@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
               className="text-center space-y-4"
             >
               <h1 className="text-heading-xl">
-                Good morning, {user?.email?.split('@')[0]}
+                Good morning, Ahmed
               </h1>
               <p className="text-body text-muted-foreground max-w-2xl mx-auto">
                 Here's your health overview for today.
