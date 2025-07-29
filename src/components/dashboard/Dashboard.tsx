@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
+import { AccessibilityProvider } from '../ui/AccessibilityProvider';
 import Navigation from '../layout/Navigation';
 import MetricsGrid from './MetricsGrid';
 import HealthInsights from './HealthInsights';
@@ -39,14 +40,15 @@ const Dashboard: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
-          <div className="space-y-12">
+          <main id="main-content" className="space-y-12" role="main" aria-label="Health Dashboard">
             {/* Welcome Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center space-y-4"
+              role="banner"
             >
-              <h1 className="text-heading-xl">
+              <h1 className="text-heading-xl" id="page-title">
                 Good morning, Ahmed
               </h1>
               <p className="text-body text-muted-foreground max-w-2xl mx-auto">
@@ -55,20 +57,26 @@ const Dashboard: React.FC = () => {
             </motion.div>
 
             {/* Biowell Score */}
-            <ReadinessScore score={62} />
+            <section aria-labelledby="biowell-score-heading">
+              <ReadinessScore score={62} />
+            </section>
 
             {/* Metrics Grid */}
-            <div className="space-y-6">
-              <h2 className="text-heading-xl text-foreground">Today's Metrics</h2>
+            <section aria-labelledby="metrics-heading" className="space-y-6">
+              <h2 id="metrics-heading" className="text-heading-xl text-foreground">Today's Metrics</h2>
               <MetricsGrid />
-            </div>
+            </section>
 
             {/* Health Insights */}
-            <HealthInsights />
+            <section aria-labelledby="insights-heading">
+              <HealthInsights />
+            </section>
 
             {/* Quick Actions */}
-            <QuickActions onActionClick={handleQuickAction} />
-          </div>
+            <section aria-labelledby="actions-heading">
+              <QuickActions onActionClick={handleQuickAction} />
+            </section>
+          </main>
         );
 
       case 'coach':
@@ -95,11 +103,16 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+    <AccessibilityProvider>
+    <div className="min-h-screen bg-background" data-testid="dashboard">
+      <Navigation 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange}
+        aria-label="Main navigation"
+      />
       
       {/* Main Content */}
-      <main className="lg:ml-80 min-h-screen">
+      <div className="lg:ml-80 min-h-screen">
         <Container className="py-8 lg:py-12">
           <AnimatePresence mode="wait">
             <motion.div
@@ -108,16 +121,19 @@ const Dashboard: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              role="main"
+              aria-live="polite"
             >
               {renderContent()}
             </motion.div>
           </AnimatePresence>
         </Container>
-      </main>
+      </div>
 
       {/* Mobile spacing for bottom navigation */}
       <div className="lg:hidden h-24" />
     </div>
+    </AccessibilityProvider>
   );
 };
 
