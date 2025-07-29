@@ -5,8 +5,6 @@ import {
   BoltIcon, 
   HeartIcon, 
   FireIcon,
-  ScaleIcon,
-  ClockIcon,
   BeakerIcon,
   ChevronDownIcon,
   TrendingUpIcon,
@@ -19,35 +17,25 @@ const MetricsGrid: React.FC = () => {
   const metrics = [
     {
       id: 'sleep',
-      label: 'Sleep',
+      label: 'Sleep Score',
       value: 68,
       unit: '/100',
       change: -3,
       icon: MoonIcon,
-      color: 'var(--primary)',
-      data: [72, 70, 69, 68, 67, 68, 68],
+      color: '#6366f1',
       target: 85,
-      details: {
-        deep: '45m',
-        rem: '1h 20m',
-        efficiency: '78%'
-      }
+      status: 'Below target'
     },
     {
       id: 'steps',
-      label: 'Steps',
+      label: 'Daily Steps',
       value: 8234,
       unit: '',
       change: -12,
       icon: BoltIcon,
-      color: 'var(--secondary)',
-      data: [9200, 8800, 7900, 8500, 8100, 8400, 8234],
+      color: '#06b6d4',
       target: 10000,
-      details: {
-        distance: '6.1km',
-        active: '52min',
-        calories: '312'
-      }
+      status: 'Below target'
     },
     {
       id: 'heart',
@@ -56,14 +44,9 @@ const MetricsGrid: React.FC = () => {
       unit: 'bpm',
       change: 2,
       icon: HeartIcon,
-      color: 'var(--error)',
-      data: [70, 71, 73, 72, 74, 71, 72],
+      color: '#ef4444',
       target: 65,
-      details: {
-        max: '182',
-        hrv: '28ms',
-        zones: '4'
-      }
+      status: 'Elevated'
     },
     {
       id: 'glucose',
@@ -72,46 +55,22 @@ const MetricsGrid: React.FC = () => {
       unit: 'mg/dL',
       change: 8,
       icon: BeakerIcon,
-      color: 'var(--warning)',
-      data: [138, 145, 140, 148, 142, 146, 142],
+      color: '#f59e0b',
       target: 100,
-      details: {
-        fasting: '108',
-        spikes: '8',
-        range: '62%'
-      }
+      status: 'High'
     }
   ];
 
-  const MiniChart: React.FC<{ data: number[]; color: string }> = ({ data, color }) => {
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const range = max - min || 1;
-    
-    return (
-      <div className="flex items-end gap-1 h-8 w-16">
-        {data.map((value, index) => {
-          const height = ((value - min) / range) * 100;
-          return (
-            <div
-              key={index}
-              className="w-1 rounded-sm opacity-60 last:opacity-100"
-              style={{ 
-                height: `${Math.max(height, 10)}%`,
-                backgroundColor: color
-              }}
-            />
-          );
-        })}
-      </div>
-    );
+  const toggleExpanded = (metricId: string) => {
+    setExpandedMetric(expandedMetric === metricId ? null : metricId);
   };
 
   return (
-    <div className="grid grid-auto grid-md">
+    <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric, index) => {
         const isExpanded = expandedMetric === metric.id;
         const isPositive = metric.change >= 0;
+        const progress = Math.min((metric.value / metric.target) * 100, 100);
         
         return (
           <motion.div
@@ -119,81 +78,85 @@ const MetricsGrid: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="card cursor-pointer"
-            onClick={() => setExpandedMetric(isExpanded ? null : metric.id)}
+            className="metric-card"
+            onClick={() => toggleExpanded(metric.id)}
           >
-            <div className="stack stack-md">
-              {/* Header */}
-              <div className="cluster justify-between">
-                <div className="cluster cluster-sm">
-                  <div 
-                    className="avatar avatar-sm"
-                    style={{ backgroundColor: metric.color }}
-                  >
-                    <metric.icon className="icon icon-sm" />
-                  </div>
-                  <span className="text-caption">{metric.label}</span>
-                </div>
-                
-                <div className="cluster cluster-sm">
-                  <div className={`metric-change ${isPositive ? 'positive' : 'negative'}`}>
-                    {isPositive ? '+' : ''}{metric.change}%
-                  </div>
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ChevronDownIcon className="icon icon-sm" style={{ color: 'var(--text-tertiary)' }} />
-                  </motion.div>
-                </div>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: metric.color }}
+              >
+                <metric.icon className="w-5 h-5 text-white" />
               </div>
-
-              {/* Value */}
-              <div className="metric">
-                <div className="metric-value">
-                  {metric.value.toLocaleString()}{metric.unit}
-                </div>
+              <div className={`status-indicator ${isPositive ? 'status-success' : 'status-error'}`}>
+                {isPositive ? (
+                  <TrendingUpIcon className="w-3 h-3" />
+                ) : (
+                  <TrendingDownIcon className="w-3 h-3" />
+                )}
+                {isPositive ? '+' : ''}{metric.change}%
               </div>
+            </div>
 
-              {/* Progress */}
-              <div className="progress">
+            {/* Value */}
+            <div className="mb-3">
+              <div className="flex items-baseline space-x-1">
+                <span className="text-2xl font-bold text-foreground">
+                  {metric.value.toLocaleString()}
+                </span>
+                <span className="text-caption">{metric.unit}</span>
+              </div>
+              <div className="text-body font-medium text-foreground mt-1">
+                {metric.label}
+              </div>
+            </div>
+
+            {/* Status */}
+            <div className="text-caption mb-4">{metric.status}</div>
+
+            {/* Progress */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-caption">
+                <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
+                <span>{Math.round(progress)}%</span>
+              </div>
+              <div className="progress-bar">
                 <motion.div
                   className="progress-fill"
                   initial={{ width: 0 }}
-                  animate={{ width: `${Math.min((metric.value / metric.target) * 100, 100)}%` }}
+                  animate={{ width: `${progress}%` }}
                   transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
                   style={{ backgroundColor: metric.color }}
                 />
               </div>
-
-              {/* Chart */}
-              <div className="cluster justify-between items-end">
-                <MiniChart data={metric.data} color={metric.color} />
-                <span className="text-label">7D</span>
-              </div>
-
-              {/* Expanded Details */}
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="stack stack-sm pt-4 border-t"
-                    style={{ borderColor: 'var(--border-secondary)' }}
-                  >
-                    <div className="grid grid-3 gap-3">
-                      {Object.entries(metric.details).map(([key, value]) => (
-                        <div key={key} className="text-center">
-                          <div className="text-body font-semibold">{value}</div>
-                          <div className="text-label">{key}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
+
+            {/* Expand Indicator */}
+            <div className="flex items-center justify-center mt-4">
+              <motion.div
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDownIcon className="w-4 h-4 text-muted-foreground" />
+              </motion.div>
+            </div>
+
+            {/* Expanded Content */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 pt-4 border-t border-border"
+                >
+                  <div className="text-caption">
+                    Detailed analytics and trends for {metric.label.toLowerCase()} coming soon.
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         );
       })}
