@@ -257,8 +257,8 @@ const MetricsGrid: React.FC = () => {
   };
 
   const MiniChart: React.FC<{ data: number[]; color: string }> = ({ data, color }) => {
-    const max = Math.max(...data, target || 0);
-    const min = Math.min(...data, target || 0);
+    const max = Math.max(...data);
+    const min = Math.min(...data);
     const range = max - min || 1;
     
     return (
