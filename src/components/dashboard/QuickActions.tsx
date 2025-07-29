@@ -84,7 +84,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <h2 className="text-heading-xl text-foreground">Quick Actions</h2>
-          <p className="text-caption">Fast access to key features</p>
+          <p className="text-caption">Access key features instantly</p>
         </div>
         <button className="btn-ghost flex items-center space-x-2">
           <span>Customize</span>

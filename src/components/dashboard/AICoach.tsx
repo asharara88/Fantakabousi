@@ -119,7 +119,7 @@ const AICoach: React.FC = () => {
              <h1 className="text-heading-xl text-foreground">Coach</h1>
               <div className="flex items-center space-x-2">
                 <div className="status-dot success animate-pulse"></div>
-                <span className="text-caption">Online & Ready</span>
+                <span className="text-caption">Online and Ready</span>
               </div>
             </div>
           </div>

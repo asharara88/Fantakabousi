@@ -317,7 +317,7 @@ const HealthDashboard: React.FC = () => {
             </div>
             <div>
               <h1 className="text-heading-xl text-foreground">Health Dashboard</h1>
-              <p className="text-caption">Real-time biometric monitoring</p>
+              <p className="text-caption">Track your health metrics in real-time</p>
             </div>
           </div>
         </div>

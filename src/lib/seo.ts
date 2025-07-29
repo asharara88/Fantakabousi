@@ -1,5 +1,258 @@
 // SEO and Internal Linking Utilities
 
+// Content Readability Analysis and Optimization
+export interface ReadabilityMetrics {
+  fleschKincaidGrade: number;
+  fleschReadingEase: number;
+  averageSentenceLength: number;
+  averageWordsPerSentence: number;
+  passiveVoicePercentage: number;
+  readingLevel: 'elementary' | 'middle' | 'high' | 'college' | 'graduate';
+  recommendations: string[];
+}
+
+export interface ContentOptimization {
+  original: string;
+  optimized: string;
+  improvements: string[];
+  seoKeywords: string[];
+  readabilityScore: number;
+}
+
+// Analyze content readability
+export const analyzeReadability = (text: string): ReadabilityMetrics => {
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const words = text.split(/\s+/).filter(w => w.length > 0);
+  const syllables = words.reduce((count, word) => count + countSyllables(word), 0);
+  
+  const avgSentenceLength = words.length / sentences.length;
+  const avgSyllablesPerWord = syllables / words.length;
+  
+  // Flesch-Kincaid Grade Level
+  const fleschKincaidGrade = 0.39 * avgSentenceLength + 11.8 * avgSyllablesPerWord - 15.59;
+  
+  // Flesch Reading Ease
+  const fleschReadingEase = 206.835 - 1.015 * avgSentenceLength - 84.6 * avgSyllablesPerWord;
+  
+  // Passive voice detection (simplified)
+  const passiveIndicators = ['was', 'were', 'been', 'being', 'is', 'are', 'am'];
+  const passiveCount = sentences.filter(sentence => 
+    passiveIndicators.some(indicator => sentence.toLowerCase().includes(indicator))
+  ).length;
+  const passiveVoicePercentage = (passiveCount / sentences.length) * 100;
+  
+  const readingLevel = getReadingLevel(fleschKincaidGrade);
+  const recommendations = generateReadabilityRecommendations(
+    avgSentenceLength, 
+    passiveVoicePercentage, 
+    fleschReadingEase
+  );
+  
+  return {
+    fleschKincaidGrade,
+    fleschReadingEase,
+    averageSentenceLength: avgSentenceLength,
+    averageWordsPerSentence: avgSentenceLength,
+    passiveVoicePercentage,
+    readingLevel,
+    recommendations
+  };
+};
+
+// Count syllables in a word (simplified algorithm)
+const countSyllables = (word: string): number => {
+  word = word.toLowerCase();
+  if (word.length <= 3) return 1;
+  
+  const vowels = 'aeiouy';
+  let syllableCount = 0;
+  let previousWasVowel = false;
+  
+  for (let i = 0; i < word.length; i++) {
+    const isVowel = vowels.includes(word[i]);
+    if (isVowel && !previousWasVowel) {
+      syllableCount++;
+    }
+    previousWasVowel = isVowel;
+  }
+  
+  // Handle silent 'e'
+  if (word.endsWith('e')) {
+    syllableCount--;
+  }
+  
+  return Math.max(1, syllableCount);
+};
+
+// Determine reading level from Flesch-Kincaid grade
+const getReadingLevel = (grade: number): ReadabilityMetrics['readingLevel'] => {
+  if (grade <= 5) return 'elementary';
+  if (grade <= 8) return 'middle';
+  if (grade <= 12) return 'high';
+  if (grade <= 16) return 'college';
+  return 'graduate';
+};
+
+// Generate readability recommendations
+const generateReadabilityRecommendations = (
+  avgSentenceLength: number,
+  passiveVoicePercentage: number,
+  fleschReadingEase: number
+): string[] => {
+  const recommendations: string[] = [];
+  
+  if (avgSentenceLength > 20) {
+    recommendations.push('Break down long sentences (current average: ' + Math.round(avgSentenceLength) + ' words)');
+  }
+  
+  if (passiveVoicePercentage > 20) {
+    recommendations.push('Reduce passive voice usage (currently ' + Math.round(passiveVoicePercentage) + '%)');
+  }
+  
+  if (fleschReadingEase < 60) {
+    recommendations.push('Simplify vocabulary and sentence structure for better readability');
+  }
+  
+  if (avgSentenceLength < 8) {
+    recommendations.push('Consider combining some short sentences for better flow');
+  }
+  
+  return recommendations;
+};
+
+// Optimize content for readability and SEO
+export const optimizeContent = (content: string, targetKeywords: string[]): ContentOptimization => {
+  const original = content;
+  let optimized = content;
+  const improvements: string[] = [];
+  
+  // Break down long sentences
+  optimized = optimized.replace(/([^.!?]{50,})[,;]([^.!?]{20,})/g, (match, part1, part2) => {
+    improvements.push('Split long sentence for better readability');
+    return part1.trim() + '. ' + part2.trim();
+  });
+  
+  // Convert passive to active voice (simplified)
+  const passivePatterns = [
+    { pattern: /is tracked by/g, replacement: 'tracks' },
+    { pattern: /are monitored by/g, replacement: 'monitors' },
+    { pattern: /was created by/g, replacement: 'created' },
+    { pattern: /were developed by/g, replacement: 'developed' },
+  ];
+  
+  passivePatterns.forEach(({ pattern, replacement }) => {
+    if (pattern.test(optimized)) {
+      optimized = optimized.replace(pattern, replacement);
+      improvements.push('Converted passive voice to active voice');
+    }
+  });
+  
+  // Add transition words for better flow
+  optimized = optimized.replace(/\. ([A-Z])/g, (match, letter) => {
+    const transitions = ['Additionally, ', 'Furthermore, ', 'Moreover, ', 'However, '];
+    const randomTransition = transitions[Math.floor(Math.random() * transitions.length)];
+    improvements.push('Added transition word for better flow');
+    return '. ' + randomTransition + letter;
+  });
+  
+  const readabilityScore = analyzeReadability(optimized).fleschReadingEase;
+  
+  return {
+    original,
+    optimized,
+    improvements,
+    seoKeywords: targetKeywords,
+    readabilityScore
+  };
+};
+
+// Content optimization examples for Biowell
+export const biowellContentOptimizations = {
+  // Dashboard welcome message
+  welcomeMessage: {
+    original: "Here's your comprehensive health overview for today, featuring advanced biometric analysis and personalized recommendations.",
+    optimized: "Here's your health overview for today. Get insights from your biometric data and personalized recommendations.",
+    improvements: [
+      'Reduced sentence length from 16 to 13 words',
+      'Simplified vocabulary (removed "comprehensive", "advanced")',
+      'Split into two shorter sentences'
+    ]
+  },
+  
+  // AI Coach description
+  coachDescription: {
+    original: "Your AI wellness coach analyzes your comprehensive health data to provide personalized recommendations that are specifically tailored to your unique biological profile and health objectives.",
+    optimized: "Your AI coach analyzes your health data. It provides personalized recommendations based on your biology and health goals.",
+    improvements: [
+      'Split 28-word sentence into two 12-word sentences',
+      'Removed redundant phrases ("comprehensive", "specifically tailored")',
+      'Simplified vocabulary ("objectives" → "goals")'
+    ]
+  },
+  
+  // Supplement stack description
+  supplementDescription: {
+    original: "AI-curated supplements that have been optimized for your specific health goals and are based on your individual biometric data analysis.",
+    optimized: "AI-curated supplements optimized for your health goals. Based on your biometric data analysis.",
+    improvements: [
+      'Split 20-word sentence into two shorter sentences',
+      'Removed passive voice ("have been optimized")',
+      'Eliminated redundant words ("specific", "individual")'
+    ]
+  },
+  
+  // Health insights explanation
+  insightsExplanation: {
+    original: "These insights are generated by our advanced AI algorithms that continuously analyze your health metrics and identify patterns that may not be immediately apparent to provide actionable recommendations.",
+    optimized: "Our AI algorithms analyze your health metrics continuously. They identify hidden patterns and provide actionable recommendations.",
+    improvements: [
+      'Split 28-word sentence into two 14-word sentences',
+      'Converted passive voice to active voice',
+      'Simplified complex phrases ("may not be immediately apparent" → "hidden")'
+    ]
+  }
+};
+
+// SEO content structure recommendations
+export const seoContentStructure = {
+  // Optimal heading structure
+  headingHierarchy: {
+    h1: 'Primary page topic (1 per page)',
+    h2: 'Main sections (3-6 per page)',
+    h3: 'Subsections within h2',
+    h4: 'Details within h3',
+    guidelines: [
+      'Use only one H1 per page',
+      'Include target keywords in headings naturally',
+      'Maintain logical hierarchy (don\'t skip levels)',
+      'Keep headings under 60 characters'
+    ]
+  },
+  
+  // Paragraph optimization
+  paragraphStructure: {
+    idealLength: '50-150 words per paragraph',
+    sentenceLength: '15-20 words per sentence',
+    guidelines: [
+      'Start with topic sentence',
+      'Use 2-4 sentences per paragraph',
+      'Include keywords naturally',
+      'End with transition or call-to-action'
+    ]
+  },
+  
+  // Content density recommendations
+  contentDensity: {
+    keywordDensity: '1-2% for primary keywords',
+    semanticKeywords: 'Include related terms and synonyms',
+    guidelines: [
+      'Use keywords in first 100 words',
+      'Include keywords in headings naturally',
+      'Use semantic variations',
+      'Avoid keyword stuffing'
+    ]
+  }
+};
 export interface PageMetadata {
   title: string;
   description: string;

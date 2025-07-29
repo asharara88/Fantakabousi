@@ -49,10 +49,10 @@ const Dashboard: React.FC = () => {
               role="banner"
             >
               <h1 className="text-heading-lg" id="page-title">
-                Good morning, Ahmed
+                Good Morning, Ahmed
               </h1>
-              <p className="text-caption text-muted-foreground max-w-xl mx-auto">
-                Here's your health overview for today.
+              <p className="text-caption text-muted-foreground max-w-xl mx-auto" role="doc-subtitle">
+                Your daily health insights and wellness metrics.
               </p>
             </motion.div>
 

@@ -104,7 +104,7 @@ const HealthInsights: React.FC = () => {
             </div>
             <div>
               <h2 className="text-heading-lg text-foreground">Health Insights</h2>
-              <p className="text-caption">AI-powered recommendations</p>
+              <p className="text-caption">Smart recommendations from your data</p>
             </div>
           </div>
         </div>

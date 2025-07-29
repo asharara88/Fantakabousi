@@ -228,7 +228,7 @@ const ProfileSettings: React.FC = () => {
             </div>
             <div>
               <h1 className="text-heading-xl text-foreground">Profile Settings</h1>
-              <p className="text-caption">Manage your account and preferences</p>
+              <p className="text-caption">Update your account and health preferences</p>
             </div>
           </div>
         </div>

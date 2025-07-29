@@ -136,13 +136,13 @@ const AuthForms: React.FC = () => {
               </motion.div>
               
               <div className="space-y-6">
-                <h1 className="text-display-xl leading-tight">
-                  Your AI Wellness
+                <h1 className="text-display-xl leading-tight" id="main-heading">
+                  Transform Your Health
                   <br />
-                  Revolution
+                  with AI Wellness
                 </h1>
-                <p className="text-body-lg leading-relaxed max-w-lg" style={{ color: 'var(--muted-foreground)' }}>
-                  Transform your health with personalized AI insights, real-time biometric tracking, and expert-curated supplement stacks.
+                <p className="text-body-lg leading-relaxed max-w-lg" style={{ color: 'var(--muted-foreground)' }} role="banner">
+                  Get personalized AI insights and real-time health tracking. Build your optimal supplement stack with expert guidance.
                 </p>
               </div>
             </div>
