@@ -18,11 +18,23 @@ const HealthInsights: React.FC = () => {
       type: 'achievement',
       icon: CheckCircleIcon,
       title: 'Sleep Streak Achievement',
+      message: 'Your CGM shows 8 glucose spikes this week averaging 185 mg/dL post-meal. This may impact fertility hormones and muscle recovery.',
+      gradient: 'from-green-500 to-emerald-600',
+      priority: 'low',
+      timestamp: '2 days ago',
+      confidence: 94,
+      action: 'View Trends'
+    },
+    {
       type: 'warning',
       icon: ExclamationTriangleIcon,
       title: 'Glucose Spikes Detected',
       message: 'Your CGM shows 8 glucose spikes this week averaging 185 mg/dL post-meal. This may impact fertility hormones and muscle recovery.',
+      gradient: 'from-red-500 to-pink-600',
+      priority: 'high',
+      timestamp: '6 hours ago',
       confidence: 94,
+      action: 'Review Diet'
     },
     {
       type: 'optimization',
@@ -33,37 +45,30 @@ const HealthInsights: React.FC = () => {
       priority: 'medium',
       timestamp: '4 hours ago',
       confidence: 89,
+      action: 'View Protocol'
     },
     {
-      type: 'warning',
-      icon: ExclamationTriangleIcon,
-      title: 'Hydration Alert',
-      message: 'Your morning weight indicates mild dehydration (-0.8% from baseline). Aim for 750ml of water in the next hour.',
-      gradient: 'from-amber-500 to-orange-600',
-      priority: 'high',
-      action: 'Review Diet',
-      gradient: 'from-red-500 to-pink-600',
       type: 'optimization',
       icon: BeakerIcon,
       title: 'Insulin Sensitivity Protocol',
       message: 'Your insulin resistance requires targeted intervention. Consider metformin consultation and time-restricted eating windows.',
-      confidence: 88,
-      message: 'Your heart rate variability has increased by 12% over the past week, indicating improved autonomic nervous system balance.',
-      action: 'Protocol Plan',
-      gradient: 'from-green-500 to-emerald-600',
+      gradient: 'from-purple-500 to-indigo-600',
+      priority: 'high',
       timestamp: '1 day ago',
-      confidence: 94,
+      confidence: 88,
+      action: 'Protocol Plan'
     },
+    {
       type: 'optimization',
-      icon: CheckCircleIcon,
+      icon: ArrowTrendingUpIcon,
       title: 'Training Volume Optimization',
       message: 'Your current training strain of 16.8/21 may be hindering recovery. Consider reducing volume by 20% to optimize hormone production.',
-      confidence: 86,
-      priority: 'medium',
-      action: 'Adjust Training',
       gradient: 'from-orange-500 to-red-600',
-      variant: 'warning',
-      variant: 'warning',
+      priority: 'medium',
+      timestamp: '12 hours ago',
+      confidence: 86,
+      action: 'Adjust Training',
+    }
   ];
 
   const getPriorityIndicator = (priority: string) => {
