@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
             </motion.div>
 
             {/* Biowell Score */}
-            <ReadinessScore score={87} />
+            <ReadinessScore score={62} />
 
             {/* Metrics Grid */}
             <div className="space-y-6">

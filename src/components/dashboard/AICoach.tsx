@@ -29,7 +29,7 @@ const AICoach: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! I'm your AI wellness coach. I've analyzed your recent health data and I'm ready to help you optimize your wellness journey. What would you like to focus on today?",
+      content: "Hi Ahmed! I've analyzed your recent health data and I can see you're working on fertility, muscle building, and sleep optimization. Your CGM data shows some concerning glucose patterns, and your deep sleep is quite low at 45 minutes. What would you like to focus on first?",
       role: 'assistant',
       timestamp: new Date(),
     }
@@ -65,11 +65,11 @@ const AICoach: React.FC = () => {
     // Simulate AI response
     setTimeout(() => {
       const responses = [
-        "Based on your recent sleep data showing 8.2 hours with 94% quality, your recovery is excellent. I recommend maintaining your current bedtime routine and consider adding magnesium supplementation 30 minutes before bed for even deeper sleep phases.",
-        "Your HRV has increased 12% this week, indicating improved autonomic nervous system balance. This is perfect timing for high-intensity training. Would you like me to suggest an optimal workout plan?",
-        "I notice your glucose levels have been stable in the 85-95 mg/dL range. Your metabolic health is excellent. Consider timing your largest meal earlier in the day to optimize circadian rhythm alignment.",
-        "Your stress markers suggest you're in an optimal state for learning and productivity. This would be an ideal time to tackle challenging mental tasks or learn new skills.",
-        "Based on your biometric trends, I recommend adjusting your supplement timing. Taking omega-3 with your largest meal will improve absorption by 40%."
+        "Ahmed, your CGM data shows concerning patterns with post-meal spikes averaging 185 mg/dL. For fertility optimization, we need to address this insulin resistance. I recommend starting with a 16:8 intermittent fasting protocol and reducing refined carbs. This will help improve sperm motility and testosterone production.",
+        "Your deep sleep at 45 minutes is significantly below the optimal 90+ minutes needed for testosterone and growth hormone production. I suggest moving your bedtime earlier to 10 PM, avoiding screens 2 hours before bed, and considering magnesium glycinate supplementation. This is crucial for both muscle building and fertility.",
+        "At 90kg and 180cm with 18.2% body fat, reducing to 15% would significantly improve insulin sensitivity and fertility markers. Your current training strain of 16.8 might be too high - consider reducing volume by 20% to optimize recovery and hormone production.",
+        "Your elevated resting heart rate (72 bpm) and low HRV (28 ms) suggest your body is under stress. This impacts fertility hormones. I recommend adding 10 minutes of daily meditation and ensuring 8+ hours of sleep. Would you like a specific stress management protocol?",
+        "For your muscle building goals with insulin resistance, focus on post-workout carb timing. Consume 30-40g of carbs immediately after training when insulin sensitivity is highest. This supports muscle growth while minimizing glucose spikes throughout the day."
       ];
 
       const aiMessage: Message = {
@@ -109,10 +109,10 @@ const AICoach: React.FC = () => {
   };
 
   const quickPrompts = [
-    { text: "Analyze my sleep patterns", icon: HeartIcon },
-    { text: "Optimize my workout timing", icon: BoltIcon },
-    { text: "Review my supplement stack", icon: BeakerIcon },
-    { text: "Check my recovery status", icon: SparklesIcon },
+    { text: "Help with my glucose spikes", icon: BeakerIcon },
+    { text: "Improve my deep sleep", icon: HeartIcon },
+    { text: "Fertility optimization plan", icon: SparklesIcon },
+    { text: "Muscle building with insulin resistance", icon: BoltIcon },
   ];
 
   return (
