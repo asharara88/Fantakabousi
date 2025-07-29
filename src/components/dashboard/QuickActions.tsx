@@ -102,7 +102,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
           >
             <InternalLink
               href={action.href}
-              className="card-premium p-6 h-full text-left group hover:scale-[1.02] transition-all duration-300 block"
+              className="card-minimal p-4 h-full text-left group hover:scale-[1.01] transition-all duration-300 block"
               variant="ghost"
               onClick={() => {
                 if (onActionClick && action.tabId) {
@@ -115,10 +115,10 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
                 label: action.title,
               }}
             >
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${action.gradient} rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
-                    <action.icon className="w-7 h-7 text-white" />
+                  <div className={`w-10 h-10 bg-gradient-to-br ${action.gradient} rounded-lg flex items-center justify-center`}>
+                    <action.icon className="w-5 h-5 text-white" />
                   </div>
                   {action.badge && (
                     <div className="status-indicator status-success">
@@ -127,18 +127,18 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
                   )}
                 </div>
                 
-                <div className="space-y-3">
-                  <h4 className="text-body font-semibold text-foreground group-hover:text-primary transition-colors">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                     {action.title}
                   </h4>
-                  <p className="text-caption leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                     {action.description}
                   </p>
                 </div>
                 
-                <div className="pt-4 border-t border-border">
+                <div className="pt-3 border-t border-border">
                   <div className="flex items-center justify-between">
-                    <span className="text-body font-semibold text-primary group-hover:text-primary/80 transition-colors">
+                    <span className="text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
                       {action.action}
                     </span>
                     <ArrowRightIcon className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />

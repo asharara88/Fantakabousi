@@ -45,13 +45,13 @@ const Dashboard: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center space-y-4"
+              className="text-center space-y-3"
               role="banner"
             >
-              <h1 className="text-heading-xl" id="page-title">
+              <h1 className="text-heading-lg" id="page-title">
                 Good morning, Ahmed
               </h1>
-              <p className="text-body text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-caption text-muted-foreground max-w-xl mx-auto">
                 Here's your health overview for today.
               </p>
             </motion.div>
@@ -62,8 +62,8 @@ const Dashboard: React.FC = () => {
             </section>
 
             {/* Metrics Grid */}
-            <section aria-labelledby="metrics-heading" className="space-y-6">
-              <h2 id="metrics-heading" className="text-heading-xl text-foreground">Today's Metrics</h2>
+            <section aria-labelledby="metrics-heading" className="space-y-4">
+              <h2 id="metrics-heading" className="text-heading-lg text-foreground">Today's Metrics</h2>
               <MetricsGrid />
             </section>
 
@@ -113,7 +113,7 @@ const Dashboard: React.FC = () => {
       
       {/* Main Content */}
       <div className="lg:ml-80 min-h-screen">
-        <Container className="py-8 lg:py-12">
+        <Container className="py-6 lg:py-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Mobile spacing for bottom navigation */}
-      <div className="lg:hidden h-24" />
+      <div className="lg:hidden h-20" />
     </div>
     </AccessibilityProvider>
   );

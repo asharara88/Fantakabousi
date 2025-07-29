@@ -25,8 +25,8 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   
   // Mobile-optimized dimensions
   const isMobile = window.innerWidth < 768;
-  const ringSize = isMobile ? 160 : 200;
-  const radius = isMobile ? 60 : 75;
+  const ringSize = isMobile ? 120 : 160;
+  const radius = isMobile ? 45 : 60;
   const strokeWidth = isMobile ? 4 : 6;
   
   const circumference = 2 * Math.PI * radius;
@@ -148,22 +148,21 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   };
 
   return (
-    <div className="card-premium p-4 lg:p-8 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 lg:mb-8 gap-4 lg:gap-6">
+    <div className="card-minimal p-4 lg:p-6 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
         <div className="space-y-2 lg:space-y-3">
           <div className="flex items-center space-x-3 lg:space-x-4">
-            <div className="w-8 h-8 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg">
-              <SparklesIcon className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <SparklesIcon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg lg:text-heading-xl text-foreground">Biowell Score</h2>
+              <h2 className="text-base lg:text-heading-lg text-foreground">Biowell Score</h2>
               <p className="text-xs lg:text-caption">AI-powered wellness index</p>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-3">
           <div className={`status-indicator status-${status.variant}`}>
-            <CheckCircleIcon className="w-3 h-3 lg:w-4 lg:h-4" />
             {status.text}
           </div>
           <motion.div
@@ -175,7 +174,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-12 items-center">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-center">
         {/* Biowell Score Ring - Mobile Optimized */}
         <div className="relative flex justify-center">
           <div className="relative">
@@ -185,7 +184,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                 cx={ringSize / 2}
                 cy={ringSize / 2}
                 r={radius}
-                stroke="hsl(var(--muted))"
+                stroke="rgba(255, 255, 255, 0.1)"
                 strokeWidth={strokeWidth}
                 fill="none"
               />
@@ -216,31 +215,28 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                  className="text-3xl lg:text-6xl font-bold text-foreground"
+                  className="text-2xl lg:text-4xl font-bold text-foreground"
                 >
                   {score}
                 </motion.div>
-                <div className="text-xs lg:text-caption font-semibold uppercase tracking-wider">
+                <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Biowell Score
-                </div>
-                <div className="status-indicator status-success text-xs lg:text-sm">
-                  Wellness Index
                 </div>
               </div>
             </div>
 
             {/* Floating indicators - Reduced for mobile */}
             <div className="absolute inset-0 pointer-events-none">
-              {[...Array(isMobile ? 3 : 6)].map((_, i) => (
+              {[...Array(isMobile ? 2 : 3)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-1 h-1 lg:w-2 lg:h-2 bg-blue-400 rounded-full"
+                  className="absolute w-1 h-1 bg-blue-400/60 rounded-full"
                   style={{
-                    left: `${25 + i * (isMobile ? 25 : 15)}%`,
+                    left: `${30 + i * (isMobile ? 30 : 20)}%`,
                     top: `${30 + (i % 2) * 40}%`,
                   }}
                   animate={{
-                    y: [-4, 4, -4],
+                    y: [-2, 2, -2],
                     opacity: [0.3, 0.8, 0.3],
                     scale: [0.8, 1.2, 0.8],
                   }}
@@ -256,34 +252,34 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
         </div>
 
         {/* KPI Summary - Always Visible */}
-        <div className="space-y-3 lg:space-y-4">
+        <div className="space-y-3">
           {kpis.slice(0, isExpanded ? kpis.length : 4).map((kpi, index) => (
             <motion.div
               key={kpi.name}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
-              className="card-premium p-3 lg:p-4"
+              className="card-minimal p-3"
             >
-              <div className="flex items-center space-x-3 lg:space-x-4">
-                <div className={`w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br ${kpi.color} rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg`}>
-                  <kpi.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
+              <div className="flex items-center space-x-3">
+                <div className={`w-8 h-8 bg-gradient-to-br ${kpi.color} rounded-lg flex items-center justify-center`}>
+                  <kpi.icon className="w-4 h-4 text-white" />
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1 lg:mb-2">
-                    <h3 className="text-sm lg:text-body font-semibold text-foreground truncate">{kpi.name}</h3>
-                    <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
-                      <div className="text-lg lg:text-xl font-bold text-foreground">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-sm font-semibold text-foreground truncate">{kpi.name}</h3>
+                    <div className="flex items-center space-x-2 flex-shrink-0">
+                      <div className="text-lg font-bold text-foreground">
                         {kpi.value}%
                       </div>
-                      <div className="status-indicator status-success text-xs">
+                      <div className="text-xs text-green-400 font-medium">
                         {kpi.trend}
                       </div>
                     </div>
                   </div>
                   
-                  <p className="text-xs lg:text-caption mb-2 lg:mb-3 text-muted-foreground">{kpi.description}</p>
+                  <p className="text-xs mb-2 text-muted-foreground line-clamp-1">{kpi.description}</p>
                   
                   <div className="flex items-center justify-between">
                     <div className="progress-bar flex-1 mr-3">
@@ -316,13 +312,13 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-6 lg:mt-8 pt-6 lg:pt-8 border-t border-border space-y-6"
+            className="mt-6 pt-6 border-t border-border space-y-6"
           >
             {/* Score Calculation Breakdown */}
-            <div className="card-premium p-4 lg:p-6 bg-muted/30">
+            <div className="card-minimal p-4 bg-muted/20">
               <div className="flex items-center space-x-3 mb-4">
                 <ChartBarIcon className="w-5 h-5 text-primary" />
-                <h3 className="text-body font-semibold text-foreground">Score Calculation</h3>
+                <h3 className="text-sm font-semibold text-foreground">Score Calculation</h3>
               </div>
               
               <div className="space-y-3">
@@ -330,9 +326,9 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                   Your Biowell Score is calculated using weighted KPIs based on your health goals:
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                   {kpis.map((kpi, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
                       <div className="flex items-center space-x-3">
                         <kpi.icon className="w-4 h-4 text-muted-foreground" />
                         <span className="text-sm font-medium text-foreground">{kpi.name}</span>
@@ -350,28 +346,28 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                 </div>
                 
                 <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <span className="text-body font-semibold text-foreground">Total Biowell Score</span>
-                  <span className="text-xl font-bold text-primary">{score}/100</span>
+                  <span className="text-sm font-semibold text-foreground">Total Biowell Score</span>
+                  <span className="text-lg font-bold text-primary">{score}/100</span>
                 </div>
               </div>
             </div>
 
             {/* Detailed KPI Breakdown */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {kpis.map((kpi, index) => (
                 <motion.div
                   key={kpi.name}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="card-premium p-4"
+                  className="card-minimal p-3"
                 >
                   <div className="flex items-center space-x-3 mb-4">
                     <div className={`w-8 h-8 bg-gradient-to-br ${kpi.color} rounded-lg flex items-center justify-center`}>
                       <kpi.icon className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h4 className="text-body font-semibold text-foreground">{kpi.name}</h4>
+                      <h4 className="text-sm font-semibold text-foreground">{kpi.name}</h4>
                       <div className="text-caption">Weight: {kpi.weight}% of total score</div>
                     </div>
                   </div>
@@ -393,10 +389,10 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
             </div>
 
             {/* Improvement Recommendations */}
-            <div className="card-premium p-4 lg:p-6 bg-blue-500/5 border border-blue-500/20">
+            <div className="card-minimal p-4 bg-blue-500/5 border border-blue-500/10">
               <div className="flex items-center space-x-3 mb-4">
                 <SparklesIcon className="w-5 h-5 text-blue-500" />
-                <h3 className="text-body font-semibold text-foreground">Score Improvement Plan</h3>
+                <h3 className="text-sm font-semibold text-foreground">Score Improvement Plan</h3>
               </div>
               
               <div className="space-y-3">
@@ -409,7 +405,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                   { priority: 2, area: 'Sleep Quality', impact: '+12 pts', action: 'Optimize sleep hygiene for 90min+ deep sleep' },
                   { priority: 3, area: 'Recovery', impact: '+8 pts', action: 'Reduce training strain and focus on HRV improvement' },
                 ].map((rec, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 bg-background/50 rounded-lg">
+                  <div key={index} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg">
                     <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
                       {rec.priority}
                     </div>

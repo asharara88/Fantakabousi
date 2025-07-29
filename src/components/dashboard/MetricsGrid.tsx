@@ -282,7 +282,7 @@ const MetricsGrid: React.FC = () => {
   };
 
   return (
-    <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 box-border px-2 lg:px-0">
+    <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 box-border">
       {metrics.map((metric, index) => {
         const isExpanded = expandedCard === metric.id;
         
@@ -292,45 +292,45 @@ const MetricsGrid: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.8 }}
-          className={`card-premium w-full box-border p-3 lg:p-6 cursor-pointer transition-all duration-300 ${
+          className={`metric-card w-full box-border cursor-pointer transition-all duration-300 ${
             isExpanded ? 'col-span-2 lg:col-span-2' : ''
-          } touch-target haptic-medium apple-shadow`}
+          } touch-target haptic-medium`}
           onClick={() => toggleCard(metric.id)}
           style={{ WebkitTapHighlightColor: 'transparent' }}
           layout
         >
-          <div className="flex items-center justify-between mb-3 lg:mb-4 w-full">
-            <div className={`p-2 lg:p-3 rounded-lg lg:rounded-xl bg-gradient-to-br ${metric.gradient} shadow-lg flex-shrink-0`}>
-              <metric.icon className="w-4 h-4 lg:w-7 lg:h-7 text-white" />
+          <div className="flex items-center justify-between mb-4 w-full">
+            <div className={`p-2 lg:p-2.5 rounded-lg bg-gradient-to-br ${metric.gradient} flex-shrink-0`}>
+              <metric.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
             </div>
             <div className="text-right flex-shrink-0">
-              <div className={`px-2 py-1 rounded-full text-xs font-bold ${
+              <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                 metric.trend === 'up' 
-                  ? 'text-green-400 bg-green-500/20 border border-green-500/30' 
-                  : 'text-blue-400 bg-blue-500/20 border border-blue-500/30'
+                  ? 'text-green-400 bg-green-500/10' 
+                  : 'text-blue-400 bg-blue-500/10'
               }`}>
                 {metric.change}
               </div>
             </div>
           </div>
 
-          <div className="w-full space-y-2 lg:space-y-3 flex flex-col">
-            <div className="flex items-baseline justify-start space-x-1 w-full">
+          <div className="w-full space-y-3 flex flex-col">
+            <div className="flex items-baseline space-x-1 w-full">
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5 + index * 0.1, type: "spring", stiffness: 200 }}
-                className="text-2xl lg:text-4xl font-bold text-white flex-shrink-0"
+                className="text-xl lg:text-2xl font-bold text-foreground flex-shrink-0"
               >
                 {metric.value}
               </motion.span>
-              <span className="text-xs lg:text-base text-white/60 font-semibold flex-shrink-0">
+              <span className="text-xs text-muted-foreground font-medium flex-shrink-0">
                 {metric.unit}
               </span>
             </div>
             
             <div className="flex items-center justify-between w-full">
-              <div className="text-sm lg:text-base font-bold text-white/90 text-left leading-tight mobile-spacing-xs">
+              <div className="text-sm font-semibold text-foreground text-left leading-tight">
                 {metric.name}
               </div>
               <motion.div
@@ -338,25 +338,25 @@ const MetricsGrid: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="flex-shrink-0"
               >
-                <ChevronDownIcon className="w-4 h-4 text-white/60" />
+                <ChevronDownIcon className="w-4 h-4 text-muted-foreground" />
               </motion.div>
             </div>
             
-            <div className="text-xs text-white/60 w-full line-clamp-2 text-left mobile-spacing-sm">
+            <div className="text-xs text-muted-foreground w-full line-clamp-1 text-left">
               {metric.description}
             </div>
 
             {/* Mini Chart */}
-            <div className="flex items-center justify-between pt-2 lg:pt-3 border-t border-white/8 w-full">
+            <div className="flex items-center justify-between pt-3 border-t border-border w-full">
               <MiniChart data={metric.chart} gradient={metric.gradient} target={metric.target} />
-              <ChartBarIcon className="w-3 h-3 lg:w-4 lg:h-4 text-white/30 flex-shrink-0" />
+              <ChartBarIcon className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground/50 flex-shrink-0" />
             </div>
           </div>
 
           {/* Progress indicator for specific metrics */}
           {(metric.name === 'Sleep Score' || metric.name === 'Daily Steps') && (
-            <div className="mt-3 lg:mt-4 w-full">
-              <div className="w-full h-1 lg:h-1.5 bg-white/8 rounded-full overflow-hidden">
+            <div className="mt-3 w-full">
+              <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className={`h-full bg-gradient-to-r ${metric.gradient}`}
                   initial={{ width: 0 }}
@@ -372,8 +372,8 @@ const MetricsGrid: React.FC = () => {
           )}
 
           {/* Target indicator */}
-          <div className="mt-2 lg:mt-3 flex items-center justify-between text-xs w-full">
-            <span className="text-white/50 text-xs flex-1 text-left truncate">Target: {metric.target}{metric.unit}</span>
+          <div className="mt-2 flex items-center justify-between text-xs w-full">
+            <span className="text-muted-foreground text-xs flex-1 text-left truncate">Target: {metric.target}{metric.unit}</span>
             <div className={`w-2 h-2 rounded-full flex-shrink-0 ml-2 ${
               parseFloat(metric.value.replace(',', '')) >= metric.target 
                 ? 'bg-green-400' 
@@ -389,7 +389,7 @@ const MetricsGrid: React.FC = () => {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="mt-4 pt-4 border-t border-white/10 space-y-4"
+                className="mt-4 pt-4 border-t border-border space-y-4"
               >
                 {/* Detailed Stats */}
                 <div className="grid grid-cols-2 gap-3">
@@ -397,10 +397,10 @@ const MetricsGrid: React.FC = () => {
                     if (key === 'insights' || key === 'zones') return null;
                     return (
                       <div key={key} className="space-y-1">
-                        <div className="text-xs text-white/50 capitalize">
+                        <div className="text-xs text-muted-foreground capitalize">
                           {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
                         </div>
-                        <div className="text-sm font-semibold text-white">
+                        <div className="text-sm font-semibold text-foreground">
                           {typeof value === 'string' ? value : `${value}`}
                         </div>
                       </div>
@@ -411,12 +411,12 @@ const MetricsGrid: React.FC = () => {
                 {/* Heart Rate Zones (if applicable) */}
                 {metric.details.zones && (
                   <div className="space-y-2">
-                    <div className="text-xs text-white/50">Heart Rate Zones</div>
+                    <div className="text-xs text-muted-foreground">Heart Rate Zones</div>
                     <div className="grid grid-cols-2 gap-2">
                       {Object.entries(metric.details.zones).map(([zone, time]) => (
                         <div key={zone} className="flex justify-between text-xs">
-                          <span className="text-white/60 capitalize">{zone}</span>
-                          <span className="text-white font-semibold">{time}</span>
+                          <span className="text-muted-foreground capitalize">{zone}</span>
+                          <span className="text-foreground font-semibold">{time}</span>
                         </div>
                       ))}
                     </div>
@@ -424,13 +424,13 @@ const MetricsGrid: React.FC = () => {
                 )}
 
                 {/* Weekly Trend */}
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                   <div className="flex items-center space-x-2">
-                    <CalendarIcon className="w-4 h-4 text-white/60" />
-                    <span className="text-xs text-white/60">7-day average</span>
+                    <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">7-day average</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold text-white">
+                    <span className="text-sm font-bold text-foreground">
                       {metric.details.weeklyAvg || metric.details.weeklyTotal}
                     </span>
                     <div className={`flex items-center space-x-1 text-xs ${
@@ -448,12 +448,12 @@ const MetricsGrid: React.FC = () => {
 
                 {/* AI Insights */}
                 <div className="space-y-2">
-                  <div className="text-xs text-white/50">AI Insights</div>
+                  <div className="text-xs text-muted-foreground">AI Insights</div>
                   <div className="space-y-2">
                     {metric.details.insights.map((insight, idx) => (
                       <div key={idx} className="flex items-start space-x-2">
                         <div className="w-1 h-1 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                        <span className="text-xs text-white/80 leading-relaxed">{insight}</span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">{insight}</span>
                       </div>
                     ))}
                   </div>
@@ -462,8 +462,6 @@ const MetricsGrid: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* Hover effect overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
         </motion.div>
         );
       })}
