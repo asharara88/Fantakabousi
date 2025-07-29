@@ -345,7 +345,12 @@ const MetricsGrid: React.FC = () => {
               <div 
                 className="progress-bar"
                 style={{ 
-        </motion.div>
+                  backgroundColor: metric.color,
+                  width: `${Math.min((parseInt(metric.value.replace(/,/g, '')) / metric.target) * 100, 100)}%`
+                }}
+              />
+            </div>
+          </motion.div>
         );
       })}
     </div>
