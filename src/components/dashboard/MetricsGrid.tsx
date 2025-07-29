@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { 
   MoonIcon, 
   BoltIcon, 
   HeartIcon, 
-  FireIcon,
   BeakerIcon,
-  ChevronDownIcon,
   TrendingUpIcon,
   TrendingDownIcon
 } from '@heroicons/react/24/outline';
 
 const MetricsGrid: React.FC = () => {
-  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
-
   const metrics = [
     {
       id: 'sleep',
@@ -23,8 +19,7 @@ const MetricsGrid: React.FC = () => {
       change: -3,
       icon: MoonIcon,
       color: '#6366f1',
-      target: 85,
-      status: 'Below target'
+      target: 85
     },
     {
       id: 'steps',
@@ -34,8 +29,7 @@ const MetricsGrid: React.FC = () => {
       change: -12,
       icon: BoltIcon,
       color: '#06b6d4',
-      target: 10000,
-      status: 'Below target'
+      target: 10000
     },
     {
       id: 'heart',
@@ -45,8 +39,7 @@ const MetricsGrid: React.FC = () => {
       change: 2,
       icon: HeartIcon,
       color: '#ef4444',
-      target: 65,
-      status: 'Elevated'
+      target: 65
     },
     {
       id: 'glucose',
@@ -56,19 +49,13 @@ const MetricsGrid: React.FC = () => {
       change: 8,
       icon: BeakerIcon,
       color: '#f59e0b',
-      target: 100,
-      status: 'High'
+      target: 100
     }
   ];
 
-  const toggleExpanded = (metricId: string) => {
-    setExpandedMetric(expandedMetric === metricId ? null : metricId);
-  };
-
   return (
-    <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-2 md:grid-4">
       {metrics.map((metric, index) => {
-        const isExpanded = expandedMetric === metric.id;
         const isPositive = metric.change >= 0;
         const progress = Math.min((metric.value / metric.target) * 100, 100);
         
@@ -79,17 +66,16 @@ const MetricsGrid: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             className="metric-card"
-            onClick={() => toggleExpanded(metric.id)}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="metric-header">
               <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                className="metric-icon"
                 style={{ backgroundColor: metric.color }}
               >
-                <metric.icon className="w-5 h-5 text-white" />
+                <metric.icon className="w-5 h-5" />
               </div>
-              <div className={`status-indicator ${isPositive ? 'status-success' : 'status-error'}`}>
+              <div className={`metric-change ${isPositive ? 'positive' : 'negative'}`}>
                 {isPositive ? (
                   <TrendingUpIcon className="w-3 h-3" />
                 ) : (
@@ -100,30 +86,25 @@ const MetricsGrid: React.FC = () => {
             </div>
 
             {/* Value */}
-            <div className="mb-3">
-              <div className="flex items-baseline space-x-1">
-                <span className="text-2xl font-bold text-foreground">
+            <div>
+              <div className="flex items-baseline gap-1">
+                <span className="metric-value">
                   {metric.value.toLocaleString()}
                 </span>
                 <span className="text-caption">{metric.unit}</span>
               </div>
-              <div className="text-body font-medium text-foreground mt-1">
-                {metric.label}
-              </div>
+              <div className="metric-label">{metric.label}</div>
             </div>
-
-            {/* Status */}
-            <div className="text-caption mb-4">{metric.status}</div>
 
             {/* Progress */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-caption">
-                <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
+              <div className="flex justify-between text-label">
+                <span>Target: {metric.target.toLocaleString()}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
-              <div className="progress-bar">
+              <div className="progress">
                 <motion.div
-                  className="progress-fill"
+                  className="progress-bar"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
@@ -131,32 +112,6 @@ const MetricsGrid: React.FC = () => {
                 />
               </div>
             </div>
-
-            {/* Expand Indicator */}
-            <div className="flex items-center justify-center mt-4">
-              <motion.div
-                animate={{ rotate: isExpanded ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <ChevronDownIcon className="w-4 h-4 text-muted-foreground" />
-              </motion.div>
-            </div>
-
-            {/* Expanded Content */}
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 pt-4 border-t border-border"
-                >
-                  <div className="text-caption">
-                    Detailed analytics and trends for {metric.label.toLowerCase()} coming soon.
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </motion.div>
         );
       })}

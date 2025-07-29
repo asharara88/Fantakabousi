@@ -7,7 +7,7 @@ interface ReadinessScoreProps {
 }
 
 const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
-  const radius = 70;
+  const radius = 60;
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = `${(score / 100) * circumference} ${circumference}`;
 
@@ -26,44 +26,47 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   };
 
   return (
-    <div className="card-premium">
+    <div className="card">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div 
+            className="w-10 h-10 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: getScoreColor(score) }}
+          >
             <SparklesIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-heading-lg text-foreground">Biowell Score</h2>
+            <h2 className="text-title">Biowell Score</h2>
             <p className="text-caption">Your daily wellness index</p>
           </div>
         </div>
-        <div className={`status-indicator status-${score >= 70 ? 'success' : score >= 55 ? 'warning' : 'error'}`}>
+        <div className={`status ${score >= 70 ? 'status-success' : score >= 55 ? 'status-warning' : 'status-error'}`}>
           {getScoreStatus(score)}
         </div>
       </div>
 
-      {/* Score Ring */}
-      <div className="flex justify-center mb-8">
-        <div className="relative">
-          <svg width="160" height="160" className="transform -rotate-90">
+      <div className="flex items-center gap-8">
+        {/* Score Ring */}
+        <div className="relative flex-shrink-0">
+          <svg width="140" height="140" className="transform -rotate-90">
             {/* Background circle */}
             <circle
-              cx="80"
-              cy="80"
+              cx="70"
+              cy="70"
               r={radius}
               stroke="hsl(var(--muted))"
-              strokeWidth="8"
+              strokeWidth="6"
               fill="none"
             />
             
             {/* Progress circle */}
             <motion.circle
-              cx="80"
-              cy="80"
+              cx="70"
+              cy="70"
               r={radius}
               stroke={getScoreColor(score)}
-              strokeWidth="8"
+              strokeWidth="6"
               fill="none"
               strokeLinecap="round"
               initial={{ strokeDasharray: "0 " + circumference }}
@@ -79,40 +82,40 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                className="text-4xl font-bold text-foreground"
+                className="text-3xl font-bold text-foreground"
               >
                 {score}
               </motion.div>
-              <div className="text-caption">Score</div>
+              <div className="text-label">SCORE</div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Breakdown */}
-      <div className="grid-premium grid-cols-4">
-        {[
-          { label: 'Sleep', value: 68, color: '#6366f1' },
-          { label: 'Activity', value: 72, color: '#06b6d4' },
-          { label: 'Nutrition', value: 58, color: '#f59e0b' },
-          { label: 'Recovery', value: 52, color: '#ef4444' }
-        ].map((item, index) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 + index * 0.1 }}
-            className="text-center"
-          >
-            <div 
-              className="text-xl font-bold mb-1"
-              style={{ color: item.color }}
+        {/* Breakdown */}
+        <div className="flex-1 grid grid-2 gap-4">
+          {[
+            { label: 'Sleep', value: 68, color: '#6366f1' },
+            { label: 'Activity', value: 72, color: '#06b6d4' },
+            { label: 'Nutrition', value: 58, color: '#f59e0b' },
+            { label: 'Recovery', value: 52, color: '#ef4444' }
+          ].map((item, index) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              className="text-center"
             >
-              {item.value}
-            </div>
-            <div className="text-caption">{item.label}</div>
-          </motion.div>
-        ))}
+              <div 
+                className="text-xl font-bold mb-1"
+                style={{ color: item.color }}
+              >
+                {item.value}
+              </div>
+              <div className="text-caption">{item.label}</div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -19,56 +19,56 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       id: 'coach',
       title: 'Chat with Coach',
       icon: ChatBubbleLeftRightIcon,
-      color: 'var(--primary)',
+      color: '#8b5cf6',
       badge: 'New'
     },
     {
       id: 'health',
       title: 'View Analytics',
       icon: ChartBarIcon,
-      color: 'var(--secondary)',
+      color: '#06b6d4',
       badge: null
     },
     {
       id: 'workout',
       title: 'Log Workout',
       icon: PlusIcon,
-      color: 'var(--warning)',
+      color: '#f59e0b',
       badge: null
     },
     {
       id: 'scan',
       title: 'Scan Food',
       icon: CameraIcon,
-      color: 'var(--success)',
+      color: '#10b981',
       badge: 'Beta'
     },
     {
       id: 'vitals',
       title: 'Check Vitals',
       icon: HeartIcon,
-      color: 'var(--error)',
+      color: '#ef4444',
       badge: null
     },
     {
       id: 'schedule',
       title: 'Schedule',
       icon: CalendarIcon,
-      color: 'var(--accent)',
+      color: '#6366f1',
       badge: null
     }
   ];
 
   return (
-    <div className="stack stack-lg">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="cluster justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-title">Quick Actions</h2>
         <button className="btn btn-ghost btn-sm">Customize</button>
       </div>
       
       {/* Actions Grid */}
-      <div className="grid grid-3 grid-md">
+      <div className="grid grid-3 md:grid-6 gap-4">
         {actions.map((action, index) => (
           <motion.button
             key={action.id}
@@ -78,25 +78,23 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onActionClick?.(action.id)}
-            className="card card-flat text-left relative"
+            className="card card-compact text-center relative cursor-pointer"
           >
             {action.badge && (
-              <div className="absolute top-3 right-3 status status-success">
+              <div className="absolute top-2 right-2 status status-success text-xs">
                 {action.badge}
               </div>
             )}
             
-            <div className="stack stack-md">
+            <div className="space-y-3">
               <div 
-                className="avatar avatar-md"
+                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto"
                 style={{ backgroundColor: action.color }}
               >
-                <action.icon className="icon icon-lg" />
+                <action.icon className="w-6 h-6 text-white" />
               </div>
               
-              <div className="stack stack-sm">
-                <span className="text-heading">{action.title}</span>
-              </div>
+              <span className="text-body font-medium">{action.title}</span>
             </div>
           </motion.button>
         ))}

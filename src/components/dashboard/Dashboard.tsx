@@ -7,26 +7,14 @@ import MetricsGrid from './MetricsGrid';
 import HealthInsights from './HealthInsights';
 import QuickActions from './QuickActions';
 import ReadinessScore from './ReadinessScore';
-import WellnessScore from './WellnessScore';
 import AICoach from './AICoach';
 import HealthDashboard from './HealthDashboard';
 import SupplementShop from './SupplementShop';
 import ProfileSettings from './ProfileSettings';
-import Container from '../ui/Container';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
-
-  // Listen for navigation events from other components
-  React.useEffect(() => {
-    const handleNavigateToCoach = () => {
-      setActiveTab('coach');
-    };
-
-    window.addEventListener('navigateToCoach', handleNavigateToCoach);
-    return () => window.removeEventListener('navigateToCoach', handleNavigateToCoach);
-  }, []);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -40,37 +28,29 @@ const Dashboard: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
-          <main id="main-content" className="stack stack-xl" role="main" aria-label="Health Dashboard">
+          <main className="space-y-8">
             {/* Welcome Section */}
-            <div className="text-center stack stack-sm" role="banner">
-              <h1 className="text-display" id="page-title">
-                Good Morning, Ahmed
-              </h1>
-              <p className="text-caption max-w-xl mx-auto" role="doc-subtitle">
+            <div className="text-center space-y-2">
+              <h1 className="text-display">Good Morning, Ahmed</h1>
+              <p className="text-caption max-w-xl mx-auto">
                 Your daily health insights and wellness metrics.
               </p>
             </div>
 
             {/* Biowell Score */}
-            <section aria-labelledby="biowell-score-heading">
-              <ReadinessScore score={62} />
-            </section>
+            <ReadinessScore score={62} />
 
             {/* Metrics Grid */}
-            <section aria-labelledby="metrics-heading" className="stack stack-md">
-              <h2 id="metrics-heading" className="text-title">Today's Metrics</h2>
+            <div className="space-y-4">
+              <h2 className="text-title">Today's Metrics</h2>
               <MetricsGrid />
-            </section>
+            </div>
 
             {/* Health Insights */}
-            <section aria-labelledby="insights-heading">
-              <HealthInsights />
-            </section>
+            <HealthInsights />
 
             {/* Quick Actions */}
-            <section aria-labelledby="actions-heading">
-              <QuickActions onActionClick={handleQuickAction} />
-            </section>
+            <QuickActions onActionClick={handleQuickAction} />
           </main>
         );
 
@@ -99,35 +79,32 @@ const Dashboard: React.FC = () => {
 
   return (
     <AccessibilityProvider>
-    <div className="min-h-screen bg-background" data-testid="dashboard">
-      <Navigation 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange}
-        aria-label="Main navigation"
-      />
-      
-      {/* Main Content */}
-      <div className="lg:ml-72 min-h-screen">
-        <div className="container py-6 lg:py-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              role="main"
-              aria-live="polite"
-            >
-              {renderContent()}
-            </motion.div>
-          </AnimatePresence>
+      <div className="min-h-screen bg-background">
+        <Navigation 
+          activeTab={activeTab} 
+          onTabChange={handleTabChange}
+        />
+        
+        {/* Main Content */}
+        <div className="lg:ml-72 min-h-screen">
+          <div className="container py-8">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile spacing for bottom navigation */}
-      <div className="lg:hidden h-16" />
-    </div>
+        {/* Mobile spacing for bottom navigation */}
+        <div className="lg:hidden h-20" />
+      </div>
     </AccessibilityProvider>
   );
 };

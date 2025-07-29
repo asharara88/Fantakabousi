@@ -17,7 +17,7 @@ const HealthInsights: React.FC = () => {
       title: 'Glucose Spikes',
       message: 'CGM shows 8 spikes this week averaging 185 mg/dL post-meal.',
       confidence: 94,
-      color: 'var(--error)'
+      color: '#ef4444'
     },
     {
       id: 'workout',
@@ -26,7 +26,7 @@ const HealthInsights: React.FC = () => {
       title: 'Optimal Training',
       message: 'Readiness score of 87 suggests ideal conditions for high-intensity training.',
       confidence: 89,
-      color: 'var(--success)'
+      color: '#10b981'
     },
     {
       id: 'sleep',
@@ -35,19 +35,19 @@ const HealthInsights: React.FC = () => {
       title: 'Sleep Protocol',
       message: 'Deep sleep at 45min vs 90min target. Consider magnesium supplementation.',
       confidence: 88,
-      color: 'var(--info)'
+      color: '#3b82f6'
     }
   ];
 
   return (
-    <div className="stack stack-lg">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="cluster justify-between">
-        <div className="cluster cluster-md">
-          <div className="avatar avatar-md" style={{ backgroundColor: 'var(--accent)' }}>
-            <BeakerIcon className="icon icon-lg" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center">
+            <BeakerIcon className="w-5 h-5 text-white" />
           </div>
-          <div className="stack stack-sm">
+          <div>
             <h2 className="text-title">Health Insights</h2>
             <p className="text-caption">AI recommendations from your data</p>
           </div>
@@ -56,24 +56,24 @@ const HealthInsights: React.FC = () => {
       </div>
       
       {/* Insights Grid */}
-      <div className="grid grid-auto grid-md">
+      <div className="grid md:grid-3 gap-4">
         {insights.map((insight, index) => (
           <motion.div
             key={insight.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="card card-flat"
+            className="card card-compact"
           >
-            <div className="stack stack-md">
+            <div className="space-y-4">
               {/* Header */}
-              <div className="cluster justify-between">
-                <div className="cluster cluster-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
                   <div 
-                    className="avatar avatar-sm"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
                     style={{ backgroundColor: insight.color }}
                   >
-                    <insight.icon className="icon icon-sm" />
+                    <insight.icon className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-heading">{insight.title}</span>
                 </div>
@@ -84,15 +84,15 @@ const HealthInsights: React.FC = () => {
               <p className="text-body">{insight.message}</p>
 
               {/* Actions */}
-              <div className="cluster justify-between">
+              <div className="flex items-center justify-between">
                 <button 
                   className="btn btn-primary btn-sm"
                   style={{ backgroundColor: insight.color }}
                 >
                   Take Action
                 </button>
-                <button className="btn btn-ghost btn-sm cluster cluster-sm">
-                  <ChatBubbleLeftRightIcon className="icon icon-sm" />
+                <button className="btn btn-ghost btn-sm">
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
                   Ask Coach
                 </button>
               </div>
@@ -102,14 +102,14 @@ const HealthInsights: React.FC = () => {
       </div>
 
       {/* Status */}
-      <div className="card card-flat">
-        <div className="cluster justify-between">
-          <div className="cluster cluster-sm">
+      <div className="card card-compact">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
             <span className="text-caption">Updated 2 minutes ago</span>
           </div>
-          <button className="btn btn-primary btn-sm cluster cluster-sm">
-            <SparklesIcon className="icon icon-sm" />
+          <button className="btn btn-primary btn-sm">
+            <SparklesIcon className="w-4 h-4" />
             Chat with Coach
           </button>
         </div>
