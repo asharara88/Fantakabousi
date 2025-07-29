@@ -9,7 +9,8 @@ import {
   ArrowTrendingUpIcon,
   ClockIcon,
   ChatBubbleLeftRightIcon,
-  BeakerIcon
+  BeakerIcon,
+  ArrowRightIcon
 } from '@heroicons/react/24/outline';
 
 const HealthInsights: React.FC = () => {
@@ -67,7 +68,7 @@ const HealthInsights: React.FC = () => {
       priority: 'medium',
       timestamp: '12 hours ago',
       confidence: 86,
-      action: 'Adjust Training',
+      action: 'Adjust Training'
     }
   ];
 
@@ -79,6 +80,17 @@ const HealthInsights: React.FC = () => {
         return <div className="w-3 h-3 bg-yellow-400 rounded-full shadow-lg" />;
       default:
         return <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg" />;
+    }
+  };
+
+  const getPriorityVariant = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'error';
+      case 'medium':
+        return 'warning';
+      default:
+        return 'success';
     }
   };
 
@@ -183,7 +195,7 @@ const HealthInsights: React.FC = () => {
         </div>
       </div>
     </div>
-            <div className="flex items-center space-x-3">
+  );
 };
 
 export default HealthInsights;
