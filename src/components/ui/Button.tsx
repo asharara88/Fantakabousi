@@ -49,8 +49,9 @@ const Button: React.FC<ButtonProps> = ({
     <motion.button
       whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size }), 'touch-target apple-focus', className)}
       disabled={disabled || loading}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
       {...props}
     >
       {loading && (

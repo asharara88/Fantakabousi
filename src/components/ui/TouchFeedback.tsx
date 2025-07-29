@@ -7,6 +7,7 @@ interface TouchFeedbackProps {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  hapticType?: 'selection' | 'impact' | 'notification';
 }
 
 const TouchFeedback: React.FC<TouchFeedbackProps> = ({
@@ -15,8 +16,29 @@ const TouchFeedback: React.FC<TouchFeedbackProps> = ({
   className = '',
   onClick,
   disabled = false,
+  hapticType = 'impact',
 }) => {
-  const getIntensityClass = () => {
+  const handleClick = () => {
+    if (disabled || !onClick) return;
+    
+    // Trigger haptic feedback on iOS
+    if ('vibrate' in navigator) {
+      switch (intensity) {
+        case 'light':
+          navigator.vibrate(10);
+          break;
+        case 'heavy':
+          navigator.vibrate(50);
+          break;
+        default:
+          navigator.vibrate(25);
+      }
+    }
+    
+    onClick();
+  };
+
+  const getHapticClass = () => {
     switch (intensity) {
       case 'light':
         return 'haptic-light';
@@ -29,10 +51,11 @@ const TouchFeedback: React.FC<TouchFeedbackProps> = ({
 
   return (
     <motion.div
-      className={`${getIntensityClass()} ${className} ${disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}`}
-      onClick={disabled ? undefined : onClick}
+      className={`${getHapticClass()} touch-target ${className} ${disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}`}
+      onClick={handleClick}
       whileTap={{ scale: intensity === 'light' ? 0.98 : intensity === 'heavy' ? 0.92 : 0.95 }}
-      transition={{ duration: 0.1, ease: 'easeOut' }}
+      transition={{ duration: 0.15, ease: 'easeOut' }}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
       {children}
     </motion.div>

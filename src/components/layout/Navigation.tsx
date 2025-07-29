@@ -285,14 +285,14 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab = 'dashboard', onTabC
       </AnimatePresence>
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-20 border-t border-border">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-20 border-t border-border safe-area-bottom">
         <div className="px-4 py-3">
-          <div className="bg-card/95 backdrop-blur-20 rounded-2xl p-2 border border-border/50">
+          <div className="bg-card/95 backdrop-blur-20 rounded-2xl p-2 border border-border/50 apple-shadow">
             <div className="flex items-center justify-around w-full">
               {navItems.slice(0, 5).map((item, index) => (
                 <button
                   key={item.name}
-                  className={`flex flex-col items-center space-y-1 p-2 rounded-xl transition-all duration-200 flex-1 min-w-0 ${
+                  className={`touch-target flex flex-col items-center space-y-1 p-2 rounded-xl transition-all duration-200 flex-1 min-w-0 haptic-medium ${
                     activeTab === item.id
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground'

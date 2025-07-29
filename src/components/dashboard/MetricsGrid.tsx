@@ -294,8 +294,9 @@ const MetricsGrid: React.FC = () => {
           transition={{ delay: index * 0.1, duration: 0.8 }}
           className={`card-premium w-full box-border p-3 lg:p-6 cursor-pointer transition-all duration-300 ${
             isExpanded ? 'col-span-2 lg:col-span-2' : ''
-          }`}
+          } touch-target haptic-medium apple-shadow`}
           onClick={() => toggleCard(metric.id)}
+          style={{ WebkitTapHighlightColor: 'transparent' }}
           layout
         >
           <div className="flex items-center justify-between mb-3 lg:mb-4 w-full">
