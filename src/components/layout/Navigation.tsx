@@ -1,324 +1,436 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MobileContainer } from '../ui/MobileOptimized';
+import { useState } from 'react';
+import { MobileCard } from '../ui/MobileOptimized';
 import { 
-  HomeIcon, 
-  ChatBubbleLeftRightIcon, 
-  HeartIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
-  XMarkIcon,
-  SparklesIcon,
-  BellIcon
+  MoonIcon, 
+  BoltIcon, 
+  HeartIcon, 
+  FireIcon,
+  ScaleIcon,
+  ClockIcon,
+  BeakerIcon,
+  ArrowTrendingUpIcon,
+  ChartBarIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CalendarIcon,
+  ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline';
 
-interface NavigationProps {
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
-}
+const MetricsGrid: React.FC = () => {
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
-const Navigation: React.FC<NavigationProps> = ({ activeTab = 'dashboard', onTabChange }) => {
-  const { signOut } = useAuth();
-  const { actualTheme } = useTheme();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Use the exact Biowell logo URLs provided
-  const logoUrl = actualTheme === 'dark' 
-    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI" // White logo for dark background
-    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY"; // Dark logo for light background
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navItems = [
-    { 
-      name: 'Dashboard', 
-      id: 'dashboard',
-      icon: HomeIcon, 
-      href: '/', 
-      badge: false
+  const metrics = [
+    {
+      id: 'sleep',
+      name: 'Sleep Score',
+      value: '68',
+      unit: '%',
+      change: '-3%',
+      trend: 'down',
+      icon: MoonIcon,
+      color: '#3b82f6',
+      status: 'Low deep sleep',
+      chart: [72, 69, 65, 71, 68, 66, 68],
+      target: 85,
+      details: {
+        deepSleep: '45m',
+        remSleep: '1h 20m',
+        efficiency: '78%',
+        bedtime: '11:45 PM',
+        wakeTime: '6:30 AM',
+        restlessness: 'High',
+        weeklyAverage: '69',
+        trend7d: '-5%',
+        insights: [
+          'Deep sleep significantly below optimal (45m vs 90m target)',
+          'Late bedtime affecting sleep quality',
+          'Consider sleep hygiene improvements for fertility'
+        ]
+      }
     },
-    { 
-      name: 'Coach', 
-      id: 'coach',
-      icon: ChatBubbleLeftRightIcon, 
-      href: '/coach', 
-      badge: true
+    {
+      id: 'steps',
+      name: 'Daily Steps',
+      value: '8,234',
+      unit: '',
+      change: '-12%',
+      trend: 'down',
+      icon: BoltIcon,
+      color: '#06b6d4',
+      status: 'Below target',
+      chart: [9200, 8800, 7900, 8500, 8100, 8400, 8234],
+      target: 10000,
+      details: {
+        activeMinutes: '52 min',
+        distance: '6.1 km',
+        calories: '312 kcal',
+        floors: '8 flights',
+        peakHour: '7-8 AM',
+        avgPace: '13:45/km',
+        weeklyTotal: '57,634',
+        trend7d: '-8%',
+        insights: [
+          'Activity levels below target for muscle building',
+          'Increase daily movement for insulin sensitivity',
+          'Consider morning walks to boost metabolism'
+        ]
+      }
     },
-    { 
-      name: 'Health', 
-      id: 'health',
-      icon: HeartIcon, 
-      href: '/health', 
-      badge: false
+    {
+      id: 'heart_rate',
+      name: 'Resting HR',
+      value: '72',
+      unit: 'bpm',
+      change: '+2%',
+      trend: 'up',
+      icon: HeartIcon,
+      color: '#ef4444',
+      status: 'Elevated',
+      chart: [70, 71, 73, 72, 74, 71, 72],
+      target: 65,
+      details: {
+        maxHR: '182 bpm',
+        avgHR: '78 bpm',
+        hrv: '28 ms',
+        zones: {
+          zone1: '32 min',
+          zone2: '18 min',
+          zone3: '8 min',
+          zone4: '3 min'
+        },
+        recovery: 'Poor',
+        weeklyAvg: '72 bpm',
+        trend7d: '+3%',
+        insights: [
+          'Elevated RHR may indicate stress or overtraining',
+          'Low HRV suggests autonomic imbalance',
+          'Focus on stress management and recovery'
+        ]
+      }
     },
-    { 
-      name: 'Stack', 
-      id: 'shop',
-      icon: ShoppingBagIcon, 
-      href: '/supplements', 
-      badge: false
+    {
+      id: 'calories',
+      name: 'Calories',
+      value: '2,890',
+      unit: 'kcal',
+      change: '+8%',
+      trend: 'up',
+      icon: FireIcon,
+      gradient: 'from-blue-800 to-blue-900',
+      description: 'Muscle building phase',
+      chart: [2750, 2820, 2680, 2900, 2850, 2920, 2890],
+      target: 2800,
+      details: {
+        bmr: '1,920 kcal',
+        active: '520 kcal',
+        exercise: '380 kcal',
+        neat: '140 kcal',
+        efficiency: 'High',
+        metabolicAge: '42 years',
+        weeklyAvg: '2,832 kcal',
+        trend7d: '+5%',
+        insights: [
+          'Caloric surplus supporting muscle growth',
+          'Monitor glucose response to higher intake',
+          'Protein timing crucial for muscle synthesis'
+        ]
+      }
     },
-    { 
-      name: 'Profile', 
-      id: 'profile',
-      icon: UserCircleIcon, 
-      href: '/profile', 
-      badge: false
+    {
+      id: 'weight',
+      name: 'Weight',
+      value: '90.2',
+      unit: 'kg',
+      change: '+0.3%',
+      trend: 'up',
+      icon: ScaleIcon,
+      gradient: 'from-blue-500 to-blue-700',
+      description: 'Lean muscle gain',
+      chart: [89.8, 89.9, 90.1, 90.0, 90.3, 90.1, 90.2],
+      target: 88,
+      details: {
+        bmi: '27.8',
+        bodyFat: '18.2%',
+        muscleMass: '68.4 kg',
+        waterWeight: '58.3%',
+        boneDensity: 'Normal',
+        visceralFat: 'Moderate',
+        weeklyChange: '+0.3 kg',
+        trend7d: '+0.4%',
+        insights: [
+          'Weight gain from muscle building phase',
+          'Body fat slightly elevated for fertility goals',
+          'Focus on lean mass while reducing visceral fat'
+        ]
+      }
+    },
+    {
+      id: 'workout',
+      name: 'Workout',
+      value: '75',
+      unit: 'min',
+      change: '+15%',
+      trend: 'up',
+      icon: ClockIcon,
+      gradient: 'from-blue-600 to-blue-800',
+      description: 'Heavy compound lifts',
+      chart: [60, 65, 70, 68, 75, 72, 75],
+      target: 60,
+      details: {
+        type: 'Compound Strength',
+        intensity: 'High',
+        sets: '18 sets',
+        reps: '108 total',
+        volume: '4,320 kg',
+        restTime: '3m avg',
+        weeklyTotal: '5h 30m',
+        trend7d: '+12%',
+        insights: [
+          'Progressive overload supporting muscle growth',
+          'Heavy compound movements boost testosterone',
+          'Adequate rest between sets for strength gains'
+        ]
+      }
+    },
+    {
+      id: 'glucose',
+      name: 'Glucose',
+      value: '142',
+      unit: 'mg/dL',
+      change: '+8%',
+      trend: 'up',
+      icon: BeakerIcon,
+      color: '#10b981',
+      status: 'High',
+      chart: [138, 145, 140, 148, 142, 146, 142],
+      target: 100,
+      details: {
+        fasting: '108 mg/dL',
+        postMeal: '185 mg/dL',
+        avgDaily: '142 mg/dL',
+        timeInRange: '62%',
+        spikes: '8 events',
+        stability: 'Poor',
+        weeklyAvg: '143 mg/dL',
+        trend7d: '+6%',
+        insights: [
+          'Elevated glucose indicating insulin resistance',
+          'Post-meal spikes affecting fertility hormones',
+          'CGM data shows need for dietary intervention'
+        ]
+      }
+    },
+    {
+      id: 'strain',
+      name: 'Strain',
+      value: '16.8',
+      unit: '/21',
+      change: '+12%',
+      trend: 'up',
+      icon: ArrowTrendingUpIcon,
+      gradient: 'from-blue-800 to-blue-500',
+      description: 'High training load',
+      chart: [15.2, 16.1, 15.8, 16.5, 16.2, 17.1, 16.8],
+      target: 15,
+      details: {
+        cardiovascular: '14.2',
+        muscular: '18.4',
+        recovery: '12.5 hrs',
+        efficiency: 'Moderate',
+        adaptation: 'Slow',
+        overreaching: 'Risk',
+        weeklyAvg: '16.2',
+        trend7d: '+10%',
+        insights: [
+          'High training strain may impact recovery',
+          'Extended recovery time affecting sleep',
+          'Consider deload week for hormone optimization'
+        ]
+      }
     },
   ];
 
+  const toggleCard = (metricId: string) => {
+    setExpandedCard(expandedCard === metricId ? null : metricId);
+  };
+
+  const MiniChart: React.FC<{ data: number[]; color: string }> = ({ data, color }) => {
+    const max = Math.max(...data, target || 0);
+    const min = Math.min(...data, target || 0);
+    const range = max - min || 1;
+    
+    return (
+      <div className="flex items-end space-x-0.5 h-6 w-16">
+        {data.map((value, index) => {
+          const height = ((value - min) / range) * 100;
+          return (
+            <motion.div
+              key={index}
+              className="rounded-sm opacity-60 last:opacity-100"
+              style={{ 
+                width: '2px', 
+                minWidth: '2px',
+                backgroundColor: color,
+                height: `${Math.max(height, 8)}%`
+              }}
+              initial={{ height: 0 }}
+              animate={{ height: `${Math.max(height, 8)}%` }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
-    <>
-      {/* Desktop Navigation - Hidden on mobile */}
-      <nav className="hidden lg:flex fixed left-0 top-0 h-full w-80 z-50">
-        <div className="card-minimal w-full m-4 flex flex-col py-6 px-4 space-y-6">
-          {/* Logo */}
+    <div className="layout-grid grid-cols-2 lg:grid-cols-4">
+      {metrics.map((metric, index) => {
+        const isExpanded = expandedCard === metric.id;
+        
+        return (
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 200 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative"
+            key={metric.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className={`metric-card cursor-pointer ${isExpanded ? 'col-span-2' : ''}`}
+            onClick={() => toggleCard(metric.id)}
           >
-            <div className="w-28 h-10 flex items-center">
-              <img 
-                src={logoUrl}
-                alt="Biowell"
-                className="h-16 w-auto object-contain max-w-full"
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div 
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: metric.color }}
+              >
+                <metric.icon className="w-4 h-4 text-white" />
+              </div>
+              <div className={`status-badge ${
+                metric.trend === 'up' ? 'status-warning' : 'status-success'
+              }`}>
+                {metric.change}
+              </div>
+            </div>
+            
+            {/* Value */}
+            <div className="mb-2">
+              <div className="flex items-baseline space-x-1">
+                <span className="metric-value">{metric.value}</span>
+                <span className="text-micro">{metric.unit}</span>
+              </div>
+            </div>
+            
+            {/* Label and Status */}
+            <div className="flex items-center justify-between mb-3">
+              <span className="metric-label">{metric.name}</span>
+              <ChevronDownIcon 
+                className={`w-4 h-4 text-muted-foreground transition-transform ${
+                  isExpanded ? 'rotate-180' : ''
+                }`} 
               />
             </div>
-          </motion.div>
-
-          {/* Navigation Items */}
-          <div className="flex flex-col space-y-2">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={item.name}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                className={`relative flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 w-full ${
-                  activeTab === item.id
-                    ? 'bg-primary/10 text-primary border border-primary/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-                onClick={() => onTabChange?.(item.id)}
+            
+            <div className="text-subtitle mb-3">{metric.status}</div>
+            
+            {/* Chart and Progress */}
+            <div className="flex items-center justify-between">
+              <MiniChart data={metric.chart} color={metric.color} />
+              <div className="text-micro">vs {metric.target}</div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="progress-container mt-3">
+              <div 
+                className="progress-bar"
+                style={{ 
+                  width: `${Math.min((parseInt(metric.value.replace(',', '')) / metric.target) * 100, 100)}%`,
+                  backgroundColor: metric.color
+                }}
+              />
+            </div>
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4 pt-4 border-t border-border space-y-4"
               >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium text-sm">{item.name}</span>
-                
-                {activeTab === item.id && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute right-2 w-0.5 h-6 bg-primary rounded-full"
-                  />
-                )}
-                
-                {item.badge && (
-                  <div className="ml-auto w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-                )}
-              </motion.button>
-            ))}
-          </div>
-
-          {/* AI Status */}
-          <div className="flex-1 flex items-end justify-center pb-6">
-            <div className="relative w-full">
-              <div className="flex items-center space-x-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                <SparklesIcon className="w-4 h-4 text-green-400" />
-                <div>
-                  <div className="text-sm font-medium text-foreground">Coach</div>
-                  <div className="text-xs text-green-500">Online</div>
-                </div>
-              </div>
-              <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></div>
-            </div>
-          </div>
-
-          {/* Bottom Actions */}
-          <div className="flex flex-col space-y-2">
-            <button
-              whileHover={{ scale: 1.05, y: -2 }}
-              className="flex items-center space-x-3 p-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-300 w-full"
-            >
-              <Cog6ToothIcon className="w-5 h-5" />
-              <span className="font-medium text-sm">Settings</span>
-            </button>
-            
-            <button
-              whileHover={{ scale: 1.05, y: -2 }}
-              onClick={signOut}
-              className="flex items-center space-x-3 p-3 rounded-lg text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-all duration-300 w-full"
-            >
-              <ArrowRightOnRectangleIcon className="w-5 h-5" />
-              <span className="font-medium text-sm">Sign Out</span>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Header */}
-      <header className={`lg:hidden fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/90 backdrop-blur-20' : 'bg-background/60 backdrop-blur-10'
-      }`}>
-        <div className="container-premium">
-          <div className="flex items-center justify-between h-14 border-b border-border/50">
-            <div className="flex items-center space-x-3">
-              <div className="w-20 h-6">
-                <img 
-                  src={logoUrl}
-                  alt="Biowell"
-                  className="h-full w-auto object-contain max-w-full"
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              <button className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <BellIcon className="w-5 h-5" />
-                <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-              </button>
-              
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {isMobileMenuOpen ? (
-                  <XMarkIcon className="w-5 h-5" />
-                ) : (
-                  <Bars3Icon className="w-5 h-5" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute left-0 top-0 bottom-0 w-72 bg-background/95 backdrop-blur-20 border-r border-border shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 pt-16">
-                <div className="flex items-center space-x-3 mb-8">
-                  <div className="w-24 h-8">
-                    <img 
-                      src={logoUrl}
-                      alt="Biowell"
-                      className="h-full w-auto object-contain max-w-full"
-                    />
-                  </div>
-                </div>
-
-                <nav className="space-y-2">
-                  {navItems.map((item, index) => (
-                    <motion.button
-                      key={item.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-300 ${
-                        item.active
-                          ? 'bg-primary/10 text-primary border border-primary/20'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <div className="relative">
-                        <item.icon className="w-5 h-5" />
-                        {item.badge && (
-                          <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-                        )}
+                {/* Detailed Stats */}
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.entries(metric.details).slice(0, 6).map(([key, value]) => {
+                    if (key === 'insights' || key === 'zones') return null;
+                    return (
+                      <div key={key} className="space-y-1">
+                        <div className="text-xs text-muted-foreground capitalize">
+                          {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                        </div>
+                        <div className="text-sm font-semibold text-foreground">
+                          {typeof value === 'string' ? value : `${value}`}
+                        </div>
                       </div>
-                      <span className="font-medium text-sm">{item.name}</span>
-                    </motion.button>
-                  ))}
-                </nav>
-
-                <div className="mt-6 pt-4 border-t border-border space-y-2">
-                  <button className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-300">
-                    <Cog6ToothIcon className="w-5 h-5" />
-                    <span className="font-medium text-sm">Settings</span>
-                  </button>
-                  
-                  <button
-                    onClick={signOut}
-                    className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
-                  >
-                    <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                    <span className="font-medium text-sm">Sign Out</span>
-                  </button>
+                    );
+                  })}
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-20 border-t border-border safe-area-bottom">
-        <div className="px-3 py-2">
-          <div className="bg-card/95 backdrop-blur-20 rounded-xl p-1.5 border border-border/50">
-            <div className="flex items-center justify-around w-full">
-              {navItems.slice(0, 5).map((item, index) => (
-                <button
-                  key={item.name}
-                  className={`touch-target flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-200 flex-1 min-w-0 haptic-medium ${
-                    activeTab === item.id
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  onClick={() => {
-                    onTabChange?.(item.id);
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <div className="relative flex items-center justify-center">
-                    <item.icon className="w-5 h-5" />
-                    {item.badge && (
-                      <div className="absolute -top-0.5 -right-0.5 w-1 h-1 bg-red-500 rounded-full animate-pulse"></div>
-                    )}
+                {/* Heart Rate Zones (if applicable) */}
+                {metric.details.zones && (
+                  <div className="space-y-2">
+                    <div className="text-xs text-muted-foreground">Heart Rate Zones</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(metric.details.zones).map(([zone, time]) => (
+                        <div key={zone} className="flex justify-between text-xs">
+                          <span className="text-muted-foreground capitalize">{zone}</span>
+                          <span className="text-foreground font-semibold">{time}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <span className="text-xs font-medium truncate w-full text-center leading-tight">
-                    {item.name}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+                )}
+
+                {/* Weekly Trend */}
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">7-day average</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-bold text-foreground">
+                      {metric.details.weeklyAvg || metric.details.weeklyTotal}
+                    </span>
+                    <div className={`flex items-center space-x-1 text-xs ${
+                      metric.details.trend7d?.startsWith('+') ? 'text-green-400' : 'text-blue-400'
+                    }`}>
+                      {metric.details.trend7d?.startsWith('+') ? (
+                        <ArrowTrendingUpIcon className="w-3 h-3" />
+                      ) : (
+                        <ArrowTrendingDownIcon className="w-3 h-3" />
+                      )}
+                      <span>{metric.details.trend7d}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Insights */}
+                <div className="space-y-2">
+                  <div className="text-xs text-muted-foreground">AI Insights</div>
+                  <div className="space-y-2">
+                    {metric.details.insights.map((insight, idx) => (
+                      <div key={idx} className="flex items-start space-x-2">
+                        <div className="w-1 h-1 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <span className="text-xs text-muted-foreground leading-relaxed">{insight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+        </motion.div>
+        );
+      })}
+    </div>
   );
 };
 
-export default Navigation;
+export default MetricsGrid;

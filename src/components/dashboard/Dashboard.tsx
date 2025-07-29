@@ -40,21 +40,16 @@ const Dashboard: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
-          <main id="main-content" className="space-y-12" role="main" aria-label="Health Dashboard">
+          <main id="main-content" className="stack stack-xl" role="main" aria-label="Health Dashboard">
             {/* Welcome Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center space-y-3"
-              role="banner"
-            >
-              <h1 className="text-heading-lg" id="page-title">
+            <div className="text-center stack stack-sm" role="banner">
+              <h1 className="text-display" id="page-title">
                 Good Morning, Ahmed
               </h1>
-              <p className="text-caption text-muted-foreground max-w-xl mx-auto" role="doc-subtitle">
+              <p className="text-caption max-w-xl mx-auto" role="doc-subtitle">
                 Your daily health insights and wellness metrics.
               </p>
-            </motion.div>
+            </div>
 
             {/* Biowell Score */}
             <section aria-labelledby="biowell-score-heading">
@@ -62,8 +57,8 @@ const Dashboard: React.FC = () => {
             </section>
 
             {/* Metrics Grid */}
-            <section aria-labelledby="metrics-heading" className="space-y-4">
-              <h2 id="metrics-heading" className="text-heading-lg text-foreground">Today's Metrics</h2>
+            <section aria-labelledby="metrics-heading" className="stack stack-md">
+              <h2 id="metrics-heading" className="text-title">Today's Metrics</h2>
               <MetricsGrid />
             </section>
 
@@ -112,8 +107,8 @@ const Dashboard: React.FC = () => {
       />
       
       {/* Main Content */}
-      <div className="lg:ml-80 min-h-screen">
-        <Container className="py-6 lg:py-8">
+      <div className="lg:ml-72 min-h-screen">
+        <div className="container py-6 lg:py-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -127,11 +122,11 @@ const Dashboard: React.FC = () => {
               {renderContent()}
             </motion.div>
           </AnimatePresence>
-        </Container>
+        </div>
       </div>
 
       {/* Mobile spacing for bottom navigation */}
-      <div className="lg:hidden h-20" />
+      <div className="lg:hidden h-16" />
     </div>
     </AccessibilityProvider>
   );

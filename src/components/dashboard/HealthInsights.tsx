@@ -1,197 +1,117 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import InternalLink from '../ui/InternalLink';
 import { 
-  LightBulbIcon, 
   ExclamationTriangleIcon, 
   CheckCircleIcon,
   SparklesIcon,
-  ArrowTrendingUpIcon,
-  ClockIcon,
-  ChatBubbleLeftRightIcon,
   BeakerIcon,
-  ArrowRightIcon
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
 const HealthInsights: React.FC = () => {
   const insights = [
     {
-      type: 'achievement',
-      icon: CheckCircleIcon,
-      title: 'Sleep Streak Achievement',
-      message: 'Your CGM shows 8 glucose spikes this week averaging 185 mg/dL post-meal. This may impact fertility hormones and muscle recovery.',
-      gradient: 'from-green-500 to-emerald-600',
-      priority: 'low',
-      timestamp: '2 days ago',
-      confidence: 94,
-      action: 'View Trends'
-    },
-    {
+      id: 'glucose',
       type: 'warning',
       icon: ExclamationTriangleIcon,
-      title: 'Glucose Spikes Detected',
-      message: 'Your CGM shows 8 glucose spikes this week averaging 185 mg/dL post-meal. This may impact fertility hormones and muscle recovery.',
-      gradient: 'from-red-500 to-pink-600',
-      priority: 'high',
-      timestamp: '6 hours ago',
+      title: 'Glucose Spikes',
+      message: 'CGM shows 8 spikes this week averaging 185 mg/dL post-meal.',
       confidence: 94,
-      action: 'Review Diet'
+      color: 'var(--error)'
     },
     {
-      type: 'optimization',
+      id: 'workout',
+      type: 'success',
       icon: SparklesIcon,
-      title: 'Pre-Workout Optimization',
-      message: 'Your readiness score of 87 suggests optimal conditions for high-intensity training. Consider taking creatine 30 minutes before your workout.',
-      gradient: 'from-blue-500 to-cyan-600',
-      priority: 'medium',
-      timestamp: '4 hours ago',
+      title: 'Optimal Training',
+      message: 'Readiness score of 87 suggests ideal conditions for high-intensity training.',
       confidence: 89,
-      action: 'View Protocol'
+      color: 'var(--success)'
     },
     {
-      type: 'optimization',
+      id: 'sleep',
+      type: 'info',
       icon: BeakerIcon,
-      title: 'Insulin Sensitivity Protocol',
-      message: 'Your insulin resistance requires targeted intervention. Consider metformin consultation and time-restricted eating windows.',
-      gradient: 'from-purple-500 to-indigo-600',
-      priority: 'high',
-      timestamp: '1 day ago',
+      title: 'Sleep Protocol',
+      message: 'Deep sleep at 45min vs 90min target. Consider magnesium supplementation.',
       confidence: 88,
-      action: 'Protocol Plan'
-    },
-    {
-      type: 'optimization',
-      icon: ArrowTrendingUpIcon,
-      title: 'Training Volume Optimization',
-      message: 'Your current training strain of 16.8/21 may be hindering recovery. Consider reducing volume by 20% to optimize hormone production.',
-      gradient: 'from-orange-500 to-red-600',
-      priority: 'medium',
-      timestamp: '12 hours ago',
-      confidence: 86,
-      action: 'Adjust Training'
+      color: 'var(--info)'
     }
   ];
 
-  const getPriorityIndicator = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse shadow-lg" />;
-      case 'medium':
-        return <div className="w-3 h-3 bg-yellow-400 rounded-full shadow-lg" />;
-      default:
-        return <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg" />;
-    }
-  };
-
-  const getPriorityVariant = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      default:
-        return 'success';
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <BeakerIcon className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-heading-lg text-foreground">Health Insights</h2>
-              <p className="text-caption">Smart recommendations from your data</p>
-            </div>
+    <div className="stack stack-lg">
+      {/* Header */}
+      <div className="cluster justify-between">
+        <div className="cluster cluster-md">
+          <div className="avatar avatar-md" style={{ backgroundColor: 'var(--accent)' }}>
+            <BeakerIcon className="icon icon-lg" />
+          </div>
+          <div className="stack stack-sm">
+            <h2 className="text-title">Health Insights</h2>
+            <p className="text-caption">AI recommendations from your data</p>
           </div>
         </div>
-        <button className="btn-ghost flex items-center space-x-2">
-          <span>View All</span>
-          <ArrowRightIcon className="w-4 h-4" />
-        </button>
+        <button className="btn btn-ghost btn-sm">View All</button>
       </div>
       
-      <div className="grid-premium grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Insights Grid */}
+      <div className="grid grid-auto grid-md">
         {insights.map((insight, index) => (
           <motion.div
-            key={index}
+            key={insight.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            className="card-minimal p-6 group hover:scale-[1.01] transition-all duration-300"
+            transition={{ delay: index * 0.1 }}
+            className="card card-flat"
           >
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 bg-gradient-to-br ${insight.gradient} rounded-lg flex items-center justify-center`}>
-                    <insight.icon className="w-5 h-5 text-white" />
+            <div className="stack stack-md">
+              {/* Header */}
+              <div className="cluster justify-between">
+                <div className="cluster cluster-sm">
+                  <div 
+                    className="avatar avatar-sm"
+                    style={{ backgroundColor: insight.color }}
+                  >
+                    <insight.icon className="icon icon-sm" />
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="text-body font-semibold text-foreground">
-                      {insight.title}
-                    </h4>
-                    <div className="flex items-center space-x-3">
-                      <div className={`status-indicator status-${getPriorityVariant(insight.priority)}`}>
-                        {insight.priority.toUpperCase()}
-                      </div>
-                      <div className="text-caption">
-                        AI: {insight.confidence}%
-                      </div>
-                    </div>
-                  </div>
+                  <span className="text-heading">{insight.title}</span>
                 </div>
+                <div className="text-label">AI: {insight.confidence}%</div>
               </div>
-              
-              <p className="text-body text-muted-foreground leading-relaxed">
-                {insight.message}
-              </p>
-              
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <button className={`btn-primary bg-gradient-to-r ${insight.gradient} text-sm px-4 py-2`}>
-                  {insight.action}
-                </button>
-                <InternalLink
-                  href="/coach"
-                  variant="ghost"
-                  className="text-sm flex items-center space-x-1"
-                  analytics={{
-                    event: 'insight_ask_coach',
-                    category: 'health_insights',
-                    label: insight.title,
-                  }}
+
+              {/* Message */}
+              <p className="text-body">{insight.message}</p>
+
+              {/* Actions */}
+              <div className="cluster justify-between">
+                <button 
+                  className="btn btn-primary btn-sm"
+                  style={{ backgroundColor: insight.color }}
                 >
-                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  <span>Ask Coach</span>
-                </InternalLink>
+                  Take Action
+                </button>
+                <button className="btn btn-ghost btn-sm cluster cluster-sm">
+                  <ChatBubbleLeftRightIcon className="icon icon-sm" />
+                  Ask Coach
+                </button>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
-      
-      <div className="card-minimal p-6 bg-muted/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="status-dot success animate-pulse"></div>
-            <div className="text-body font-medium text-foreground">
-              Last updated: 2 minutes ago
-            </div>
+
+      {/* Status */}
+      <div className="card card-flat">
+        <div className="cluster justify-between">
+          <div className="cluster cluster-sm">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+            <span className="text-caption">Updated 2 minutes ago</span>
           </div>
-          <InternalLink
-            href="/coach"
-            className="btn-primary flex items-center space-x-2"
-            analytics={{
-              event: 'start_ai_chat',
-              category: 'health_insights',
-              label: 'cta_button',
-            }}
-          >
-            <SparklesIcon className="w-4 h-4" />
-            <span>Chat with Coach</span>
-          </InternalLink>
+          <button className="btn btn-primary btn-sm cluster cluster-sm">
+            <SparklesIcon className="icon icon-sm" />
+            Chat with Coach
+          </button>
         </div>
       </div>
     </div>

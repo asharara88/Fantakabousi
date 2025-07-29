@@ -1,14 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import InternalLink from '../ui/InternalLink';
 import { 
   ChatBubbleLeftRightIcon,
   ChartBarIcon,
   PlusIcon,
-  CalendarIcon,
   CameraIcon,
   HeartIcon,
-  ArrowRightIcon
+  CalendarIcon
 } from '@heroicons/react/24/outline';
 
 interface QuickActionsProps {
@@ -18,135 +16,89 @@ interface QuickActionsProps {
 const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
   const actions = [
     {
-     title: 'Chat with Coach',
-      description: 'Get personalized health guidance',
+      id: 'coach',
+      title: 'Chat with Coach',
       icon: ChatBubbleLeftRightIcon,
-      gradient: 'from-blue-500 to-cyan-600',
-      badge: 'New insights',
-      href: '/coach',
-      tabId: 'coach',
-      action: 'Start Chat'
+      color: 'var(--primary)',
+      badge: 'New'
     },
     {
+      id: 'health',
       title: 'View Analytics',
-      description: 'Deep dive into your health trends',
       icon: ChartBarIcon,
-      gradient: 'from-emerald-500 to-green-600',
-      badge: null,
-      href: '/health',
-      tabId: 'health',
-      action: 'Explore Data'
+      color: 'var(--secondary)',
+      badge: null
     },
     {
+      id: 'workout',
       title: 'Log Workout',
-      description: 'Track your fitness session',
       icon: PlusIcon,
-      gradient: 'from-orange-500 to-red-600',
-      badge: null,
-      href: '/health',
-      tabId: 'health',
-      action: 'Add Workout',
+      color: 'var(--warning)',
+      badge: null
     },
     {
-      title: 'Schedule Check-in',
-      description: 'Book a wellness consultation',
-      icon: CalendarIcon,
-      gradient: 'from-purple-500 to-indigo-600',
-      badge: null,
-      href: '/coach',
-      tabId: 'coach',
-      action: 'Book Now',
-    },
-    {
+      id: 'scan',
       title: 'Scan Food',
-      description: 'AI-powered nutrition tracking',
       icon: CameraIcon,
-      gradient: 'from-green-500 to-emerald-600',
-      badge: 'Beta',
-      href: '/health',
-      tabId: 'health',
-      action: 'Scan Now',
+      color: 'var(--success)',
+      badge: 'Beta'
     },
     {
-      title: 'Health Check',
-      description: 'Quick vitals assessment',
+      id: 'vitals',
+      title: 'Check Vitals',
       icon: HeartIcon,
-      gradient: 'from-rose-500 to-pink-600',
-      badge: null,
-      href: '/health',
-      tabId: 'health',
-      action: 'Start Check',
+      color: 'var(--error)',
+      badge: null
     },
+    {
+      id: 'schedule',
+      title: 'Schedule',
+      icon: CalendarIcon,
+      color: 'var(--accent)',
+      badge: null
+    }
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <h2 className="text-heading-xl text-foreground">Quick Actions</h2>
-          <p className="text-caption">Access key features instantly</p>
-        </div>
-        <button className="btn-ghost flex items-center space-x-2">
-          <span>Customize</span>
-          <ArrowRightIcon className="w-4 h-4" />
-        </button>
+    <div className="stack stack-lg">
+      {/* Header */}
+      <div className="cluster justify-between">
+        <h2 className="text-title">Quick Actions</h2>
+        <button className="btn btn-ghost btn-sm">Customize</button>
       </div>
       
-      <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Actions Grid */}
+      <div className="grid grid-3 grid-md">
         {actions.map((action, index) => (
-          <motion.div
-            key={action.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
+          <motion.button
+            key={action.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.05 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onActionClick?.(action.id)}
+            className="card card-flat text-left relative"
           >
-            <InternalLink
-              href={action.href}
-              className="card-minimal p-4 h-full text-left group hover:scale-[1.01] transition-all duration-300 block"
-              variant="ghost"
-              onClick={() => {
-                if (onActionClick && action.tabId) {
-                  onActionClick(action.tabId);
-                }
-              }}
-              analytics={{
-                event: 'quick_action_click',
-                category: 'dashboard_navigation',
-                label: action.title,
-              }}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className={`w-10 h-10 bg-gradient-to-br ${action.gradient} rounded-lg flex items-center justify-center`}>
-                    <action.icon className="w-5 h-5 text-white" />
-                  </div>
-                  {action.badge && (
-                    <div className="status-indicator status-success">
-                      {action.badge}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {action.title}
-                  </h4>
-                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                    {action.description}
-                  </p>
-                </div>
-                
-                <div className="pt-3 border-t border-border">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
-                      {action.action}
-                    </span>
-                    <ArrowRightIcon className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                </div>
+            {action.badge && (
+              <div className="absolute top-3 right-3 status status-success">
+                {action.badge}
               </div>
-            </InternalLink>
-          </motion.div>
+            )}
+            
+            <div className="stack stack-md">
+              <div 
+                className="avatar avatar-md"
+                style={{ backgroundColor: action.color }}
+              >
+                <action.icon className="icon icon-lg" />
+              </div>
+              
+              <div className="stack stack-sm">
+                <span className="text-heading">{action.title}</span>
+              </div>
+            </div>
+          </motion.button>
         ))}
       </div>
     </div>
