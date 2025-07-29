@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { sendChatMessage, generateSpeech } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   SparklesIcon,
@@ -62,37 +62,28 @@ const AICoach: React.FC = () => {
     setInputMessage('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "Ahmed, your CGM data shows concerning patterns with post-meal spikes averaging 185 mg/dL. For fertility optimization, we need to address this insulin resistance. I recommend starting with a 16:8 intermittent fasting protocol and reducing refined carbs. This will help improve sperm motility and testosterone production.",
-        "Your deep sleep at 45 minutes is significantly below the optimal 90+ minutes needed for testosterone and growth hormone production. I suggest moving your bedtime earlier to 10 PM, avoiding screens 2 hours before bed, and considering magnesium glycinate supplementation. This is crucial for both muscle building and fertility.",
-        "At 90kg and 180cm with 18.2% body fat, reducing to 15% would significantly improve insulin sensitivity and fertility markers. Your current training strain of 16.8 might be too high - consider reducing volume by 20% to optimize recovery and hormone production.",
-        "Your elevated resting heart rate (72 bpm) and low HRV (28 ms) suggest your body is under stress. This impacts fertility hormones. I recommend adding 10 minutes of daily meditation and ensuring 8+ hours of sleep. Would you like a specific stress management protocol?",
-        "For your muscle building goals with insulin resistance, focus on post-workout carb timing. Consume 30-40g of carbs immediately after training when insulin sensitivity is highest. This supports muscle growth while minimizing glucose spikes throughout the day."
-      ];
-
+    try {
+      const response = await sendChatMessage(inputMessage, user?.id || '');
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: response.response,
         role: 'assistant',
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, aiMessage]);
-      setIsLoading(false);
-    }, 1500);
-
-    // Save to database
-    try {
-      await supabase.from('chat_history').insert({
-        user_id: user?.id,
-        message: inputMessage,
-        response: 'AI response placeholder',
-        role: 'user',
-      });
     } catch (error) {
-      console.error('Error saving message:', error);
+      console.error('Error sending message:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        role: 'assistant',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 

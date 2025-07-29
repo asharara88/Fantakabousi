@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { generateHealthInsights } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import FoodLogger from '../nutrition/FoodLogger';
+import RecipeSearch from '../recipes/RecipeSearch';
 import { 
   HeartIcon,
   BoltIcon,
@@ -31,9 +34,11 @@ const HealthDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState('heart_rate');
   const [timeRange, setTimeRange] = useState('7d');
+  const [activeView, setActiveView] = useState('metrics');
 
   useEffect(() => {
     fetchHealthMetrics();
+    loadHealthInsights();
   }, []);
 
   const fetchHealthMetrics = async () => {
@@ -70,6 +75,15 @@ const HealthDashboard: React.FC = () => {
       fetchHealthMetrics();
     } catch (error) {
       console.error('Error adding metric:', error);
+    }
+  };
+
+  const loadHealthInsights = async () => {
+    try {
+      const insights = await generateHealthInsights(user?.id || '');
+      console.log('Health insights:', insights);
+    } catch (error) {
+      console.error('Error loading insights:', error);
     }
   };
 
@@ -122,47 +136,19 @@ const HealthDashboard: React.FC = () => {
     return ((latest - previous) / previous) * 100;
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <LoadingSpinner size="xl" variant="premium" />
-      </div>
-    );
-  }
+  const renderContent = () => {
+    switch (activeView) {
+      case 'food':
+        return <FoodLogger />;
+      case 'recipes':
+        return <RecipeSearch />;
+      default:
+        return renderMetricsView();
+    }
+  };
 
-  return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
-              <HeartIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-heading-xl text-foreground">Health Dashboard</h1>
-              <p className="text-caption">Real-time biometric monitoring</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-3">
-          <button 
-            onClick={() => {
-              const type = prompt('Metric type (heart_rate, steps, sleep, glucose):');
-              const value = prompt('Value:');
-              const unit = prompt('Unit:');
-              if (type && value && unit) {
-                addMetric(type, parseFloat(value), unit);
-              }
-            }}
-            className="btn-primary flex items-center space-x-2"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span>Add Metric</span>
-          </button>
-        </div>
-      </div>
-
+  const renderMetricsView = () => (
+    <>
       {/* Metrics Grid */}
       <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {metricTypes.map((metric, index) => {
@@ -310,6 +296,92 @@ const HealthDashboard: React.FC = () => {
           })}
         </div>
       </div>
+    </>
+  );
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner size="xl" variant="premium" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
+              <HeartIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-heading-xl text-foreground">Health Dashboard</h1>
+              <p className="text-caption">Real-time biometric monitoring</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center space-x-3">
+          {/* View Toggle */}
+          <div className="flex rounded-xl p-1 bg-muted">
+            <button
+              onClick={() => setActiveView('metrics')}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeView === 'metrics'
+                  ? 'bg-primary text-white shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Metrics
+            </button>
+            <button
+              onClick={() => setActiveView('food')}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeView === 'food'
+                  ? 'bg-primary text-white shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Food Log
+            </button>
+            <button
+              onClick={() => setActiveView('recipes')}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeView === 'recipes'
+                  ? 'bg-primary text-white shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Recipes
+            </button>
+          </div>
+          
+          <button 
+            onClick={() => {
+              const type = prompt('Metric type (heart_rate, steps, sleep, glucose):');
+              const value = prompt('Value:');
+              const unit = prompt('Unit:');
+              if (type && value && unit) {
+                addMetric(type, parseFloat(value), unit);
+              }
+            }}
+            className="btn-primary flex items-center space-x-2"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>Add Metric</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Dynamic Content */}
+      <motion.div
+        key={activeView}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {renderContent()}
+      </motion.div>
     </div>
   );
 };
