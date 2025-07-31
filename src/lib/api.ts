@@ -1,21 +1,36 @@
 import { supabase } from './supabase';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 
 // Chat API with proper error handling
 export const sendChatMessage = async (message: string, userId: string, sessionId?: string) => {
   try {
-    // For demo purposes, return a mock response
-    // In production, this would call the OpenAI edge function
-    const mockResponses = [
-      "Thanks for your message! Based on your health data, I'd recommend focusing on consistent sleep patterns and balanced nutrition. Would you like specific recommendations?",
-      "I can see from your metrics that you're making great progress! Let's work on optimizing your supplement timing for better absorption.",
-      "Your glucose levels suggest we should focus on meal timing and composition. I can help you create a personalized nutrition plan.",
-      "Great question! Based on your fitness goals, I'd recommend adjusting your protein intake and workout timing. Here's what I suggest...",
-      "I notice your sleep quality could be improved. Let's discuss some evidence-based strategies for better recovery."
-    ];
+    // Call OpenAI edge function
+    const apiUrl = `${SUPABASE_URL}/functions/v1/openai-chat`;
+    
+    const headers = {
+      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+    };
 
-    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        message,
+        userId,
+        sessionId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const aiResponse = data.response;
 
     // Save to chat history
     if (sessionId && userId) {
@@ -24,15 +39,15 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
           user_id: userId,
           session_id: sessionId,
           message: message,
-          response: '',
+          response: aiResponse,
           role: 'user',
           timestamp: new Date().toISOString()
         },
         {
           user_id: userId,
           session_id: sessionId,
-          message: response,
-          response: '',
+          message: aiResponse,
+          response: aiResponse,
           role: 'assistant',
           timestamp: new Date().toISOString()
         }
@@ -40,12 +55,43 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
     }
 
     return {
-      response,
-      timestamp: new Date().toISOString()
+      response: aiResponse,
+      timestamp: data.timestamp || new Date().toISOString()
     };
   } catch (error) {
     console.error('Error sending chat message:', error);
     throw new Error('Failed to send message. Please try again.');
+  }
+};
+
+// Text-to-Speech API
+export const generateSpeech = async (text: string, voiceId?: string) => {
+  try {
+    const apiUrl = `${SUPABASE_URL}/functions/v1/elevenlabs-tts`;
+    
+    const headers = {
+      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+    };
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        text,
+        voiceId: voiceId || 'EXAVITQu4vr4xnSDxMaL' // Default voice
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`TTS API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error generating speech:', error);
+    throw new Error('Failed to generate speech. Please try again.');
   }
 };
 

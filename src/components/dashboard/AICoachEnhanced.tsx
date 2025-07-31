@@ -2,11 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useChatSessions } from '../../hooks/useChatSessions';
+import { generateSpeech } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { useToast } from '../../hooks/useToast';
 import { 
   SparklesIcon,
   PaperAirplaneIcon,
   MicrophoneIcon,
+  SpeakerWaveIcon,
+  StopIcon,
   ChatBubbleLeftRightIcon,
   HeartIcon,
   BoltIcon,
@@ -23,6 +27,7 @@ import {
 
 const AICoachEnhanced: React.FC = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const {
     sessions,
     currentSession,
@@ -36,6 +41,8 @@ const AICoachEnhanced: React.FC = () => {
   
   const [inputMessage, setInputMessage] = useState('');
   const [showOnboarding, setShowOnboarding] = useState(!currentSession || messages.length === 0);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -59,6 +66,56 @@ const AICoachEnhanced: React.FC = () => {
     setShowOnboarding(false);
     await sendMessage(prompt);
     setInputMessage('');
+  };
+
+  const handlePlayAudio = async (text: string) => {
+    try {
+      if (isPlayingAudio && currentAudio) {
+        currentAudio.pause();
+        setIsPlayingAudio(false);
+        setCurrentAudio(null);
+        return;
+      }
+
+      setIsPlayingAudio(true);
+      
+      const audioData = await generateSpeech(text);
+      const audioBlob = new Blob([
+        Uint8Array.from(atob(audioData.audioData), c => c.charCodeAt(0))
+      ], { type: 'audio/mpeg' });
+      
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      
+      audio.onended = () => {
+        setIsPlayingAudio(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audio.onerror = () => {
+        setIsPlayingAudio(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+        toast({
+          title: "Audio Error",
+          description: "Failed to play audio response.",
+          variant: "destructive",
+        });
+      };
+      
+      setCurrentAudio(audio);
+      await audio.play();
+      
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      setIsPlayingAudio(false);
+      toast({
+        title: "Audio Error",
+        description: "Failed to generate audio response.",
+        variant: "destructive",
+      });
+    }
   };
 
   const quickPrompts = [
@@ -228,9 +285,31 @@ const AICoachEnhanced: React.FC = () => {
                           ? 'bg-gradient-to-br from-blue-50 to-cyan-50' 
                           : ''
                       }`}>
-                        <p className="text-gray-900 leading-relaxed">
-                          {message.message}
-                        </p>
+                        <div className="space-y-3">
+                          <p className="text-gray-900 leading-relaxed">
+                            {message.message}
+                          </p>
+                          
+                          {message.role === 'assistant' && (
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => handlePlayAudio(message.message)}
+                                disabled={isPlayingAudio}
+                                className="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors disabled:opacity-50"
+                                title="Play audio response"
+                              >
+                                {isPlayingAudio ? (
+                                  <StopIcon className="w-4 h-4 text-blue-600" />
+                                ) : (
+                                  <SpeakerWaveIcon className="w-4 h-4 text-blue-600" />
+                                )}
+                              </button>
+                              <span className="text-xs text-gray-500">
+                                {isPlayingAudio ? 'Playing...' : 'Play audio'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                         <div className="text-xs text-gray-500 mt-2">
                           {new Date(message.timestamp).toLocaleTimeString([], { 
                             hour: '2-digit', 

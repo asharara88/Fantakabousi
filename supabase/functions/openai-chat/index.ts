@@ -1,12 +1,13 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'npm:@supabase/supabase-js@2'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -28,15 +29,15 @@ serve(async (req) => {
     )
 
     // Get user's health data for context
-    const { data: healthData } = await supabaseClient
+    const { data: healthData, error: healthError } = await supabaseClient
       .from('health_metrics')
       .select('*')
       .eq('user_id', userId)
       .order('timestamp', { ascending: false })
       .limit(10)
 
-    const { data: profileData } = await supabaseClient
-      .from('user_profile_signin')
+    const { data: profileData, error: profileError } = await supabaseClient
+      .from('profiles')
       .select('*')
       .eq('id', userId)
       .single()
@@ -48,35 +49,28 @@ serve(async (req) => {
 
     const userContext = profileData ? `
 User Profile:
-- Age: ${profileData.age || 'Not specified'}
-- Gender: ${profileData.gender || 'Not specified'}
-- Primary Goals: ${profileData.primary_health_goals?.join(', ') || 'Not specified'}
-- Activity Level: ${profileData.activity_level || 'Not specified'}
-- Health Concerns: ${profileData.health_concerns?.join(', ') || 'None specified'}
+- Name: ${profileData.first_name || 'Not specified'}
+- Email: ${profileData.email || 'Not specified'}
+- Onboarding: ${profileData.onboarding_completed ? 'Complete' : 'Pending'}
 ` : 'No profile data available'
 
-    const systemPrompt = `You are Ahmed's personal AI wellness coach on the Biowell platform. You have access to his comprehensive health data and are helping him optimize his fertility, muscle building, and sleep quality while managing his insulin resistance.
+    const systemPrompt = `You are a personal AI wellness coach on the Biowell platform. You have access to the user's health data and provide personalized recommendations for their wellness journey.
 
-User's Health Profile:
-- Primary Goals: Fertility optimization, muscle building, sleep improvement
-- Key Challenges: Insulin resistance, sleep optimization, fitness goals
-- Health Metrics: Available from connected devices and manual logs
+User's Current Context:
+${userContext}
 
 Recent Health Data:
 ${healthContext}
 
-${userContext}
-
 Guidelines for responses:
 1. Be conversational, supportive, and evidence-based
-2. Reference his specific health data when relevant
-3. Focus on actionable recommendations for his three main goals
-4. Consider the interconnection between metabolic health, fertility, and sleep
+2. Reference their specific health data when relevant
+3. Focus on actionable recommendations for their health goals
+4. Consider the interconnection between different health metrics
 5. Suggest specific protocols, supplements, or lifestyle changes
 6. Keep responses concise but comprehensive (2-3 paragraphs max)
 7. Always prioritize safety and suggest medical consultation when appropriate
 
-Respond as a knowledgeable wellness coach who understands the user's unique health profile and goals.`
 
     // Call OpenAI API
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {

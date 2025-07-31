@@ -105,7 +105,7 @@ export const useChatSessions = () => {
       };
       setMessages(prev => [...prev, userMessage]);
 
-      // Send to API
+      // Send to OpenAI API via edge function
       const response = await sendChatMessage(message, user!.id, currentSession.id);
       
       // Add AI response
@@ -125,9 +125,12 @@ export const useChatSessions = () => {
       ));
 
     } catch (error: any) {
+      // Remove the user message if API call failed
+      setMessages(prev => prev.slice(0, -1));
+      
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error.message || "Failed to send message. Please try again.",
         variant: "destructive",
       });
     } finally {
