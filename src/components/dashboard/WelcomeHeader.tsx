@@ -217,7 +217,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
           { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF]' },
           { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-[#3BE6C5]' },
           { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-to-br from-[#2A7FFF] to-[#0026CC]' },
-          { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-to-br from-[#0026CC] to-[#48C6FF]' },
+          { label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'bg-gradient-to-br from-[#0026CC] to-[#48C6FF]' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
