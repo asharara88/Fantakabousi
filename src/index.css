@@ -1344,7 +1344,6 @@ a:visited {
   background: none;
   padding: 0;
 }
-}
 
 /* === HIGH CONTRAST MODE === */
 @media (prefers-contrast: high) {
