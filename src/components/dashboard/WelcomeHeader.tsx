@@ -83,16 +83,16 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
               >
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-blue-light rounded-xl flex items-center justify-center">
+                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
                   <greeting.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                 </div>
-                <h1 className="text-heading-2xl lg:text-heading-3xl text-foreground">
+                <h1 className="text-2xl lg:text-4xl font-bold text-foreground font-inter">
                   {greeting.text}, {firstName}!
                 </h1>
               </motion.div>
               
               <motion.p 
-                className="text-body lg:text-heading-sm text-muted-foreground max-w-lg"
+                className="text-base lg:text-lg text-muted-foreground max-w-lg font-inter"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
@@ -110,7 +110,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             >
               <button 
                 onClick={() => onQuickAction?.('start-day')}
-                className="btn-mobile-primary lg:btn-primary cursor-pointer"
+                className="px-6 py-3 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
                 <PlayIcon className="w-5 h-5" />
                 <span>Start Your Day</span>
@@ -118,7 +118,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               
               <button 
                 onClick={() => onQuickAction?.('health')}
-                className="btn-mobile-secondary lg:btn-secondary cursor-pointer"
+                className="px-6 py-3 bg-card border border-border text-card-foreground font-semibold rounded-xl hover:bg-muted hover:border-[#48C6FF]/30 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
                 <ChartBarIcon className="w-5 h-5" />
                 <span>View Health Data</span>
@@ -132,13 +132,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
             >
-              <div className="flex items-center space-x-2 px-3 py-2 bg-card rounded-full border border-border">
-                <div className="status-dot success animate-pulse"></div>
-                <span className="text-body-sm font-medium accent-neon">All systems active</span>
+              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-[#3BE6C5]">All systems active</span>
               </div>
-              <div className="flex items-center space-x-2 px-3 py-2 bg-card rounded-full border border-border">
-                <BoltIcon className="w-4 h-4 text-blue-light" />
-                <span className="text-body-sm font-medium text-blue-light">AI ready</span>
+              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
+                <BoltIcon className="w-4 h-4 text-[#48C6FF]" />
+                <span className="text-sm font-medium text-[#48C6FF]">AI ready</span>
               </div>
             </motion.div>
           </motion.div>
@@ -214,25 +214,25 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       {/* Quick Metrics Grid */}
       <div className="mobile-grid-2 lg:grid-cols-4">
         {[
-          { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-blue-light' },
-          { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-accent-neon' },
-          { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-blue-medium' },
-          { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-blue-deep' },
+          { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF]' },
+          { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-[#3BE6C5]' },
+          { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-to-br from-[#2A7FFF] to-[#0026CC]' },
+          { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-to-br from-[#0026CC] to-[#48C6FF]' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 + index * 0.1 }}
-            className="card cursor-pointer"
+            className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md hover:border-[#48C6FF]/20 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
             <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 lg:w-12 lg:h-12 ${metric.color} rounded-xl flex items-center justify-center`}>
+              <div className={`w-10 h-10 lg:w-12 lg:h-12 ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
                 <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
               </div>
               <div>
-                <div className="text-heading-md lg:text-heading-lg text-foreground">{metric.value}</div>
-                <div className="text-caption">{metric.label}</div>
+                <div className="text-lg lg:text-xl font-bold text-foreground font-inter">{metric.value}</div>
+                <div className="text-sm text-muted-foreground font-medium">{metric.label}</div>
               </div>
             </div>
           </motion.div>

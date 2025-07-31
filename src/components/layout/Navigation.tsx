@@ -141,21 +141,21 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </div>
 
           {/* User Profile Section */}
-          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-light/10 to-neon-green/10 rounded-2xl border border-blue-light/20 shadow-sm">
-            <div className="w-14 h-14 bg-gradient-blue-light rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-2xl border border-[#48C6FF]/20 shadow-sm">
+            <div className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">
                 {firstName.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-foreground truncate">
+              <p className="text-base font-bold text-foreground truncate font-inter">
                 Welcome back, {firstName}
               </p>
-              <p className="text-sm text-muted-foreground truncate">
+              <p className="text-sm text-muted-foreground truncate font-inter">
                 {user?.email}
               </p>
             </div>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></div>
           </div>
           {/* Navigation Items */}
           <nav className="flex flex-1 flex-col">
@@ -170,15 +170,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   onClick={() => onTabChange(item.id)}
                   className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-brand text-white shadow-lg'
-                      : 'text-foreground hover:text-blue-light hover:bg-blue-light/10'
+                      ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg'
+                      : 'text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-blue-light'}`} />
+                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-[#48C6FF]'}`} />
                   <div className="flex-1 text-left">
-                    <div>{item.label}</div>
+                    <div className="font-inter">{item.label}</div>
                     <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
                       {item.description}
                     </div>
@@ -186,7 +186,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   {isActive && (
                     <motion.div
                       layoutId="activeIndicator"
-                      className="w-1 h-6 bg-white rounded-full"
+                      className="w-1 h-6 bg-white rounded-full shadow-sm"
                     />
                   )}
                 </motion.button>
@@ -211,17 +211,17 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             
             <button 
               onClick={() => setShowNotifications(true)}
-              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200"
             >
-              <BellIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-blue-light" />
+              <BellIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-[#48C6FF]" />
               <span>Notifications</span>
-              <span className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></span>
+              <span className="ml-auto w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></span>
             </button>
             <button 
               onClick={() => onTabChange('profile')}
-              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200"
             >
-              <Cog6ToothIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-blue-light" />
+              <Cog6ToothIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-[#48C6FF]" />
               <span>Settings</span>
             </button>
             <button 

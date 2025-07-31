@@ -66,8 +66,8 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
     <div className="space-y-4 lg:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-heading-lg lg:text-heading-xl text-foreground">Quick Actions</h2>
-        <button className="btn-ghost text-body-sm cursor-pointer">Customize</button>
+        <h2 className="text-xl lg:text-2xl font-bold text-foreground font-inter">Quick Actions</h2>
+        <button className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer font-medium">Customize</button>
       </div>
       
       {/* Actions Grid */}
@@ -81,20 +81,20 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onActionClick?.(action.id)}
-            className="card text-center relative cursor-pointer hover:shadow-md transition-all duration-200 touch-target-large"
+            className="bg-card border border-border rounded-xl p-4 text-center relative cursor-pointer hover:shadow-md hover:border-[#48C6FF]/20 hover:-translate-y-1 transition-all duration-200 min-h-[120px] flex flex-col items-center justify-center gap-3"
           >
             {action.badge && (
-              <div className="absolute top-2 right-2 status-indicator status-success text-xs">
+              <div className="absolute top-2 right-2 px-2 py-1 bg-green-500/10 text-green-600 text-xs font-bold rounded-full border border-green-500/20">
                 {action.badge}
               </div>
             )}
             
-            <div className="space-y-3">
-              <div className={`w-12 h-12 lg:w-14 lg:h-14 ${action.color} rounded-xl flex items-center justify-center mx-auto`}>
+            <div className="flex flex-col items-center gap-3">
+              <div className={`w-12 h-12 lg:w-14 lg:h-14 ${action.color} rounded-xl flex items-center justify-center shadow-lg`}>
                 <action.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
               </div>
               
-              <span className="text-body-sm lg:text-body font-medium text-foreground">{action.title}</span>
+              <span className="text-sm lg:text-base font-semibold text-foreground font-inter">{action.title}</span>
             </div>
           </motion.button>
         ))}

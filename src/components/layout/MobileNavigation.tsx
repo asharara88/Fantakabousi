@@ -147,16 +147,16 @@ export function MobileNavigation({
               </div>
 
               {/* User Profile */}
-              <div className="p-6 bg-gradient-to-r from-blue-light/10 to-neon-green/10 border-b border-border">
+              <div className="p-6 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 border-b border-border">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center">
-                    <span className="text-white font-bold text-heading-md">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold text-lg font-inter">
                       {firstName.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <p className="text-body font-semibold text-foreground">{firstName}</p>
-                    <p className="text-body-sm text-muted-foreground truncate">{user?.email}</p>
+                    <p className="text-base font-semibold text-foreground font-inter">{firstName}</p>
+                    <p className="text-sm text-muted-foreground truncate font-inter">{user?.email}</p>
                   </div>
                 </div>
               </div>
@@ -180,14 +180,14 @@ export function MobileNavigation({
                         }}
                         className={`w-full flex items-center space-x-4 p-4 rounded-xl text-left transition-all duration-200 cursor-pointer touch-target ${
                           isActive 
-                            ? 'bg-gradient-brand text-white' 
+                            ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg' 
                             : 'text-foreground hover:bg-muted'
                         }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
-                        <span className="text-body font-semibold">{item.label}</span>
+                        <span className="text-base font-semibold font-inter">{item.label}</span>
                       </motion.button>
                     );
                   })}
@@ -201,28 +201,28 @@ export function MobileNavigation({
                     setShowNotifications(true);
                     onMenuToggle();
                   }}
-                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200 cursor-pointer touch-target"
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200 cursor-pointer"
                 >
                   <BellIcon className="w-5 h-5" />
-                  <span className="text-body font-medium">Notifications</span>
-                  <span className="ml-auto status-dot success animate-pulse"></span>
+                  <span className="text-base font-medium font-inter">Notifications</span>
+                  <span className="ml-auto w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></span>
                 </button>
                 <button 
                   onClick={() => {
                     onViewChange('profile');
                     onMenuToggle();
                   }}
-                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:bg-muted transition-all duration-200 cursor-pointer touch-target"
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:bg-muted transition-all duration-200 cursor-pointer"
                 >
                   <UserCircleIcon className="w-5 h-5" />
-                  <span className="text-body font-medium">Profile & Settings</span>
+                  <span className="text-base font-medium font-inter">Profile & Settings</span>
                 </button>
                 <button 
                   onClick={signOut}
-                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200 cursor-pointer touch-target"
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200 cursor-pointer"
                 >
                   <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                  <span className="text-body font-medium">Sign Out</span>
+                  <span className="text-base font-medium font-inter">Sign Out</span>
                 </button>
               </div>
             </motion.div>

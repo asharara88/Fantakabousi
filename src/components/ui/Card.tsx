@@ -18,24 +18,24 @@ const Card: React.FC<CardProps> = ({
   gradient = false
 }) => {
   const variants = {
-    default: 'bg-card text-card-foreground border border-border shadow-sm',
-    glass: 'glass-card text-foreground',
-    elevated: 'bg-card text-card-foreground border border-border shadow-lg hover:shadow-xl transition-shadow duration-300',
-    premium: 'glass-ultra text-foreground shadow-2xl',
+    default: 'bg-card text-card-foreground border border-border shadow-sm hover:shadow-md hover:border-[#48C6FF]/20',
+    glass: 'bg-card/80 backdrop-blur-sm text-foreground border border-border/50 shadow-lg',
+    elevated: 'bg-card text-card-foreground border border-border shadow-lg hover:shadow-xl hover:border-[#48C6FF]/30 transition-all duration-300',
+    premium: 'bg-card text-foreground shadow-xl border border-border hover:shadow-2xl hover:border-[#48C6FF]/20',
   };
 
   const Component = hover ? motion.div : 'div';
   const motionProps = hover ? {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    whileHover: { y: -2, scale: 1.01 },
+    whileHover: { y: -2, scale: 1.005 },
     transition: { duration: 0.3, ease: "easeOut" }
   } : {};
 
   return (
     <Component
       className={cn(
-        'rounded-2xl p-6 relative overflow-hidden',
+        'rounded-2xl p-6 relative overflow-hidden font-inter',
         variants[variant],
         gradient && 'bg-gradient-to-br from-white/10 to-white/5',
         hover && 'cursor-pointer',
@@ -44,7 +44,7 @@ const Card: React.FC<CardProps> = ({
       {...motionProps}
     >
       {gradient && (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#48C6FF]/5 via-[#2A7FFF]/5 to-[#0026CC]/5 pointer-events-none" />
       )}
       <div className="relative z-10">
         {children}

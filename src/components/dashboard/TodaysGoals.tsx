@@ -75,29 +75,29 @@ const TodaysGoals: React.FC = () => {
     <div id="todays-goals" className="card-premium">
       <div className="flex items-center justify-between mb-4 lg:mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-blue-light rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
             <FlagIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-heading-lg lg:text-heading-xl text-foreground">Today's Goals</h2>
-            <p className="text-caption">{completedCount} of {goals.length} completed</p>
+            <h2 className="text-xl lg:text-2xl font-bold text-foreground font-inter">Today's Goals</h2>
+            <p className="text-sm text-muted-foreground">{completedCount} of {goals.length} completed</p>
           </div>
         </div>
         
-        <button className="touch-target cursor-pointer text-muted-foreground hover:text-blue-light transition-colors">
+        <button className="p-2 text-muted-foreground hover:text-[#48C6FF] hover:bg-muted rounded-lg transition-all duration-200 cursor-pointer">
           <PlusIcon className="w-5 h-5" />
         </button>
       </div>
 
       {/* Progress Bar */}
       <div className="mb-4 lg:mb-6">
-        <div className="flex items-center justify-between text-caption mb-2">
+        <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
           <span>Progress</span>
           <span>{Math.round(progressPercentage)}%</span>
         </div>
-        <div className="progress-bar">
+        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
           <motion.div
-            className="progress-fill"
+            className="h-full bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${progressPercentage}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -115,27 +115,27 @@ const TodaysGoals: React.FC = () => {
             transition={{ delay: index * 0.1 }}
             className={`p-3 lg:p-4 rounded-xl border transition-all duration-200 cursor-pointer touch-target ${
               goal.completed 
-                ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
-                : 'bg-muted border-border hover:border-blue-light'
+                ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 shadow-sm' 
+                : 'bg-card border-border hover:border-[#48C6FF]/30 hover:shadow-sm'
             }`}
             onClick={() => toggleGoal(goal.id)}
           >
             <div className="flex items-center space-x-3 lg:space-x-4">
-              <div className="flex-shrink-0 touch-target">
+              <div className="flex-shrink-0">
                 {goal.completed ? (
                   <CheckCircleSolidIcon className="w-6 h-6 text-green-500" />
                 ) : (
-                  <div className="w-6 h-6 border-2 border-muted-foreground rounded-full"></div>
+                  <div className="w-6 h-6 border-2 border-border rounded-full hover:border-[#48C6FF] transition-colors"></div>
                 )}
               </div>
               
               <div className="flex-1 min-w-0">
-                <h3 className={`text-body lg:text-heading-sm font-semibold ${
+                <h3 className={`text-base lg:text-lg font-semibold font-inter ${
                   goal.completed ? 'text-green-700 dark:text-green-400 line-through' : 'text-foreground'
                 }`}>
                   {goal.title}
                 </h3>
-                <p className={`text-body-sm ${
+                <p className={`text-sm ${
                   goal.completed ? 'text-green-600 dark:text-green-500' : 'text-muted-foreground'
                 }`}>
                   {goal.description}
@@ -143,10 +143,14 @@ const TodaysGoals: React.FC = () => {
               </div>
               
               <div className="flex flex-col lg:flex-row items-end lg:items-center space-y-1 lg:space-y-0 lg:space-x-2">
-                <span className={`status-indicator ${getPriorityColor(goal.priority)} text-xs`}>
+                <span className={`px-2 py-1 text-xs font-bold rounded-full ${
+                  goal.priority === 'high' ? 'bg-red-100 text-red-700 border border-red-200' :
+                  goal.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
+                  'bg-green-100 text-green-700 border border-green-200'
+                }`}>
                   {goal.priority}
                 </span>
-                <span className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground">
+                <span className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground font-medium">
                   {goal.category}
                 </span>
               </div>
