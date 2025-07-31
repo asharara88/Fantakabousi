@@ -125,50 +125,50 @@ const FoodLogger: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-12 h-12 bg-gradient-to-br from-neon-green to-blue-light rounded-xl flex items-center justify-center shadow-lg">
           <BeakerIcon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Food Logger</h2>
-          <p className="text-gray-600">Track nutrition and analyze health impact</p>
+          <h2 className="text-2xl font-bold text-foreground">Food Logger</h2>
+          <p className="text-muted-foreground">Track nutrition and analyze health impact</p>
         </div>
       </div>
 
       {/* Input Form */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-900">Food Item</label>
+              <label className="block text-sm font-medium text-foreground">Food Item</label>
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={foodName}
                   onChange={(e) => setFoodName(e.target.value)}
                   placeholder="e.g., grilled chicken breast"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-900">Quantity</label>
+              <label className="block text-sm font-medium text-foreground">Quantity</label>
               <input
                 type="text"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="e.g., 150g, 1 cup"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-900">Meal Type</label>
+              <label className="block text-sm font-medium text-foreground">Meal Type</label>
               <select
                 value={mealType}
                 onChange={(e) => setMealType(e.target.value as any)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
               >
                 <option value="breakfast">Breakfast</option>
                 <option value="lunch">Lunch</option>
@@ -184,7 +184,7 @@ const FoodLogger: React.FC = () => {
               whileTap={{ scale: 0.98 }}
               onClick={analyzeFood}
               disabled={!foodName.trim() || loading}
-              className="flex-1 bg-blue-500 text-white font-medium py-3 px-6 rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+              className="flex-1 bg-gradient-to-r from-blue-light to-blue-medium text-white font-medium py-3 px-6 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <LoadingSpinner size="sm" />
@@ -196,7 +196,7 @@ const FoodLogger: React.FC = () => {
               )}
             </motion.button>
             
-            <button className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center space-x-2">
+            <button className="px-6 py-3 border border-border text-muted-foreground font-medium rounded-xl hover:bg-muted/50 transition-colors flex items-center space-x-2">
               <CameraIcon className="w-5 h-5" />
               <span>Scan Food</span>
             </button>

@@ -214,34 +214,34 @@ const RecipeSearch: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-12 h-12 bg-gradient-to-br from-blue-deep to-neon-green rounded-xl flex items-center justify-center shadow-lg">
           <SparklesIcon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Recipe Search</h2>
-          <p className="text-gray-600">Discover healthy recipes optimized for your goals</p>
+          <h2 className="text-2xl font-bold text-foreground">Recipe Search</h2>
+          <p className="text-muted-foreground">Discover healthy recipes optimized for your goals</p>
         </div>
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
         <div className="space-y-4">
           <div className="flex space-x-3">
             <div className="flex-1 relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for healthy recipes..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
             <select
               value={selectedDiet}
               onChange={(e) => setSelectedDiet(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
             >
               <option value="">All Diets</option>
               <option value="ketogenic">Keto</option>
@@ -252,7 +252,7 @@ const RecipeSearch: React.FC = () => {
             </select>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center space-x-2"
+              className="px-6 py-3 bg-gradient-to-r from-blue-light to-blue-medium text-white font-medium rounded-xl hover:opacity-90 transition-all duration-200 flex items-center space-x-2"
             >
               <MagnifyingGlassIcon className="w-5 h-5" />
               <span>Search</span>
@@ -265,7 +265,7 @@ const RecipeSearch: React.FC = () => {
                 setSearchQuery('high protein');
                 handleSearch();
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
               High Protein
             </button>
@@ -274,7 +274,7 @@ const RecipeSearch: React.FC = () => {
                 setSearchQuery('low carb');
                 handleSearch();
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
               Low Carb
             </button>
@@ -283,7 +283,7 @@ const RecipeSearch: React.FC = () => {
                 setSearchQuery('fertility');
                 handleSearch();
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
               Fertility Support
             </button>
