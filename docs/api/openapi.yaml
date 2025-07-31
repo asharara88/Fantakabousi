@@ -1,0 +1,400 @@
+openapi: 3.0.3
+info:
+  title: Biowell API
+  description: Comprehensive health and wellness platform API
+  version: 1.0.0
+  contact:
+    name: Biowell API Support
+    email: api@biowell.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://your-project.supabase.co/functions/v1
+    description: Production server
+  - url: http://localhost:54321/functions/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /openai-chat:
+    post:
+      summary: Send message to AI health coach
+      description: Send a message to the AI coach and receive personalized health advice
+      tags:
+        - AI Coach
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - userId
+              properties:
+                message:
+                  type: string
+                  description: User's message to the AI coach
+                  example: "How can I improve my sleep quality?"
+                userId:
+                  type: string
+                  format: uuid
+                  description: User's unique identifier
+                sessionId:
+                  type: string
+                  format: uuid
+                  description: Chat session identifier
+            examples:
+              sleep_advice:
+                summary: Sleep improvement question
+                value:
+                  message: "How can I improve my sleep quality?"
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  sessionId: "987fcdeb-51a2-43d1-9f12-123456789abc"
+      responses:
+        '200':
+          description: Successful response with AI advice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: AI coach response
+                  timestamp:
+                    type: string
+                    format: date-time
+                  confidence:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+                    description: AI confidence score
+                  sources:
+                    type: array
+                    items:
+                      type: string
+                    description: Data sources used for response
+              examples:
+                sleep_response:
+                  summary: Sleep advice response
+                  value:
+                    response: "Based on your recent sleep data showing 6.5 hours average, I recommend establishing a consistent bedtime routine..."
+                    timestamp: "2025-01-30T12:00:00Z"
+                    confidence: 0.94
+                    sources: ["sleep_metrics", "hrv_data"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /nutrition-analysis:
+    post:
+      summary: Analyze food nutrition
+      description: Analyze nutritional content and health impact of food items
+      tags:
+        - Nutrition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - foodName
+                - userId
+              properties:
+                foodName:
+                  type: string
+                  description: Name of the food item
+                  example: "grilled chicken breast"
+                quantity:
+                  type: string
+                  description: Quantity or serving size
+                  example: "150g"
+                userId:
+                  type: string
+                  format: uuid
+                  description: User's unique identifier
+      responses:
+        '200':
+          description: Nutrition analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionAnalysis'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Food not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Food not found"
+
+  /elevenlabs-tts:
+    post:
+      summary: Generate speech from text
+      description: Convert text to speech using ElevenLabs AI voices
+      tags:
+        - Text-to-Speech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                  description: Text to convert to speech
+                  maxLength: 1000
+                  example: "Based on your sleep data, I recommend going to bed 30 minutes earlier tonight."
+                voiceId:
+                  type: string
+                  description: ElevenLabs voice ID
+                  default: "EXAVITQu4vr4xnSDxMaL"
+      responses:
+        '200':
+          description: Generated audio data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audioData:
+                    type: string
+                    format: base64
+                    description: Base64 encoded audio data
+                  contentType:
+                    type: string
+                    example: "audio/mpeg"
+                  duration:
+                    type: number
+                    description: Audio duration in seconds
+                  voiceId:
+                    type: string
+                    description: Voice ID used
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /spoonacular-recipes:
+    get:
+      summary: Search recipes
+      description: Search for health-optimized recipes
+      tags:
+        - Recipes
+      parameters:
+        - name: query
+          in: query
+          description: Search term
+          schema:
+            type: string
+            default: "healthy"
+        - name: diet
+          in: query
+          description: Diet type
+          schema:
+            type: string
+            enum: [ketogenic, paleo, mediterranean, vegetarian, vegan]
+        - name: intolerances
+          in: query
+          description: Food intolerances
+          schema:
+            type: string
+        - name: maxReadyTime
+          in: query
+          description: Maximum cooking time in minutes
+          schema:
+            type: integer
+            default: 45
+        - name: number
+          in: query
+          description: Number of results
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 12
+      responses:
+        '200':
+          description: Recipe search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeSearchResults'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    NutritionAnalysis:
+      type: object
+      properties:
+        nutrition:
+          type: object
+          properties:
+            calories:
+              type: number
+            protein:
+              type: number
+            carbohydrates:
+              type: number
+            fat:
+              type: number
+            fiber:
+              type: number
+            sugar:
+              type: number
+        glycemicImpact:
+          type: number
+          description: Glycemic load score
+        insights:
+          type: object
+          properties:
+            fertilityScore:
+              type: number
+              minimum: 0
+              maximum: 100
+            muscleScore:
+              type: number
+              minimum: 0
+              maximum: 100
+            insulinScore:
+              type: number
+              minimum: 0
+              maximum: 100
+            recommendations:
+              type: array
+              items:
+                type: string
+        foodName:
+          type: string
+        image:
+          type: string
+          format: uri
+
+    RecipeSearchResults:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipe'
+        totalResults:
+          type: integer
+        offset:
+          type: integer
+        number:
+          type: integer
+
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        image:
+          type: string
+          format: uri
+        readyInMinutes:
+          type: integer
+        servings:
+          type: integer
+        summary:
+          type: string
+        nutrition:
+          type: object
+        healthTags:
+          type: array
+          items:
+            type: string
+        fertilityScore:
+          type: number
+        muscleScore:
+          type: number
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: string
+          description: Additional error details
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Missing required fields"
+            code: "MISSING_FIELDS"
+            details: "message and userId are required"
+            timestamp: "2025-01-30T12:00:00Z"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Authentication required"
+            code: "UNAUTHORIZED"
+            details: "Valid JWT token required"
+            timestamp: "2025-01-30T12:00:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Internal server error"
+            code: "INTERNAL_ERROR"
+            details: "An unexpected error occurred"
+            timestamp: "2025-01-30T12:00:00Z"
+
+tags:
+  - name: AI Coach
+    description: AI-powered health coaching endpoints
+  - name: Health Metrics
+    description: Health data tracking and retrieval
+  - name: Nutrition
+    description: Food logging and nutrition analysis
+  - name: Text-to-Speech
+    description: Voice synthesis for AI responses
+  - name: Recipes
+    description: Recipe search and recommendations

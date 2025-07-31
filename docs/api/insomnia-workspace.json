@@ -1,0 +1,215 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-01-30T12:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_biowell_openai_chat",
+      "_type": "request",
+      "parentId": "fld_ai_coach",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "url": "{{ _.base_url }}/openai-chat",
+      "name": "Send Chat Message",
+      "description": "Send a message to the AI health coach",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"message\": \"How can I improve my sleep quality?\",\n  \"userId\": \"{{ _.user_id }}\",\n  \"sessionId\": \"987fcdeb-51a2-43d1-9f12-123456789abc\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1706616000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_biowell_nutrition",
+      "_type": "request",
+      "parentId": "fld_nutrition",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "url": "{{ _.base_url }}/nutrition-analysis",
+      "name": "Analyze Food",
+      "description": "Analyze nutritional content of food",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"foodName\": \"grilled chicken breast\",\n  \"quantity\": \"150g\",\n  \"userId\": \"{{ _.user_id }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1706616000000,
+      "isPrivate": false
+    },
+    {
+      "_id": "req_biowell_tts",
+      "_type": "request",
+      "parentId": "fld_tts",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "url": "{{ _.base_url }}/elevenlabs-tts",
+      "name": "Generate Speech",
+      "description": "Convert text to speech",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"text\": \"Based on your sleep data, I recommend going to bed 30 minutes earlier tonight.\",\n  \"voiceId\": \"EXAVITQu4vr4xnSDxMaL\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1706616000000,
+      "isPrivate": false
+    },
+    {
+      "_id": "req_biowell_recipes",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "url": "{{ _.base_url }}/spoonacular-recipes",
+      "name": "Search Recipes",
+      "description": "Search for health-optimized recipes",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "query",
+          "value": "healthy",
+          "description": "Search term"
+        },
+        {
+          "name": "diet",
+          "value": "ketogenic",
+          "description": "Diet type"
+        },
+        {
+          "name": "maxReadyTime",
+          "value": "30",
+          "description": "Max cooking time"
+        },
+        {
+          "name": "number",
+          "value": "12",
+          "description": "Number of results"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1706616000000,
+      "isPrivate": false
+    },
+    {
+      "_id": "fld_ai_coach",
+      "_type": "request_group",
+      "parentId": "wrk_biowell",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "AI Coach",
+      "description": "AI-powered health coaching endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1706616000000
+    },
+    {
+      "_id": "fld_nutrition",
+      "_type": "request_group",
+      "parentId": "wrk_biowell",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "Nutrition",
+      "description": "Food logging and nutrition analysis",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1706616000000
+    },
+    {
+      "_id": "fld_tts",
+      "_type": "request_group",
+      "parentId": "wrk_biowell",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "Text-to-Speech",
+      "description": "Voice synthesis endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1706616000000
+    },
+    {
+      "_id": "fld_recipes",
+      "_type": "request_group",
+      "parentId": "wrk_biowell",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "Recipes",
+      "description": "Recipe search and recommendations",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1706616000000
+    },
+    {
+      "_id": "wrk_biowell",
+      "_type": "workspace",
+      "parentId": null,
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "Biowell API",
+      "description": "Health and wellness platform API workspace"
+    },
+    {
+      "_id": "env_biowell_base",
+      "_type": "environment",
+      "parentId": "wrk_biowell",
+      "modified": 1706616000000,
+      "created": 1706616000000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "https://your-project.supabase.co/functions/v1",
+        "jwt_token": "your-jwt-token-here",
+        "user_id": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "jwt_token", "user_id"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1706616000000
+    }
+  ]
+}

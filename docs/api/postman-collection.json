@@ -1,0 +1,202 @@
+{
+  "info": {
+    "name": "Biowell API",
+    "description": "Comprehensive health and wellness platform API",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://your-project.supabase.co/functions/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "123e4567-e89b-12d3-a456-426614174000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "AI Coach",
+      "item": [
+        {
+          "name": "Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"How can I improve my sleep quality?\",\n  \"userId\": \"{{user_id}}\",\n  \"sessionId\": \"987fcdeb-51a2-43d1-9f12-123456789abc\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/openai-chat",
+              "host": ["{{base_url}}"],
+              "path": ["openai-chat"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"How can I improve my sleep quality?\",\n  \"userId\": \"{{user_id}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/openai-chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["openai-chat"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"response\": \"Based on your recent sleep data showing 6.5 hours average, I recommend establishing a consistent bedtime routine...\",\n  \"timestamp\": \"2025-01-30T12:00:00Z\",\n  \"confidence\": 0.94\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nutrition",
+      "item": [
+        {
+          "name": "Analyze Food",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"foodName\": \"grilled chicken breast\",\n  \"quantity\": \"150g\",\n  \"userId\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/nutrition-analysis",
+              "host": ["{{base_url}}"],
+              "path": ["nutrition-analysis"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Text-to-Speech",
+      "item": [
+        {
+          "name": "Generate Speech",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Based on your sleep data, I recommend going to bed 30 minutes earlier tonight.\",\n  \"voiceId\": \"EXAVITQu4vr4xnSDxMaL\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/elevenlabs-tts",
+              "host": ["{{base_url}}"],
+              "path": ["elevenlabs-tts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recipes",
+      "item": [
+        {
+          "name": "Search Recipes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/spoonacular-recipes?query=healthy&diet=ketogenic&maxReadyTime=30&number=12",
+              "host": ["{{base_url}}"],
+              "path": ["spoonacular-recipes"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "healthy"
+                },
+                {
+                  "key": "diet",
+                  "value": "ketogenic"
+                },
+                {
+                  "key": "maxReadyTime",
+                  "value": "30"
+                },
+                {
+                  "key": "number",
+                  "value": "12"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-refresh JWT token if needed",
+          "if (!pm.environment.get('jwt_token')) {",
+          "  console.log('JWT token not set. Please authenticate first.');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test for successful responses",
+          "pm.test('Status code is successful', function () {",
+          "  pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+          "});",
+          "",
+          "// Check response time",
+          "pm.test('Response time is less than 10s', function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(10000);",
+          "});"
+        ]
+      }
+    }
+  ]
+}
