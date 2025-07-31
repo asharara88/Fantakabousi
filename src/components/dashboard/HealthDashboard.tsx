@@ -69,7 +69,7 @@ const HealthDashboard: React.FC = () => {
   const tabs = [
     { id: 'metrics', label: 'Health Metrics', icon: HeartIcon },
     { id: 'food', label: 'Food Logging', icon: BeakerIcon },
-    { id: 'recipes', label: 'Recipe Search', icon: FireIcon },
+    { id: 'recipes', label: 'Find Recipes', icon: FireIcon },
   ];
 
   const ConnectDeviceCard: React.FC<{ metric: any }> = ({ metric }) => (
@@ -298,7 +298,7 @@ const HealthDashboard: React.FC = () => {
           
           <button
             onClick={() => setShowDeviceConnection(true)}
-            className="btn-primary flex items-center space-x-2 cursor-pointer"
+            className="btn-primary flex items-center space-x-2"
           >
             <WifiIcon className="w-4 h-4" />
             <span>Connect Device</span>
