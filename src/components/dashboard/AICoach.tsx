@@ -264,7 +264,7 @@ const AICoach: React.FC = () => {
                   <span>Send</span>
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
