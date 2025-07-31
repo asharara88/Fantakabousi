@@ -5,8 +5,8 @@ import {
   BoltIcon, 
   HeartIcon, 
   BeakerIcon,
-  TrendingUpIcon,
-  TrendingDownIcon
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline';
 
 const MetricsGrid: React.FC = () => {
@@ -77,9 +77,9 @@ const MetricsGrid: React.FC = () => {
               </div>
               <div className={`metric-change ${isPositive ? 'positive' : 'negative'}`}>
                 {isPositive ? (
-                  <TrendingUpIcon className="w-3 h-3" />
+                  <ArrowTrendingUpIcon className="w-3 h-3" />
                 ) : (
-                  <TrendingDownIcon className="w-3 h-3" />
+                  <ArrowTrendingDownIcon className="w-3 h-3" />
                 )}
                 {isPositive ? '+' : ''}{metric.change}%
               </div>
