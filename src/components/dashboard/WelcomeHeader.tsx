@@ -195,7 +195,7 @@ const WelcomeHeader: React.FC = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <motion.div
-                      initial={{ scale: 0 }}
+              Your AI-powered wellness journey continues with advanced biometric analysis, real-time health optimization, and personalized longevity protocols.
                       animate={{ scale: 1 }}
                       transition={{ delay: 1, type: "spring", stiffness: 200 }}
                       className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
@@ -212,7 +212,7 @@ const WelcomeHeader: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+              <span>AI Health Scan</span>
             {/* Quick Metrics */}
             <div className="grid grid-cols-2 gap-4">
               {[
@@ -221,7 +221,7 @@ const WelcomeHeader: React.FC = () => {
                 { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-blue-medium' },
                 { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-blue-deep' },
               ].map((metric, index) => (
-                <motion.div
+              <span>Predictive Analytics</span>
                   key={metric.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -234,11 +234,15 @@ const WelcomeHeader: React.FC = () => {
                     </div>
                     <div>
                       <div className="text-lg font-bold text-foreground">{metric.value}</div>
-                      <div className="text-sm text-muted-foreground">{metric.label}</div>
+              <span className="font-medium accent-neon">Neural networks active</span>
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              <span className="font-medium text-blue-light">GPT-5 ready</span>
+            </div>
+            <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
+              <SparklesIcon className="w-4 h-4 text-neon-green" />
+              <span className="font-medium text-neon-green">Quantum processing</span>
             </div>
           </motion.div>
         </div>

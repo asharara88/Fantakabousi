@@ -98,10 +98,10 @@ const AICoachEnhanced: React.FC = () => {
   ];
 
   const exampleGoals = [
-    { icon: MoonIcon, title: 'Better Sleep', description: 'Optimize sleep quality and duration' },
-    { icon: FireIcon, title: 'Build Muscle', description: 'Increase lean muscle mass' },
-    { icon: HeartIcon, title: 'Heart Health', description: 'Improve cardiovascular fitness' },
-    { icon: BeakerIcon, title: 'Blood Sugar', description: 'Manage glucose levels' },
+    { icon: MoonIcon, title: 'Longevity Optimization', description: 'AI-powered aging reversal protocols' },
+    { icon: FireIcon, title: 'Neural Enhancement', description: 'Cognitive performance optimization' },
+    { icon: HeartIcon, title: 'Biomarker Optimization', description: 'Predictive health analytics' },
+    { icon: BeakerIcon, title: 'Metabolic Hacking', description: 'Advanced glucose & insulin optimization' },
   ];
 
   if (loading && !currentSession) {
@@ -122,10 +122,10 @@ const AICoachEnhanced: React.FC = () => {
               <CpuChipIcon className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">AI Wellness Coach</h1>
+              <h1 className="text-3xl font-bold text-gray-900">GPT-5 Wellness Coach</h1>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-gray-600">Online and ready to help</span>
+                <span className="text-gray-600">Neural networks active • Quantum processing ready</span>
               </div>
             </div>
           </div>
@@ -159,10 +159,10 @@ const AICoachEnhanced: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                    Welcome to Your AI Coach
+                    Welcome to Your GPT-5 Health Coach
                   </h2>
                   <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    I'm here to help you optimize your health, analyze your data, and achieve your wellness goals. Let's get started!
+                    I'm your advanced AI health companion, powered by GPT-5 and trained on the latest longevity research. I can predict health outcomes, optimize your biomarkers, and create personalized protocols for optimal aging.
                   </p>
                 </div>
               </motion.div>

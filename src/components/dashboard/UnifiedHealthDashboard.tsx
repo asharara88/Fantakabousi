@@ -142,8 +142,8 @@ const UnifiedHealthDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">Your Wellness Score</h2>
-              <p className="text-lg text-muted-foreground">Based on your latest health data</p>
+              <h2 className="text-3xl font-bold text-foreground mb-2">Neural Wellness Score</h2>
+              <p className="text-lg text-muted-foreground">AI-analyzed biomarkers with longevity predictions</p>
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-6xl font-bold text-gradient-brand">
@@ -151,9 +151,9 @@ const UnifiedHealthDashboard: React.FC = () => {
               </div>
               <div className="space-y-1">
                 <div className="text-sm font-semibold accent-neon bg-neon-green/10 px-3 py-1 rounded-full">
-                  Good Progress
+                  Optimizing Longevity
                 </div>
-                <div className="text-xs text-muted-foreground">Updated 5 minutes ago</div>
+                <div className="text-xs text-muted-foreground">Neural analysis • Updated 30 seconds ago</div>
               </div>
             </div>
           </div>
@@ -195,10 +195,10 @@ const UnifiedHealthDashboard: React.FC = () => {
       {/* Quick Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Heart Rate', value: '68 bpm', icon: HeartIcon, color: 'bg-gradient-blue-light' },
-          { label: 'Steps', value: '8,234', icon: BoltIcon, color: 'bg-gradient-blue-medium' },
-          { label: 'Sleep', value: '7h 23m', icon: MoonIcon, color: 'bg-gradient-blue-deep' },
-          { label: 'Glucose', value: '142 mg/dL', icon: BeakerIcon, color: 'bg-accent-neon' },
+          { label: 'Neural HRV', value: '68 ms', icon: HeartIcon, color: 'bg-gradient-blue-light' },
+          { label: 'Biometric Score', value: '8,234', icon: BoltIcon, color: 'bg-gradient-blue-medium' },
+          { label: 'Recovery Index', value: '94%', icon: MoonIcon, color: 'bg-gradient-blue-deep' },
+          { label: 'Metabolic Age', value: '24 years', icon: BeakerIcon, color: 'bg-accent-neon' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
@@ -225,9 +225,9 @@ const UnifiedHealthDashboard: React.FC = () => {
         <h3 className="text-xl font-bold text-foreground mb-4">Today's Goals</h3>
         <div className="space-y-3">
           {[
-            { task: 'Complete morning workout', completed: true },
-            { task: 'Log breakfast nutrition', completed: false },
-            { task: 'Take evening supplements', completed: false },
+            { task: 'Neural optimization protocol', completed: true },
+            { task: 'Biomarker analysis complete', completed: false },
+            { task: 'Longevity stack activation', completed: false },
           ].map((goal, index) => (
             <div key={index} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
               <div className={`w-5 h-5 rounded-full border-2 ${
@@ -294,8 +294,8 @@ const UnifiedHealthDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">Health Dashboard</h1>
-          <p className="text-xl text-gray-600">Track your wellness journey in real-time</p>
+          <h1 className="text-4xl font-bold text-gray-900">Neural Health Dashboard</h1>
+          <p className="text-xl text-gray-600">AI-powered predictive health analytics with quantum processing</p>
         </div>
         
         {/* Tab Navigation */}

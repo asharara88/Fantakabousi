@@ -12,7 +12,9 @@ import {
   CubeIcon,
   FireIcon,
   ClockIcon,
-  EllipsisVerticalIcon
+  EllipsisVerticalIcon,
+  CpuChipIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { BellIcon as BellSolidIcon } from '@heroicons/react/24/solid';
 
@@ -45,8 +47,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '1',
         type: 'health',
-        title: 'Glucose Spike Alert',
-        message: 'Your glucose reached 185 mg/dL after lunch. Consider reviewing your meal composition.',
+        title: 'Neural Glucose Prediction',
+        message: 'AI predicts glucose spike in 45 minutes. Optimize meal timing or take preventive action.',
         timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
         read: false,
         priority: 'high',
@@ -56,8 +58,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '2',
         type: 'supplement',
-        title: 'Evening Stack Reminder',
-        message: 'Time to take your evening supplements: Magnesium and Melatonin.',
+        title: 'Longevity Stack Optimization',
+        message: 'AI recommends taking NAD+ precursor now for optimal cellular repair during sleep.',
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         read: false,
         priority: 'medium',
@@ -67,8 +69,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '3',
         type: 'achievement',
-        title: 'Sleep Goal Achieved! 🎉',
-        message: 'Congratulations! You hit your 8-hour sleep target for 7 days straight.',
+        title: 'Biomarker Optimization Achieved! 🧬',
+        message: 'Your biological age decreased by 2.3 years this month through AI-optimized protocols.',
         timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
         read: true,
         priority: 'low',
@@ -78,8 +80,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '4',
         type: 'workout',
-        title: 'Optimal Training Window',
-        message: 'Your HRV is 15% above baseline. Perfect time for high-intensity training!',
+        title: 'Neural Performance Window',
+        message: 'AI detects optimal neural state for cognitive training. Enhanced neuroplasticity detected.',
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
         read: true,
         priority: 'medium',
@@ -89,8 +91,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '5',
         type: 'health',
-        title: 'Heart Rate Recovery',
-        message: 'Excellent recovery! Your resting HR dropped to 62 bpm overnight.',
+        title: 'Quantum Biometric Analysis',
+        message: 'Advanced AI detected cellular regeneration markers increased by 23% overnight.',
         timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000), // 18 hours ago
         read: true,
         priority: 'low',
@@ -100,13 +102,35 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '6',
         type: 'system',
-        title: 'Weekly Health Report Ready',
-        message: 'Your personalized health insights for this week are now available.',
+        title: 'GPT-5 Health Analysis Complete',
+        message: 'Your personalized longevity protocol has been updated with latest research findings.',
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
         read: true,
         priority: 'low',
         icon: InformationCircleIcon,
         color: 'from-indigo-500 to-purple-600'
+      },
+      {
+        id: '7',
+        type: 'health',
+        title: 'Neuralink Sync Complete',
+        message: 'Neural interface data successfully integrated. Cognitive enhancement protocols activated.',
+        timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000), // 1.5 days ago
+        read: false,
+        priority: 'high',
+        icon: CpuChipIcon,
+        color: 'from-purple-500 to-indigo-600'
+      },
+      {
+        id: '8',
+        type: 'achievement',
+        title: 'Quantum Coherence Achieved',
+        message: 'Your biomarkers show perfect quantum coherence. Longevity protocols optimized.',
+        timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
+        read: true,
+        priority: 'medium',
+        icon: SparklesIcon,
+        color: 'from-cyan-500 to-blue-600'
       }
     ];
 

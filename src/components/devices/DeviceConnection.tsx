@@ -47,135 +47,157 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
     // Wearables
     {
       id: 'apple-watch',
-      name: 'Apple Watch',
+      name: 'Apple Watch Ultra 3',
       brand: 'Apple',
       category: 'wearable',
       logo: '⌚', // Apple Watch emoji
-      description: 'Track heart rate, activity, sleep, and more',
-      features: ['Heart Rate', 'Steps', 'Sleep', 'Workouts', 'ECG'],
+      description: 'Advanced health monitoring with neural processing',
+      features: ['Continuous Vitals', 'Blood Oxygen', 'Neural Sleep Analysis', 'AI Workouts', 'Advanced ECG'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'fitbit-versa',
-      name: 'Fitbit Versa 4',
+      name: 'Fitbit Sense 3',
       brand: 'Fitbit',
       category: 'wearable',
       logo: '🏃', // Fitness emoji
-      description: 'Comprehensive fitness and health tracking',
-      features: ['Heart Rate', 'Steps', 'Sleep', 'Stress', 'GPS'],
+      description: 'AI-powered stress management and health insights',
+      features: ['Stress Monitoring', 'EDA Sensor', 'Temperature Tracking', 'AI Coaching', 'Advanced Sleep'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'garmin-forerunner',
-      name: 'Garmin Forerunner',
+      name: 'Garmin Forerunner 1065',
       brand: 'Garmin',
       category: 'wearable',
       logo: '🏃‍♂️', // Running emoji
-      description: 'Advanced running and fitness metrics',
-      features: ['GPS', 'Heart Rate', 'VO2 Max', 'Training Load'],
+      description: 'Professional athlete-grade performance analytics',
+      features: ['Multi-Band GPS', 'Training Readiness', 'Recovery Advisor', 'Performance Predictor'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'samsung-galaxy-watch',
-      name: 'Galaxy Watch',
+      name: 'Galaxy Watch 8 Pro',
       brand: 'Samsung',
       category: 'wearable',
       logo: '⌚', // Watch emoji
-      description: 'Smart health and fitness tracking',
-      features: ['Heart Rate', 'Sleep', 'Body Composition', 'ECG'],
+      description: 'Next-gen health monitoring with Samsung Health AI',
+      features: ['BioActive Sensor', 'Body Composition', 'Blood Pressure', 'AI Health Assistant'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'whoop-strap',
-      name: 'WHOOP Strap 4.0',
+      name: 'WHOOP 5.0 Neural',
       brand: 'WHOOP',
       category: 'wearable',
       logo: '💪', // Muscle emoji
-      description: 'Recovery and strain optimization',
-      features: ['HRV', 'Recovery', 'Strain', 'Sleep Coaching'],
+      description: 'Neural network-powered recovery optimization',
+      features: ['Neural HRV', 'Predictive Recovery', 'Strain Coach 3.0', 'Circadian Optimization'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'oura-ring',
-      name: 'Oura Ring',
+      name: 'Oura Ring Gen 4',
       brand: 'Oura',
       category: 'wearable',
       logo: '💍', // Ring emoji
-      description: 'Sleep and recovery insights',
-      features: ['Sleep', 'HRV', 'Temperature', 'Activity'],
+      description: 'Advanced biometric ring with AI insights',
+      features: ['Continuous Temperature', 'Blood Oxygen', 'Stress Resilience', 'Longevity Score'],
+      connectionType: 'app',
+      popular: true
+    },
+    {
+      id: 'meta-neural-band',
+      name: 'Meta Neural Band',
+      brand: 'Meta',
+      category: 'wearable',
+      logo: '🧠', // Brain emoji
+      description: 'Neural interface for thought-controlled health tracking',
+      features: ['Neural Signals', 'Thought Commands', 'Stress Prediction', 'Mental Clarity Score'],
       connectionType: 'app',
       popular: true
     },
     // Smart Scales
     {
       id: 'withings-body',
-      name: 'Body+ Scale',
+      name: 'Body Scan Pro',
       brand: 'Withings',
       category: 'scale',
       logo: '⚖️', // Scale emoji
-      description: 'Body composition and weight tracking',
-      features: ['Weight', 'Body Fat', 'Muscle Mass', 'BMI'],
+      description: 'Full-body health scan with AI analysis',
+      features: ['3D Body Scan', 'Visceral Fat', 'Metabolic Age', 'Health Predictions'],
       connectionType: 'wifi',
       popular: true
     },
     {
       id: 'fitbit-aria',
-      name: 'Aria Air Scale',
+      name: 'Aria AI Scale',
       brand: 'Fitbit',
       category: 'scale',
       logo: '⚖️', // Scale emoji
-      description: 'Smart scale with app integration',
-      features: ['Weight', 'BMI', 'Trends', 'Multi-User'],
+      description: 'AI-powered body composition analysis',
+      features: ['Body Composition', 'Metabolic Rate', 'Health Trends', 'Family Profiles'],
       connectionType: 'bluetooth',
       popular: true
     },
     {
       id: 'tanita-bc',
-      name: 'BC-1000 Plus',
+      name: 'BC-2000 Neural',
       brand: 'Tanita',
       category: 'scale',
       logo: '⚖️', // Scale emoji
-      description: 'Professional body composition analysis',
-      features: ['Weight', 'Body Fat', 'Muscle Mass', 'Visceral Fat'],
+      description: 'Medical-grade body analysis with AI insights',
+      features: ['Cellular Health', 'Organ Fat Analysis', 'Metabolic Prediction', 'Longevity Metrics'],
       connectionType: 'bluetooth',
       popular: false
     },
     // CGM Devices
     {
       id: 'freestyle-libre-2',
-      name: 'FreeStyle Libre 2',
+      name: 'FreeStyle Libre 4',
       brand: 'Abbott',
       category: 'cgm',
       logo: '🩸', // Blood drop emoji
-      description: 'Continuous glucose monitoring with alarms',
-      features: ['Real-time Glucose', 'Trends', 'Alarms', '14-day Sensor'],
+      description: 'Next-gen CGM with predictive glucose analytics',
+      features: ['Predictive Alerts', 'AI Trend Analysis', '21-day Sensor', 'Meal Impact Prediction'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'dexcom-g7',
-      name: 'Dexcom G7',
+      name: 'Dexcom G8 Pro',
       brand: 'Dexcom',
       category: 'cgm',
       logo: '📊', // Chart emoji
-      description: 'Advanced CGM with smartphone integration',
-      features: ['Real-time Glucose', 'Share Data', 'Predictive Alerts'],
+      description: 'AI-enhanced CGM with neural glucose prediction',
+      features: ['Neural Predictions', 'Meal Optimization', 'Exercise Timing', 'Longevity Insights'],
       connectionType: 'app',
       popular: true
     },
     {
       id: 'medtronic-guardian',
-      name: 'Guardian Connect',
+      name: 'Guardian AI Connect',
       brand: 'Medtronic',
       category: 'cgm',
       logo: '🩸', // Blood drop emoji
-      description: 'Professional-grade glucose monitoring',
-      features: ['Continuous Monitoring', 'Predictive Alerts', 'Data Sharing'],
+      description: 'Medical AI-powered glucose management system',
+      features: ['AI Dosing Recommendations', 'Predictive Hypoglycemia', 'Automated Insulin', 'Health Optimization'],
+      connectionType: 'app',
+      popular: false
+    },
+    {
+      id: 'neuralink-health',
+      name: 'Neuralink Health Monitor',
+      brand: 'Neuralink',
+      category: 'wearable',
+      logo: '🧠', // Brain emoji
+      description: 'Direct neural interface for comprehensive health monitoring',
+      features: ['Neural Activity', 'Stress Prediction', 'Cognitive Enhancement', 'Biomarker Analysis'],
       connectionType: 'app',
       popular: false
     }

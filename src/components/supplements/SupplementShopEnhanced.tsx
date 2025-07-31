@@ -23,116 +23,105 @@ const SupplementShopEnhanced: React.FC = () => {
   const [cartItems, setCartItems] = useState<Set<string>>(new Set());
 
   const categories = [
-    { id: 'all', name: 'All Products', icon: CubeIcon, count: 24 },
-    { id: 'sleep', name: 'Sleep & Recovery', icon: MoonIcon, count: 8 },
+    { id: 'all', name: 'All Products', icon: CubeIcon, count: 32 },
+    { id: 'longevity', name: 'Longevity & Anti-Aging', icon: SparklesIcon, count: 12 },
+    { id: 'neural', name: 'Neural Enhancement', icon: BeakerIcon, count: 8 },
     { id: 'performance', name: 'Performance', icon: FireIcon, count: 6 },
-    { id: 'recovery', name: 'Recovery', icon: ShieldCheckIcon, count: 5 },
-    { id: 'wellness', name: 'General Wellness', icon: HeartIcon, count: 5 },
+    { id: 'recovery', name: 'Recovery', icon: ShieldCheckIcon, count: 6 },
   ];
 
   const dummySupplements = [
-    // Sleep & Recovery
+    // Longevity & Anti-Aging
     {
       id: '1',
-      name: 'Magnesium Glycinate',
-      category: 'sleep',
-      price: 89,
-      rating: 4.8,
-      reviews: 1247,
+      name: 'NAD+ Precursor Complex',
+      category: 'longevity',
+      price: 189,
+      rating: 4.9,
+      reviews: 2847,
       image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Premium magnesium for deep sleep and muscle recovery',
-      benefits: ['Improves sleep quality', 'Reduces muscle tension', 'Supports relaxation'],
+      description: 'Advanced NAD+ boosting formula for cellular regeneration',
+      benefits: ['Cellular repair', 'DNA protection', 'Mitochondrial enhancement'],
       tier: 'green',
       featured: true
     },
     {
       id: '2',
-      name: 'Melatonin Complex',
-      category: 'sleep',
+      name: 'Senolytic Compound',
+      category: 'longevity',
+      price: 245,
+      rating: 4.8,
+      reviews: 1534,
+      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
+      description: 'Targets senescent cells for healthy aging',
+      benefits: ['Removes zombie cells', 'Tissue regeneration', 'Age reversal'],
+      tier: 'green',
+      featured: true
+    },
+    // Neural Enhancement
+    {
+      id: '3',
+      name: 'Nootropic Neural Stack',
+      category: 'neural',
+      price: 165,
+      rating: 4.7,
+      reviews: 1892,
+      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
+      description: 'Advanced cognitive enhancement with neural peptides',
+      benefits: ['Enhanced focus', 'Memory optimization', 'Neural plasticity'],
+      tier: 'green'
+    },
+    {
+      id: '4',
+      name: 'Brain-Derived Neurotrophic Factor',
+      category: 'neural',
+      price: 195,
+      rating: 4.6,
+      reviews: 967,
+      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
+      description: 'Promotes neurogenesis and cognitive enhancement',
+      benefits: ['New neuron growth', 'Cognitive protection', 'Mental clarity'],
+      tier: 'yellow'
+    },
+    // Sleep & Recovery
+    {
+      id: '5',
+      name: 'Quantum Sleep Formula',
+      category: 'recovery',
+      price: 89,
+      rating: 4.8,
+      reviews: 1247,
+      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
+      description: 'Advanced sleep optimization with circadian enhancement',
+      benefits: ['Deep sleep enhancement', 'Circadian reset', 'Recovery acceleration'],
+      tier: 'green',
+      featured: true
+    },
+    {
+      id: '6',
+      name: 'Mitochondrial Recovery Complex',
+      category: 'recovery',
       price: 65,
       rating: 4.6,
       reviews: 892,
       image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Natural sleep support with time-release formula',
-      benefits: ['Regulates sleep cycle', 'Reduces sleep latency', 'Antioxidant support'],
+      description: 'Cellular energy optimization for enhanced recovery',
+      benefits: ['ATP production', 'Cellular repair', 'Energy optimization'],
       tier: 'green'
-    },
-    {
-      id: '3',
-      name: 'Ashwagandha KSM-66',
-      category: 'recovery',
-      price: 125,
-      rating: 4.9,
-      reviews: 2156,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Clinically studied adaptogen for stress and recovery',
-      benefits: ['Reduces cortisol', 'Improves stress response', 'Enhances recovery'],
-      tier: 'green',
-      featured: true
     },
     // Performance
     {
-      id: '4',
-      name: 'Creatine Monohydrate',
+      id: '7',
+      name: 'Quantum Creatine Matrix',
       category: 'performance',
       price: 75,
       rating: 4.7,
       reviews: 3421,
       image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Pure creatine for strength and power output',
-      benefits: ['Increases power output', 'Improves strength', 'Enhances muscle growth'],
+      description: 'Next-gen creatine with enhanced bioavailability',
+      benefits: ['Quantum absorption', 'Neural enhancement', 'Performance optimization'],
       tier: 'green'
     },
-    {
-      id: '5',
-      name: 'Beta-Alanine',
-      category: 'performance',
-      price: 95,
-      rating: 4.5,
-      reviews: 1876,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Endurance support for high-intensity training',
-      benefits: ['Reduces muscle fatigue', 'Improves endurance', 'Buffers lactic acid'],
-      tier: 'yellow'
-    },
-    {
-      id: '6',
-      name: 'Rhodiola Rosea',
-      category: 'performance',
-      price: 110,
-      rating: 4.4,
-      reviews: 967,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Adaptogenic herb for mental and physical performance',
-      benefits: ['Enhances mental clarity', 'Reduces fatigue', 'Improves endurance'],
-      tier: 'yellow'
-    },
-    // General Wellness
-    {
-      id: '7',
-      name: 'Omega-3 EPA/DHA',
-      category: 'wellness',
-      price: 135,
-      rating: 4.8,
-      reviews: 2847,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'High-potency fish oil for heart and brain health',
-      benefits: ['Supports heart health', 'Improves brain function', 'Reduces inflammation'],
-      tier: 'green',
-      featured: true
-    },
-    {
-      id: '8',
-      name: 'Vitamin D3 + K2',
-      category: 'wellness',
-      price: 85,
-      rating: 4.6,
-      reviews: 1534,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Essential vitamins for bone and immune health',
-      benefits: ['Supports bone health', 'Boosts immunity', 'Improves mood'],
-      tier: 'green'
-    }
   ];
 
   const filteredSupplements = dummySupplements.filter(supplement => {
