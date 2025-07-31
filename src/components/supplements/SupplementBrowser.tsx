@@ -233,8 +233,9 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                   )}
                   
                   <button className="w-full py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
+                    onClick={onAskCoach}
                     <InformationCircleIcon className="w-5 h-5" />
-                    <span>Learn More</span>
+                    <span>Ask Smart Coach</span>
                   </button>
                 </div>
               </div>
