@@ -18,7 +18,8 @@ import {
   PlayIcon,
   HeartIcon,
   CubeIcon,
-  BeakerIcon
+  BeakerIcon,
+  CameraIcon
 } from '@heroicons/react/24/outline';
 
 interface WelcomeHeaderProps {
@@ -36,17 +37,44 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return { text: 'Good Morning', icon: SunIcon };
-    if (hour < 17) return { text: 'Good Afternoon', icon: SunIcon };
-    if (hour < 21) return { text: 'Good Evening', icon: CloudIcon };
-    return { text: 'Good Night', icon: MoonIcon };
+    if (hour < 12) return { text: 'Hi', icon: SunIcon };
+    if (hour < 17) return { text: 'Hi', icon: SunIcon };
+    if (hour < 21) return { text: 'Hi', icon: CloudIcon };
+    return { text: 'Hi', icon: MoonIcon };
+  };
+
+  const getBedtimeCountdown = () => {
+    const now = new Date();
+    const bedtime = new Date();
+    bedtime.setHours(23, 0, 0, 0); // 11 PM
+    
+    if (now > bedtime) {
+      bedtime.setDate(bedtime.getDate() + 1);
+    }
+    
+    const diff = bedtime.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${hours}h ${minutes}m`;
   };
 
   const greeting = getGreeting();
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
 
   const handleQuickAction = (action: string) => {
-    console.log(`Quick action: ${action}`);
+    switch (action) {
+      case 'home-workout':
+        // Navigate to home workout routines
+        onQuickAction?.('workout');
+        break;
+      case 'gym-workout':
+        // Navigate to gym with AI machine recognition
+        onQuickAction?.('gym-ai');
+        break;
+      default:
+        onQuickAction?.(action);
+    }
   };
 
   return (
@@ -97,7 +125,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                Welcome to your wellness dashboard. Track your health, get personalized insights, and optimize your daily routine.
+                We still have {getBedtimeCountdown()} to bedtime (11 PM). Need to make time for a 30min exercise.
               </motion.p>
             </div>
             
@@ -109,19 +137,19 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               transition={{ delay: 0.7 }}
             >
               <button 
-                onClick={() => onQuickAction?.('start-day')}
-                className="px-6 py-3 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
+                onClick={() => onQuickAction?.('home-workout')}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
-                <PlayIcon className="w-5 h-5" />
-                <span>Start Your Day</span>
+                <HeartIcon className="w-5 h-5" />
+                <span>Home Workout</span>
               </button>
               
               <button 
-                onClick={() => onQuickAction?.('health')}
+                onClick={() => onQuickAction?.('gym-workout')}
                 className="px-6 py-3 bg-card border border-border text-card-foreground font-semibold rounded-xl hover:bg-muted hover:border-[#48C6FF]/30 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
-                <ChartBarIcon className="w-5 h-5" />
-                <span>View Health Data</span>
+                <CameraIcon className="w-5 h-5" />
+                <span>Gym + AI Coach</span>
               </button>
             </motion.div>
             
