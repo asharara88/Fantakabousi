@@ -19,8 +19,11 @@ import {
   HeartIcon,
   CubeIcon,
   BeakerIcon
-  onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
+
+interface WelcomeHeaderProps {
+  onQuickAction?: (action: string) => void;
+}
 
 const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
