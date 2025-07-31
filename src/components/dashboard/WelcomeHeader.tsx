@@ -19,9 +19,10 @@ import {
   HeartIcon,
   CubeIcon,
   BeakerIcon
+  onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
 
-const WelcomeHeader: React.FC = () => {
+const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const { actualTheme } = useTheme();
@@ -104,12 +105,18 @@ const WelcomeHeader: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <button className="btn-mobile-primary lg:btn-primary cursor-pointer">
+              <button 
+                onClick={() => onQuickAction?.('start-day')}
+                className="btn-mobile-primary lg:btn-primary cursor-pointer"
+              >
                 <PlayIcon className="w-5 h-5" />
                 <span>Start Your Day</span>
               </button>
               
-              <button className="btn-mobile-secondary lg:btn-secondary cursor-pointer">
+              <button 
+                onClick={() => onQuickAction?.('health')}
+                className="btn-mobile-secondary lg:btn-secondary cursor-pointer"
+              >
                 <ChartBarIcon className="w-5 h-5" />
                 <span>View Health Data</span>
               </button>

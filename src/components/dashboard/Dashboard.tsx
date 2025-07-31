@@ -29,10 +29,46 @@ const Dashboard: React.FC = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'start-day':
+        // Navigate to today's goals and habits
+        setActiveTab('dashboard');
+        // Scroll to goals section
+        setTimeout(() => {
+          const goalsElement = document.getElementById('todays-goals');
+          goalsElement?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+        break;
+      case 'health':
+        setActiveTab('health');
+        break;
+      case 'coach':
+        setActiveTab('coach');
+        break;
+      case 'shop':
+        setActiveTab('shop');
+        break;
+      case 'recipes':
+        setActiveTab('health');
+        // Switch to recipes tab in health section
+        setTimeout(() => {
+          const recipesTab = document.querySelector('[data-tab="recipes"]') as HTMLButtonElement;
+          recipesTab?.click();
+        }, 100);
+        break;
+      case 'profile':
+        setActiveTab('profile');
+        break;
+      default:
+        console.log(`Quick action: ${action}`);
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <WelcomeHeader />;
+        return <WelcomeHeader onQuickAction={handleQuickAction} />;
       case 'coach':
         return <AICoachEnhanced />;
       case 'health':
@@ -42,7 +78,7 @@ const Dashboard: React.FC = () => {
       case 'profile':
         return <ProfileSettingsEnhanced />;
       default:
-        return <WelcomeHeader />;
+        return <WelcomeHeader onQuickAction={handleQuickAction} />;
     }
   };
 

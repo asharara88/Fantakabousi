@@ -72,7 +72,7 @@ const TodaysGoals: React.FC = () => {
   };
 
   return (
-    <div className="card-premium">
+    <div id="todays-goals" className="card-premium">
       <div className="flex items-center justify-between mb-4 lg:mb-6">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-blue-light rounded-xl flex items-center justify-center">
