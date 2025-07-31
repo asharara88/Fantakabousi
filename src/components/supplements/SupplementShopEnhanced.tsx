@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useSupplements } from '../../hooks/useSupplements';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import { formatCurrency } from '../../lib/utils';
 import { 
   MagnifyingGlassIcon,
@@ -18,118 +20,41 @@ import {
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
 const SupplementShopEnhanced: React.FC = () => {
+  const { supplements, loading } = useSupplements();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [cartItems, setCartItems] = useState<Set<string>>(new Set());
 
-  const categories = [
-    { id: 'all', name: 'All Products', icon: CubeIcon, count: 32 },
-    { id: 'longevity', name: 'Longevity & Anti-Aging', icon: SparklesIcon, count: 12 },
-    { id: 'neural', name: 'Neural Enhancement', icon: BeakerIcon, count: 8 },
-    { id: 'performance', name: 'Performance', icon: FireIcon, count: 6 },
-    { id: 'recovery', name: 'Recovery', icon: ShieldCheckIcon, count: 6 },
-  ];
+  // Generate categories from real data
+  const categories = React.useMemo(() => {
+    const uniqueCategories = Array.from(new Set(supplements.map(s => s.category).filter(Boolean)));
+    return [
+      { id: 'all', name: 'All Products', icon: CubeIcon, count: supplements.length },
+      ...uniqueCategories.map(cat => ({
+        id: cat.toLowerCase(),
+        name: cat,
+        icon: getCategoryIcon(cat),
+        count: supplements.filter(s => s.category === cat).length
+      }))
+    ];
+  }, [supplements]);
 
-  const dummySupplements = [
-    // Longevity & Anti-Aging
-    {
-      id: '1',
-      name: 'NAD+ Precursor Complex',
-      category: 'longevity',
-      price: 189,
-      rating: 4.9,
-      reviews: 2847,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Advanced NAD+ boosting formula for cellular regeneration',
-      benefits: ['Cellular repair', 'DNA protection', 'Mitochondrial enhancement'],
-      tier: 'green',
-      featured: true
-    },
-    {
-      id: '2',
-      name: 'Senolytic Compound',
-      category: 'longevity',
-      price: 245,
-      rating: 4.8,
-      reviews: 1534,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Targets senescent cells for healthy aging',
-      benefits: ['Removes zombie cells', 'Tissue regeneration', 'Age reversal'],
-      tier: 'green',
-      featured: true
-    },
-    // Neural Enhancement
-    {
-      id: '3',
-      name: 'Nootropic Neural Stack',
-      category: 'neural',
-      price: 165,
-      rating: 4.7,
-      reviews: 1892,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Advanced cognitive enhancement with neural peptides',
-      benefits: ['Enhanced focus', 'Memory optimization', 'Neural plasticity'],
-      tier: 'green'
-    },
-    {
-      id: '4',
-      name: 'Brain-Derived Neurotrophic Factor',
-      category: 'neural',
-      price: 195,
-      rating: 4.6,
-      reviews: 967,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Promotes neurogenesis and cognitive enhancement',
-      benefits: ['New neuron growth', 'Cognitive protection', 'Mental clarity'],
-      tier: 'yellow'
-    },
-    // Sleep & Recovery
-    {
-      id: '5',
-      name: 'Quantum Sleep Formula',
-      category: 'recovery',
-      price: 89,
-      rating: 4.8,
-      reviews: 1247,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Advanced sleep optimization with circadian enhancement',
-      benefits: ['Deep sleep enhancement', 'Circadian reset', 'Recovery acceleration'],
-      tier: 'green',
-      featured: true
-    },
-    {
-      id: '6',
-      name: 'Mitochondrial Recovery Complex',
-      category: 'recovery',
-      price: 65,
-      rating: 4.6,
-      reviews: 892,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Cellular energy optimization for enhanced recovery',
-      benefits: ['ATP production', 'Cellular repair', 'Energy optimization'],
-      tier: 'green'
-    },
-    // Performance
-    {
-      id: '7',
-      name: 'Quantum Creatine Matrix',
-      category: 'performance',
-      price: 75,
-      rating: 4.7,
-      reviews: 3421,
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
-      description: 'Next-gen creatine with enhanced bioavailability',
-      benefits: ['Quantum absorption', 'Neural enhancement', 'Performance optimization'],
-      tier: 'green'
-    },
-  ];
-
-  const filteredSupplements = dummySupplements.filter(supplement => {
+  const filteredSupplements = supplements.filter(supplement => {
     const matchesCategory = selectedCategory === 'all' || supplement.category === selectedCategory;
     const matchesSearch = supplement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          supplement.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  function getCategoryIcon(category: string) {
+    const cat = category.toLowerCase();
+    if (cat.includes('vitamin') || cat.includes('mineral')) return BeakerIcon;
+    if (cat.includes('protein') || cat.includes('amino')) return FireIcon;
+    if (cat.includes('omega') || cat.includes('fatty')) return HeartIcon;
+    if (cat.includes('probiotic') || cat.includes('digestive')) return ShieldCheckIcon;
+    if (cat.includes('sleep') || cat.includes('recovery')) return MoonIcon;
+    return CubeIcon;
+  }
 
   const toggleCart = (supplementId: string) => {
     setCartItems(prev => {
@@ -143,22 +68,27 @@ const SupplementShopEnhanced: React.FC = () => {
     });
   };
 
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'green': return 'bg-green-100 text-green-700 border-green-200';
-      case 'yellow': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'orange': return 'bg-orange-100 text-orange-700 border-orange-200';
-      case 'red': return 'bg-red-100 text-red-700 border-red-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
-    }
+  const getStockStatus = (quantity: number) => {
+    if (quantity > 50) return { text: 'In Stock', color: 'text-green-600' };
+    if (quantity > 10) return { text: 'Low Stock', color: 'text-yellow-600' };
+    if (quantity > 0) return { text: 'Very Low', color: 'text-red-600' };
+    return { text: 'Out of Stock', color: 'text-gray-500' };
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto flex items-center justify-center h-64">
+        <LoadingSpinner size="xl" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-gray-900">Supplement Shop</h1>
-        <p className="text-xl text-gray-600">AI-curated supplements for your health goals</p>
+        <p className="text-xl text-gray-600">Real supplements database with {supplements.length} products</p>
       </div>
 
       {/* Search and Filters */}
@@ -212,6 +142,7 @@ const SupplementShopEnhanced: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredSupplements.map((supplement, index) => {
           const isInCart = cartItems.has(supplement.id);
+          const stockStatus = getStockStatus(supplement.stock_quantity);
           
           return (
             <motion.div
@@ -226,21 +157,23 @@ const SupplementShopEnhanced: React.FC = () => {
                 <div className="relative">
                   <div className="w-full h-48 bg-gray-100 rounded-xl overflow-hidden">
                     <img
-                      src={supplement.image}
+                      src={supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
                       alt={supplement.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   
-                  {supplement.featured && (
+                  {supplement.is_featured && (
                     <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full">
                       Featured
                     </div>
                   )}
                   
-                  <div className={`absolute top-3 right-3 px-2 py-1 text-xs font-bold rounded-full border ${getTierColor(supplement.tier)}`}>
-                    {supplement.tier.toUpperCase()}
-                  </div>
+                  {supplement.is_bestseller && (
+                    <div className="absolute top-3 right-3 px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                      BESTSELLER
+                    </div>
+                  )}
                 </div>
 
                 {/* Product Info */}
@@ -255,28 +188,31 @@ const SupplementShopEnhanced: React.FC = () => {
                   </div>
                   
                   {/* Rating */}
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1">
                     {[...Array(5)].map((_, i) => (
                       <StarSolidIcon 
                         key={i} 
                         className={`w-4 h-4 ${
-                          i < Math.floor(supplement.rating) 
+                          i < 4 // Default 4-star rating
                             ? 'text-yellow-400' 
                             : 'text-gray-300'
                         }`} 
                       />
                     ))}
-                    <span className="text-sm text-gray-600 ml-2">
-                      ({supplement.reviews.toLocaleString()})
-                    </span>
+                      <span className="text-sm text-gray-600 ml-2">(4.0)</span>
+                    </div>
+                    <div className={`text-xs font-medium ${stockStatus.color}`}>
+                      {stockStatus.text}
+                    </div>
                   </div>
                   
                   {/* Benefits */}
                   <div className="space-y-1">
-                    {supplement.benefits.slice(0, 2).map((benefit, idx) => (
+                    {supplement.key_benefits.split(',').slice(0, 2).map((benefit, idx) => (
                       <div key={idx} className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span className="text-xs text-gray-600">{benefit}</span>
+                        <span className="text-xs text-gray-600">{benefit.trim()}</span>
                       </div>
                     ))}
                   </div>
@@ -284,11 +220,13 @@ const SupplementShopEnhanced: React.FC = () => {
                   {/* Price */}
                   <div className="flex items-center justify-between">
                     <div className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(supplement.price)}
+                      {formatCurrency(supplement.price)} {supplement.currency}
                     </div>
+                    {supplement.compare_at_price > supplement.price && (
                     <div className="text-sm text-green-600">
-                      20% off subscription
+                        Save {formatCurrency(supplement.compare_at_price - supplement.price)}
                     </div>
+                    )}
                   </div>
                 </div>
 
@@ -297,14 +235,20 @@ const SupplementShopEnhanced: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => toggleCart(supplement.id)}
+                  disabled={!supplement.is_available}
                   className={`w-full py-3 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
-                    isInCart
+                    !supplement.is_available
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : isInCart
                       ? 'bg-green-100 text-green-700 border-2 border-green-200'
                       : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg'
                   }`}
                 >
                   <ShoppingCartIcon className="w-5 h-5" />
-                  <span>{isInCart ? 'Added to Stack' : 'Add to Stack'}</span>
+                  <span>
+                    {!supplement.is_available ? 'Out of Stock' :
+                     isInCart ? 'Added to Stack' : 'Add to Stack'}
+                  </span>
                 </motion.button>
               </div>
             </motion.div>
@@ -330,7 +274,7 @@ const SupplementShopEnhanced: React.FC = () => {
                 <span className="text-gray-600">Subtotal</span>
                 <span className="font-semibold">
                   {formatCurrency(Array.from(cartItems).reduce((sum, id) => {
-                    const supplement = dummySupplements.find(s => s.id === id);
+                    const supplement = supplements.find(s => s.id === id);
                     return sum + (supplement?.price || 0);
                   }, 0))}
                 </span>
@@ -339,7 +283,7 @@ const SupplementShopEnhanced: React.FC = () => {
                 <span>Subscription Discount (20%)</span>
                 <span className="font-semibold">
                   -{formatCurrency(Array.from(cartItems).reduce((sum, id) => {
-                    const supplement = dummySupplements.find(s => s.id === id);
+                    const supplement = supplements.find(s => s.id === id);
                     return sum + (supplement?.price || 0);
                   }, 0) * 0.2)}
                 </span>

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase, Supplement } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+import { getSupplements, SupplementData } from '../lib/supplementsData';
 import { getUserSupplements, addSupplementToStack, removeSupplementFromStack } from '../lib/api';
 import { useToast } from './useToast';
 
 export const useSupplements = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [supplements, setSupplements] = useState<Supplement[]>([]);
+  const [supplements, setSupplements] = useState<SupplementData[]>([]);
   const [userSupplements, setUserSupplements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,19 +24,13 @@ export const useSupplements = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch all available supplements
-      const { data: supplementsData, error: supplementsError } = await supabase
-        .from('supplements')
-        .select('*')
-        .eq('is_active', true)
-        .order('name');
-
-      if (supplementsError) throw supplementsError;
+      // Fetch supplements from CSV
+      const supplementsData = await getSupplements();
 
       // Fetch user's supplements
       const userSupplementsData = await getUserSupplements(user!.id);
 
-      setSupplements(supplementsData || []);
+      setSupplements(supplementsData);
       setUserSupplements(userSupplementsData);
     } catch (err: any) {
       setError(err.message);
