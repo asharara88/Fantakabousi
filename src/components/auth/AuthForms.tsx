@@ -222,7 +222,7 @@ const AuthForms: React.FC = () => {
                   />
                 </motion.div>
                 <h1 className="text-heading-lg mt-4" style={{ color: 'var(--foreground)' }}>
-                  Welcome to Biowell
+                  Welcome Back
                 </h1>
                 <p className="text-body mt-2" style={{ color: 'var(--muted-foreground)' }}>
                   Your AI wellness journey starts here

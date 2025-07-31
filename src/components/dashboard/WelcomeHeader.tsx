@@ -75,9 +75,6 @@ const WelcomeHeader: React.FC = () => {
                 alt="Biowell"
                 className="h-16 lg:h-20 w-auto"
               />
-              <div className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Biowell
-              </div>
             </motion.div>
             
             {/* Main Greeting */}
