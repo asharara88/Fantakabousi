@@ -114,11 +114,14 @@ const RecipeSearch: React.FC = () => {
 
           <div className="flex space-x-3">
             <button
-              onClick={loadPersonalizedRecipes}
+              onClick={() => {
+                setSearchQuery('high protein low carb fertility muscle building');
+                handleSearch();
+              }}
               className="btn-secondary flex items-center space-x-2"
             >
               <SparklesIcon className="w-4 h-4" />
-              <span>Ahmed's Recommendations</span>
+              <span>Health Recommendations</span>
             </button>
           </div>
         </div>

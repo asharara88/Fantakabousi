@@ -220,7 +220,7 @@ export const processVoiceMessage = async (audioBlob: Blob, userId: string) => {
   }
 };
 
-// Recipe Recommendations for Ahmed's Goals
+// Recipe Recommendations for Health Goals
 export const getPersonalizedRecipes = async (userId: string) => {
   try {
     // Get user's dietary preferences and health goals
@@ -230,7 +230,7 @@ export const getPersonalizedRecipes = async (userId: string) => {
       .eq('id', userId)
       .single();
 
-    // Search for recipes optimized for Ahmed's goals
+    // Search for recipes optimized for health goals
     const recipes = await searchRecipes({
       query: 'high protein low carb fertility muscle building',
       diet: profile?.diet_preference || '',

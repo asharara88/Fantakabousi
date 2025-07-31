@@ -90,7 +90,10 @@ const FoodLogger: React.FC = () => {
 
           <div className="flex space-x-3">
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              onClick={() => {
+                setSearchQuery('high protein low carb');
+                handleSearch();
+              }}
               whileTap={{ scale: 0.98 }}
               onClick={handleAnalyzeFood}
               disabled={!foodName.trim() || loading}
@@ -108,7 +111,7 @@ const FoodLogger: React.FC = () => {
             
             <button className="btn-secondary flex items-center space-x-2">
               <CameraIcon className="w-5 h-5" />
-              <span>Scan</span>
+              <span>Health Recommendations</span>
             </button>
           </div>
         </div>

@@ -166,7 +166,7 @@ export const optimizeContent = (content: string, targetKeywords: string[]): Cont
   };
 };
 
-// Content optimization examples for Biowell
+// Content optimization examples
 export const biowellContentOptimizations = {
   // Dashboard welcome message
   welcomeMessage: {

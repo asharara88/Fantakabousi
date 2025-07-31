@@ -25,7 +25,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+            className="w-2 h-2 bg-primary rounded-full"
             animate={{
               scale: [1, 1.5, 1],
               opacity: [0.5, 1, 0.5],
@@ -52,21 +52,9 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           />
           <motion.div
-            className={`absolute inset-0 ${sizeClasses[size]} border-2 border-transparent border-t-blue-500 border-r-purple-600 rounded-full`}
+            className={`absolute inset-0 ${sizeClasses[size]} border-2 border-transparent border-t-primary rounded-full`}
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div
-            className="absolute inset-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-20"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
           />
         </div>
       </div>

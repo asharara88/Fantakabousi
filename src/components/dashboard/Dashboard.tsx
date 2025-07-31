@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
           <main className="space-y-8">
             {/* Welcome Section */}
             <div className="text-center space-y-2">
-              <h1 className="text-display">Good Morning, Ahmed</h1>
+              <h1 className="text-display">Good Morning</h1>
               <p className="text-caption max-w-xl mx-auto">
                 Your daily health insights and wellness metrics.
               </p>

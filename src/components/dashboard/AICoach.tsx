@@ -29,7 +29,7 @@ const AICoach: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hi Ahmed! I've analyzed your recent health data and I can see you're working on fertility, muscle building, and sleep optimization. Your CGM data shows some concerning glucose patterns, and your deep sleep is quite low at 45 minutes. What would you like to focus on first?",
+      content: "Hi! I've analyzed your recent health data. I can see you're working on fertility, muscle building, and sleep optimization. Your glucose patterns show some areas for improvement, and your deep sleep could be optimized. What would you like to focus on first?",
       role: 'assistant',
       timestamp: new Date(),
     }

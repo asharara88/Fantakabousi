@@ -172,18 +172,6 @@ const AuthForms: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8 }}
-              className="card-glass p-6"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map((i) => (
-                    <div 
-                      key={i} 
-                      className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-white font-bold text-sm"
-                      style={{ 
-                        background: 'var(--gradient-biowell)',
-                        borderColor: 'var(--background)'
                       }}
                     >
                       {i}
