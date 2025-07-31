@@ -19,56 +19,56 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       id: 'coach',
       title: 'Chat with Coach',
       icon: ChatBubbleLeftRightIcon,
-      color: '#8b5cf6',
+      color: 'bg-gradient-blue-light',
       badge: 'New'
     },
     {
       id: 'health',
       title: 'View Analytics',
       icon: ChartBarIcon,
-      color: '#06b6d4',
+      color: 'bg-gradient-blue-medium',
       badge: null
     },
     {
       id: 'workout',
       title: 'Log Workout',
       icon: PlusIcon,
-      color: '#f59e0b',
+      color: 'bg-accent-neon',
       badge: null
     },
     {
       id: 'scan',
       title: 'Scan Food',
       icon: CameraIcon,
-      color: '#10b981',
+      color: 'bg-gradient-blue-deep',
       badge: 'Beta'
     },
     {
       id: 'vitals',
       title: 'Check Vitals',
       icon: HeartIcon,
-      color: '#ef4444',
+      color: 'bg-gradient-blue-light',
       badge: null
     },
     {
       id: 'schedule',
       title: 'Schedule',
       icon: CalendarIcon,
-      color: '#6366f1',
+      color: 'bg-gradient-blue-medium',
       badge: null
     }
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-title">Quick Actions</h2>
-        <button className="btn btn-ghost btn-sm">Customize</button>
+        <h2 className="text-heading-lg lg:text-heading-xl text-foreground">Quick Actions</h2>
+        <button className="btn-ghost text-body-sm cursor-pointer">Customize</button>
       </div>
       
       {/* Actions Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="mobile-grid-2 lg:grid-cols-3 xl:grid-cols-6">
         {actions.map((action, index) => (
           <motion.button
             key={action.id}
@@ -78,23 +78,20 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onActionClick?.(action.id)}
-            className="bg-white rounded-xl border border-gray-200 p-4 text-center relative cursor-pointer hover:border-blue-300 hover:shadow-md transition-all duration-200"
+            className="card text-center relative cursor-pointer hover:shadow-md transition-all duration-200 touch-target-large"
           >
             {action.badge && (
-              <div className="absolute top-2 right-2 bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
+              <div className="absolute top-2 right-2 status-indicator status-success text-xs">
                 {action.badge}
               </div>
             )}
             
             <div className="space-y-3">
-              <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto shadow-sm"
-                style={{ backgroundColor: action.color }}
-              >
-                <action.icon className="w-6 h-6 text-white" />
+              <div className={`w-12 h-12 lg:w-14 lg:h-14 ${action.color} rounded-xl flex items-center justify-center mx-auto`}>
+                <action.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
               </div>
               
-              <span className="text-sm font-medium text-gray-900">{action.title}</span>
+              <span className="text-body-sm lg:text-body font-medium text-foreground">{action.title}</span>
             </div>
           </motion.button>
         ))}

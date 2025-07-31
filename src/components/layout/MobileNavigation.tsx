@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useProfile } from '../../hooks/useProfile';
 import NotificationCenter from '../notifications/NotificationCenter';
+import SafeArea from '../ui/SafeArea';
 import { 
   HomeIcon, 
   ChatBubbleLeftRightIcon, 
@@ -58,9 +59,9 @@ export function MobileNavigation({
 
   return (
     <>
-      {/* Mobile Header - Always Visible */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
+      {/* Mobile Header */}
+      <SafeArea top className="lg:hidden mobile-header">
+        <div className="flex items-center justify-between">
           <motion.div 
             className="flex items-center space-x-3"
             initial={{ opacity: 0, x: -20 }}
@@ -69,22 +70,22 @@ export function MobileNavigation({
             <img 
               src={logoUrl}
               alt="Biowell"
-              className="h-17 w-auto"
+              className="h-8 w-auto"
             />
           </motion.div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <button 
               onClick={() => setShowNotifications(true)}
-              className="relative p-2 rounded-xl hover:bg-muted transition-colors"
+              className="touch-target cursor-pointer relative rounded-xl hover:bg-muted transition-colors"
             >
               <BellIcon className="w-6 h-6 text-muted-foreground" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent-neon rounded-full animate-pulse"></div>
             </button>
             
             <motion.button
               onClick={onMenuToggle}
-              className="p-2 rounded-xl hover:bg-muted transition-all duration-200"
+              className="touch-target cursor-pointer rounded-xl hover:bg-muted transition-all duration-200"
               aria-label="Toggle menu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -97,7 +98,7 @@ export function MobileNavigation({
             </motion.button>
           </div>
         </div>
-      </div>
+      </SafeArea>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -115,27 +116,27 @@ export function MobileNavigation({
       {/* Mobile Menu Sidebar */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            className="lg:hidden fixed top-0 right-0 h-full w-80 bg-card z-50 shadow-2xl"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          >
-            <div className="flex flex-col h-full">
+          <SafeArea top bottom right className="lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-card z-50 shadow-2xl">
+            <motion.div
+              className="flex flex-col h-full"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center space-x-3">
                   <img 
                     src={logoUrl}
                     alt="Biowell"
-                    className="h-14 w-auto"
+                    className="h-8 w-auto"
                   />
-                  <span className="text-lg font-bold text-foreground">Menu</span>
+                  <span className="text-heading-md text-foreground">Menu</span>
                 </div>
                 <button
                   onClick={onMenuToggle}
-                  className="p-2 rounded-xl hover:bg-muted transition-colors"
+                  className="touch-target cursor-pointer rounded-xl hover:bg-muted transition-colors"
                 >
                   <XMarkIcon className="w-6 h-6 text-muted-foreground" />
                 </button>
@@ -144,14 +145,14 @@ export function MobileNavigation({
               {/* User Profile */}
               <div className="p-6 bg-gradient-to-r from-blue-light/10 to-neon-green/10 border-b border-border">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">
+                  <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-heading-md">
                       {firstName.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">{firstName}</p>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
+                    <p className="text-body font-semibold text-foreground">{firstName}</p>
+                    <p className="text-body-sm text-muted-foreground truncate">{user?.email}</p>
                   </div>
                 </div>
               </div>
@@ -173,16 +174,16 @@ export function MobileNavigation({
                           onViewChange(item.id);
                           onMenuToggle();
                         }}
-                        className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 ${
+                        className={`w-full flex items-center space-x-4 p-4 rounded-xl text-left transition-all duration-200 cursor-pointer touch-target ${
                           isActive 
-                            ? 'bg-gradient-brand text-white shadow-lg' 
+                            ? 'bg-gradient-brand text-white' 
                             : 'text-foreground hover:bg-muted'
                         }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
-                        <span className="font-semibold">{item.label}</span>
+                        <span className="text-body font-semibold">{item.label}</span>
                       </motion.button>
                     );
                   })}
@@ -196,38 +197,32 @@ export function MobileNavigation({
                     setShowNotifications(true);
                     onMenuToggle();
                   }}
-                  className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+                  className="w-full flex items-center space-x-4 p-4 rounded-xl text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200 cursor-pointer touch-target"
                 >
                   <BellIcon className="w-5 h-5" />
-                  <span className="font-medium">Notifications</span>
-                  <span className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></span>
+                  <span className="text-body font-medium">Notifications</span>
+                  <span className="ml-auto status-dot success animate-pulse"></span>
                 </button>
-                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-foreground transition-all duration-200">
+                <button className="w-full flex items-center space-x-4 p-4 rounded-xl text-foreground hover:bg-muted transition-all duration-200 cursor-pointer touch-target">
                   <Cog6ToothIcon className="w-5 h-5" />
-                  <span className="font-medium">Settings</span>
+                  <span className="text-body font-medium">Settings</span>
                 </button>
                 <button 
                   onClick={signOut}
-                  className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200"
+                  className="w-full flex items-center space-x-4 p-4 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200 cursor-pointer touch-target"
                 >
                   <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                  <span className="font-medium">Sign Out</span>
+                  <span className="text-body font-medium">Sign Out</span>
                 </button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </SafeArea>
         )}
       </AnimatePresence>
 
-      {/* Notification Center */}
-      <NotificationCenter 
-        isOpen={showNotifications}
-        onClose={() => setShowNotifications(false)}
-      />
-
-      {/* Bottom Navigation Bar - Always Visible */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border shadow-lg">
-        <div className="flex items-center justify-around px-2 py-2">
+      {/* Bottom Navigation Bar */}
+      <SafeArea bottom className="lg:hidden mobile-nav">
+        <div className="flex items-center justify-around">
           {navigationItems.map((item) => {
             const Icon = currentView === item.id ? item.activeIcon : item.icon;
             const isActive = currentView === item.id;
@@ -236,17 +231,12 @@ export function MobileNavigation({
               <motion.button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`relative flex flex-col items-center justify-center px-3 py-3 rounded-xl transition-all duration-200 min-w-0 flex-1 ${
-                  isActive 
-                    ? 'text-blue-light bg-blue-light/10' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                }`}
-                style={{ minHeight: '60px' }}
+                className={`mobile-nav-item cursor-pointer ${isActive ? 'active' : ''}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-light' : 'text-muted-foreground'}`} />
-                <span className={`text-xs font-semibold mt-1 truncate ${isActive ? 'text-blue-light' : 'text-muted-foreground'}`}>
+                <Icon className="w-6 h-6" />
+                <span className="text-xs font-semibold mt-1 truncate">
                   {item.label}
                 </span>
                 {isActive && (
@@ -259,7 +249,13 @@ export function MobileNavigation({
             );
           })}
         </div>
-      </div>
+      </SafeArea>
+
+      {/* Notification Center */}
+      <NotificationCenter 
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
     </>
   );
 }

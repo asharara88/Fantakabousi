@@ -41,38 +41,38 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const navItems = [
     { 
       id: 'dashboard', 
-      label: 'Dashboard', 
+      label: 'Home', 
       icon: HomeIcon, 
       activeIcon: HomeSolidIcon,
-      description: 'Your health overview'
+      description: 'Daily overview & goals'
     },
     { 
       id: 'coach', 
       label: 'AI Coach', 
       icon: ChatBubbleLeftRightIcon, 
       activeIcon: ChatSolidIcon,
-      description: 'Personalized guidance'
+      description: 'Get health advice'
     },
     { 
       id: 'health', 
-      label: 'Health', 
+      label: 'Analytics', 
       icon: HeartIcon, 
       activeIcon: HeartSolidIcon,
-      description: 'Metrics & analytics'
+      description: 'Track your progress'
     },
     { 
       id: 'shop', 
       label: 'Supplements', 
       icon: ShoppingBagIcon, 
       activeIcon: ShoppingSolidIcon,
-      description: 'Your supplement stack'
+      description: 'Browse products'
     },
     { 
       id: 'profile', 
       label: 'Profile', 
       icon: UserCircleIcon, 
       activeIcon: UserSolidIcon,
-      description: 'Settings & preferences'
+      description: 'Account settings'
     },
   ];
 

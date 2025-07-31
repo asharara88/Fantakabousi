@@ -160,13 +160,6 @@ const RecipeSearch: React.FC = () => {
   const toggleSaveRecipe = async (recipeId: number) => {
     try {
       if (savedRecipes.has(recipeId)) {
-        // Remove from saved
-        await supabase
-          .from('saved_recipes')
-          .delete()
-          .eq('user_id', user?.id)
-          .eq('recipe_id', recipeId);
-        
         setSavedRecipes(prev => {
           const newSet = new Set(prev);
           newSet.delete(recipeId);
@@ -178,25 +171,12 @@ const RecipeSearch: React.FC = () => {
           description: "Recipe removed from your saved collection.",
         });
       } else {
-        // Add to saved
-        const recipe = recipes.find(r => r.id === recipeId);
-        if (recipe) {
-          await supabase
-            .from('saved_recipes')
-            .insert({
-              user_id: user?.id,
-              recipe_id: recipeId,
-              title: recipe.title,
-              image: recipe.image,
-            });
-          
-          setSavedRecipes(prev => new Set([...prev, recipeId]));
-          
-          toast({
-            title: "Recipe Saved",
-            description: "Recipe added to your saved collection.",
-          });
-        }
+        setSavedRecipes(prev => new Set([...prev, recipeId]));
+        
+        toast({
+          title: "Recipe Saved",
+          description: "Recipe added to your saved collection.",
+        });
       }
     } catch (error) {
       console.error('Error toggling recipe save:', error);
@@ -214,19 +194,19 @@ const RecipeSearch: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-deep to-neon-green rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center">
           <SparklesIcon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Recipe Search</h2>
-          <p className="text-muted-foreground">Discover healthy recipes optimized for your goals</p>
+          <h2 className="text-heading-xl lg:text-heading-2xl text-foreground">Find Recipes</h2>
+          <p className="text-body text-muted-foreground">What would you like to cook today?</p>
         </div>
       </div>
 
       {/* Search */}
-      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+      <div className="card">
         <div className="space-y-4">
-          <div className="flex space-x-3">
+          <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
             <div className="flex-1 relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
@@ -234,14 +214,14 @@ const RecipeSearch: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for healthy recipes..."
-                className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+                className="input-mobile lg:input pl-10"
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
             <select
               value={selectedDiet}
               onChange={(e) => setSelectedDiet(e.target.value)}
-              className="px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+              className="input-mobile lg:input cursor-pointer"
             >
               <option value="">All Diets</option>
               <option value="ketogenic">Keto</option>
@@ -252,41 +232,26 @@ const RecipeSearch: React.FC = () => {
             </select>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-gradient-to-r from-blue-light to-blue-medium text-white font-medium rounded-xl hover:opacity-90 transition-all duration-200 flex items-center space-x-2"
+              className="btn-mobile-primary lg:btn-primary cursor-pointer"
             >
               <MagnifyingGlassIcon className="w-5 h-5" />
               <span>Search</span>
             </button>
           </div>
 
-          <div className="flex space-x-3">
-            <button
-              onClick={() => {
-                setSearchQuery('high protein');
-                handleSearch();
-              }}
-              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
-            >
-              High Protein
-            </button>
-            <button
-              onClick={() => {
-                setSearchQuery('low carb');
-                handleSearch();
-              }}
-              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
-            >
-              Low Carb
-            </button>
-            <button
-              onClick={() => {
-                setSearchQuery('fertility');
-                handleSearch();
-              }}
-              className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
-            >
-              Fertility Support
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {['Protein Rich', 'Low Carb', 'Quick & Healthy'].map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  setSearchQuery(tag.toLowerCase());
+                  handleSearch();
+                }}
+                className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-body-sm cursor-pointer touch-target"
+              >
+                {tag}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -300,7 +265,7 @@ const RecipeSearch: React.FC = () => {
 
       {/* Recipes Grid */}
       {!loading && recipes.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mobile-grid-1 lg:grid-cols-2 xl:grid-cols-3">
           {recipes.map((recipe, index) => {
             const isSaved = savedRecipes.has(recipe.id);
             
@@ -310,18 +275,18 @@ const RecipeSearch: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+                className="card hover:shadow-lg transition-all duration-300"
               >
-                <div className="relative">
+                <div className="relative mb-4">
                   <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-cover rounded-xl"
                   />
                   <div className="absolute top-3 right-3 flex space-x-2">
                     <button
                       onClick={() => toggleSaveRecipe(recipe.id)}
-                      className="p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors"
+                      className="touch-target cursor-pointer bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors"
                     >
                       {isSaved ? (
                         <HeartSolidIcon className="w-5 h-5 text-red-500" />
@@ -342,13 +307,13 @@ const RecipeSearch: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                <div className="space-y-4">
                   <div>
-                    <h3 className="font-bold text-gray-900 line-clamp-2 mb-2">
+                    <h3 className="text-heading-md font-bold text-foreground line-clamp-2 mb-2">
                       {recipe.title}
                     </h3>
                     
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex items-center space-x-4 text-body-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <ClockIcon className="w-4 h-4" />
                         <span>{recipe.readyInMinutes} min</span>
@@ -367,20 +332,20 @@ const RecipeSearch: React.FC = () => {
                   {/* Nutrition */}
                   <div className="grid grid-cols-4 gap-3">
                     <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{recipe.nutrition.calories}</div>
-                      <div className="text-xs text-gray-600">Cal</div>
+                      <div className="text-heading-md font-bold text-foreground">{recipe.nutrition.calories}</div>
+                      <div className="text-caption">Cal</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{recipe.nutrition.protein}g</div>
-                      <div className="text-xs text-gray-600">Protein</div>
+                      <div className="text-heading-md font-bold text-foreground">{recipe.nutrition.protein}g</div>
+                      <div className="text-caption">Protein</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{recipe.nutrition.carbs}g</div>
-                      <div className="text-xs text-gray-600">Carbs</div>
+                      <div className="text-heading-md font-bold text-foreground">{recipe.nutrition.carbs}g</div>
+                      <div className="text-caption">Carbs</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{recipe.nutrition.fat}g</div>
-                      <div className="text-xs text-gray-600">Fat</div>
+                      <div className="text-heading-md font-bold text-foreground">{recipe.nutrition.fat}g</div>
+                      <div className="text-caption">Fat</div>
                     </div>
                   </div>
 
@@ -393,9 +358,9 @@ const RecipeSearch: React.FC = () => {
                           className={`w-4 h-4 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`} 
                         />
                       ))}
-                      <span className="text-sm text-gray-600 ml-2">(4.2)</span>
+                      <span className="text-body-sm text-muted-foreground ml-2">(4.2)</span>
                     </div>
-                    <button className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors">
+                    <button className="btn-primary cursor-pointer">
                       View Recipe
                     </button>
                   </div>
@@ -409,18 +374,18 @@ const RecipeSearch: React.FC = () => {
       {/* Empty State */}
       {!loading && recipes.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <SparklesIcon className="w-8 h-8 text-gray-400" />
+          <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <SparklesIcon className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">
+          <h3 className="text-heading-lg text-foreground mb-2">
             No recipes found
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-body text-muted-foreground mb-6">
             Try searching for specific ingredients or dietary preferences
           </p>
           <button
             onClick={loadFeaturedRecipes}
-            className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors"
+            className="btn-primary cursor-pointer"
           >
             Load Featured Recipes
           </button>

@@ -11,6 +11,7 @@ import AICoachEnhanced from './AICoachEnhanced';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
 import OfflineIndicator from '../ui/OfflineIndicator';
+import SafeArea from '../ui/SafeArea';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -23,13 +24,10 @@ const Dashboard: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleQuickAction = (action: string) => {
-    setActiveTab(action);
-  };
-
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -49,14 +47,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <AccessibilityProvider>
-      <div className="min-h-screen bg-background">
+      <SafeArea top bottom left right className="min-h-screen bg-background">
         <OfflineIndicator />
         
         {/* Desktop Navigation */}
-        <Navigation 
-          activeTab={activeTab} 
-          onTabChange={handleTabChange}
-        />
+        <div className="hidden lg:block">
+          <Navigation 
+            activeTab={activeTab} 
+            onTabChange={handleTabChange}
+          />
+        </div>
         
         {/* Mobile Navigation */}
         <div className="lg:hidden">
@@ -69,22 +69,29 @@ const Dashboard: React.FC = () => {
         </div>
         
         {/* Main Content */}
-        <div className="lg:pl-72 pt-20 lg:pt-8 pb-24 lg:pb-8 min-h-screen">
-          <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-              >
-                {renderContent()}
-              </motion.div>
-            </AnimatePresence>
+        <main 
+          id="main-content"
+          className="mobile-layout lg:pl-72"
+        >
+          <div className="mobile-main">
+            <div className="mobile-content">
+              <div className="container">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    {renderContent()}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </main>
+      </SafeArea>
     </AccessibilityProvider>
   );
 };
