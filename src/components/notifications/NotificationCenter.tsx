@@ -47,8 +47,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '1',
         type: 'health',
-        title: 'Neural Glucose Prediction',
-        message: 'AI predicts glucose spike in 45 minutes. Optimize meal timing or take preventive action.',
+        title: 'Glucose Alert',
+        message: 'Your glucose might spike after lunch. Consider a lighter meal or take a walk.',
         timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
         read: false,
         priority: 'high',
@@ -58,8 +58,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '2',
         type: 'supplement',
-        title: 'Longevity Stack Optimization',
-        message: 'AI recommends taking NAD+ precursor now for optimal cellular repair during sleep.',
+        title: 'Supplement Reminder',
+        message: 'Time to take your evening supplements for better sleep tonight.',
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         read: false,
         priority: 'medium',
@@ -69,8 +69,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '3',
         type: 'achievement',
-        title: 'Biomarker Optimization Achieved! 🧬',
-        message: 'Your biological age decreased by 2.3 years this month through AI-optimized protocols.',
+        title: 'Great Progress! 🎉',
+        message: 'You hit your step goal 5 days in a row this week. Keep it up!',
         timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
         read: true,
         priority: 'low',
@@ -80,8 +80,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '4',
         type: 'workout',
-        title: 'Neural Performance Window',
-        message: 'AI detects optimal neural state for cognitive training. Enhanced neuroplasticity detected.',
+        title: 'Perfect Time to Exercise',
+        message: 'Your energy levels are high right now. Great time for a workout!',
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
         read: true,
         priority: 'medium',
@@ -91,8 +91,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '5',
         type: 'health',
-        title: 'Quantum Biometric Analysis',
-        message: 'Advanced AI detected cellular regeneration markers increased by 23% overnight.',
+        title: 'Sleep Quality Improved',
+        message: 'Your sleep score increased by 15% this week. Your new bedtime routine is working!',
         timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000), // 18 hours ago
         read: true,
         priority: 'low',
@@ -102,8 +102,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '6',
         type: 'system',
-        title: 'GPT-5 Health Analysis Complete',
-        message: 'Your personalized longevity protocol has been updated with latest research findings.',
+        title: 'Weekly Health Report Ready',
+        message: 'Your weekly health summary is ready. Check out your progress and insights.',
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
         read: true,
         priority: 'low',
@@ -113,8 +113,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '7',
         type: 'health',
-        title: 'Neuralink Sync Complete',
-        message: 'Neural interface data successfully integrated. Cognitive enhancement protocols activated.',
+        title: 'Device Sync Complete',
+        message: 'Your Apple Watch data has been synced. All metrics are up to date.',
         timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000), // 1.5 days ago
         read: false,
         priority: 'high',
@@ -124,8 +124,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '8',
         type: 'achievement',
-        title: 'Quantum Coherence Achieved',
-        message: 'Your biomarkers show perfect quantum coherence. Longevity protocols optimized.',
+        title: 'Health Goal Achieved',
+        message: 'Congratulations! You reached your monthly fitness goal 3 days early.',
         timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
         read: true,
         priority: 'medium',
