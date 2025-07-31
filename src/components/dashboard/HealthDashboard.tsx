@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { generateHealthInsights } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import FoodLogger from '../nutrition/FoodLogger';
 import RecipeSearch from '../recipes/RecipeSearch';
@@ -16,76 +14,16 @@ import {
   ChartBarIcon,
   PlusIcon,
   CalendarIcon,
-  TrendingUpIcon
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline';
-
-interface HealthMetric {
-  id: string;
-  metric_type: string;
-  value: number;
-  unit: string;
-  timestamp: string;
-  source: string;
-}
 
 const HealthDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [metrics, setMetrics] = useState<HealthMetric[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState('heart_rate');
   const [timeRange, setTimeRange] = useState('7d');
   const [activeView, setActiveView] = useState('metrics');
-
-  useEffect(() => {
-    fetchHealthMetrics();
-    loadHealthInsights();
-  }, []);
-
-  const fetchHealthMetrics = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('health_metrics')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('timestamp', { ascending: false })
-        .limit(100);
-
-      if (error) throw error;
-      setMetrics(data || []);
-    } catch (error) {
-      console.error('Error fetching health metrics:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addMetric = async (type: string, value: number, unit: string) => {
-    try {
-      const { error } = await supabase
-        .from('health_metrics')
-        .insert({
-          user_id: user?.id,
-          metric_type: type,
-          value,
-          unit,
-          source: 'manual',
-        });
-
-      if (error) throw error;
-      fetchHealthMetrics();
-    } catch (error) {
-      console.error('Error adding metric:', error);
-    }
-  };
-
-  const loadHealthInsights = async () => {
-    try {
-      const insights = await generateHealthInsights(user?.id || '');
-      console.log('Health insights:', insights);
-    } catch (error) {
-      console.error('Error loading insights:', error);
-    }
-  };
 
   const metricTypes = [
     { 
@@ -94,6 +32,8 @@ const HealthDashboard: React.FC = () => {
       unit: 'bpm', 
       icon: HeartIcon,
       color: 'from-red-500 to-rose-600',
+      value: 68,
+      change: -3,
       target: 65
     },
     { 
@@ -102,6 +42,8 @@ const HealthDashboard: React.FC = () => {
       unit: 'steps', 
       icon: BoltIcon,
       color: 'from-blue-500 to-cyan-600',
+      value: 8234,
+      change: -12,
       target: 10000
     },
     { 
@@ -110,6 +52,8 @@ const HealthDashboard: React.FC = () => {
       unit: '/100', 
       icon: MoonIcon,
       color: 'from-indigo-500 to-purple-600',
+      value: 68,
+      change: -5,
       target: 85
     },
     { 
@@ -118,23 +62,11 @@ const HealthDashboard: React.FC = () => {
       unit: 'mg/dL', 
       icon: BeakerIcon,
       color: 'from-green-500 to-emerald-600',
-      target: 95
+      value: 142,
+      change: 8,
+      target: 100
     },
   ];
-
-  const getLatestValue = (type: string) => {
-    const latest = metrics.find(m => m.metric_type === type);
-    return latest?.value || 0;
-  };
-
-  const getMetricTrend = (type: string) => {
-    const typeMetrics = metrics.filter(m => m.metric_type === type).slice(0, 7);
-    if (typeMetrics.length < 2) return 0;
-    
-    const latest = typeMetrics[0].value;
-    const previous = typeMetrics[typeMetrics.length - 1].value;
-    return ((latest - previous) / previous) * 100;
-  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -150,10 +82,9 @@ const HealthDashboard: React.FC = () => {
   const renderMetricsView = () => (
     <>
       {/* Metrics Grid */}
-      <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metricTypes.map((metric, index) => {
-          const latestValue = getLatestValue(metric.key);
-          const trend = getMetricTrend(metric.key);
+          const isPositive = metric.change >= 0;
           
           return (
             <motion.div
@@ -161,43 +92,53 @@ const HealthDashboard: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="metric-card group cursor-pointer"
+              className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => setSelectedMetric(metric.key)}
             >
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <metric.icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className={`status-indicator ${trend >= 0 ? 'status-success' : 'status-warning'}`}>
-                    {trend >= 0 ? '+' : ''}{trend.toFixed(1)}%
+                  <div className={`flex items-center space-x-1 text-sm font-medium ${
+                    isPositive ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {isPositive ? (
+                      <ArrowTrendingUpIcon className="w-4 h-4" />
+                    ) : (
+                      <ArrowTrendingDownIcon className="w-4 h-4" />
+                    )}
+                    <span>{isPositive ? '+' : ''}{metric.change}%</span>
                   </div>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex items-baseline space-x-2">
-                    <span className="text-heading-lg font-bold text-foreground">
-                      {latestValue.toLocaleString()}
+                    <span className="text-2xl font-bold text-gray-900">
+                      {metric.value.toLocaleString()}
                     </span>
-                    <span className="text-caption">
+                    <span className="text-sm text-gray-500">
                       {metric.unit}
                     </span>
                   </div>
-                  <div className="text-body font-semibold text-foreground">
+                  <div className="text-base font-medium text-gray-900">
                     {metric.name}
                   </div>
                 </div>
                 
-                <div className="progress-bar">
-                  <motion.div
-                    className="progress-fill"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min((latestValue / metric.target) * 100, 100)}%` }}
-                    transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
-                    style={{
-                      background: `linear-gradient(90deg, ${metric.color.split(' ')[1]}, ${metric.color.split(' ')[3]})`
-                    }}
-                  />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
+                    <span>{Math.round((metric.value / metric.target) * 100)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <motion.div
+                      className={`h-2 rounded-full bg-gradient-to-r ${metric.color}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min((metric.value / metric.target) * 100, 100)}%` }}
+                      transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
+                    />
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -206,14 +147,14 @@ const HealthDashboard: React.FC = () => {
       </div>
 
       {/* Chart Section */}
-      <div className="card-premium p-8">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 shadow-sm">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-heading-lg text-foreground">Trends</h2>
+          <h2 className="text-xl font-bold text-gray-900">Health Trends</h2>
           <div className="flex items-center space-x-3">
             <select 
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="input-premium"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="7d">7 Days</option>
               <option value="30d">30 Days</option>
@@ -227,84 +168,68 @@ const HealthDashboard: React.FC = () => {
             <button
               key={metric.key}
               onClick={() => setSelectedMetric(metric.key)}
-              className={`card-premium p-4 text-center transition-all duration-200 ${
+              className={`p-4 rounded-xl border transition-all duration-200 ${
                 selectedMetric === metric.key 
-                  ? 'border-primary bg-primary/5' 
-                  : 'hover:bg-muted/30'
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
             >
               <metric.icon className={`w-6 h-6 mx-auto mb-2 ${
-                selectedMetric === metric.key ? 'text-primary' : 'text-muted-foreground'
+                selectedMetric === metric.key ? 'text-blue-500' : 'text-gray-400'
               }`} />
-              <div className="text-body font-medium text-foreground">{metric.name}</div>
+              <div className="text-sm font-medium text-gray-900">{metric.name}</div>
             </button>
           ))}
         </div>
         
-        <div className="h-64 flex items-center justify-center bg-muted/20 rounded-xl">
+        <div className="h-64 flex items-center justify-center bg-gray-50 rounded-xl">
           <div className="text-center space-y-3">
-            <ChartBarIcon className="w-12 h-12 text-muted-foreground mx-auto" />
-            <div className="text-body text-muted-foreground">
+            <ChartBarIcon className="w-12 h-12 text-gray-400 mx-auto" />
+            <div className="text-gray-600">
               Chart visualization for {metricTypes.find(m => m.key === selectedMetric)?.name}
             </div>
-            <div className="text-caption">
-              {metrics.filter(m => m.metric_type === selectedMetric).length} data points
+            <div className="text-sm text-gray-500">
+              Historical data will be displayed here
             </div>
           </div>
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="card-premium p-8">
-        <h2 className="text-heading-lg text-foreground mb-6">Recent Activity</h2>
+      <div className="bg-white rounded-xl border border-gray-200 p-8 shadow-sm">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Activity</h2>
         <div className="space-y-4">
-          {metrics.slice(0, 5).map((metric, index) => {
-            const metricType = metricTypes.find(m => m.key === metric.metric_type);
-            return (
-              <motion.div
-                key={metric.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-muted/20 rounded-xl"
-              >
-                <div className="flex items-center space-x-4">
-                  {metricType && (
-                    <div className={`w-10 h-10 bg-gradient-to-br ${metricType.color} rounded-lg flex items-center justify-center`}>
-                      <metricType.icon className="w-5 h-5 text-white" />
-                    </div>
-                  )}
-                  <div>
-                    <div className="text-body font-medium text-foreground">
-                      {metricType?.name || metric.metric_type}
-                    </div>
-                    <div className="text-caption">
-                      {new Date(metric.timestamp).toLocaleString()}
-                    </div>
-                  </div>
+          {[
+            { type: 'Heart Rate', value: '68 bpm', time: '30m ago', icon: HeartIcon, color: 'bg-red-500' },
+            { type: 'Steps', value: '8,234', time: '1h ago', icon: BoltIcon, color: 'bg-blue-500' },
+            { type: 'Sleep', value: '7h 23m', time: '8h ago', icon: MoonIcon, color: 'bg-indigo-500' },
+            { type: 'Glucose', value: '142 mg/dL', time: '2h ago', icon: BeakerIcon, color: 'bg-green-500' },
+          ].map((activity, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+            >
+              <div className="flex items-center space-x-4">
+                <div className={`w-10 h-10 ${activity.color} rounded-lg flex items-center justify-center`}>
+                  <activity.icon className="w-5 h-5 text-white" />
                 </div>
-                <div className="text-right">
-                  <div className="text-body font-bold text-foreground">
-                    {metric.value} {metric.unit}
-                  </div>
-                  <div className="text-caption">
-                    {metric.source}
-                  </div>
+                <div>
+                  <div className="font-medium text-gray-900">{activity.type}</div>
+                  <div className="text-sm text-gray-600">{activity.time}</div>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+              <div className="text-right">
+                <div className="font-bold text-gray-900">{activity.value}</div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </>
   );
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <LoadingSpinner size="xl" variant="premium" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8">
@@ -316,20 +241,20 @@ const HealthDashboard: React.FC = () => {
               <HeartIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-heading-xl text-foreground">Health Dashboard</h1>
-              <p className="text-caption">Track your health metrics in real-time</p>
+              <h1 className="text-3xl font-bold text-gray-900">Health Dashboard</h1>
+              <p className="text-gray-600">Track your health metrics in real-time</p>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-3">
           {/* View Toggle */}
-          <div className="flex rounded-xl p-1 bg-muted">
+          <div className="flex rounded-xl p-1 bg-gray-100">
             <button
               onClick={() => setActiveView('metrics')}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 activeView === 'metrics'
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-blue-500 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Metrics
@@ -338,8 +263,8 @@ const HealthDashboard: React.FC = () => {
               onClick={() => setActiveView('food')}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 activeView === 'food'
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-blue-500 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Food Log
@@ -348,28 +273,13 @@ const HealthDashboard: React.FC = () => {
               onClick={() => setActiveView('recipes')}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 activeView === 'recipes'
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-blue-500 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Recipes
             </button>
           </div>
-          
-          <button 
-            onClick={() => {
-              const type = prompt('Metric type (heart_rate, steps, sleep, glucose):');
-              const value = prompt('Value:');
-              const unit = prompt('Unit:');
-              if (type && value && unit) {
-                addMetric(type, parseFloat(value), unit);
-              }
-            }}
-            className="btn-primary flex items-center space-x-2"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span>Add Metric</span>
-          </button>
         </div>
       </div>
 
