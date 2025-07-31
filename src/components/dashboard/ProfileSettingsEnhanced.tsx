@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ThemeSelector from '../settings/ThemeSelector';
+import AccessibilitySettings from '../ui/AccessibilitySettings';
 import { useToast } from '../../hooks/useToast';
 import { 
   UserCircleIcon,
