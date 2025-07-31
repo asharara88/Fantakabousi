@@ -2,265 +2,293 @@ import { supabase } from './supabase';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
-// OpenAI Chat API
+// Chat API with proper error handling
 export const sendChatMessage = async (message: string, userId: string, sessionId?: string) => {
   try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/openai-chat`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message,
-        userId,
-        sessionId: sessionId || crypto.randomUUID()
-      }),
-    });
+    // For demo purposes, return a mock response
+    // In production, this would call the OpenAI edge function
+    const mockResponses = [
+      "Thanks for your message! Based on your health data, I'd recommend focusing on consistent sleep patterns and balanced nutrition. Would you like specific recommendations?",
+      "I can see from your metrics that you're making great progress! Let's work on optimizing your supplement timing for better absorption.",
+      "Your glucose levels suggest we should focus on meal timing and composition. I can help you create a personalized nutrition plan.",
+      "Great question! Based on your fitness goals, I'd recommend adjusting your protein intake and workout timing. Here's what I suggest...",
+      "I notice your sleep quality could be improved. Let's discuss some evidence-based strategies for better recovery."
+    ];
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+
+    // Save to chat history
+    if (sessionId && userId) {
+      await supabase.from('chat_history').insert([
+        {
+          user_id: userId,
+          session_id: sessionId,
+          message: message,
+          response: '',
+          role: 'user',
+          timestamp: new Date().toISOString()
+        },
+        {
+          user_id: userId,
+          session_id: sessionId,
+          message: response,
+          response: '',
+          role: 'assistant',
+          timestamp: new Date().toISOString()
+        }
+      ]);
     }
 
-    const data = await response.json();
-    return data;
+    return {
+      response,
+      timestamp: new Date().toISOString()
+    };
   } catch (error) {
     console.error('Error sending chat message:', error);
-    throw error;
+    throw new Error('Failed to send message. Please try again.');
   }
 };
 
-// ElevenLabs Text-to-Speech API
-export const generateSpeech = async (text: string, voiceId?: string) => {
+// Health Metrics API
+export const getHealthMetrics = async (userId: string, metricType?: string) => {
   try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        voiceId: voiceId || 'EXAVITQu4vr4xnSDxMaL' // Default voice
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error generating speech:', error);
-    throw error;
-  }
-};
-
-// Spoonacular Recipe Search API
-export const searchRecipes = async (params: {
-  query?: string;
-  diet?: string;
-  intolerances?: string;
-  maxReadyTime?: number;
-  number?: number;
-}) => {
-  try {
-    const searchParams = new URLSearchParams();
-    if (params.query) searchParams.set('query', params.query);
-    if (params.diet) searchParams.set('diet', params.diet);
-    if (params.intolerances) searchParams.set('intolerances', params.intolerances);
-    if (params.maxReadyTime) searchParams.set('maxReadyTime', params.maxReadyTime.toString());
-    if (params.number) searchParams.set('number', params.number.toString());
-
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/spoonacular-recipes?${searchParams}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error searching recipes:', error);
-    throw error;
-  }
-};
-
-// Nutrition Analysis API
-export const analyzeFood = async (foodName: string, quantity: string, userId: string) => {
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/nutrition-analysis`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        foodName,
-        quantity,
-        userId
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error analyzing food:', error);
-    throw error;
-  }
-};
-
-// Health Insights API
-export const generateHealthInsights = async (userId: string) => {
-  try {
-    const { data: healthMetrics } = await supabase
+    let query = supabase
       .from('health_metrics')
       .select('*')
       .eq('user_id', userId)
-      .order('timestamp', { ascending: false })
-      .limit(50);
+      .order('timestamp', { ascending: false });
 
-    const { data: foodLogs } = await supabase
+    if (metricType) {
+      query = query.eq('metric_type', metricType);
+    }
+
+    const { data, error } = await query.limit(50);
+    
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching health metrics:', error);
+    throw error;
+  }
+};
+
+// Food Logging API
+export const logFood = async (foodData: {
+  user_id: string;
+  food_name: string;
+  portion_size: string;
+  meal_type: string;
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+  glucose_impact?: number;
+}) => {
+  try {
+    const { data, error } = await supabase
       .from('food_logs')
-      .select('*')
-      .eq('user_id', userId)
-      .order('meal_time', { ascending: false })
-      .limit(20);
-
-    // Process data locally for insights
-    const insights = processHealthData(healthMetrics || [], foodLogs || []);
-    return insights;
-  } catch (error) {
-    console.error('Error generating health insights:', error);
-    throw error;
-  }
-};
-
-// Process health data for insights
-const processHealthData = (healthMetrics: any[], foodLogs: any[]) => {
-  const insights = [];
-
-  // Glucose analysis for Ahmed's insulin resistance
-  const glucoseMetrics = healthMetrics.filter(m => m.metric_type === 'glucose');
-  if (glucoseMetrics.length > 0) {
-    const avgGlucose = glucoseMetrics.reduce((sum, m) => sum + m.value, 0) / glucoseMetrics.length;
-    if (avgGlucose > 140) {
-      insights.push({
-        type: 'warning',
-        title: 'Elevated Glucose Levels',
-        message: `Your average glucose is ${Math.round(avgGlucose)} mg/dL. Consider reducing refined carbs and implementing time-restricted eating.`,
-        priority: 'high',
-        category: 'metabolic'
-      });
-    }
-  }
-
-  // Sleep analysis for Ahmed's deep sleep issues
-  const sleepMetrics = healthMetrics.filter(m => m.metric_type === 'sleep');
-  if (sleepMetrics.length > 0) {
-    const avgSleep = sleepMetrics.reduce((sum, m) => sum + m.value, 0) / sleepMetrics.length;
-    if (avgSleep < 75) {
-      insights.push({
-        type: 'optimization',
-        title: 'Sleep Quality Improvement',
-        message: `Your sleep score is ${Math.round(avgSleep)}/100. Focus on sleep hygiene and consider magnesium supplementation for deeper sleep.`,
-        priority: 'high',
-        category: 'recovery'
-      });
-    }
-  }
-
-  // Food pattern analysis
-  const recentMeals = foodLogs.slice(0, 10);
-  const highGlycemicMeals = recentMeals.filter(meal => (meal.glucose_impact || 0) > 15);
-  if (highGlycemicMeals.length > 3) {
-    insights.push({
-      type: 'warning',
-      title: 'High Glycemic Food Pattern',
-      message: `${highGlycemicMeals.length} recent meals had high glucose impact. Consider meal timing and composition adjustments.`,
-      priority: 'medium',
-      category: 'nutrition'
-    });
-  }
-
-  return insights;
-};
-
-// Voice Chat API
-export const processVoiceMessage = async (audioBlob: Blob, userId: string) => {
-  try {
-    // Convert speech to text (would need additional API like Whisper)
-    // For now, return placeholder
-    const text = "Voice processing not yet implemented";
-    
-    // Send to chat API
-    const response = await sendChatMessage(text, userId);
-    
-    // Generate speech response
-    const speechResponse = await generateSpeech(response.response);
-    
-    return {
-      transcription: text,
-      response: response.response,
-      audioResponse: speechResponse.audioData
-    };
-  } catch (error) {
-    console.error('Error processing voice message:', error);
-    throw error;
-  }
-};
-
-// Recipe Recommendations for Health Goals
-export const getPersonalizedRecipes = async (userId: string) => {
-  try {
-    // Get user's dietary preferences and health goals
-    const { data: profile } = await supabase
-      .from('user_profile_signin')
-      .select('*')
-      .eq('id', userId)
+      .insert({
+        ...foodData,
+        meal_time: new Date().toISOString(),
+      })
+      .select()
       .single();
 
-    // Search for recipes optimized for health goals
-    const recipes = await searchRecipes({
-      query: 'high protein low carb fertility muscle building',
-      diet: profile?.diet_preference || '',
-      intolerances: profile?.allergies?.join(',') || '',
-      maxReadyTime: 45,
-      number: 12
-    });
-
-    return recipes;
+    if (error) throw error;
+    return data;
   } catch (error) {
-    console.error('Error getting personalized recipes:', error);
+    console.error('Error logging food:', error);
     throw error;
   }
 };
 
-// Supplement Interaction Checker
-export const checkSupplementInteractions = async (supplementIds: string[]) => {
+// Supplement Management API
+export const getUserSupplements = async (userId: string) => {
   try {
-    // This would integrate with a drug interaction API
-    // For now, return basic compatibility info
-    const interactions = supplementIds.map(id => ({
-      supplementId: id,
-      interactions: [],
-      warnings: [],
-      recommendations: []
-    }));
+    const { data, error } = await supabase
+      .from('user_supplements')
+      .select(`
+        *,
+        supplement:supplements(*)
+      `)
+      .eq('user_id', userId)
+      .eq('subscription_active', true);
 
-    return { interactions, safe: true };
+    if (error) throw error;
+    return data || [];
   } catch (error) {
-    console.error('Error checking supplement interactions:', error);
+    console.error('Error fetching user supplements:', error);
     throw error;
   }
+};
+
+export const addSupplementToStack = async (userId: string, supplementId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('user_supplements')
+      .insert({
+        user_id: userId,
+        supplement_id: supplementId,
+        subscription_active: true,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error adding supplement to stack:', error);
+    throw error;
+  }
+};
+
+export const removeSupplementFromStack = async (userId: string, supplementId: string) => {
+  try {
+    const { error } = await supabase
+      .from('user_supplements')
+      .delete()
+      .eq('user_id', userId)
+      .eq('supplement_id', supplementId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error removing supplement from stack:', error);
+    throw error;
+  }
+};
+
+// Profile Management API
+export const updateUserProfile = async (userId: string, updates: any) => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    throw error;
+  }
+};
+
+// Chat Sessions API
+export const createChatSession = async (userId: string, title?: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('chat_sessions')
+      .insert({
+        user_id: userId,
+        title: title || 'New Chat',
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error creating chat session:', error);
+    throw error;
+  }
+};
+
+export const getChatSessions = async (userId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('chat_sessions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching chat sessions:', error);
+    throw error;
+  }
+};
+
+export const getChatHistory = async (sessionId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('chat_history')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('timestamp', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching chat history:', error);
+    throw error;
+  }
+};
+
+// Mock data generators for demo
+export const generateMockHealthData = (userId: string) => {
+  const metrics = ['heart_rate', 'steps', 'sleep', 'glucose', 'hrv'];
+  const data = [];
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+
+    metrics.forEach(metric => {
+      let value = 0;
+      let unit = '';
+
+      switch (metric) {
+        case 'heart_rate':
+          value = 60 + Math.random() * 20;
+          unit = 'bpm';
+          break;
+        case 'steps':
+          value = 5000 + Math.random() * 8000;
+          unit = 'steps';
+          break;
+        case 'sleep':
+          value = 60 + Math.random() * 40;
+          unit = 'score';
+          break;
+        case 'glucose':
+          value = 80 + Math.random() * 60;
+          unit = 'mg/dL';
+          break;
+        case 'hrv':
+          value = 20 + Math.random() * 40;
+          unit = 'ms';
+          break;
+      }
+
+      data.push({
+        user_id: userId,
+        metric_type: metric,
+        value: Math.round(value),
+        unit,
+        timestamp: date.toISOString(),
+        source: 'demo',
+      });
+    });
+  }
+
+  return data;
+};
+
+// Error handling utility
+export const handleApiError = (error: any) => {
+  console.error('API Error:', error);
+  
+  if (error.message?.includes('JWT')) {
+    return 'Authentication expired. Please sign in again.';
+  }
+  
+  if (error.message?.includes('Network')) {
+    return 'Network error. Please check your connection.';
+  }
+  
+  return error.message || 'An unexpected error occurred.';
 };
