@@ -172,18 +172,27 @@ const AuthForms: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-                      }}
-                    >
-                      {i}
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <div className="text-body font-semibold" style={{ color: 'var(--foreground)' }}>
-                    Join 10,000+ users
+              transition={{ delay: 1.4, duration: 0.8 }}
+              className="flex items-center space-x-4"
+            >
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 rounded-full border-2 border-white shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg, hsl(${120 + i * 30}, 70%, 60%), hsl(${150 + i * 30}, 70%, 70%))`
+                    }}
+                  >
+                    {i}
                   </div>
-                  <div className="text-caption">Already optimizing their health</div>
+                ))}
+              </div>
+              <div>
+                <div className="text-body font-semibold" style={{ color: 'var(--foreground)' }}>
+                  Join 10,000+ users
                 </div>
+                <div className="text-caption">Already optimizing their health</div>
               </div>
             </motion.div>
           </motion.div>
