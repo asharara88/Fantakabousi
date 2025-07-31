@@ -294,8 +294,8 @@ const UnifiedHealthDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">Neural Health Dashboard</h1>
-          <p className="text-xl text-gray-600">AI-powered predictive health analytics with quantum processing</p>
+          <h1 className="text-4xl font-bold text-gray-900">Health Dashboard</h1>
+          <p className="text-xl text-gray-600">Track your health metrics and get personalized insights</p>
         </div>
         
         {/* Tab Navigation */}
