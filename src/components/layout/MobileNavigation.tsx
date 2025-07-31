@@ -137,9 +137,9 @@ export function MobileNavigation({
               </div>
 
               {/* User Profile */}
-              <div className="p-6 bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border">
+              <div className="p-6 bg-gradient-to-r from-blue-light/10 to-neon-green/10 border-b border-border">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">
                       {firstName.charAt(0).toUpperCase()}
                     </span>
@@ -170,8 +170,8 @@ export function MobileNavigation({
                         }}
                         className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 ${
                           isActive 
-                            ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
-                            : 'text-foreground hover:bg-muted hover:text-foreground'
+                            ? 'bg-gradient-brand text-white shadow-lg' 
+                            : 'text-foreground hover:bg-muted'
                         }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -221,21 +221,21 @@ export function MobileNavigation({
                 onClick={() => onViewChange(item.id)}
                 className={`relative flex flex-col items-center justify-center px-3 py-3 rounded-xl transition-all duration-200 min-w-0 flex-1 ${
                   isActive 
-                    ? 'text-blue-600 bg-blue-50' 
+                    ? 'text-blue-light bg-blue-light/10' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
                 style={{ minHeight: '60px' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-600' : 'text-muted-foreground'}`} />
-                <span className={`text-xs font-semibold mt-1 truncate ${isActive ? 'text-blue-600' : 'text-muted-foreground'}`}>
+                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-light' : 'text-muted-foreground'}`} />
+                <span className={`text-xs font-semibold mt-1 truncate ${isActive ? 'text-blue-light' : 'text-muted-foreground'}`}>
                   {item.label}
                 </span>
                 {isActive && (
                   <motion.div
                     layoutId="mobileActiveTab"
-                    className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"
+                    className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-light rounded-full"
                   />
                 )}
               </motion.button>

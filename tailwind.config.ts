@@ -10,54 +10,29 @@ export default {
       },
       colors: {
         border: 'rgb(var(--border))',
-        input: 'rgb(var(--input))',
-        ring: '#48C6FF',
         background: 'rgb(var(--background))',
         foreground: 'rgb(var(--foreground))',
-        // Exact Biowell Brand Colors
-        'biowell-light': '#48C6FF',    // Top Dash - Light Blue
-        'biowell-medium': '#2A7FFF',   // Middle Dash - Medium Blue  
-        'biowell-deep': '#0026CC',     // Bottom Dash - Deep Blue
-        // Updated Biowell Brand Colors
-        'biowell-primary': '#5C4DFF',  // Primary brand color
-        'biowell-accent': '#3BE6C5',   // Accent color
-        primary: {
-          DEFAULT: '#5C4DFF',
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#5C4DFF',
-          500: '#5C4DFF',
-          600: '#4338CA',
-          700: '#3730A3',
-          800: '#312E81',
-          900: '#1E1B4B',
-        },
-        accent: {
-          DEFAULT: '#3BE6C5',
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#3BE6C5',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+        card: {
+          DEFAULT: 'rgb(var(--card))',
+          foreground: 'rgb(var(--card-foreground))',
         },
         muted: {
           DEFAULT: 'rgb(var(--muted))',
           foreground: 'rgb(var(--muted-foreground))',
         },
-        popover: {
-          DEFAULT: 'rgb(var(--popover))',
-          foreground: 'rgb(var(--popover-foreground))',
+        // Biowell Brand - 3 Blue Gradients + Neon Green
+        'blue-light': '#48C6FF',
+        'blue-medium': '#2A7FFF',
+        'blue-deep': '#0026CC',
+        'neon-green': '#3BE6C5',
+        primary: {
+          DEFAULT: '#48C6FF',
+          light: '#48C6FF',
+          medium: '#2A7FFF',
+          deep: '#0026CC',
         },
-        card: {
-          DEFAULT: 'rgb(var(--card))',
-          foreground: 'rgb(var(--card-foreground))',
+        accent: {
+          DEFAULT: '#3BE6C5',
         },
       },
       width: {

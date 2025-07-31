@@ -60,14 +60,14 @@ const AuthForms: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl p-8">
+        <div className="bg-card border border-border rounded-2xl shadow-2xl p-8">
           {/* Logo */}
           <div className="text-center mb-8">
             <img 
@@ -90,7 +90,7 @@ const AuthForms: React.FC = () => {
               onClick={() => setIsSignIn(true)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 isSignIn
-                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  ? 'bg-gradient-blue-light text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -101,7 +101,7 @@ const AuthForms: React.FC = () => {
               onClick={() => setIsSignIn(false)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 !isSignIn
-                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  ? 'bg-gradient-blue-light text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -134,7 +134,7 @@ const AuthForms: React.FC = () => {
                   placeholder="Full Name"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
                   required={!isSignIn}
                 />
               </div>
@@ -148,7 +148,7 @@ const AuthForms: React.FC = () => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
                 required
               />
             </div>
@@ -161,7 +161,7 @@ const AuthForms: React.FC = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-12 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                className="w-full pl-10 pr-12 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
                 required
               />
               <button
@@ -180,7 +180,7 @@ const AuthForms: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground py-3 rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-brand text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <LoadingSpinner size="sm" />
@@ -197,19 +197,19 @@ const AuthForms: React.FC = () => {
           <div className="mt-8 pt-6 border-t border-border">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <ShieldCheckIcon className="h-4 w-4 text-primary" />
+                <ShieldCheckIcon className="h-4 w-4 text-blue-light" />
                 <span>Secure & Private</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <SparklesIcon className="h-4 w-4 text-accent" />
+                <SparklesIcon className="h-4 w-4 accent-neon" />
                 <span>AI-Powered</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <CheckCircleIcon className="h-4 w-4 text-primary" />
+                <CheckCircleIcon className="h-4 w-4 text-blue-medium" />
                 <span>Evidence-Based</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <UserIcon className="h-4 w-4 text-accent" />
+                <UserIcon className="h-4 w-4 accent-neon" />
                 <span>Personalized</span>
               </div>
             </div>

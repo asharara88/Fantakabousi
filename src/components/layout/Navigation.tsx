@@ -90,8 +90,8 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </div>
 
           {/* User Profile Section */}
-          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl border border-primary/20 shadow-sm">
-            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-light/10 to-neon-green/10 rounded-2xl border border-blue-light/20 shadow-sm">
+            <div className="w-14 h-14 bg-gradient-blue-light rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">
                 {firstName.charAt(0).toUpperCase()}
               </span>
@@ -119,16 +119,16 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   onClick={() => onTabChange(item.id)}
                   className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
-                      : 'text-foreground hover:text-primary hover:bg-primary/10'
+                      ? 'bg-gradient-brand text-white shadow-lg'
+                      : 'text-foreground hover:text-blue-light hover:bg-blue-light/10'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-primary'}`} />
+                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-blue-light'}`} />
                   <div className="flex-1 text-left">
                     <div>{item.label}</div>
-                    <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-muted-foreground'}`}>
+                    <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
                       {item.description}
                     </div>
                   </div>
@@ -147,13 +147,13 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
           {/* Bottom Section */}
           <div className="space-y-2 pt-6 border-t border-border">
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200">
-              <BellIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-primary" />
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200">
+              <BellIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
               <span>Notifications</span>
               <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200">
-              <Cog6ToothIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-primary" />
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200">
+              <Cog6ToothIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
               <span>Settings</span>
             </button>
             <button 

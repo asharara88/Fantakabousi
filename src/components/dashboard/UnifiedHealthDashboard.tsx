@@ -79,7 +79,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center space-x-2 mx-auto"
+        className="btn-primary flex items-center space-x-2 mx-auto"
       >
         <PlusIcon className="w-4 h-4" />
         <span>Connect Device</span>
@@ -135,7 +135,7 @@ const UnifiedHealthDashboard: React.FC = () => {
   const renderOverview = () => (
     <div className="space-y-8">
       {/* Today's Summary */}
-      <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-8 border border-primary/20">
+      <div className="bg-card rounded-2xl p-8 border border-border shadow-lg">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
             <div>
@@ -143,11 +143,11 @@ const UnifiedHealthDashboard: React.FC = () => {
               <p className="text-lg text-muted-foreground">Based on your latest health data</p>
             </div>
             <div className="flex items-center space-x-6">
-              <div className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <div className="text-6xl font-bold text-gradient-brand">
                 72
               </div>
               <div className="space-y-1">
-                <div className="text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                <div className="text-sm font-semibold accent-neon bg-neon-green/10 px-3 py-1 rounded-full">
                   Good Progress
                 </div>
                 <div className="text-xs text-muted-foreground">Updated 5 minutes ago</div>
@@ -172,8 +172,9 @@ const UnifiedHealthDashboard: React.FC = () => {
                 />
                 <defs>
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
+                    <stop offset="0%" stopColor="#48C6FF" />
+                    <stop offset="50%" stopColor="#2A7FFF" />
+                    <stop offset="100%" stopColor="#0026CC" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -191,20 +192,20 @@ const UnifiedHealthDashboard: React.FC = () => {
       {/* Quick Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Heart Rate', value: '68 bpm', icon: HeartIcon, color: 'from-red-500 to-pink-600' },
-          { label: 'Steps', value: '8,234', icon: BoltIcon, color: 'from-blue-500 to-cyan-600' },
-          { label: 'Sleep', value: '7h 23m', icon: MoonIcon, color: 'from-indigo-500 to-purple-600' },
-          { label: 'Glucose', value: '142 mg/dL', icon: BeakerIcon, color: 'from-green-500 to-emerald-600' },
+          { label: 'Heart Rate', value: '68 bpm', icon: HeartIcon, color: 'bg-gradient-blue-light' },
+          { label: 'Steps', value: '8,234', icon: BoltIcon, color: 'bg-gradient-blue-medium' },
+          { label: 'Sleep', value: '7h 23m', icon: MoonIcon, color: 'bg-gradient-blue-deep' },
+          { label: 'Glucose', value: '142 mg/dL', icon: BeakerIcon, color: 'bg-accent-neon' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-card rounded-xl p-4 shadow-lg border border-border"
+            className="card rounded-xl p-4"
           >
             <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-lg flex items-center justify-center`}>
+              <div className={`w-10 h-10 ${metric.color} rounded-lg flex items-center justify-center`}>
                 <metric.icon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -217,7 +218,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       </div>
 
       {/* Today's Goals */}
-      <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+      <div className="card">
         <h3 className="text-xl font-bold text-foreground mb-4">Today's Goals</h3>
         <div className="space-y-3">
           {[
@@ -227,7 +228,7 @@ const UnifiedHealthDashboard: React.FC = () => {
           ].map((goal, index) => (
             <div key={index} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
               <div className={`w-5 h-5 rounded-full border-2 ${
-                goal.completed ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                goal.completed ? 'bg-neon-green border-neon-green' : 'border-border'
               }`}>
                 {goal.completed && <CheckCircleIcon className="w-5 h-5 text-white" />}
               </div>
@@ -258,10 +259,10 @@ const UnifiedHealthDashboard: React.FC = () => {
       </div>
 
       {/* Detailed Chart Section */}
-      <div className="bg-card rounded-xl p-8 shadow-lg border border-border">
+      <div className="card-premium">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground">Health Trends</h2>
-          <select className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground">
+          <select className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground">
             <option value="7d">7 Days</option>
             <option value="30d">30 Days</option>
             <option value="90d">90 Days</option>
