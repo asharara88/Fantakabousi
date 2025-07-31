@@ -57,7 +57,7 @@ export function MobileNavigation({
   return (
     <>
       {/* Mobile Header - Always Visible */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
         <div className="flex items-center justify-between px-6 py-4">
           <motion.div 
             className="flex items-center space-x-3"
@@ -72,22 +72,22 @@ export function MobileNavigation({
           </motion.div>
           
           <div className="flex items-center space-x-3">
-            <button className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
-              <BellIcon className="w-6 h-6 text-gray-600" />
+            <button className="relative p-2 rounded-xl hover:bg-muted transition-colors">
+              <BellIcon className="w-6 h-6 text-muted-foreground" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
             </button>
             
             <motion.button
               onClick={onMenuToggle}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-all duration-200"
+              className="p-2 rounded-xl hover:bg-muted transition-all duration-200"
               aria-label="Toggle menu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               {isMenuOpen ? (
-                <XMarkIcon className="w-6 h-6 text-gray-600" />
+                <XMarkIcon className="w-6 h-6 text-muted-foreground" />
               ) : (
-                <Bars3Icon className="w-6 h-6 text-gray-600" />
+                <Bars3Icon className="w-6 h-6 text-muted-foreground" />
               )}
             </motion.button>
           </div>
@@ -111,7 +111,7 @@ export function MobileNavigation({
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="lg:hidden fixed top-0 right-0 h-full w-80 bg-white z-50 shadow-2xl"
+            className="lg:hidden fixed top-0 right-0 h-full w-80 bg-card z-50 shadow-2xl"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -119,25 +119,25 @@ export function MobileNavigation({
           >
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center space-x-3">
                   <img 
                     src={logoUrl}
                     alt="Biowell"
                     className="h-8 w-auto"
                   />
-                  <span className="text-lg font-bold text-gray-900">Menu</span>
+                  <span className="text-lg font-bold text-foreground">Menu</span>
                 </div>
                 <button
                   onClick={onMenuToggle}
-                  className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  className="p-2 rounded-xl hover:bg-muted transition-colors"
                 >
-                  <XMarkIcon className="w-6 h-6 text-gray-600" />
+                  <XMarkIcon className="w-6 h-6 text-muted-foreground" />
                 </button>
               </div>
 
               {/* User Profile */}
-              <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+              <div className="p-6 bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">
@@ -145,8 +145,8 @@ export function MobileNavigation({
                     </span>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{firstName}</p>
-                    <p className="text-sm text-gray-600">{user?.email}</p>
+                    <p className="font-semibold text-foreground">{firstName}</p>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
                   </div>
                 </div>
               </div>
@@ -171,12 +171,12 @@ export function MobileNavigation({
                         className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 ${
                           isActive 
                             ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            : 'text-foreground hover:bg-muted hover:text-foreground'
                         }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                        <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
                         <span className="font-semibold">{item.label}</span>
                       </motion.button>
                     );
@@ -185,13 +185,13 @@ export function MobileNavigation({
               </nav>
 
               {/* Bottom Actions */}
-              <div className="p-6 border-t border-gray-200 space-y-2">
-                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+              <div className="p-6 border-t border-border space-y-2">
+                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-foreground transition-all duration-200">
                   <BellIcon className="w-5 h-5" />
                   <span className="font-medium">Notifications</span>
                   <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
-                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-foreground transition-all duration-200">
                   <Cog6ToothIcon className="w-5 h-5" />
                   <span className="font-medium">Settings</span>
                 </button>
@@ -209,7 +209,7 @@ export function MobileNavigation({
       </AnimatePresence>
 
       {/* Bottom Navigation Bar - Always Visible */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border shadow-lg">
         <div className="flex items-center justify-around px-2 py-2">
           {navigationItems.map((item) => {
             const Icon = currentView === item.id ? item.activeIcon : item.icon;
@@ -222,14 +222,14 @@ export function MobileNavigation({
                 className={`relative flex flex-col items-center justify-center px-3 py-3 rounded-xl transition-all duration-200 min-w-0 flex-1 ${
                   isActive 
                     ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
                 style={{ minHeight: '60px' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
-                <span className={`text-xs font-semibold mt-1 truncate ${isActive ? 'text-blue-600' : 'text-gray-500'}`}>
+                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-600' : 'text-muted-foreground'}`} />
+                <span className={`text-xs font-semibold mt-1 truncate ${isActive ? 'text-blue-600' : 'text-muted-foreground'}`}>
                   {item.label}
                 </span>
                 {isActive && (

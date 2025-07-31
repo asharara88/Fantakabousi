@@ -70,12 +70,12 @@ const UnifiedHealthDashboard: React.FC = () => {
   ];
 
   const ConnectDeviceCard: React.FC<{ metric: any }> = ({ metric }) => (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 border-dashed border-gray-300 text-center">
+    <div className="bg-gradient-to-br from-muted/50 to-muted rounded-xl p-6 border-2 border-dashed border-border text-center">
       <div className={`w-16 h-16 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center mx-auto mb-4 opacity-50`}>
         <metric.icon className="w-8 h-8 text-white" />
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{metric.name}</h3>
-      <p className="text-sm text-gray-600 mb-4">Connect your {metric.deviceType} to track this metric</p>
+      <h3 className="text-lg font-semibold text-foreground mb-2">{metric.name}</h3>
+      <p className="text-sm text-muted-foreground mb-4">Connect your {metric.deviceType} to track this metric</p>
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -88,7 +88,7 @@ const UnifiedHealthDashboard: React.FC = () => {
   );
 
   const MetricCard: React.FC<{ metric: any; value: number; trend: number }> = ({ metric, value, trend }) => (
-    <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+    <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:shadow-xl transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
           <metric.icon className="w-6 h-6 text-white" />
@@ -107,19 +107,19 @@ const UnifiedHealthDashboard: React.FC = () => {
       
       <div className="space-y-3">
         <div className="flex items-baseline space-x-2">
-          <span className="text-3xl font-bold text-gray-900">
+          <span className="text-3xl font-bold text-foreground">
             {value.toLocaleString()}
           </span>
-          <span className="text-sm text-gray-500">{metric.unit}</span>
+          <span className="text-sm text-muted-foreground">{metric.unit}</span>
         </div>
-        <div className="text-base font-semibold text-gray-900">{metric.name}</div>
+        <div className="text-base font-semibold text-foreground">{metric.name}</div>
         
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
             <span>{Math.round((value / metric.target) * 100)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-2">
             <motion.div
               className={`h-2 rounded-full bg-gradient-to-r ${metric.color}`}
               initial={{ width: 0 }}
@@ -135,12 +135,12 @@ const UnifiedHealthDashboard: React.FC = () => {
   const renderOverview = () => (
     <div className="space-y-8">
       {/* Today's Summary */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
+      <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-8 border border-primary/20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Wellness Score</h2>
-              <p className="text-lg text-gray-600">Based on your latest health data</p>
+              <h2 className="text-3xl font-bold text-foreground mb-2">Your Wellness Score</h2>
+              <p className="text-lg text-muted-foreground">Based on your latest health data</p>
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -150,14 +150,14 @@ const UnifiedHealthDashboard: React.FC = () => {
                 <div className="text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">
                   Good Progress
                 </div>
-                <div className="text-xs text-gray-500">Updated 5 minutes ago</div>
+                <div className="text-xs text-muted-foreground">Updated 5 minutes ago</div>
               </div>
             </div>
           </div>
           <div className="flex justify-center">
             <div className="relative w-48 h-48">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" stroke="#e5e7eb" strokeWidth="3" fill="none" />
+                <circle cx="50" cy="50" r="45" stroke="rgb(var(--muted))" strokeWidth="3" fill="none" />
                 <motion.circle
                   cx="50"
                   cy="50"
@@ -179,8 +179,8 @@ const UnifiedHealthDashboard: React.FC = () => {
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">72</div>
-                  <div className="text-xs text-gray-500">Score</div>
+                  <div className="text-2xl font-bold text-foreground">72</div>
+                  <div className="text-xs text-muted-foreground">Score</div>
                 </div>
               </div>
             </div>
@@ -201,15 +201,15 @@ const UnifiedHealthDashboard: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
+            className="bg-card rounded-xl p-4 shadow-lg border border-border"
           >
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-lg flex items-center justify-center`}>
                 <metric.icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="text-lg font-bold text-gray-900">{metric.value}</div>
-                <div className="text-sm text-gray-600">{metric.label}</div>
+                <div className="text-lg font-bold text-foreground">{metric.value}</div>
+                <div className="text-sm text-muted-foreground">{metric.label}</div>
               </div>
             </div>
           </motion.div>
@@ -217,21 +217,21 @@ const UnifiedHealthDashboard: React.FC = () => {
       </div>
 
       {/* Today's Goals */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Today's Goals</h3>
+      <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+        <h3 className="text-xl font-bold text-foreground mb-4">Today's Goals</h3>
         <div className="space-y-3">
           {[
             { task: 'Complete morning workout', completed: true },
             { task: 'Log breakfast nutrition', completed: false },
             { task: 'Take evening supplements', completed: false },
           ].map((goal, index) => (
-            <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+            <div key={index} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
               <div className={`w-5 h-5 rounded-full border-2 ${
                 goal.completed ? 'bg-green-500 border-green-500' : 'border-gray-300'
               }`}>
                 {goal.completed && <CheckCircleIcon className="w-5 h-5 text-white" />}
               </div>
-              <span className={`flex-1 ${goal.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+              <span className={`flex-1 ${goal.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                 {goal.task}
               </span>
             </div>
@@ -258,21 +258,21 @@ const UnifiedHealthDashboard: React.FC = () => {
       </div>
 
       {/* Detailed Chart Section */}
-      <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
+      <div className="bg-card rounded-xl p-8 shadow-lg border border-border">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Health Trends</h2>
-          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <h2 className="text-2xl font-bold text-foreground">Health Trends</h2>
+          <select className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground">
             <option value="7d">7 Days</option>
             <option value="30d">30 Days</option>
             <option value="90d">90 Days</option>
           </select>
         </div>
         
-        <div className="h-64 flex items-center justify-center bg-gray-50 rounded-xl">
+        <div className="h-64 flex items-center justify-center bg-muted/30 rounded-xl">
           <div className="text-center space-y-3">
-            <ChartBarIcon className="w-16 h-16 text-gray-400 mx-auto" />
-            <div className="text-gray-600 text-lg font-medium">Health Trends Visualization</div>
-            <div className="text-sm text-gray-500">{metrics.length} data points available</div>
+            <ChartBarIcon className="w-16 h-16 text-muted-foreground mx-auto" />
+            <div className="text-muted-foreground text-lg font-medium">Health Trends Visualization</div>
+            <div className="text-sm text-muted-foreground">{metrics.length} data points available</div>
           </div>
         </div>
       </div>

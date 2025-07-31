@@ -79,7 +79,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
     <>
       {/* Desktop Navigation */}
       <nav className="hidden lg:flex fixed inset-y-0 z-50 w-72 flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4 shadow-xl border-r border-gray-200">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 pb-4 shadow-xl border-r border-border">
           {/* Logo */}
           <div className="flex h-20 shrink-0 items-center gap-4 pt-6">
             <img 
@@ -90,17 +90,17 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </div>
 
           {/* User Profile Section */}
-          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-100 shadow-sm">
+          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl border border-primary/20 shadow-sm">
             <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">
                 {firstName.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-gray-900 truncate">
+              <p className="text-base font-bold text-foreground truncate">
                 Welcome back, {firstName}
               </p>
-              <p className="text-sm text-gray-600 truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 {user?.email}
               </p>
             </div>
@@ -120,15 +120,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
                     isActive
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                      : 'text-foreground hover:text-primary hover:bg-primary/10'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
+                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-primary'}`} />
                   <div className="flex-1 text-left">
                     <div>{item.label}</div>
-                    <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-gray-500'}`}>
+                    <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-muted-foreground'}`}>
                       {item.description}
                     </div>
                   </div>
@@ -146,21 +146,21 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </nav>
 
           {/* Bottom Section */}
-          <div className="space-y-2 pt-6 border-t border-gray-200">
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-              <BellIcon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" />
+          <div className="space-y-2 pt-6 border-t border-border">
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200">
+              <BellIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-primary" />
               <span>Notifications</span>
               <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-              <Cog6ToothIcon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" />
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200">
+              <Cog6ToothIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-primary" />
               <span>Settings</span>
             </button>
             <button 
               onClick={signOut}
               className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
             >
-              <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 text-red-500 group-hover:text-red-600" />
+              <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 text-red-500 group-hover:text-red-700" />
               <span>Sign Out</span>
             </button>
           </div>
