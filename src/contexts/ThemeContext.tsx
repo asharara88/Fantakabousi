@@ -6,6 +6,8 @@ interface ThemeContextType {
   theme: Theme;
   actualTheme: 'light' | 'dark';
   setTheme: (theme: Theme) => void;
+  autoSyncTime: boolean;
+  setAutoSyncTime: (enabled: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -23,6 +25,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const saved = localStorage.getItem('biowell-theme');
     return (saved as Theme) || 'auto';
   });
+  const [autoSyncTime, setAutoSyncTime] = useState(() => {
+    const saved = localStorage.getItem('biowell-auto-sync-time');
+    return saved === 'true';
+  });
 
   const [actualTheme, setActualTheme] = useState<'light' | 'dark'>('light');
 
@@ -30,8 +36,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updateTheme = () => {
       let newActualTheme: 'light' | 'dark';
       
-      if (theme === 'auto') {
-        newActualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      if (theme === 'auto' || autoSyncTime) {
+        if (autoSyncTime) {
+          // Auto-sync with time: light during day (6 AM - 6 PM), dark at night
+          const hour = new Date().getHours();
+          newActualTheme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+        } else {
+          // Follow system preference
+          newActualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
       } else {
         newActualTheme = theme;
       }
@@ -48,19 +61,27 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
       
       localStorage.setItem('biowell-theme', theme);
+      localStorage.setItem('biowell-auto-sync-time', autoSyncTime.toString());
     };
 
     updateTheme();
 
-    if (theme === 'auto') {
+    // Set up listeners for system preference changes
+    if (theme === 'auto' && !autoSyncTime) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       mediaQuery.addEventListener('change', updateTheme);
       return () => mediaQuery.removeEventListener('change', updateTheme);
     }
-  }, [theme]);
+    
+    // Set up timer for time-based auto-sync
+    if (autoSyncTime) {
+      const interval = setInterval(updateTheme, 60000); // Check every minute
+      return () => clearInterval(interval);
+    }
+  }, [theme, autoSyncTime]);
 
   return (
-    <ThemeContext.Provider value={{ theme, actualTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, actualTheme, setTheme, autoSyncTime, setAutoSyncTime }}>
       {children}
     </ThemeContext.Provider>
   );
