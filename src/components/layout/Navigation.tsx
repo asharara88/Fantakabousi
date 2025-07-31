@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
-import { useTheme } from '../../contexts/ThemeContext';
 import NotificationCenter from '../notifications/NotificationCenter';
 import { 
   HomeIcon, 
