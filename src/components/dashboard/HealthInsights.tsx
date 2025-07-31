@@ -56,44 +56,46 @@ const HealthInsights: React.FC = () => {
       </div>
       
       {/* Insights Grid */}
-      <div className="grid md:grid-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {insights.map((insight, index) => (
           <motion.div
             key={insight.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="card card-compact"
+            className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm"
           >
             <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm"
                     style={{ backgroundColor: insight.color }}
                   >
                     <insight.icon className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-heading">{insight.title}</span>
+                  <span className="font-semibold text-gray-900">{insight.title}</span>
                 </div>
-                <div className="text-label">AI: {insight.confidence}%</div>
+                <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  AI: {insight.confidence}%
+                </div>
               </div>
 
               {/* Message */}
-              <p className="text-body">{insight.message}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">{insight.message}</p>
 
               {/* Actions */}
               <div className="flex items-center justify-between">
                 <button 
-                  className="btn btn-primary btn-sm"
+                  className="px-3 py-2 text-sm font-medium text-white rounded-lg hover:opacity-90 transition-opacity"
                   style={{ backgroundColor: insight.color }}
                 >
                   Take Action
                 </button>
-                <button className="btn btn-ghost btn-sm">
+                <button className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors flex items-center space-x-1">
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  Ask Coach
+                  <span>Ask Coach</span>
                 </button>
               </div>
             </div>
@@ -102,15 +104,15 @@ const HealthInsights: React.FC = () => {
       </div>
 
       {/* Status */}
-      <div className="card card-compact">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-            <span className="text-caption">Updated 2 minutes ago</span>
+            <span className="text-sm text-gray-600">Updated 2 minutes ago</span>
           </div>
-          <button className="btn btn-primary btn-sm">
+          <button className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2">
             <SparklesIcon className="w-4 h-4" />
-            Chat with Coach
+            <span>Chat with Coach</span>
           </button>
         </div>
       </div>

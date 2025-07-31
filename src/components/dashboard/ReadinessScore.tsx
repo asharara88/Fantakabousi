@@ -7,7 +7,7 @@ interface ReadinessScoreProps {
 }
 
 const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
-  const radius = 60;
+  const radius = 45;
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = `${(score / 100) * circumference} ${circumference}`;
 
@@ -26,7 +26,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   };
 
   return (
-    <div className="card">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -37,36 +37,39 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
             <SparklesIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-title">Biowell Score</h2>
-            <p className="text-caption">Your daily wellness index</p>
+            <h2 className="text-xl font-bold text-gray-900">Biowell Score</h2>
+            <p className="text-sm text-gray-600">Your daily wellness index</p>
           </div>
         </div>
-        <div className={`status ${score >= 70 ? 'status-success' : score >= 55 ? 'status-warning' : 'status-error'}`}>
+        <div className={`px-3 py-1 text-sm font-medium rounded-full ${
+          score >= 70 ? 'bg-green-100 text-green-700' : 
+          score >= 55 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+        }`}>
           {getScoreStatus(score)}
         </div>
       </div>
 
-      <div className="flex items-center gap-8">
+      <div className="flex items-center justify-between">
         {/* Score Ring */}
         <div className="relative flex-shrink-0">
-          <svg width="140" height="140" className="transform -rotate-90">
+          <svg width="120" height="120" className="transform -rotate-90">
             {/* Background circle */}
             <circle
-              cx="70"
-              cy="70"
+              cx="60"
+              cy="60"
               r={radius}
-              stroke="hsl(var(--muted))"
-              strokeWidth="6"
+              stroke="#e5e7eb"
+              strokeWidth="4"
               fill="none"
             />
             
             {/* Progress circle */}
             <motion.circle
-              cx="70"
-              cy="70"
+              cx="60"
+              cy="60"
               r={radius}
               stroke={getScoreColor(score)}
-              strokeWidth="6"
+              strokeWidth="4"
               fill="none"
               strokeLinecap="round"
               initial={{ strokeDasharray: "0 " + circumference }}
@@ -82,17 +85,17 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                className="text-3xl font-bold text-foreground"
+                className="text-2xl font-bold text-gray-900"
               >
                 {score}
               </motion.div>
-              <div className="text-label">SCORE</div>
+              <div className="text-xs text-gray-500 font-medium">SCORE</div>
             </div>
           </div>
         </div>
 
         {/* Breakdown */}
-        <div className="flex-1 grid grid-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {[
             { label: 'Sleep', value: 68, color: '#6366f1' },
             { label: 'Activity', value: 72, color: '#06b6d4' },
@@ -107,12 +110,12 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
               className="text-center"
             >
               <div 
-                className="text-xl font-bold mb-1"
+                className="text-lg font-bold mb-1"
                 style={{ color: item.color }}
               >
                 {item.value}
               </div>
-              <div className="text-caption">{item.label}</div>
+              <div className="text-xs text-gray-500">{item.label}</div>
             </motion.div>
           ))}
         </div>

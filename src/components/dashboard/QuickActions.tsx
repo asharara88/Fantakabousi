@@ -68,7 +68,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       </div>
       
       {/* Actions Grid */}
-      <div className="grid grid-3 md:grid-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {actions.map((action, index) => (
           <motion.button
             key={action.id}
@@ -78,23 +78,23 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onActionClick?.(action.id)}
-            className="card card-compact text-center relative cursor-pointer"
+            className="bg-white rounded-xl border border-gray-200 p-4 text-center relative cursor-pointer hover:border-blue-300 hover:shadow-md transition-all duration-200"
           >
             {action.badge && (
-              <div className="absolute top-2 right-2 status status-success text-xs">
+              <div className="absolute top-2 right-2 bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
                 {action.badge}
               </div>
             )}
             
             <div className="space-y-3">
               <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto"
+                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto shadow-sm"
                 style={{ backgroundColor: action.color }}
               >
                 <action.icon className="w-6 h-6 text-white" />
               </div>
               
-              <span className="text-body font-medium">{action.title}</span>
+              <span className="text-sm font-medium text-gray-900">{action.title}</span>
             </div>
           </motion.button>
         ))}
