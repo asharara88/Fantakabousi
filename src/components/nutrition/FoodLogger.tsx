@@ -49,7 +49,7 @@ const FoodLogger: React.FC = () => {
 
     setLoading(true);
     try {
-      // Simulate nutrition analysis (replace with real API call)
+      // Simulate nutrition analysis
       const mockAnalysis: FoodAnalysis = {
         nutrition: {
           calories: Math.floor(Math.random() * 400) + 100,
@@ -66,8 +66,8 @@ const FoodLogger: React.FC = () => {
           insulinScore: Math.floor(Math.random() * 40) + 60,
           recommendations: [
             'Good protein content for muscle building',
-            'Moderate glycemic impact - consider timing',
-            'Contains nutrients beneficial for fertility'
+            'Moderate impact on blood sugar',
+            'Contains beneficial nutrients'
           ]
         }
       };
@@ -93,7 +93,7 @@ const FoodLogger: React.FC = () => {
       if (error) throw error;
 
       toast({
-        title: "Food Logged Successfully",
+        title: "Food Logged",
         description: `${foodName} has been added to your nutrition log.`,
       });
 
@@ -115,60 +115,49 @@ const FoodLogger: React.FC = () => {
     return 'text-red-600';
   };
 
-  const getGlycemicColor = (impact: number) => {
-    if (impact < 10) return 'text-green-600';
-    if (impact < 20) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-neon-green to-blue-light rounded-xl flex items-center justify-center shadow-lg">
-          <BeakerIcon className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">Food Logger</h2>
-          <p className="text-muted-foreground">Track nutrition and analyze health impact</p>
-        </div>
+      <div className="text-center space-y-2">
+        <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Food Logger</h2>
+        <p className="text-gray-600">Track what you eat and get nutrition insights</p>
       </div>
 
       {/* Input Form */}
-      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+      <div className="card p-4 lg:p-6">
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">Food Item</label>
+              <label className="block text-sm font-medium text-gray-900">What did you eat?</label>
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   value={foodName}
                   onChange={(e) => setFoodName(e.target.value)}
                   placeholder="e.g., grilled chicken breast"
-                  className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">Quantity</label>
+              <label className="block text-sm font-medium text-gray-900">How much?</label>
               <input
                 type="text"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="e.g., 150g, 1 cup"
-                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">Meal Type</label>
+              <label className="block text-sm font-medium text-gray-900">Meal Type</label>
               <select
                 value={mealType}
                 onChange={(e) => setMealType(e.target.value as any)}
-                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="breakfast">Breakfast</option>
                 <option value="lunch">Lunch</option>
@@ -178,26 +167,26 @@ const FoodLogger: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex space-x-3">
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={analyzeFood}
               disabled={!foodName.trim() || loading}
-              className="flex-1 bg-gradient-to-r from-blue-light to-blue-medium text-white font-medium py-3 px-6 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
+              className="flex-1 btn-primary flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <LoadingSpinner size="sm" />
               ) : (
                 <>
-                  <PlusIcon className="w-5 h-5" />
-                  <span>Analyze & Log</span>
+                  <PlusIcon className="w-4 h-4" />
+                  <span>Log Food</span>
                 </>
               )}
             </motion.button>
             
-            <button className="px-6 py-3 border border-border text-muted-foreground font-medium rounded-xl hover:bg-muted/50 transition-colors flex items-center space-x-2">
-              <CameraIcon className="w-5 h-5" />
+            <button className="btn-secondary flex items-center justify-center space-x-2">
+              <CameraIcon className="w-4 h-4" />
               <span>Scan Food</span>
             </button>
           </div>
@@ -209,77 +198,59 @@ const FoodLogger: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+          className="card p-4 lg:p-6"
         >
           <h3 className="text-lg font-bold text-gray-900 mb-4">
             Nutrition Analysis: {foodName}
           </h3>
 
           {/* Nutrition Facts */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+          <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.calories}</div>
-              <div className="text-sm text-gray-600">Calories</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.calories}</div>
+              <div className="text-xs text-gray-600">Calories</div>
             </div>
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.protein}g</div>
-              <div className="text-sm text-gray-600">Protein</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.protein}g</div>
+              <div className="text-xs text-gray-600">Protein</div>
             </div>
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.carbohydrates}g</div>
-              <div className="text-sm text-gray-600">Carbs</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.carbohydrates}g</div>
+              <div className="text-xs text-gray-600">Carbs</div>
             </div>
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.fat}g</div>
-              <div className="text-sm text-gray-600">Fat</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.fat}g</div>
+              <div className="text-xs text-gray-600">Fat</div>
             </div>
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.fiber}g</div>
-              <div className="text-sm text-gray-600">Fiber</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.fiber}g</div>
+              <div className="text-xs text-gray-600">Fiber</div>
             </div>
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold text-gray-900">{analysis.nutrition.sugar}g</div>
-              <div className="text-sm text-gray-600">Sugar</div>
+              <div className="text-xl lg:text-2xl font-bold text-gray-900">{analysis.nutrition.sugar}g</div>
+              <div className="text-xs text-gray-600">Sugar</div>
             </div>
           </div>
 
           {/* Health Scores */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center space-y-2 p-4 bg-gray-50 rounded-xl">
-              <div className={`text-xl font-bold ${getScoreColor(analysis.insights.fertilityScore)}`}>
+            <div className="text-center space-y-2 p-3 bg-gray-50 rounded-lg">
+              <div className={`text-lg font-bold ${getScoreColor(analysis.insights.fertilityScore)}`}>
                 {analysis.insights.fertilityScore}/100
               </div>
-              <div className="text-sm text-gray-600">Fertility Score</div>
+              <div className="text-xs text-gray-600">Health Score</div>
             </div>
-            <div className="text-center space-y-2 p-4 bg-gray-50 rounded-xl">
-              <div className={`text-xl font-bold ${getScoreColor(analysis.insights.muscleScore)}`}>
+            <div className="text-center space-y-2 p-3 bg-gray-50 rounded-lg">
+              <div className={`text-lg font-bold ${getScoreColor(analysis.insights.muscleScore)}`}>
                 {analysis.insights.muscleScore}/100
               </div>
-              <div className="text-sm text-gray-600">Muscle Score</div>
+              <div className="text-xs text-gray-600">Muscle Score</div>
             </div>
-            <div className="text-center space-y-2 p-4 bg-gray-50 rounded-xl">
-              <div className={`text-xl font-bold ${getScoreColor(analysis.insights.insulinScore)}`}>
+            <div className="text-center space-y-2 p-3 bg-gray-50 rounded-lg">
+              <div className={`text-lg font-bold ${getScoreColor(analysis.insights.insulinScore)}`}>
                 {analysis.insights.insulinScore}/100
               </div>
-              <div className="text-sm text-gray-600">Insulin Score</div>
-            </div>
-          </div>
-
-          {/* Glycemic Impact */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <BeakerIcon className="w-5 h-5 text-blue-500" />
-                <span className="font-medium text-gray-900">Glycemic Impact</span>
-              </div>
-              <div className={`text-lg font-bold ${getGlycemicColor(analysis.glycemicImpact)}`}>
-                {analysis.glycemicImpact} GL
-              </div>
-            </div>
-            <div className="text-sm text-gray-600 mt-2">
-              {analysis.glycemicImpact < 10 ? 'Low impact - great for blood sugar control' :
-               analysis.glycemicImpact < 20 ? 'Moderate impact - monitor timing' :
-               'High impact - may cause glucose spikes'}
+              <div className="text-xs text-gray-600">Blood Sugar</div>
             </div>
           </div>
 
@@ -288,7 +259,7 @@ const FoodLogger: React.FC = () => {
             <h4 className="font-medium text-gray-900">Recommendations</h4>
             {analysis.insights.recommendations.map((rec, index) => (
               <div key={index} className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
-                <LightBulbIcon className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                <LightBulbIcon className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-gray-700">{rec}</span>
               </div>
             ))}
@@ -297,9 +268,9 @@ const FoodLogger: React.FC = () => {
       )}
 
       {/* Recent Logs */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="card p-4 lg:p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-gray-900">Recent Food Logs</h3>
+          <h3 className="text-lg font-bold text-gray-900">Recent Meals</h3>
           <button className="text-sm text-blue-500 hover:text-blue-600 font-medium">
             View All
           </button>
