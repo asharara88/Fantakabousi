@@ -38,11 +38,11 @@ const WelcomeHeader: React.FC = () => {
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl border border-blue-100 shadow-lg">
+    <div className="relative overflow-hidden bg-card rounded-3xl border border-border shadow-lg">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-light/5 via-blue-medium/5 to-blue-deep/5"></div>
       <motion.div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 bg-gradient-to-r from-blue-400 to-purple-600"
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 bg-gradient-brand"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.05, 0.15, 0.05],
@@ -85,16 +85,16 @@ const WelcomeHeader: React.FC = () => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
               >
-                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${greeting.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-blue-light rounded-2xl flex items-center justify-center shadow-lg`}>
                   <greeting.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
                 </div>
-                <h1 className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                <h1 className="text-3xl lg:text-5xl font-bold text-foreground">
                   {greeting.text}, {firstName}!
                 </h1>
               </motion.div>
               
               <motion.p 
-                className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl"
+                className="text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
@@ -113,7 +113,7 @@ const WelcomeHeader: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-3"
+                className="btn-primary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3"
               >
                 <PlayIcon className="w-5 h-5" />
                 <span>Start Your Day</span>
@@ -122,7 +122,7 @@ const WelcomeHeader: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white/80 backdrop-blur-sm border-2 border-blue-200 text-blue-600 font-bold rounded-2xl hover:bg-white hover:border-blue-300 transition-all duration-300 flex items-center justify-center space-x-3"
+                className="btn-secondary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3"
               >
                 <ChartBarIcon className="w-5 h-5" />
                 <span>View Analytics</span>
@@ -136,13 +136,13 @@ const WelcomeHeader: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
             >
-              <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-green-200">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
-                <span className="font-medium text-green-700">All systems active</span>
+              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
+                <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse shadow-sm"></div>
+                <span className="font-medium accent-neon">All systems active</span>
               </div>
-              <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-blue-200">
-                <BoltIcon className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-blue-700">AI ready</span>
+              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
+                <BoltIcon className="w-4 h-4 text-blue-light" />
+                <span className="font-medium text-blue-light">AI ready</span>
               </div>
             </motion.div>
           </motion.div>
@@ -216,25 +216,25 @@ const WelcomeHeader: React.FC = () => {
             {/* Quick Metrics */}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-pink-600' },
-                { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
-                { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
-                { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'from-purple-500 to-indigo-600' },
+                { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-blue-light' },
+                { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-accent-neon' },
+                { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-blue-medium' },
+                { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-blue-deep' },
               ].map((metric, index) => (
                 <motion.div
                   key={metric.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2 + index * 0.1 }}
-                  className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-white/50 shadow-sm"
+                  className="bg-card rounded-2xl p-4 border border-border shadow-sm"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                    <div className={`w-10 h-10 ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
                       <metric.icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">{metric.value}</div>
-                      <div className="text-sm text-gray-600">{metric.label}</div>
+                      <div className="text-lg font-bold text-foreground">{metric.value}</div>
+                      <div className="text-sm text-muted-foreground">{metric.label}</div>
                     </div>
                   </div>
                 </motion.div>
