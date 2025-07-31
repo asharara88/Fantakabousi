@@ -5,8 +5,8 @@ import {
   BoltIcon,
   MoonIcon,
   BeakerIcon,
-  TrendingUpIcon,
-  TrendingDownIcon
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline';
 
 interface HealthMetric {
@@ -127,9 +127,9 @@ const HealthSummary: React.FC = () => {
                 metric.change >= 0 ? 'text-green-600' : 'text-red-600'
               }`}>
                 {metric.change >= 0 ? (
-                  <TrendingUpIcon className="w-4 h-4" />
+                  <ArrowTrendingUpIcon className="w-4 h-4" />
                 ) : (
-                  <TrendingDownIcon className="w-4 h-4" />
+                  <ArrowTrendingDownIcon className="w-4 h-4" />
                 )}
                 <span>{metric.change >= 0 ? '+' : ''}{metric.change}%</span>
               </div>
