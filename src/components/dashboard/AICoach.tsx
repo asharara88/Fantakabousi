@@ -132,14 +132,9 @@ const AICoach: React.FC = () => {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">AI Wellness Coach</h1>
                 <div className="flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-medium to-blue-deep rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-sm text-gray-600">Online and Ready</span>
                 </div>
-              </div>
-              <h1 className="text-2xl font-bold text-foreground">AI Wellness Coach</h1>
-            <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Online and Ready</span>
               </div>
             </div>
           </div>
@@ -162,8 +157,8 @@ const AICoach: React.FC = () => {
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
                     message.role === 'user' 
                       ? 'bg-gradient-to-br from-blue-500 to-cyan-600' 
-                    ? 'bg-gradient-to-br from-blue-light to-blue-medium' 
-                    : 'bg-gradient-to-br from-blue-medium to-blue-deep'
+                      : 'bg-gradient-to-br from-purple-500 to-indigo-600'
+                  }`}>
                     {message.role === 'user' ? (
                       <UserIcon className="w-5 h-5 text-white" />
                     ) : (
@@ -172,15 +167,15 @@ const AICoach: React.FC = () => {
                   </div>
                   
                   <div className={`bg-white rounded-2xl p-4 shadow-sm border border-gray-200 ${
-                <div className={`bg-card rounded-2xl p-4 shadow-sm border border-border ${
+                    message.role === 'user' 
                       ? 'bg-gradient-to-br from-blue-50 to-cyan-50' 
-                    ? 'bg-blue-light/10' 
+                      : ''
                   }`}>
                     <p className="text-gray-900 leading-relaxed">
-                  <p className="text-foreground leading-relaxed">
+                      {message.content}
                     </p>
                     <div className="text-xs text-gray-500 mt-2">
-                  <div className="text-xs text-muted-foreground mt-2">
+                      {new Date(message.created_at).toLocaleTimeString()}
                     </div>
                   </div>
                 </div>
@@ -195,13 +190,13 @@ const AICoach: React.FC = () => {
               >
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-medium to-blue-deep rounded-xl flex items-center justify-center shadow-lg">
+                    <CpuChipIcon className="w-5 h-5 text-white" />
                   </div>
                   <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-                <div className="bg-card rounded-2xl p-4 shadow-sm border border-border">
+                    <div className="flex items-center space-x-2">
                       <LoadingSpinner size="sm" variant="dots" />
                       <span className="text-gray-600">AI is thinking...</span>
-                    <span className="text-muted-foreground">AI is thinking...</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -225,10 +220,10 @@ const AICoach: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setInputMessage(prompt.text)}
                   className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all duration-200"
-                className="flex items-center space-x-2 px-4 py-2 bg-card border border-border rounded-xl hover:border-blue-light hover:shadow-sm transition-all duration-200"
+                >
                   <prompt.icon className="w-4 h-4 text-blue-500" />
-                <prompt.icon className="w-4 h-4 text-blue-light" />
-                <span className="text-sm font-medium text-foreground">{prompt.text}</span>
+                  <span className="text-sm font-medium text-gray-700">{prompt.text}</span>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -236,7 +231,7 @@ const AICoach: React.FC = () => {
 
         {/* Input */}
         <div className="bg-white border-t border-gray-200 p-6">
-      <div className="bg-card border-t border-border p-6">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center space-x-4">
               <div className="flex-1 relative">
                 <input
@@ -247,15 +242,14 @@ const AICoach: React.FC = () => {
                   onKeyPress={handleKeyPress}
                   placeholder="Ask your AI coach anything about your health..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
                 />
                 <button
                   onClick={toggleRecording}
                   className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all duration-200 ${
                     isRecording 
                       ? 'text-red-500 bg-red-100' 
-                    ? 'text-red-500 bg-red-500/20' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                      : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                  }`}
                 >
                   {isRecording ? (
                     <StopIcon className="w-5 h-5" />
@@ -271,7 +265,7 @@ const AICoach: React.FC = () => {
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || sendingMessage}
                 className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
-              className="px-6 py-3 bg-gradient-to-r from-blue-light to-blue-medium text-white font-medium rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
+              >
                 {sendingMessage ? (
                   <LoadingSpinner size="sm" />
                 ) : (
@@ -279,7 +273,7 @@ const AICoach: React.FC = () => {
                     <PaperAirplaneIcon className="w-5 h-5" />
                     <span>Send</span>
                   </>
-            <div className="px-3 py-1 bg-neon-green/20 text-neon-green text-sm font-medium rounded-full">
+                )}
               </motion.button>
             </div>
           </div>
@@ -290,4 +284,3 @@ const AICoach: React.FC = () => {
 };
 
 export default AICoach;
-      <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
