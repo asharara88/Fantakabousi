@@ -1,4 +1,5 @@
 import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
@@ -30,36 +31,41 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const { actualTheme } = useTheme();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [bedtimeCountdown, setBedtimeCountdown] = useState('');
   
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
   
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return { text: 'Hi', icon: SunIcon };
-    if (hour < 17) return { text: 'Hi', icon: SunIcon };
-    if (hour < 21) return { text: 'Hi', icon: CloudIcon };
-    return { text: 'Hi', icon: MoonIcon };
-  };
-
-  const getBedtimeCountdown = () => {
-    const now = new Date();
-    const bedtime = new Date();
-    bedtime.setHours(23, 0, 0, 0); // 11 PM
+  // Live time and bedtime countdown
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now);
+      
+      // Calculate bedtime countdown (11 PM)
+      const bedtime = new Date();
+      bedtime.setHours(23, 0, 0, 0);
+      
+      if (now > bedtime) {
+        bedtime.setDate(bedtime.getDate() + 1);
+      }
+      
+      const diff = bedtime.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      setBedtimeCountdown(`${hours}h ${minutes}m ${seconds}s`);
+    };
     
-    if (now > bedtime) {
-      bedtime.setDate(bedtime.getDate() + 1);
-    }
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
     
-    const diff = bedtime.getTime() - now.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    return `${hours}h ${minutes}m`;
-  };
-
-  const greeting = getGreeting();
+    return () => clearInterval(interval);
+  }, []);
+  
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
 
   const handleQuickAction = (action: string) => {
@@ -80,40 +86,81 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Welcome Section */}
-      <div className="card-premium bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-2xl">
+        {/* Floating orbs for 2026 aesthetic */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-2xl"></div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Left Side - Welcome Content */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-4 lg:space-y-6 text-center lg:text-left"
+            className="relative z-10 space-y-6 text-center lg:text-left p-8"
           >
-            {/* Logo and Brand */}
-            {/* Main Greeting */}
-            <div className="space-y-3">
-              <motion.div 
-                className="flex items-center justify-center lg:justify-start space-x-3"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+            {/* 2026 Pro Header */}
+            <div className="space-y-4">
+              {/* Main Greeting */}
+              <motion.h1 
+                className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent font-inter tracking-tight"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               >
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
-                  <greeting.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
-                </div>
-                <h1 className="text-2xl lg:text-4xl font-bold text-foreground font-inter">
-                  Welcome back, {firstName}
-                </h1>
+                Hi {firstName}
+              </motion.h1>
+              
+              {/* Optimize Today */}
+              <motion.div
+                className="text-xl lg:text-2xl font-semibold text-foreground/80 font-inter"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Optimize today
               </motion.div>
               
-              <motion.p 
-                className="text-base lg:text-lg text-muted-foreground max-w-lg font-inter"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+              {/* Date & Time Display */}
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
               >
-                Your personalized health dashboard with AI-powered insights and recommendations.
-              </motion.p>
+                <div className="text-lg font-medium text-foreground/70 font-inter">
+                  {currentTime.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </div>
+                <div className="text-2xl font-bold text-foreground font-mono tracking-wider">
+                  {currentTime.toLocaleTimeString('en-US', { 
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                </div>
+              </motion.div>
+              
+              {/* Bedtime Countdown */}
+              <motion.div
+                className="inline-flex items-center space-x-3 px-6 py-3 bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                <MoonIcon className="w-5 h-5 text-[#48C6FF]" />
+                <div className="text-center">
+                  <div className="text-sm font-medium text-foreground/60 font-inter">Bedtime in</div>
+                  <div className="text-lg font-bold text-[#48C6FF] font-mono tracking-wider">
+                    {bedtimeCountdown}
+                  </div>
+                </div>
+              </motion.div>
             </div>
             
             {/* CTA Buttons */}
