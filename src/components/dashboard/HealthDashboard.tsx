@@ -93,7 +93,7 @@ const HealthDashboard: React.FC = () => {
   const MetricCard: React.FC<{ metric: any; value: number; trend: number }> = ({ metric, value, trend }) => (
     <div className="metric-card">
       <div className="flex items-center justify-between mb-4">
-        <div className={`w-12 h-12 ${metric.color} rounded-xl flex items-center justify-center`}>
+        <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
           <metric.icon className="w-6 h-6 text-white" />
         </div>
         <div className={`flex items-center space-x-1 text-body-sm font-semibold ${

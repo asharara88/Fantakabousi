@@ -214,10 +214,10 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       {/* Quick Metrics Grid */}
       <div className="mobile-grid-2 lg:grid-cols-4">
         {[
-          { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF]' },
-          { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-[#3BE6C5]' },
-          { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-to-br from-[#2A7FFF] to-[#0026CC]' },
-          { label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'bg-gradient-to-br from-[#0026CC] to-[#48C6FF]' },
+          { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-rose-600' },
+          { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
+          { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
+          { label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'from-purple-500 to-indigo-600' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
@@ -227,7 +227,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md hover:border-[#48C6FF]/20 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
             <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 lg:w-12 lg:h-12 ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+              <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
                 <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
               </div>
               <div>

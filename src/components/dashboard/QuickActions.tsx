@@ -22,42 +22,42 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       id: 'coach',
       title: 'Chat with Coach',
       icon: ChatBubbleLeftRightIcon,
-      color: 'bg-gradient-blue-light',
+      color: 'bg-gradient-to-br from-purple-500 to-indigo-600',
       badge: 'New'
     },
     {
       id: 'health',
       title: 'View Analytics',
       icon: ChartBarIcon,
-      color: 'bg-gradient-blue-medium',
+      color: 'bg-gradient-to-br from-blue-500 to-cyan-600',
       badge: null
     },
     {
       id: 'workout',
       title: 'Log Workout',
       icon: PlusIcon,
-      color: 'bg-accent-neon',
+      color: 'bg-gradient-to-br from-orange-500 to-red-600',
       badge: null
     },
     {
       id: 'scan',
       title: 'Scan Food',
       icon: CameraIcon,
-      color: 'bg-gradient-blue-deep',
+      color: 'bg-gradient-to-br from-green-500 to-emerald-600',
       badge: 'Beta'
     },
     {
       id: 'vitals',
       title: 'Check Vitals',
       icon: HeartIcon,
-      color: 'bg-gradient-blue-light',
+      color: 'bg-gradient-to-br from-red-500 to-pink-600',
       badge: null
     },
     {
       id: 'schedule',
       title: 'Schedule',
       icon: CalendarIcon,
-      color: 'bg-gradient-blue-medium',
+      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
       badge: null
     }
   ];
