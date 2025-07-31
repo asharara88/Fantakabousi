@@ -42,6 +42,7 @@ const ThemeSelector: React.FC = () => {
           <motion.button
             key={themeOption.value}
             onClick={() => setTheme(themeOption.value)}
+            type="button"
             className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
               theme === themeOption.value
                 ? 'border-blue-light bg-blue-light/10'

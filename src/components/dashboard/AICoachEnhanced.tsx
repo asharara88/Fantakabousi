@@ -113,7 +113,7 @@ const AICoachEnhanced: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col">
+    <div className="max-w-7xl mx-auto h-screen flex flex-col">
       {/* Header */}
       <div className="py-6 border-b border-gray-200">
         <div className="flex items-center justify-between">

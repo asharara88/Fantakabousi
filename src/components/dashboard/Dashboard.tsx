@@ -68,7 +68,8 @@ const Dashboard: React.FC = () => {
         </div>
         
         {/* Main Content */}
-        <div className="lg:pl-72 pt-20 lg:pt-8 pb-24 lg:pb-8">
+        <div className="lg:pl-72 pt-20 lg:pt-8 pb-24 lg:pb-8 min-h-screen">
+          <div className="px-4 sm:px-6 lg:px-8 py-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -80,6 +81,7 @@ const Dashboard: React.FC = () => {
                 {renderContent()}
               </motion.div>
             </AnimatePresence>
+          </div>
         </div>
       </div>
     </AccessibilityProvider>

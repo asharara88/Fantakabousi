@@ -52,6 +52,7 @@ const Button: React.FC<ButtonProps> = ({
       className={cn(buttonVariants({ variant, size }), 'touch-target apple-focus', className)}
       disabled={disabled || loading}
       style={{ WebkitTapHighlightColor: 'transparent' }}
+      type="button"
       {...props}
     >
       {loading && (

@@ -45,6 +45,29 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default;
+}
+
+/* === CURSOR FIXES === */
+button, .btn-primary, .btn-secondary, .btn-ghost, [role="button"] {
+  cursor: pointer !important;
+}
+
+input, textarea, select {
+  cursor: text !important;
+}
+
+a, [role="link"] {
+  cursor: pointer !important;
+}
+
+.nav-item, .metric-card {
+  cursor: pointer !important;
+}
+
+/* Prevent text cursor on non-text elements */
+div, span, p, h1, h2, h3, h4, h5, h6 {
+  cursor: default !important;
 }
 
 /* === BRAND GRADIENTS === */
