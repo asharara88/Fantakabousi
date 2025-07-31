@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useToast } from '../../hooks/useToast';
 import { 
@@ -45,84 +44,84 @@ const RecipeSearch: React.FC = () => {
   const [savedRecipes, setSavedRecipes] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    loadHealthyRecipes();
+    loadFeaturedRecipes();
   }, []);
 
-  const loadHealthyRecipes = async () => {
+  const loadFeaturedRecipes = async () => {
     setLoading(true);
     try {
-      // Curated healthy recipes for wellness goals
+      // Mock featured recipes optimized for health goals
       const mockRecipes: Recipe[] = [
         {
           id: 1,
-          title: 'Grilled Salmon with Sweet Potato',
+          title: 'High-Protein Salmon Bowl with Quinoa',
           image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg',
           readyInMinutes: 25,
           servings: 2,
-          summary: 'Simple, healthy meal with omega-3s and complex carbs.',
+          summary: 'Nutrient-dense salmon bowl packed with omega-3s and complete proteins.',
           healthScore: 95,
           nutrition: { calories: 420, protein: 35, carbs: 28, fat: 18 },
-          tags: ['High Protein', 'Heart Healthy', 'Easy'],
+          tags: ['High Protein', 'Omega-3', 'Low Carb', 'Anti-Inflammatory'],
           saved: false
         },
         {
           id: 2,
-          title: 'Chicken and Veggie Stir Fry',
+          title: 'Mediterranean Chicken with Vegetables',
           image: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg',
           readyInMinutes: 30,
           servings: 4,
-          summary: 'Quick and easy chicken with fresh vegetables.',
+          summary: 'Lean protein with antioxidant-rich vegetables and healthy fats.',
           healthScore: 88,
           nutrition: { calories: 380, protein: 32, carbs: 22, fat: 16 },
-          tags: ['High Protein', 'Quick', 'Family Friendly'],
+          tags: ['Mediterranean', 'High Protein', 'Heart Healthy'],
           saved: false
         },
         {
           id: 3,
-          title: 'Green Smoothie Bowl',
+          title: 'Avocado and Spinach Power Smoothie',
           image: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg',
           readyInMinutes: 5,
           servings: 1,
-          summary: 'Nutritious smoothie bowl with fruits and vegetables.',
+          summary: 'Fertility-boosting smoothie with folate, healthy fats, and antioxidants.',
           healthScore: 92,
           nutrition: { calories: 280, protein: 12, carbs: 18, fat: 20 },
-          tags: ['Healthy', 'Quick', 'Breakfast'],
+          tags: ['Fertility', 'Antioxidants', 'Quick', 'Nutrient Dense'],
           saved: false
         },
         {
           id: 4,
-          title: 'Lean Beef with Rice',
+          title: 'Grass-Fed Beef Stir Fry',
           image: 'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg',
           readyInMinutes: 20,
           servings: 3,
-          summary: 'Simple beef dish with brown rice and vegetables.',
+          summary: 'High-quality protein with zinc and B-vitamins for muscle building.',
           healthScore: 85,
           nutrition: { calories: 350, protein: 28, carbs: 15, fat: 22 },
-          tags: ['High Protein', 'Filling', 'Balanced'],
+          tags: ['High Protein', 'Muscle Building', 'Iron Rich'],
           saved: false
         },
         {
           id: 5,
-          title: 'Cauliflower Rice Bowl',
+          title: 'Keto Cauliflower Rice Bowl',
           image: 'https://images.pexels.com/photos/1640771/pexels-photo-1640771.jpeg',
           readyInMinutes: 15,
           servings: 2,
-          summary: 'Light and healthy rice alternative with vegetables.',
+          summary: 'Low-carb, high-fat meal perfect for insulin sensitivity.',
           healthScore: 90,
           nutrition: { calories: 320, protein: 18, carbs: 8, fat: 26 },
-          tags: ['Low Carb', 'Light', 'Healthy'],
+          tags: ['Keto', 'Low Carb', 'Insulin Friendly'],
           saved: false
         },
         {
           id: 6,
-          title: 'Baked Fish with Vegetables',
+          title: 'Walnut Crusted Cod with Asparagus',
           image: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg',
           readyInMinutes: 35,
           servings: 2,
-          summary: 'Simple baked fish with fresh seasonal vegetables.',
+          summary: 'Omega-3 rich fish with fertility-supporting nutrients.',
           healthScore: 94,
           nutrition: { calories: 290, protein: 30, carbs: 12, fat: 14 },
-          tags: ['Heart Healthy', 'Low Calorie', 'Simple'],
+          tags: ['Omega-3', 'Fertility', 'Low Calorie', 'Brain Health'],
           saved: false
         }
       ];
@@ -162,13 +161,11 @@ const RecipeSearch: React.FC = () => {
     try {
       if (savedRecipes.has(recipeId)) {
         // Remove from saved
-        const { error } = await supabase
+        await supabase
           .from('saved_recipes')
           .delete()
           .eq('user_id', user?.id)
           .eq('recipe_id', recipeId);
-        
-        if (error) throw error;
         
         setSavedRecipes(prev => {
           const newSet = new Set(prev);
@@ -184,7 +181,7 @@ const RecipeSearch: React.FC = () => {
         // Add to saved
         const recipe = recipes.find(r => r.id === recipeId);
         if (recipe) {
-          const { error } = await supabase
+          await supabase
             .from('saved_recipes')
             .insert({
               user_id: user?.id,
@@ -192,8 +189,6 @@ const RecipeSearch: React.FC = () => {
               title: recipe.title,
               image: recipe.image,
             });
-          
-          if (error) throw error;
           
           setSavedRecipes(prev => new Set([...prev, recipeId]));
           
@@ -205,11 +200,6 @@ const RecipeSearch: React.FC = () => {
       }
     } catch (error) {
       console.error('Error toggling recipe save:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save recipe. Please try again.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -228,8 +218,8 @@ const RecipeSearch: React.FC = () => {
           <SparklesIcon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Healthy Recipes</h2>
-          <p className="text-muted-foreground">Find simple, nutritious meals you'll love</p>
+          <h2 className="text-2xl font-bold text-foreground">Recipe Search</h2>
+          <p className="text-muted-foreground">Discover healthy recipes optimized for your goals</p>
         </div>
       </div>
 
@@ -272,30 +262,30 @@ const RecipeSearch: React.FC = () => {
           <div className="flex space-x-3">
             <button
               onClick={() => {
-                setSearchQuery('protein');
+                setSearchQuery('high protein');
                 handleSearch();
               }}
               className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
-              Protein
+              High Protein
             </button>
             <button
               onClick={() => {
-                setSearchQuery('quick');
+                setSearchQuery('low carb');
                 handleSearch();
               }}
               className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
-              Quick Meals
+              Low Carb
             </button>
             <button
               onClick={() => {
-                setSearchQuery('healthy');
+                setSearchQuery('fertility');
                 handleSearch();
               }}
               className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-sm"
             >
-              Healthy
+              Fertility Support
             </button>
           </div>
         </div>
@@ -420,18 +410,19 @@ const RecipeSearch: React.FC = () => {
       {!loading && recipes.length === 0 && (
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <option value="">All Types</option>
-            <option value="quick">Quick Meals</option>
-            <option value="healthy">Healthy</option>
-            <option value="protein">High Protein</option>
-            <option value="light">Light Meals</option>
+            <SparklesIcon className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">
+            No recipes found
+          </h3>
+          <p className="text-gray-600 mb-6">
             Try searching for specific ingredients or dietary preferences
           </p>
           <button
-            onClick={loadHealthyRecipes}
+            onClick={loadFeaturedRecipes}
             className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors"
           >
-            Show Healthy Recipes
+            Load Featured Recipes
           </button>
         </div>
       )}
