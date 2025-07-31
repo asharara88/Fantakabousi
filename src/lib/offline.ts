@@ -150,6 +150,16 @@ export const offlineStorage = {
 
 // Service Worker registration
 export const registerServiceWorker = async () => {
+  // Check if running in StackBlitz environment
+  const isStackBlitz = window.self !== window.top || 
+                      window.location.hostname.includes('stackblitz.io') ||
+                      window.location.hostname.includes('webcontainer');
+  
+  if (isStackBlitz) {
+    console.warn('Service Workers are not supported in StackBlitz environment');
+    return null;
+  }
+
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
@@ -157,6 +167,8 @@ export const registerServiceWorker = async () => {
       return registration;
     } catch (error) {
       console.error('Service Worker registration failed:', error);
+      return null;
     }
   }
+  return null;
 };
