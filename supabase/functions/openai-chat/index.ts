@@ -70,6 +70,7 @@ Guidelines for responses:
 5. Suggest specific protocols, supplements, or lifestyle changes
 6. Keep responses concise but comprehensive (2-3 paragraphs max)
 7. Always prioritize safety and suggest medical consultation when appropriate
+`
 
 
     // Call OpenAI API
@@ -132,7 +133,3 @@ Guidelines for responses:
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
-})
-  }
-}
-)
