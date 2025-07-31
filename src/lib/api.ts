@@ -446,32 +446,6 @@ export const generateRealisticHealthData = async (userId: string, deviceType: 'a
           let trend = 'stable';
           if (baseGlucose > 140) trend = 'rising';
           else if (baseGlucose < 85) trend = 'falling';
-            // Breakfast spike
-            const timeSinceMeal = (hour - 7) * 60 + minute;
-            if (timeSinceMeal <= 120) {
-              baseGlucose = 95 + (50 * Math.exp(-timeSinceMeal / 60)); // Spike and decay
-            }
-          } else if (hour >= 12 && hour <= 15) {
-            // Lunch spike
-            const timeSinceMeal = (hour - 12) * 60 + minute;
-            if (timeSinceMeal <= 180) {
-              baseGlucose = 95 + (60 * Math.exp(-timeSinceMeal / 80)); // Larger spike
-            }
-          } else if (hour >= 18 && hour <= 21) {
-            // Dinner spike
-            const timeSinceMeal = (hour - 18) * 60 + minute;
-            if (timeSinceMeal <= 180) {
-              baseGlucose = 95 + (55 * Math.exp(-timeSinceMeal / 75));
-            }
-          }
-          
-          // Dawn phenomenon (early morning rise)
-          if (hour >= 4 && hour <= 7) {
-            baseGlucose += 10;
-          }
-          
-          // Add natural variation
-          baseGlucose += (Math.random() - 0.5) * 15;
           
           dataPoints.push({
             user_id: userId,
@@ -485,9 +459,6 @@ export const generateRealisticHealthData = async (userId: string, deviceType: 'a
               trend: trend,
               sensor_age_days: Math.floor(i / 7) + 1,
               calibration_status: 'good'
-            }
-              device: 'FreeStyle Libre',
-              trend: Math.random() > 0.5 ? 'stable' : Math.random() > 0.5 ? 'rising' : 'falling'
             }
           });
         }
@@ -569,17 +540,13 @@ export const generateComprehensiveHealthData = async (userId: string) => {
   const batchSize = 100;
   for (let i = 0; i < dataPoints.length; i += batchSize) {
     const batch = dataPoints.slice(i, i + batchSize);
-    const batchSize = 50;
-    for (let i = 0; i < dataPoints.length; i += batchSize) {
-      const batch = dataPoints.slice(i, i + batchSize);
-      const { error } = await supabase
-        .from('health_metrics')
-        .insert(batch);
-      
-      if (error) {
-        console.error('Error inserting comprehensive data:', error);
-        throw error;
-      }
+    const { error } = await supabase
+      .from('health_metrics')
+      .insert(batch);
+    
+    if (error) {
+      console.error('Error inserting comprehensive data:', error);
+      throw error;
     }
   }
 
@@ -712,56 +679,6 @@ export const batchInsertHealthMetrics = async (dataPoints: any[]) => {
   }
 
   return insertedCount;
-};
-
-// Mock data generators for demo
-export const generateMockHealthData = (userId: string) => {
-  const metrics = ['heart_rate', 'steps', 'sleep', 'glucose', 'hrv'];
-  const data = [];
-
-  for (let i = 0; i < 30; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-
-    metrics.forEach(metric => {
-      let value = 0;
-      let unit = '';
-
-      switch (metric) {
-        case 'heart_rate':
-          value = 60 + Math.random() * 20;
-          unit = 'bpm';
-          break;
-        case 'steps':
-          value = 5000 + Math.random() * 8000;
-          unit = 'steps';
-          break;
-        case 'sleep':
-          value = 60 + Math.random() * 40;
-          unit = 'score';
-          break;
-        case 'glucose':
-          value = 80 + Math.random() * 60;
-          unit = 'mg/dL';
-          break;
-        case 'hrv':
-          value = 20 + Math.random() * 40;
-          unit = 'ms';
-          break;
-      }
-
-      data.push({
-        user_id: userId,
-        metric_type: metric,
-        value: Math.round(value),
-        unit,
-        timestamp: date.toISOString(),
-        source: 'demo',
-      });
-    });
-  }
-
-  return data;
 };
 
 // Error handling utility
