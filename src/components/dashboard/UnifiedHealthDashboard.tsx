@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useHealthMetrics } from '../../hooks/useHealthMetrics';
 import FoodLogger from '../nutrition/FoodLogger';
+import DeviceConnection from '../devices/DeviceConnection';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   HeartIcon,
@@ -22,6 +23,7 @@ import {
 
 const UnifiedHealthDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'metrics' | 'nutrition'>('overview');
+  const [showDeviceConnection, setShowDeviceConnection] = useState(false);
   const { metrics, loading, getLatestMetric, getMetricTrend } = useHealthMetrics();
 
   const metricTypes = [
@@ -79,6 +81,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={() => setShowDeviceConnection(true)}
         className="btn-primary flex items-center space-x-2 mx-auto"
       >
         <PlusIcon className="w-4 h-4" />
@@ -328,6 +331,12 @@ const UnifiedHealthDashboard: React.FC = () => {
           {activeTab === 'nutrition' && renderNutrition()}
         </motion.div>
       </AnimatePresence>
+
+      {/* Device Connection Modal */}
+      <DeviceConnection 
+        isOpen={showDeviceConnection}
+        onClose={() => setShowDeviceConnection(false)}
+      />
     </div>
   );
 };
