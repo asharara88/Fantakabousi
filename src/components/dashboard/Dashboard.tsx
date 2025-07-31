@@ -15,6 +15,7 @@ import AICoach from './AICoach';
 import HealthDashboard from './HealthDashboard';
 import SupplementShop from './SupplementShop';
 import ProfileSettings from './ProfileSettings';
+import OfflineIndicator from '../ui/OfflineIndicator';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -122,6 +123,7 @@ const Dashboard: React.FC = () => {
   return (
     <AccessibilityProvider>
       <div className="min-h-screen bg-gray-50">
+        <OfflineIndicator />
         <Navigation 
           activeTab={activeTab} 
           onTabChange={handleTabChange}

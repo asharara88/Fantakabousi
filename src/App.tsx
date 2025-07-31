@@ -7,8 +7,17 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import AuthForms from './components/auth/AuthForms';
 import Dashboard from './components/dashboard/Dashboard';
+import { registerServiceWorker, offlineManager } from './lib/offline';
+import { performanceMonitor } from './lib/performance';
 
 const queryClient = new QueryClient();
+
+// Initialize offline support and performance monitoring
+if (typeof window !== 'undefined') {
+  registerServiceWorker();
+  offlineManager.init();
+  performanceMonitor.startTime = Date.now();
+}
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
@@ -16,7 +25,10 @@ const AppContent: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600"></div>
+        <div className="space-y-4 text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600 mx-auto"></div>
+          <div className="text-lg font-semibold text-gray-700">Loading Biowell...</div>
+        </div>
       </div>
     );
   }
