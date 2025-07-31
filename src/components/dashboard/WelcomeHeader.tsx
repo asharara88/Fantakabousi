@@ -90,19 +90,6 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             className="space-y-4 lg:space-y-6 text-center lg:text-left"
           >
             {/* Logo and Brand */}
-            <motion.div 
-              className="flex items-center justify-center lg:justify-start space-x-3"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            >
-              <img 
-                src={logoUrl}
-                alt="Biowell"
-                className="h-16 lg:h-20 w-auto"
-              />
-            </motion.div>
-            
             {/* Main Greeting */}
             <div className="space-y-3">
               <motion.div 
@@ -115,7 +102,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   <greeting.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                 </div>
                 <h1 className="text-2xl lg:text-4xl font-bold text-foreground font-inter">
-                  {greeting.text}, {firstName}!
+                  Welcome back, {firstName}
                 </h1>
               </motion.div>
               
@@ -125,7 +112,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                We still have {getBedtimeCountdown()} to bedtime (11 PM). Need to make time for a 30min exercise.
+                Your personalized health dashboard with AI-powered insights and recommendations.
               </motion.p>
             </div>
             
@@ -137,19 +124,19 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               transition={{ delay: 0.7 }}
             >
               <button 
-                onClick={() => onQuickAction?.('home-workout')}
-                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
+                onClick={() => onQuickAction?.('coach')}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
-                <HeartIcon className="w-5 h-5" />
-                <span>Home Workout</span>
+                <SparklesIcon className="w-5 h-5" />
+                <span>Ask AI Coach</span>
               </button>
               
               <button 
-                onClick={() => onQuickAction?.('gym-workout')}
+                onClick={() => onQuickAction?.('health')}
                 className="px-6 py-3 bg-card border border-border text-card-foreground font-semibold rounded-xl hover:bg-muted hover:border-[#48C6FF]/30 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
-                <CameraIcon className="w-5 h-5" />
-                <span>Gym + AI Coach</span>
+                <ChartBarIcon className="w-5 h-5" />
+                <span>View Analytics</span>
               </button>
             </motion.div>
             
