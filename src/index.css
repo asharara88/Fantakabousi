@@ -11,7 +11,7 @@
   --card: 255 255 255;
   --card-foreground: 0 0 0;
   --muted: 248 250 252;
-  --muted-foreground: 100 116 139;
+  --muted-foreground: 71 85 105;
   --border: 226 232 240;
   
   /* Biowell Brand Colors - 3 Blue Gradients */
@@ -28,7 +28,7 @@
   --card: 30 41 59;
   --card-foreground: 255 255 255;
   --muted: 51 65 85;
-  --muted-foreground: 148 163 184;
+  --muted-foreground: 203 213 225;
   --border: 51 65 85;
 }
 
