@@ -19,7 +19,7 @@ import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
-  ChefHatIcon
+  BookOpenIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -54,7 +54,7 @@ export function MobileNavigation({
   const navigationItems = [
     { id: 'dashboard', label: 'Home', icon: HomeIcon, activeIcon: HomeSolidIcon },
     { id: 'health', label: 'Health', icon: HeartIcon, activeIcon: HeartSolidIcon },
-    { id: 'recipes', label: 'Recipes', icon: ChefHatIcon, activeIcon: ChefHatIcon },
+    { id: 'recipes', label: 'Recipes', icon: BookOpenIcon, activeIcon: BookOpenIcon },
     { id: 'coach', label: 'Coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon },
     { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon }
   ];
