@@ -31,37 +31,26 @@ const Dashboard: React.FC = () => {
 
   const handleQuickAction = (action: string) => {
     switch (action) {
-      case 'start-day':
-        // Navigate to today's goals and habits
-        setActiveTab('dashboard');
-        // Scroll to goals section
-        setTimeout(() => {
-          const goalsElement = document.getElementById('todays-goals');
-          goalsElement?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+      case 'coach':
+        setActiveTab('coach');
         break;
       case 'health':
         setActiveTab('health');
         break;
-      case 'coach':
-        setActiveTab('coach');
-        break;
       case 'shop':
         setActiveTab('shop');
         break;
+      case 'food':
+        setActiveTab('health');
+        break;
       case 'recipes':
         setActiveTab('health');
-        // Switch to recipes tab in health section
-        setTimeout(() => {
-          const recipesTab = document.querySelector('[data-tab="recipes"]') as HTMLButtonElement;
-          recipesTab?.click();
-        }, 100);
         break;
       case 'profile':
         setActiveTab('profile');
         break;
       default:
-        console.log(`Quick action: ${action}`);
+        setActiveTab('dashboard');
     }
   };
 

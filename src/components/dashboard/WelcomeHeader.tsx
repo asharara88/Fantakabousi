@@ -69,13 +69,17 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
 
   const handleQuickAction = (action: string) => {
     switch (action) {
-      case 'home-workout':
-        // Navigate to home workout routines
-        onQuickAction?.('workout');
+      case 'coach':
+        onQuickAction?.('coach');
         break;
-      case 'gym-workout':
-        // Navigate to gym with AI machine recognition
-        onQuickAction?.('gym-ai');
+      case 'health':
+        onQuickAction?.('health');
+        break;
+      case 'shop':
+        onQuickAction?.('shop');
+        break;
+      case 'profile':
+        onQuickAction?.('profile');
         break;
       default:
         onQuickAction?.(action);

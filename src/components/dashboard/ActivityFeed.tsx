@@ -99,7 +99,10 @@ const ActivityFeed: React.FC = () => {
           </div>
         </div>
         
-        <button className="text-sm text-blue-500 hover:text-blue-600 font-medium">
+        <button 
+          onClick={() => window.location.href = '#health'}
+          className="text-sm text-blue-500 hover:text-blue-600 font-medium cursor-pointer"
+        >
           View All
         </button>
       </div>
@@ -141,7 +144,10 @@ const ActivityFeed: React.FC = () => {
       </div>
 
       <div className="mt-6 pt-4 border-t border-gray-200">
-        <button className="w-full text-center text-sm text-blue-500 hover:text-blue-600 font-medium py-2">
+        <button 
+          onClick={() => window.location.href = '#health'}
+          className="w-full text-center text-sm text-blue-500 hover:text-blue-600 font-medium py-2 cursor-pointer"
+        >
           Load More Activity
         </button>
       </div>

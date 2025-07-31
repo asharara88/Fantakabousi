@@ -33,30 +33,30 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       badge: null
     },
     {
-      id: 'workout',
-      title: 'Log Workout',
-      icon: PlusIcon,
+      id: 'shop',
+      title: 'Supplements',
+      icon: CubeIcon,
       color: 'bg-gradient-to-br from-orange-500 to-red-600',
       badge: null
     },
     {
-      id: 'scan',
-      title: 'Scan Food',
+      id: 'food',
+      title: 'Log Food',
       icon: CameraIcon,
       color: 'bg-gradient-to-br from-green-500 to-emerald-600',
-      badge: 'Beta'
+      badge: null
     },
     {
-      id: 'vitals',
-      title: 'Check Vitals',
+      id: 'profile',
+      title: 'Profile',
       icon: HeartIcon,
       color: 'bg-gradient-to-br from-red-500 to-pink-600',
       badge: null
     },
     {
-      id: 'schedule',
-      title: 'Schedule',
-      icon: CalendarIcon,
+      id: 'recipes',
+      title: 'Find Recipes',
+      icon: MagnifyingGlassIcon,
       color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
       badge: null
     }

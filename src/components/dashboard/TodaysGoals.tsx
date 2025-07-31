@@ -76,6 +76,18 @@ const TodaysGoals: React.FC = () => {
   const [streakCount, setStreakCount] = useState(3);
   const [showCelebration, setShowCelebration] = useState(false);
 
+  const addNewGoal = () => {
+    const newGoal: Goal = {
+      id: Date.now().toString(),
+      title: 'New Goal',
+      description: 'Tap to edit',
+      completed: false,
+      priority: 'medium',
+      category: 'Custom'
+    };
+    setGoals(prev => [...prev, newGoal]);
+  };
+
   const toggleGoal = (goalId: string) => {
     setGoals(prev => prev.map(goal => {
       if (goal.id === goalId) {
@@ -163,7 +175,11 @@ const TodaysGoals: React.FC = () => {
           </div>
         </div>
         
-        <button className="p-2 text-muted-foreground hover:text-[#48C6FF] hover:bg-muted rounded-lg transition-all duration-200 cursor-pointer">
+        <button 
+          onClick={addNewGoal}
+          className="p-2 text-muted-foreground hover:text-[#48C6FF] hover:bg-muted rounded-lg transition-all duration-200 cursor-pointer"
+          title="Add new goal"
+        >
           <PlusIcon className="w-5 h-5" />
         </button>
       </div>

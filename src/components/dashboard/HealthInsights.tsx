@@ -10,7 +10,10 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 
+import { useToast } from '../../hooks/useToast';
+
 const HealthInsights: React.FC = () => {
+  const { toast } = useToast();
   const insights = [
     {
       id: 'glucose',
@@ -67,7 +70,7 @@ const HealthInsights: React.FC = () => {
           </div>
         </div>
         <button className="btn-ghost flex items-center space-x-2">
-          <span>View All</span>
+          <span>View All Insights</span>
           <ArrowRightIcon className="w-4 h-4" />
         </button>
       </div>
@@ -113,10 +116,24 @@ const HealthInsights: React.FC = () => {
               
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
-                <button className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter`}>
+                <button 
+                  onClick={() => {
+                    toast({
+                      title: "Action Started",
+                      description: `Taking action on: ${insight.title}`,
+                    });
+                  }}
+                  className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter cursor-pointer`}
+                >
                   Take Action
                 </button>
-                <button className="btn-ghost flex items-center space-x-2">
+                <button 
+                  onClick={() => {
+                    // Navigate to coach with pre-filled question about this insight
+                    window.location.href = '#coach';
+                  }}
+                  className="btn-ghost flex items-center space-x-2 cursor-pointer"
+                >
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
                   <span>Ask Coach</span>
                 </button>
@@ -137,7 +154,12 @@ const HealthInsights: React.FC = () => {
           </div>
           <button className="btn-primary flex items-center space-x-2">
             <SparklesIcon className="w-4 h-4" />
-            <span>Get More Insights</span>
+            <span onClick={() => {
+              toast({
+                title: "AI Analysis Running",
+                description: "Generating new insights from your latest data...",
+              });
+            }}>Get More Insights</span>
           </button>
         </div>
       </div>
