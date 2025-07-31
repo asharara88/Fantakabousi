@@ -54,14 +54,10 @@ const SupplementShop: React.FC = () => {
             <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
               <ShoppingBagIcon className="w-6 h-6 text-white" />
             </div>
-            <main className="space-y-8">
-              <div className="text-center space-y-2">
-                <h1 className="text-display">Welcome to Biowell</h1>
-                <p className="text-caption max-w-xl mx-auto">
-                  Your AI-powered wellness platform
-                </p>
-              </div>
-            </main>
+            <div>
+              <h1 className="text-heading-lg font-bold">Supplement Shop</h1>
+              <p className="text-body text-muted-foreground">Browse and manage your supplement stack</p>
+            </div>
           </div>
         </div>
         
