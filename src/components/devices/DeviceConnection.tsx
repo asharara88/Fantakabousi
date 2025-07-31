@@ -52,6 +52,16 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
   const handleQuickConnect = async (deviceId: string) => {
     if (connectedDevices.includes(deviceId)) return;
 
+    // Check if user is properly authenticated
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to connect your devices.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setConnecting(true);
     try {
       // Simulate quick connection
@@ -74,7 +84,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       if (error) throw error;
 
       // Generate dummy data for the connected device
-      await generateDummyData(deviceId);
+      await generateDummyData(deviceId, user.id);
 
       setConnectedDevices(prev => [...prev, deviceId]);
       
@@ -95,7 +105,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
     }
   };
 
-  const generateDummyData = async (deviceId: string) => {
+  const generateDummyData = async (deviceId: string, userId: string) => {
     const now = new Date();
     const dataPoints = [];
 
@@ -111,7 +121,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
           timestamp.setHours(j, Math.random() * 60);
           
           dataPoints.push({
-            user_id: user!.id,
+            user_id: userId,
             metric_type: 'heart_rate',
             value: 60 + Math.random() * 20 + (j > 6 && j < 22 ? 10 : 0), // Higher during day
             unit: 'bpm',
@@ -123,7 +133,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
         
         // Daily steps
         dataPoints.push({
-          user_id: user!.id,
+          user_id: userId,
           metric_type: 'steps',
           value: 6000 + Math.random() * 8000,
           unit: 'steps',
@@ -134,7 +144,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
         
         // Sleep score
         dataPoints.push({
-          user_id: user!.id,
+          user_id: userId,
           metric_type: 'sleep',
           value: 70 + Math.random() * 25,
           unit: 'score',
@@ -163,7 +173,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
             if (hour >= 18 && hour <= 20) baseGlucose = 130; // Dinner spike
             
             dataPoints.push({
-              user_id: user!.id,
+              user_id: userId,
               metric_type: 'glucose',
               value: baseGlucose + (Math.random() - 0.5) * 30,
               unit: 'mg/dL',
