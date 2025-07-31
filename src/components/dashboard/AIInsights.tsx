@@ -21,8 +21,7 @@ const AIInsights: React.FC = () => {
       confidence: 96,
       priority: 'high',
       action: 'Start Workout',
-      gradient: 'from-emerald-500 to-green-600',
-      variant: 'success',
+      color: 'from-green-500 to-emerald-600',
     },
     {
       type: 'optimization',
@@ -32,8 +31,7 @@ const AIInsights: React.FC = () => {
       confidence: 89,
       priority: 'medium',
       action: 'Set Reminder',
-      gradient: 'from-blue-500 to-cyan-600',
-      variant: 'success',
+      color: 'from-blue-500 to-cyan-600',
     },
     {
       type: 'warning',
@@ -43,8 +41,7 @@ const AIInsights: React.FC = () => {
       confidence: 92,
       priority: 'high',
       action: 'Track Water',
-      gradient: 'from-amber-500 to-orange-600',
-      variant: 'warning',
+      color: 'from-amber-500 to-orange-600',
     },
     {
       type: 'insight',
@@ -54,32 +51,30 @@ const AIInsights: React.FC = () => {
       confidence: 94,
       priority: 'low',
       action: 'View Trends',
-      gradient: 'from-purple-500 to-indigo-600',
-      variant: 'success',
+      color: 'from-purple-500 to-indigo-600',
     },
   ];
 
   const getPriorityVariant = (priority: string) => {
     const variants = {
-      high: 'error',
-      medium: 'warning',
-      low: 'success',
+      high: 'bg-red-100 text-red-700 border-red-200',
+      medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+      low: 'bg-green-100 text-green-700 border-green-200',
     };
-    return variants[priority as keyof typeof variants];
+    return variants[priority as keyof typeof variants] || variants.medium;
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <SparklesIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-heading-xl text-foreground">AI Health Insights</h2>
-              <p className="text-caption">Personalized recommendations from your data</p>
-            </div>
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
+            <SparklesIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-foreground font-inter">AI Health Insights</h2>
+            <p className="text-muted-foreground font-inter">Personalized recommendations from your data</p>
           </div>
         </div>
         <button className="btn-ghost flex items-center space-x-2">
@@ -88,27 +83,29 @@ const AIInsights: React.FC = () => {
         </button>
       </div>
       
-      <div className="grid-premium grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Insights Grid */}
+      <div className="mobile-grid-1 lg:grid-cols-2">
         {insights.map((insight, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
-            className="card-premium p-6 group hover:scale-[1.02] transition-transform duration-300"
+            className="card-premium hover:shadow-xl hover:border-[#48C6FF]/30 hover:-translate-y-1 transition-all duration-300"
           >
             <div className="space-y-6">
+              {/* Header */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${insight.gradient} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <div className={`w-12 h-12 bg-gradient-to-br ${insight.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <insight.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="space-y-2">
-                    <h4 className="text-body font-semibold text-foreground">
+                    <h3 className="text-lg font-bold text-foreground font-inter">
                       {insight.title}
-                    </h4>
+                    </h3>
                     <div className="flex items-center space-x-3">
-                      <div className={`status-indicator status-${getPriorityVariant(insight.priority)}`}>
+                      <div className={`px-3 py-1 text-xs font-bold rounded-full border ${getPriorityVariant(insight.priority)}`}>
                         {insight.priority.toUpperCase()}
                       </div>
                       <div className="flex items-center space-x-2 text-caption">
@@ -120,17 +117,19 @@ const AIInsights: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-body text-muted-foreground leading-relaxed">
-                Chat with your Coach for personalized guidance and deeper insights
+              {/* Message */}
+              <p className="text-base text-muted-foreground leading-relaxed font-inter">
+                {insight.message}
               </p>
               
+              {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
-                <button className={`btn-primary bg-gradient-to-r ${insight.gradient}`}>
+                <button className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter`}>
                   {insight.action}
                 </button>
                 <button className="btn-ghost flex items-center space-x-2">
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                 <span>Ask Coach</span>
+                  <span>Ask Coach</span>
                 </button>
               </div>
             </div>
@@ -138,15 +137,16 @@ const AIInsights: React.FC = () => {
         ))}
       </div>
       
-      <div className="card-premium p-6 bg-muted/30">
+      {/* Status */}
+      <div className="card bg-muted/30">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="status-dot success animate-pulse"></div>
-            <div className="text-body font-medium text-foreground">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></div>
+            <div className="text-base font-medium text-foreground font-inter">
               Last updated: 2 minutes ago
             </div>
           </div>
-          <button className="btn-ghost flex items-center space-x-2">
+          <button className="btn-primary flex items-center space-x-2">
             <SparklesIcon className="w-4 h-4" />
             <span>Get More Insights</span>
           </button>
