@@ -202,7 +202,7 @@ const SupplementStack: React.FC = () => {
             className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center space-x-2 mx-auto"
           >
             <SparklesIcon className="w-5 h-5" />
-            <span>Get Coach Recommendations</span>
+            <span>Get Smart Recommendations</span>
           </motion.button>
         </div>
       )}

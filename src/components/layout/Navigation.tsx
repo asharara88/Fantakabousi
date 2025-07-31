@@ -52,10 +52,10 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
     },
     { 
       id: 'coach', 
-      label: 'AI Coach', 
+      label: 'Smart Coach', 
       icon: ChatBubbleLeftRightIcon, 
       activeIcon: ChatSolidIcon,
-      description: 'Get health advice'
+      description: 'Get smart advice'
     },
     { 
       id: 'health', 

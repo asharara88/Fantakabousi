@@ -321,7 +321,7 @@ const SupplementDetail: React.FC<SupplementDetailProps> = ({
               
               <div className="flex items-center space-x-3">
                 <button className="btn-secondary">
-                 Ask Coach
+                  Smart Coach
                 </button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}

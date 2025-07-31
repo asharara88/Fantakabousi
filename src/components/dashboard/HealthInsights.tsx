@@ -135,7 +135,7 @@ const HealthInsights: React.FC = () => {
                   className="btn-ghost flex items-center space-x-2 cursor-pointer"
                 >
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  <span>Ask Coach</span>
+                  <span>Smart Coach</span>
                 </button>
               </div>
             </div>

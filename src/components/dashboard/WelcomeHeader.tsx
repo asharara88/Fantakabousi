@@ -178,7 +178,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
                 <SparklesIcon className="w-5 h-5" />
-                <span>Ask AI Coach</span>
+                <span>Smart Coach</span>
               </button>
               
               <button 

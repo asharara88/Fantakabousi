@@ -143,7 +143,7 @@ const AICoachEnhanced: React.FC = () => {
               <CpuChipIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-900">AI Health Coach</h1>
+              <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Smart Coach</h1>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-sm text-gray-600">Ready to help</span>
@@ -180,7 +180,7 @@ const AICoachEnhanced: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-                    Hi! I'm your health coach
+                    Hi! I'm your Smart Coach
                   </h2>
                   <p className="text-lg text-gray-600">
                     I can help you with nutrition, exercise, sleep, and wellness questions.

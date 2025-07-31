@@ -20,7 +20,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
   const actions = [
     {
       id: 'coach',
-      title: 'Chat with Coach',
+      title: 'Smart Coach',
       icon: ChatBubbleLeftRightIcon,
       color: 'bg-gradient-to-br from-purple-500 to-indigo-600',
       badge: 'New'
