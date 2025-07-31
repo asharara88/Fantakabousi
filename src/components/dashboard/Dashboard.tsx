@@ -7,7 +7,7 @@ import Navigation from '../layout/Navigation';
 import { MobileNavigation } from '../layout/MobileNavigation';
 import UnifiedHealthDashboard from './UnifiedHealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
-import SupplementShopEnhanced from './SupplementShopEnhanced';
+import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
 import OfflineIndicator from '../ui/OfflineIndicator';
 
