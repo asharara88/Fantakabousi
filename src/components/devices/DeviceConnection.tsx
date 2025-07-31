@@ -7,28 +7,13 @@ import { useToast } from '../../hooks/useToast';
 import { 
   WifiIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon,
-  DevicePhoneMobileIcon,
-  HeartIcon,
-  ScaleIcon,
-  BeakerIcon,
   XMarkIcon,
-  ArrowRightIcon,
+  HeartIcon,
+  BeakerIcon,
   ShieldCheckIcon,
-  ClockIcon
+  ClockIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
-
-interface Device {
-  id: string;
-  name: string;
-  brand: string;
-  category: 'wearable' | 'scale' | 'cgm';
-  logo: string;
-  description: string;
-  features: string[];
-  connectionType: 'bluetooth' | 'wifi' | 'app';
-  popular: boolean;
-}
 
 interface DeviceConnectionProps {
   isOpen: boolean;
@@ -38,203 +23,71 @@ interface DeviceConnectionProps {
 const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'wearable' | 'scale' | 'cgm'>('all');
-  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
-  const [connectionStep, setConnectionStep] = useState<'select' | 'connect' | 'success'>('select');
   const [connecting, setConnecting] = useState(false);
+  const [connectedDevices, setConnectedDevices] = useState<string[]>([]);
 
-  const devices: Device[] = [
-    // Wearables
+  const devices = [
     {
       id: 'apple-watch',
-      name: 'Apple Watch Ultra 2',
+      name: 'Apple Watch',
       brand: 'Apple',
-      category: 'wearable',
-      logo: '⌚', // Apple Watch emoji
-      description: 'Advanced health monitoring with always-on display',
-      features: ['Heart Rate', 'Blood Oxygen', 'Sleep Tracking', 'Workout Detection', 'ECG'],
-      connectionType: 'app',
+      logo: '⌚',
+      description: 'Heart rate, activity, and sleep tracking',
+      metrics: ['Heart Rate', 'Steps', 'Sleep', 'Workouts'],
+      color: 'from-gray-700 to-black',
       popular: true
     },
     {
-      id: 'fitbit-versa',
-      name: 'Fitbit Sense 2',
-      brand: 'Fitbit',
-      category: 'wearable',
-      logo: '🏃', // Fitness emoji
-      description: 'Stress management and health insights',
-      features: ['Stress Monitoring', 'Skin Temperature', 'Sleep Score', 'Guided Workouts', 'GPS'],
-      connectionType: 'app',
-      popular: true
-    },
-    {
-      id: 'garmin-forerunner',
-      name: 'Garmin Forerunner 965',
-      brand: 'Garmin',
-      category: 'wearable',
-      logo: '🏃‍♂️', // Running emoji
-      description: 'Professional running watch with training insights',
-      features: ['Multi-Band GPS', 'Training Status', 'Recovery Time', 'Race Predictor'],
-      connectionType: 'app',
-      popular: true
-    },
-    {
-      id: 'samsung-galaxy-watch',
-      name: 'Galaxy Watch 6 Pro',
-      brand: 'Samsung',
-      category: 'wearable',
-      logo: '⌚', // Watch emoji
-      description: 'Comprehensive health monitoring with Samsung Health',
-      features: ['BioActive Sensor', 'Body Composition', 'Blood Pressure', 'Sleep Coaching'],
-      connectionType: 'app',
-      popular: true
-    },
-    {
-      id: 'whoop-strap',
-      name: 'WHOOP 4.0',
-      brand: 'WHOOP',
-      category: 'wearable',
-      logo: '💪', // Muscle emoji
-      description: 'Recovery-focused fitness tracker',
-      features: ['HRV Monitoring', 'Recovery Score', 'Strain Coach', 'Sleep Optimization'],
-      connectionType: 'app',
-      popular: true
-    },
-    {
-      id: 'oura-ring',
-      name: 'Oura Ring Gen 3',
-      brand: 'Oura',
-      category: 'wearable',
-      logo: '💍', // Ring emoji
-      description: 'Smart ring for sleep and recovery tracking',
-      features: ['Body Temperature', 'Heart Rate', 'Sleep Analysis', 'Activity Tracking'],
-      connectionType: 'app',
-      popular: true
-    },
-    // Smart Scales
-    {
-      id: 'withings-body',
-      name: 'Body Scan',
-      brand: 'Withings',
-      category: 'scale',
-      logo: '⚖️', // Scale emoji
-      description: 'Smart scale with full body composition',
-      features: ['Body Composition', 'Visceral Fat', 'Muscle Mass', 'Bone Mass'],
-      connectionType: 'wifi',
-      popular: true
-    },
-    {
-      id: 'fitbit-aria',
-      name: 'Aria Air',
-      brand: 'Fitbit',
-      category: 'scale',
-      logo: '⚖️', // Scale emoji
-      description: 'Smart scale that tracks weight and BMI',
-      features: ['Weight Tracking', 'BMI Calculation', 'Trend Analysis', 'Multiple Users'],
-      connectionType: 'bluetooth',
-      popular: true
-    },
-    {
-      id: 'tanita-bc',
-      name: 'BC-2000',
-      brand: 'Tanita',
-      category: 'scale',
-      logo: '⚖️', // Scale emoji
-      description: 'Professional body composition analyzer',
-      features: ['Body Fat %', 'Muscle Mass', 'Bone Mass', 'Metabolic Age'],
-      connectionType: 'bluetooth',
-      popular: false
-    },
-    // CGM Devices
-    {
-      id: 'freestyle-libre-2',
-      name: 'FreeStyle Libre 3',
+      id: 'freestyle-libre',
+      name: 'FreeStyle Libre',
       brand: 'Abbott',
-      category: 'cgm',
-      logo: '🩸', // Blood drop emoji
-      description: 'Continuous glucose monitor with real-time alerts',
-      features: ['Real-time Glucose', 'Trend Arrows', '14-day Sensor', 'Smartphone Alerts'],
-      connectionType: 'app',
+      logo: '🩸',
+      description: 'Continuous glucose monitoring',
+      metrics: ['Blood Glucose', 'Trends', 'Alerts'],
+      color: 'from-blue-500 to-cyan-600',
       popular: true
-    },
-    {
-      id: 'dexcom-g7',
-      name: 'Dexcom G7',
-      brand: 'Dexcom',
-      category: 'cgm',
-      logo: '📊', // Chart emoji
-      description: 'Advanced CGM with 10-day wear time',
-      features: ['10-day Sensor', 'No Calibration', 'Customizable Alerts', 'Share Data'],
-      connectionType: 'app',
-      popular: true
-    },
-    {
-      id: 'medtronic-guardian',
-      name: 'Guardian Connect',
-      brand: 'Medtronic',
-      category: 'cgm',
-      logo: '🩸', // Blood drop emoji
-      description: 'Medical-grade continuous glucose monitor',
-      features: ['7-day Sensor', 'Predictive Alerts', 'Sugar IQ App', 'Trend Data'],
-      connectionType: 'app',
-      popular: false
     }
   ];
 
-  const categories = [
-    { id: 'all', name: 'All Devices', icon: DevicePhoneMobileIcon, count: devices.length },
-    { id: 'wearable', name: 'Wearables', icon: HeartIcon, count: devices.filter(d => d.category === 'wearable').length },
-    { id: 'scale', name: 'Smart Scales', icon: ScaleIcon, count: devices.filter(d => d.category === 'scale').length },
-    { id: 'cgm', name: 'CGM Devices', icon: BeakerIcon, count: devices.filter(d => d.category === 'cgm').length },
-  ];
-
-  const filteredDevices = selectedCategory === 'all' 
-    ? devices 
-    : devices.filter(d => d.category === selectedCategory);
-
-  const handleDeviceSelect = (device: Device) => {
-    setSelectedDevice(device);
-    setConnectionStep('connect');
-  };
-
-  const handleConnect = async () => {
-    if (!selectedDevice || !user) return;
+  const handleQuickConnect = async (deviceId: string) => {
+    if (connectedDevices.includes(deviceId)) return;
 
     setConnecting(true);
     try {
-      // Simulate connection process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Simulate quick connection
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Save device connection to database
+      // Save device connection
+      const device = devices.find(d => d.id === deviceId)!;
       const { error } = await supabase
         .from('device_connections')
         .insert({
-          user_id: user.id,
-          device_type: selectedDevice.category,
-          provider: selectedDevice.brand.toLowerCase(),
-          device_id: `${selectedDevice.id}-${Date.now()}`,
-          device_name: selectedDevice.name,
-          access_token: 'mock_token_' + Date.now(),
-          metadata: {
-            features: selectedDevice.features,
-            connectionType: selectedDevice.connectionType
-          }
+          user_id: user!.id,
+          device_type: deviceId === 'apple-watch' ? 'wearable' : 'cgm',
+          provider: device.brand.toLowerCase(),
+          device_id: `${deviceId}-${Date.now()}`,
+          device_name: device.name,
+          access_token: 'connected_' + Date.now(),
+          metadata: { features: device.metrics }
         });
 
       if (error) throw error;
 
-      setConnectionStep('success');
+      // Generate dummy data for the connected device
+      await generateDummyData(deviceId);
+
+      setConnectedDevices(prev => [...prev, deviceId]);
       
       toast({
         title: "Device Connected!",
-        description: `${selectedDevice.name} is now syncing your health data.`,
+        description: `${device.name} is now syncing your health data.`,
       });
 
     } catch (error) {
       console.error('Error connecting device:', error);
       toast({
         title: "Connection Failed",
-        description: "Failed to connect device. Please try again.",
+        description: "Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -242,19 +95,96 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
     }
   };
 
-  const handleClose = () => {
-    setSelectedDevice(null);
-    setConnectionStep('select');
-    setConnecting(false);
-    onClose();
-  };
+  const generateDummyData = async (deviceId: string) => {
+    const now = new Date();
+    const dataPoints = [];
 
-  const getConnectionIcon = (type: string) => {
-    switch (type) {
-      case 'bluetooth': return '📶';
-      case 'wifi': return '📡';
-      case 'app': return '📱';
-      default: return '🔗';
+    if (deviceId === 'apple-watch') {
+      // Generate Apple Watch data for the last 7 days
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        
+        // Heart rate data (multiple readings per day)
+        for (let j = 0; j < 24; j += 2) {
+          const timestamp = new Date(date);
+          timestamp.setHours(j, Math.random() * 60);
+          
+          dataPoints.push({
+            user_id: user!.id,
+            metric_type: 'heart_rate',
+            value: 60 + Math.random() * 20 + (j > 6 && j < 22 ? 10 : 0), // Higher during day
+            unit: 'bpm',
+            timestamp: timestamp.toISOString(),
+            source: 'wearable',
+            metadata: { device: 'Apple Watch' }
+          });
+        }
+        
+        // Daily steps
+        dataPoints.push({
+          user_id: user!.id,
+          metric_type: 'steps',
+          value: 6000 + Math.random() * 8000,
+          unit: 'steps',
+          timestamp: date.toISOString(),
+          source: 'wearable',
+          metadata: { device: 'Apple Watch' }
+        });
+        
+        // Sleep score
+        dataPoints.push({
+          user_id: user!.id,
+          metric_type: 'sleep',
+          value: 70 + Math.random() * 25,
+          unit: 'score',
+          timestamp: date.toISOString(),
+          source: 'wearable',
+          metadata: { device: 'Apple Watch' }
+        });
+      }
+    }
+
+    if (deviceId === 'freestyle-libre') {
+      // Generate CGM data for the last 3 days (every 15 minutes)
+      for (let i = 0; i < 3; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        
+        for (let hour = 0; hour < 24; hour++) {
+          for (let minute = 0; minute < 60; minute += 15) {
+            const timestamp = new Date(date);
+            timestamp.setHours(hour, minute);
+            
+            // Realistic glucose patterns
+            let baseGlucose = 90;
+            if (hour >= 7 && hour <= 9) baseGlucose = 120; // Morning spike
+            if (hour >= 12 && hour <= 14) baseGlucose = 140; // Lunch spike
+            if (hour >= 18 && hour <= 20) baseGlucose = 130; // Dinner spike
+            
+            dataPoints.push({
+              user_id: user!.id,
+              metric_type: 'glucose',
+              value: baseGlucose + (Math.random() - 0.5) * 30,
+              unit: 'mg/dL',
+              timestamp: timestamp.toISOString(),
+              source: 'cgm',
+              metadata: { device: 'FreeStyle Libre' }
+            });
+          }
+        }
+      }
+    }
+
+    // Insert all data points
+    if (dataPoints.length > 0) {
+      const { error } = await supabase
+        .from('health_metrics')
+        .insert(dataPoints);
+      
+      if (error) {
+        console.error('Error inserting dummy data:', error);
+      }
     }
   };
 
@@ -267,32 +197,32 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={handleClose}
+        onClick={onClose}
       />
       
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="absolute inset-4 lg:inset-8 bg-background rounded-2xl shadow-2xl overflow-hidden border border-border"
+        className="absolute inset-4 lg:inset-8 bg-background rounded-2xl shadow-2xl overflow-hidden border border-border max-w-2xl mx-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="p-6 border-b border-border bg-gradient-biowell">
+          <div className="p-6 border-b border-border bg-gradient-to-r from-blue-light to-blue-medium">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-neon-green rounded-xl flex items-center justify-center shadow-lg">
-                  <WifiIcon className="w-6 h-6 text-black" />
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shadow-lg">
+                  <WifiIcon className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-white">Connect Your Devices</h1>
-                  <p className="text-white/80">Sync your health data automatically</p>
+                  <p className="text-white/80">One-tap setup for instant health tracking</p>
                 </div>
               </div>
               
               <button
-                onClick={handleClose}
+                onClick={onClose}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
               >
                 <XMarkIcon className="w-6 h-6" />
@@ -300,267 +230,155 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
             </div>
           </div>
 
-          <div className="flex-1 overflow-hidden">
-            <AnimatePresence mode="wait">
-              {connectionStep === 'select' && (
-                <motion.div
-                  key="select"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="h-full flex flex-col"
-                >
-                  {/* Categories */}
-                  <div className="p-6 border-b border-border">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                      {categories.map((category) => (
-                        <motion.button
-                          key={category.id}
-                          onClick={() => setSelectedCategory(category.id as any)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                            selectedCategory === category.id
-                              ? 'border-blue-light bg-blue-light/10 text-blue-light'
-                              : 'border-border bg-card text-foreground hover:border-blue-light/50'
-                          }`}
-                        >
-                          <div className="flex flex-col items-center space-y-2">
-                            <category.icon className={`w-8 h-8 ${
-                              selectedCategory === category.id ? 'text-blue-light' : 'text-muted-foreground'
-                            }`} />
-                            <div className="text-center">
-                              <div className="font-semibold text-sm">{category.name}</div>
-                              <div className="text-xs text-muted-foreground">{category.count} devices</div>
-                            </div>
-                          </div>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-6">
+              {/* Quick Setup Message */}
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                  <SparklesIcon className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-foreground mb-2">
+                    Instant Health Sync
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Connect your devices with one tap. We'll handle the rest automatically.
+                  </p>
+                </div>
+              </div>
 
-                  {/* Device List */}
-                  <div className="flex-1 overflow-y-auto p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredDevices.map((device, index) => (
-                        <motion.div
-                          key={device.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="bg-card rounded-xl p-6 border border-border hover:border-blue-light/50 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                          onClick={() => handleDeviceSelect(device)}
-                        >
-                          <div className="space-y-4">
-                            {/* Device Header */}
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-3">
-                                <div className="text-4xl">{device.logo}</div>
-                                <div>
-                                  <h3 className="font-bold text-foreground">{device.name}</h3>
-                                  <p className="text-sm text-muted-foreground">{device.brand}</p>
-                                </div>
-                              </div>
-                              {device.popular && (
-                                <div className="px-2 py-1 bg-neon-green/20 text-neon-green text-xs font-bold rounded-full">
-                                  Popular
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Description */}
-                            <p className="text-sm text-muted-foreground">{device.description}</p>
-
-                            {/* Features */}
-                            <div className="space-y-2">
-                              <div className="text-xs font-semibold text-foreground">Features:</div>
-                              <div className="flex flex-wrap gap-1">
-                                {device.features.slice(0, 3).map((feature, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
-                                  >
-                                    {feature}
-                                  </span>
-                                ))}
-                                {device.features.length > 3 && (
-                                  <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
-                                    +{device.features.length - 3} more
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Connection Type */}
-                            <div className="flex items-center justify-between pt-2 border-t border-border">
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                                <span>{getConnectionIcon(device.connectionType)}</span>
-                                <span className="capitalize">{device.connectionType}</span>
-                              </div>
-                              <ArrowRightIcon className="w-4 h-4 text-blue-light" />
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {connectionStep === 'connect' && selectedDevice && (
-                <motion.div
-                  key="connect"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="h-full flex items-center justify-center p-6"
-                >
-                  <div className="max-w-md w-full space-y-8 text-center">
-                    <div className="space-y-4">
-                      <div className="text-6xl">{selectedDevice.logo}</div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-foreground mb-2">
-                          Connect {selectedDevice.name}
-                        </h2>
-                        <p className="text-muted-foreground">
-                          Follow these steps to connect your {selectedDevice.brand} device
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Connection Steps */}
-                    <div className="space-y-4 text-left">
-                      {[
-                        `Open the ${selectedDevice.brand} app on your phone`,
-                        'Enable data sharing in privacy settings',
-                        'Authorize Biowell to access your health data',
-                        'Your data will sync automatically'
-                      ].map((step, index) => (
-                        <div key={index} className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-blue-light text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
-                            {index + 1}
-                          </div>
-                          <p className="text-foreground">{step}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Security Notice */}
-                    <div className="bg-muted/50 rounded-xl p-4 border border-border">
-                      <div className="flex items-start space-x-3">
-                        <ShieldCheckIcon className="w-5 h-5 text-neon-green mt-0.5" />
-                        <div className="text-left">
-                          <h4 className="font-semibold text-foreground mb-1">Your Data is Secure</h4>
-                          <p className="text-sm text-muted-foreground">
-                            We use bank-level encryption and never share your personal health data.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex space-x-4">
-                      <button
-                        onClick={() => setConnectionStep('select')}
-                        className="flex-1 px-6 py-3 border border-border text-foreground font-medium rounded-xl hover:bg-muted transition-colors"
-                      >
-                        Back
-                      </button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleConnect}
-                        disabled={connecting}
-                        className="flex-1 px-6 py-3 bg-gradient-biowell text-white font-medium rounded-xl hover:opacity-90 disabled:opacity-50 transition-all duration-200 flex items-center justify-center space-x-2"
-                      >
-                        {connecting ? (
-                          <>
-                            <LoadingSpinner size="sm" />
-                            <span>Connecting...</span>
-                          </>
-                        ) : (
-                          <>
-                            <WifiIcon className="w-5 h-5" />
-                            <span>Connect Device</span>
-                          </>
-                        )}
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {connectionStep === 'success' && selectedDevice && (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="h-full flex items-center justify-center p-6"
-                >
-                  <div className="max-w-md w-full space-y-8 text-center">
+              {/* Device Cards */}
+              <div className="space-y-4">
+                {devices.map((device, index) => {
+                  const isConnected = connectedDevices.includes(device.id);
+                  const isConnecting = connecting;
+                  
+                  return (
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                      className="w-24 h-24 bg-neon-green rounded-full flex items-center justify-center mx-auto shadow-lg"
+                      key={device.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={`p-6 rounded-xl border-2 transition-all duration-300 ${
+                        isConnected 
+                          ? 'border-green-500 bg-green-50 dark:bg-green-950/20' 
+                          : 'border-border bg-card hover:border-blue-light/50'
+                      }`}
                     >
-                      <CheckCircleIcon className="w-12 h-12 text-black" />
-                    </motion.div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <h2 className="text-3xl font-bold text-foreground mb-2">
-                          Successfully Connected!
-                        </h2>
-                        <p className="text-lg text-muted-foreground">
-                          Your {selectedDevice.name} is now syncing data
-                        </p>
-                      </div>
-
-                      <div className="bg-muted/50 rounded-xl p-4 border border-border">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="text-2xl">{selectedDevice.logo}</div>
-                            <div className="text-left">
-                              <div className="font-semibold text-foreground">{selectedDevice.name}</div>
-                              <div className="text-sm text-muted-foreground">{selectedDevice.brand}</div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="text-4xl">{device.logo}</div>
+                          <div className="space-y-2">
+                            <div>
+                              <h3 className="text-lg font-bold text-foreground">{device.name}</h3>
+                              <p className="text-sm text-muted-foreground">{device.description}</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {device.metrics.map((metric, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
+                                >
+                                  {metric}
+                                </span>
+                              ))}
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2 text-neon-green">
-                            <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
-                            <span className="text-sm font-medium">Syncing</span>
-                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col items-end space-y-2">
+                          {isConnected ? (
+                            <div className="flex items-center space-x-2 text-green-600">
+                              <CheckCircleIcon className="w-5 h-5" />
+                              <span className="font-semibold">Connected</span>
+                            </div>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => handleQuickConnect(device.id)}
+                              disabled={isConnecting}
+                              className="px-6 py-3 bg-gradient-to-r from-blue-light to-blue-medium text-white font-semibold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all duration-200 flex items-center space-x-2"
+                            >
+                              {isConnecting ? (
+                                <>
+                                  <LoadingSpinner size="sm" />
+                                  <span>Connecting...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <WifiIcon className="w-5 h-5" />
+                                  <span>Quick Connect</span>
+                                </>
+                              )}
+                            </motion.button>
+                          )}
+                          
+                          {device.popular && (
+                            <div className="px-2 py-1 bg-neon-green/20 text-neon-green text-xs font-bold rounded-full">
+                              Most Popular
+                            </div>
+                          )}
                         </div>
                       </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
 
-                      <div className="space-y-3">
-                        <h4 className="font-semibold text-foreground">What's Next?</h4>
-                        <div className="space-y-2 text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-2">
-                            <ClockIcon className="w-4 h-4 text-blue-light" />
-                            <span>Data will appear in your dashboard within 5-10 minutes</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <HeartIcon className="w-4 h-4 text-blue-light" />
-                            <span>Your AI coach will analyze the new data automatically</span>
-                          </div>
-                        </div>
+              {/* Security Notice */}
+              <div className="bg-muted/50 rounded-xl p-4 border border-border">
+                <div className="flex items-start space-x-3">
+                  <ShieldCheckIcon className="w-5 h-5 text-neon-green mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Your Data is Secure</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Bank-level encryption • HIPAA compliant • Never shared with third parties
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* What Happens Next */}
+              {connectedDevices.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-green-50 dark:bg-green-950/20 rounded-xl p-4 border border-green-200 dark:border-green-800"
+                >
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-green-700 dark:text-green-400">What's Next?</h4>
+                    <div className="space-y-2 text-sm text-green-600 dark:text-green-500">
+                      <div className="flex items-center space-x-2">
+                        <ClockIcon className="w-4 h-4" />
+                        <span>Data will appear in your dashboard within 30 seconds</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <HeartIcon className="w-4 h-4" />
+                        <span>Your AI coach will analyze the new data automatically</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <SparklesIcon className="w-4 h-4" />
+                        <span>Personalized insights will be generated based on your patterns</span>
                       </div>
                     </div>
-
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={handleClose}
-                      className="w-full px-6 py-3 bg-gradient-biowell text-white font-medium rounded-xl hover:opacity-90 transition-all duration-200"
-                    >
-                      Done
-                    </motion.button>
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="p-6 border-t border-border">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onClose}
+              className="w-full px-6 py-3 bg-gradient-to-r from-blue-light to-blue-medium text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200"
+            >
+              {connectedDevices.length > 0 ? 'View My Dashboard' : 'Maybe Later'}
+            </motion.button>
           </div>
         </div>
       </motion.div>

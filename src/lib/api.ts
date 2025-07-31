@@ -274,6 +274,155 @@ export const getChatHistory = async (sessionId: string) => {
   }
 };
 
+// Generate realistic dummy health data
+export const generateDummyHealthData = async (userId: string, deviceType: 'apple-watch' | 'freestyle-libre') => {
+  const now = new Date();
+  const dataPoints = [];
+
+  if (deviceType === 'apple-watch') {
+    // Generate Apple Watch data for the last 7 days
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      
+      // Heart rate data (every 2 hours during wake time)
+      for (let hour = 6; hour <= 23; hour += 2) {
+        const timestamp = new Date(date);
+        timestamp.setHours(hour, Math.random() * 60);
+        
+        let heartRate = 65; // Base resting HR
+        if (hour >= 7 && hour <= 9) heartRate += 15; // Morning activity
+        if (hour >= 17 && hour <= 19) heartRate += 20; // Evening workout
+        heartRate += (Math.random() - 0.5) * 10; // Natural variation
+        
+        dataPoints.push({
+          user_id: userId,
+          metric_type: 'heart_rate',
+          value: Math.max(50, Math.min(100, Math.round(heartRate))),
+          unit: 'bpm',
+          timestamp: timestamp.toISOString(),
+          source: 'wearable',
+          metadata: { device: 'Apple Watch', activity: hour >= 17 && hour <= 19 ? 'workout' : 'rest' }
+        });
+      }
+      
+      // Daily steps (realistic pattern)
+      const baseSteps = 8000;
+      const variation = (Math.random() - 0.5) * 4000;
+      const weekendMultiplier = [0, 6].includes(date.getDay()) ? 0.7 : 1; // Less steps on weekends
+      
+      dataPoints.push({
+        user_id: userId,
+        metric_type: 'steps',
+        value: Math.max(3000, Math.round((baseSteps + variation) * weekendMultiplier)),
+        unit: 'steps',
+        timestamp: date.toISOString(),
+        source: 'wearable',
+        metadata: { device: 'Apple Watch' }
+      });
+      
+      // Sleep score (based on realistic sleep patterns)
+      const sleepTimestamp = new Date(date);
+      sleepTimestamp.setHours(7, 0); // Sleep data available in morning
+      
+      let sleepScore = 75; // Base score
+      if ([0, 6].includes(date.getDay())) sleepScore += 10; // Better sleep on weekends
+      sleepScore += (Math.random() - 0.5) * 20; // Natural variation
+      
+      dataPoints.push({
+        user_id: userId,
+        metric_type: 'sleep',
+        value: Math.max(40, Math.min(100, Math.round(sleepScore))),
+        unit: 'score',
+        timestamp: sleepTimestamp.toISOString(),
+        source: 'wearable',
+        metadata: { 
+          device: 'Apple Watch',
+          duration: '7h 23m',
+          deep_sleep: '1h 45m',
+          rem_sleep: '1h 30m'
+        }
+      });
+    }
+  }
+
+  if (deviceType === 'freestyle-libre') {
+    // Generate CGM data for the last 3 days (every 15 minutes)
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      
+      for (let hour = 0; hour < 24; hour++) {
+        for (let minute = 0; minute < 60; minute += 15) {
+          const timestamp = new Date(date);
+          timestamp.setHours(hour, minute);
+          
+          // Realistic glucose patterns for someone with insulin resistance
+          let baseGlucose = 95; // Slightly elevated baseline
+          
+          // Meal spikes
+          if (hour >= 7 && hour <= 9) {
+            // Breakfast spike
+            const timeSinceMeal = (hour - 7) * 60 + minute;
+            if (timeSinceMeal <= 120) {
+              baseGlucose = 95 + (50 * Math.exp(-timeSinceMeal / 60)); // Spike and decay
+            }
+          } else if (hour >= 12 && hour <= 15) {
+            // Lunch spike
+            const timeSinceMeal = (hour - 12) * 60 + minute;
+            if (timeSinceMeal <= 180) {
+              baseGlucose = 95 + (60 * Math.exp(-timeSinceMeal / 80)); // Larger spike
+            }
+          } else if (hour >= 18 && hour <= 21) {
+            // Dinner spike
+            const timeSinceMeal = (hour - 18) * 60 + minute;
+            if (timeSinceMeal <= 180) {
+              baseGlucose = 95 + (55 * Math.exp(-timeSinceMeal / 75));
+            }
+          }
+          
+          // Dawn phenomenon (early morning rise)
+          if (hour >= 4 && hour <= 7) {
+            baseGlucose += 10;
+          }
+          
+          // Add natural variation
+          baseGlucose += (Math.random() - 0.5) * 15;
+          
+          dataPoints.push({
+            user_id: userId,
+            metric_type: 'glucose',
+            value: Math.max(70, Math.min(250, Math.round(baseGlucose))),
+            unit: 'mg/dL',
+            timestamp: timestamp.toISOString(),
+            source: 'cgm',
+            metadata: { 
+              device: 'FreeStyle Libre',
+              trend: Math.random() > 0.5 ? 'stable' : Math.random() > 0.5 ? 'rising' : 'falling'
+            }
+          });
+        }
+      }
+    }
+  }
+
+  // Insert all data points in batches to avoid timeout
+  const batchSize = 100;
+  for (let i = 0; i < dataPoints.length; i += batchSize) {
+    const batch = dataPoints.slice(i, i + batchSize);
+    const { error } = await supabase
+      .from('health_metrics')
+      .insert(batch);
+    
+    if (error) {
+      console.error('Error inserting dummy data batch:', error);
+      throw error;
+    }
+  }
+
+  return dataPoints.length;
+};
+
 // Mock data generators for demo
 export const generateMockHealthData = (userId: string) => {
   const metrics = ['heart_rate', 'steps', 'sleep', 'glucose', 'hrv'];
