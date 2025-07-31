@@ -17,8 +17,8 @@ import {
   BoltIcon,
   PlayIcon,
   HeartIcon,
-  BeakerIcon,
-  CubeIcon
+  CubeIcon,
+  BeakerIcon
 } from '@heroicons/react/24/outline';
 
 const WelcomeHeader: React.FC = () => {

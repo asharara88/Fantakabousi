@@ -6,7 +6,10 @@ import {
   PlusIcon,
   CameraIcon,
   HeartIcon,
-  CalendarIcon
+  CalendarIcon,
+  MagnifyingGlassIcon,
+  CubeIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 
 interface QuickActionsProps {

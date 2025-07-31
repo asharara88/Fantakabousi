@@ -140,8 +140,6 @@ const HealthDashboard: React.FC = () => {
     switch (activeView) {
       case 'food':
         return <FoodLogger />;
-      case 'recipes':
-        return <RecipeSearch />;
       default:
         return renderMetricsView();
     }

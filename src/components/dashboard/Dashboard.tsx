@@ -10,6 +10,7 @@ import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
+import RecipeSearch from '../recipes/RecipeSearch';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
 

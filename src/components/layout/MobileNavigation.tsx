@@ -201,19 +201,25 @@ export function MobileNavigation({
                     setShowNotifications(true);
                     onMenuToggle();
                   }}
-                  className="w-full flex items-center space-x-4 p-4 rounded-xl text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200 cursor-pointer touch-target"
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200 cursor-pointer touch-target"
                 >
                   <BellIcon className="w-5 h-5" />
                   <span className="text-body font-medium">Notifications</span>
                   <span className="ml-auto status-dot success animate-pulse"></span>
                 </button>
-                <button className="w-full flex items-center space-x-4 p-4 rounded-xl text-foreground hover:bg-muted transition-all duration-200 cursor-pointer touch-target">
-                  <Cog6ToothIcon className="w-5 h-5" />
-                  <span className="text-body font-medium">Settings</span>
+                <button 
+                  onClick={() => {
+                    onViewChange('profile');
+                    onMenuToggle();
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-foreground hover:bg-muted transition-all duration-200 cursor-pointer touch-target"
+                >
+                  <UserCircleIcon className="w-5 h-5" />
+                  <span className="text-body font-medium">Profile & Settings</span>
                 </button>
                 <button 
                   onClick={signOut}
-                  className="w-full flex items-center space-x-4 p-4 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200 cursor-pointer touch-target"
+                  className="w-full flex items-center space-x-3 p-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200 cursor-pointer touch-target"
                 >
                   <ArrowRightOnRectangleIcon className="w-5 h-5" />
                   <span className="text-body font-medium">Sign Out</span>

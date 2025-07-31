@@ -288,6 +288,19 @@ const ProfileSettingsEnhanced: React.FC = () => {
       case 'appearance':
         return (
           <div className="space-y-6">
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-xl border border-blue-200 dark:border-blue-800">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mt-1">
+                  <DevicePhoneMobileIcon className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Quick Theme Access</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    You can also change themes quickly from the sidebar or mobile menu
+                  </p>
+                </div>
+              </div>
+            </div>
             <ThemeSelector />
           </div>
         );
