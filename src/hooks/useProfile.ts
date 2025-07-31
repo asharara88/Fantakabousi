@@ -24,6 +24,15 @@ export const useProfile = () => {
 
     try {
       setLoading(true);
+      
+      // Check if Supabase is properly configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        console.error('Supabase environment variables are not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.');
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -35,7 +44,11 @@ export const useProfile = () => {
       }
       setProfile(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        console.error('Network error: Unable to connect to Supabase. Please check your environment variables and network connection.');
+      } else {
+        console.error('Error fetching profile:', error);
+      }
       setProfile(null);
     } finally {
       setLoading(false);
