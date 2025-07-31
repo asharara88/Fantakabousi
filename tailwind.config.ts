@@ -18,18 +18,34 @@ export default {
         'biowell-light': '#48C6FF',    // Top Dash - Light Blue
         'biowell-medium': '#2A7FFF',   // Middle Dash - Medium Blue  
         'biowell-deep': '#0026CC',     // Bottom Dash - Deep Blue
+        // Updated Biowell Brand Colors
+        'biowell-primary': '#5C4DFF',  // Primary brand color
+        'biowell-accent': '#3BE6C5',   // Accent color
         primary: {
-          DEFAULT: '#48C6FF',
+          DEFAULT: '#5C4DFF',
           50: '#f0f9ff',
           100: '#e0f2fe',
           200: '#bae6fd',
           300: '#7dd3fc',
-          400: '#48C6FF',
-          500: '#48C6FF',
-          600: '#2A7FFF',
-          700: '#2A7FFF',
-          800: '#0026CC',
-          900: '#0026CC',
+          400: '#5C4DFF',
+          500: '#5C4DFF',
+          600: '#4338CA',
+          700: '#3730A3',
+          800: '#312E81',
+          900: '#1E1B4B',
+        },
+        accent: {
+          DEFAULT: '#3BE6C5',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#3BE6C5',
+          500: '#14b8a6',
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',

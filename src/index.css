@@ -12,7 +12,7 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
+  --primary: 248 100% 66%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
@@ -24,8 +24,14 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --ring: 248 100% 66%;
   --radius: 0.5rem;
+  
+  /* Biowell Brand Colors */
+  --biowell-primary: 248 100% 66%;
+  --biowell-accent: 166 76% 57%;
+  --gradient-biowell: linear-gradient(135deg, #5C4DFF 0%, #3BE6C5 100%);
+  --gradient-secondary: linear-gradient(135deg, #3BE6C5 0%, #5C4DFF 100%);
 }
 
 .dark {
@@ -35,7 +41,7 @@
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
+  --primary: 248 100% 66%;
   --primary-foreground: 222.2 84% 4.9%;
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
@@ -432,9 +438,9 @@ body {
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #5C4DFF 0%, #3BE6C5 100%);
   color: white;
-  box-shadow: 0 4px 12px rgb(59 130 246 / 0.4);
+  box-shadow: 0 4px 12px rgb(92 77 255 / 0.4);
 }
 
 .nav-mobile-item {
@@ -506,18 +512,18 @@ body {
 
 /* === ENHANCED BUTTONS === */
 .btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #5C4DFF 0%, #3BE6C5 100%);
   color: white;
   padding: 12px 24px;
   border-radius: 12px;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgb(59 130 246 / 0.4);
+  box-shadow: 0 4px 12px rgb(92 77 255 / 0.4);
   transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgb(59 130 246 / 0.5);
+  box-shadow: 0 6px 16px rgb(92 77 255 / 0.5);
 }
 
 .btn-secondary {
@@ -572,7 +578,7 @@ body {
 
 /* === TYPOGRAPHY ENHANCEMENTS === */
 .text-gradient-brand {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #5C4DFF 0%, #3BE6C5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -685,7 +691,7 @@ body {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(90deg, #5C4DFF 0%, #3BE6C5 100%);
   border-radius: 4px;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
