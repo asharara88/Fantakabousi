@@ -38,19 +38,19 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="card max-w-md w-full text-center space-y-6"
+            className="bg-white rounded-2xl border border-gray-200 p-8 max-w-md w-full text-center space-y-6 shadow-lg"
           >
             <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto">
               <ExclamationTriangleIcon className="w-8 h-8 text-red-500" />
             </div>
             
             <div className="space-y-3">
-              <h2 className="text-title">Something went wrong</h2>
-              <p className="text-body text-muted-foreground">
+              <h2 className="text-xl font-bold text-gray-900">Something went wrong</h2>
+              <p className="text-gray-600">
                 We encountered an unexpected error. Please try refreshing the page.
               </p>
             </div>
@@ -58,15 +58,15 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="space-y-3">
               <button
                 onClick={this.handleRetry}
-                className="btn btn-primary w-full"
+                className="w-full px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
               >
                 <ArrowPathIcon className="w-5 h-5" />
-                Try Again
+                <span>Try Again</span>
               </button>
               
               <button
                 onClick={() => window.location.reload()}
-                className="btn btn-secondary w-full"
+                className="w-full px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
               >
                 Refresh Page
               </button>
@@ -74,7 +74,7 @@ class ErrorBoundary extends Component<Props, State> {
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="text-left">
-                <summary className="text-caption cursor-pointer">Error Details</summary>
+                <summary className="text-sm text-gray-600 cursor-pointer">Error Details</summary>
                 <pre className="text-xs text-red-500 mt-2 p-3 bg-red-50 rounded-lg overflow-auto">
                   {this.state.error.toString()}
                   {this.state.errorInfo?.componentStack}

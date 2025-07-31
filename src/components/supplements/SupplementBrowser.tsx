@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase, Supplement } from '../../lib/supabase';
+import { motion } from 'framer-motion';
+import { useSupplements } from '../../hooks/useSupplements';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { formatCurrency } from '../../lib/utils';
 import { 
@@ -13,66 +12,21 @@ import {
   InformationCircleIcon,
   CheckCircleIcon,
   SparklesIcon,
-  BeakerIcon,
-  CubeIcon
+  BeakerIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
 interface SupplementBrowserProps {
-  onAddToCart: (supplement: Supplement) => void;
+  onAddToCart: (supplement: any) => void;
   cartItems: { [key: string]: number };
 }
 
 const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cartItems }) => {
-  const [supplements, setSupplements] = useState<Supplement[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { supplements, loading } = useSupplements();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    fetchSupplements();
-  }, [selectedCategory, sortBy]);
-
-  const fetchSupplements = async () => {
-    try {
-      let query = supabase
-        .from('supplements')
-        .select('*')
-        .eq('is_active', true);
-
-      if (selectedCategory !== 'all') {
-        query = query.eq('category', selectedCategory);
-      }
-
-      // Apply sorting
-      switch (sortBy) {
-        case 'featured':
-          query = query.order('is_featured', { ascending: false });
-          break;
-        case 'price_low':
-          query = query.order('price', { ascending: true });
-          break;
-        case 'price_high':
-          query = query.order('price', { ascending: false });
-          break;
-        case 'rating':
-          query = query.order('evidence_rating', { ascending: false });
-          break;
-        default:
-          query = query.order('name', { ascending: true });
-      }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      setSupplements(data || []);
-    } catch (error) {
-      console.error('Error fetching supplements:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleFavorite = (supplementId: string) => {
     setFavorites(prev => {
@@ -106,7 +60,7 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <LoadingSpinner size="xl" variant="premium" />
+        <LoadingSpinner size="xl" />
       </div>
     );
   }
@@ -114,25 +68,25 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
   return (
     <div className="space-y-8">
       {/* Search and Filters */}
-      <div className="card-premium p-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1 relative">
-            <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search supplements..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-premium pl-12 w-full"
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           
           <div className="flex items-center space-x-3">
-            <FunnelIcon className="w-5 h-5 text-muted-foreground" />
+            <FunnelIcon className="w-5 h-5 text-gray-400" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="input-premium"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {categories.map(category => (
                 <option key={category} value={category}>
@@ -144,7 +98,7 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="input-premium"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="featured">Featured</option>
               <option value="name">Name A-Z</option>
@@ -158,17 +112,17 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
 
       {/* Results Count */}
       <div className="flex items-center justify-between">
-        <div className="text-body text-muted-foreground">
+        <div className="text-gray-600">
           {filteredSupplements.length} supplements found
         </div>
         <div className="flex items-center space-x-2">
-          <SparklesIcon className="w-4 h-4 text-primary" />
-          <span className="text-caption">AI-Curated Selection</span>
+          <SparklesIcon className="w-4 h-4 text-blue-500" />
+          <span className="text-sm text-gray-600">AI-Curated Selection</span>
         </div>
       </div>
 
       {/* Products Grid */}
-      <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredSupplements.map((supplement, index) => {
           const cartQuantity = cartItems[supplement.id] || 0;
           const isFavorite = favorites.has(supplement.id);
@@ -179,24 +133,24 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="card-premium p-6 group hover:scale-[1.02] transition-all duration-300"
+              className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="space-y-4">
-                {/* Image and Badges */}
+                {/* Image */}
                 <div className="relative">
-                  <div className="w-full h-48 bg-muted/20 rounded-xl overflow-hidden">
+                  <div className="w-full h-48 bg-gray-100 rounded-xl overflow-hidden">
                     <img
                       src={supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
                       alt={supplement.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   
-                  <button
+                  <button 
                     onClick={() => toggleFavorite(supplement.id)}
-                    className="absolute top-3 right-3 p-2 bg-background/80 backdrop-blur-sm rounded-lg hover:bg-background transition-colors"
+                    className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-lg hover:bg-white transition-colors"
                   >
-                    <HeartIcon className={`w-5 h-5 ${isFavorite ? 'text-red-500 fill-current' : 'text-muted-foreground'}`} />
+                    <HeartIcon className={`w-5 h-5 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
                   </button>
                   
                   {supplement.is_featured && (
@@ -215,10 +169,10 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                 {/* Product Info */}
                 <div className="space-y-3">
                   <div>
-                    <h3 className="text-body font-bold text-foreground line-clamp-2">
+                    <h3 className="font-bold text-gray-900 line-clamp-2">
                       {supplement.name}
                     </h3>
-                    <p className="text-caption line-clamp-2 mt-1">
+                    <p className="text-sm text-gray-600 line-clamp-2 mt-1">
                       {supplement.description}
                     </p>
                   </div>
@@ -231,11 +185,11 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                         className={`w-4 h-4 ${
                           i < Math.floor(supplement.evidence_rating || 4) 
                             ? 'text-yellow-400' 
-                            : 'text-muted/30'
+                            : 'text-gray-300'
                         }`} 
                       />
                     ))}
-                    <span className="text-caption ml-2">
+                    <span className="text-sm text-gray-600 ml-2">
                       ({supplement.evidence_rating || 4.0})
                     </span>
                   </div>
@@ -243,17 +197,17 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                   {/* Price */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <div className="text-heading-lg font-bold text-foreground">
+                      <div className="text-xl font-bold text-gray-900">
                         {formatCurrency(supplement.price)}
                       </div>
                       {supplement.subscription_discount_percent > 0 && (
-                        <div className="text-caption text-green-500">
+                        <div className="text-sm text-green-500">
                           {supplement.subscription_discount_percent}% off subscription
                         </div>
                       )}
                     </div>
                     
-                    <div className="text-caption">
+                    <div className="text-sm text-gray-600">
                       Stock: {supplement.stock_quantity} • {supplement.use_case || 'General wellness'}
                     </div>
                   </div>
@@ -262,23 +216,23 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                 {/* Actions */}
                 <div className="space-y-3">
                   {cartQuantity > 0 ? (
-                    <div className="status-indicator status-success w-full justify-center">
-                      <CheckCircleIcon className="w-4 h-4" />
-                      In Cart ({cartQuantity})
+                    <div className="flex items-center justify-center space-x-2 w-full py-3 bg-green-100 text-green-700 rounded-xl font-medium">
+                      <CheckCircleIcon className="w-5 h-5" />
+                      <span>In Cart ({cartQuantity})</span>
                     </div>
                   ) : (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => onAddToCart(supplement)}
-                      className="btn-primary w-full flex items-center justify-center space-x-2"
+                      className="w-full py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
                     >
                       <ShoppingCartIcon className="w-5 h-5" />
                       <span>Add to Stack</span>
                     </motion.button>
                   )}
                   
-                  <button className="btn-secondary w-full flex items-center justify-center space-x-2">
+                  <button className="w-full py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
                     <InformationCircleIcon className="w-5 h-5" />
                     <span>Learn More</span>
                   </button>
@@ -292,13 +246,13 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
       {/* Empty State */}
       {filteredSupplements.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-20 h-20 bg-muted/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <BeakerIcon className="w-10 h-10 text-muted-foreground" />
+          <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <BeakerIcon className="w-10 h-10 text-gray-400" />
           </div>
-          <h3 className="text-heading-lg text-foreground mb-3">
+          <h3 className="text-xl font-bold text-gray-900 mb-3">
             No supplements found
           </h3>
-          <p className="text-body text-muted-foreground mb-6">
+          <p className="text-gray-600 mb-6">
             Try adjusting your search or filter criteria
           </p>
           <button 
@@ -306,7 +260,7 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
               setSearchTerm('');
               setSelectedCategory('all');
             }}
-            className="btn-primary"
+            className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors"
           >
             Clear Filters
           </button>

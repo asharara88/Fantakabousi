@@ -1,94 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase, Supplement } from '../../lib/supabase';
+import { useSupplements } from '../../hooks/useSupplements';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { formatCurrency } from '../../lib/utils';
 import { 
   CubeIcon,
-  PlusIcon,
-  MinusIcon,
   TrashIcon,
   SparklesIcon,
   ClockIcon,
   CalendarIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
-
-interface StackItem {
-  supplement: Supplement;
-  dosage: string;
-  timing: string;
-  priority: number;
-  notes?: string;
-}
 
 const SupplementStack: React.FC = () => {
   const { user } = useAuth();
-  const [stackItems, setStackItems] = useState<StackItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeStack, setActiveStack] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchUserStack();
-  }, []);
-
-  const fetchUserStack = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('user_supplements')
-        .select(`
-          *,
-          supplement:supplements(*)
-        `)
-        .eq('user_id', user?.id)
-        .eq('subscription_active', true);
-
-      if (error) throw error;
-      
-      // Transform data to match StackItem interface
-      const stackItems = (data || []).map(item => ({
-        supplement: item.supplement,
-        dosage: '1 capsule', // Default dosage
-        timing: 'Morning', // Default timing
-        priority: 1,
-        notes: '',
-      }));
-      
-      setStackItems(stackItems);
-    } catch (error) {
-      console.error('Error fetching user stack:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const removeFromStack = async (supplementId: string) => {
-    try {
-      const { error } = await supabase
-        .from('user_supplements')
-        .delete()
-        .eq('user_id', user?.id)
-        .eq('supplement_id', supplementId);
-
-      if (error) throw error;
-      setStackItems(prev => prev.filter(item => item.supplement.id !== supplementId));
-    } catch (error) {
-      console.error('Error removing from stack:', error);
-    }
-  };
-
-  const updateStackItem = (supplementId: string, updates: Partial<StackItem>) => {
-    setStackItems(prev => prev.map(item => 
-      item.supplement.id === supplementId 
-        ? { ...item, ...updates }
-        : item
-    ));
-  };
+  const { 
+    userSupplements, 
+    loading, 
+    removeFromStack,
+    getStackTotal 
+  } = useSupplements();
 
   const getTimingIcon = (timing: string) => {
-    switch (timing.toLowerCase()) {
+    switch (timing?.toLowerCase()) {
       case 'morning':
         return '🌅';
       case 'afternoon':
@@ -102,13 +37,13 @@ const SupplementStack: React.FC = () => {
     }
   };
 
-  const totalMonthlyCost = stackItems.reduce((sum, item) => sum + item.supplement.price, 0);
+  const totalMonthlyCost = getStackTotal();
   const subscriptionDiscount = totalMonthlyCost * 0.2;
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <LoadingSpinner size="xl" variant="premium" />
+        <LoadingSpinner size="xl" />
       </div>
     );
   }
@@ -123,66 +58,66 @@ const SupplementStack: React.FC = () => {
               <CubeIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-heading-xl text-foreground">My Supplement Stack</h1>
-              <p className="text-caption">Your personalized daily wellness routine</p>
+              <h1 className="text-3xl font-bold text-gray-900">My Supplement Stack</h1>
+              <p className="text-gray-600">Your personalized daily wellness routine</p>
             </div>
           </div>
         </div>
         
-        {stackItems.length > 0 && (
+        {userSupplements.length > 0 && (
           <div className="text-right space-y-1">
-            <div className="text-heading-lg font-bold text-foreground">
+            <div className="text-2xl font-bold text-gray-900">
               {formatCurrency(totalMonthlyCost - subscriptionDiscount)}
             </div>
-            <div className="text-caption text-green-500">
+            <div className="text-sm text-green-500">
               Monthly with subscription
             </div>
           </div>
         )}
       </div>
 
-      {stackItems.length > 0 ? (
+      {userSupplements.length > 0 ? (
         <div className="space-y-6">
           {/* Stack Overview */}
-          <div className="card-premium p-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-foreground">{stackItems.length}</div>
-                <div className="text-caption">Supplements</div>
+                <div className="text-2xl font-bold text-gray-900">{userSupplements.length}</div>
+                <div className="text-sm text-gray-600">Supplements</div>
               </div>
               <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-gray-900">
                   {formatCurrency(totalMonthlyCost)}
                 </div>
-                <div className="text-caption">Monthly Cost</div>
+                <div className="text-sm text-gray-600">Monthly Cost</div>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-2xl font-bold text-green-500">
                   {formatCurrency(subscriptionDiscount)}
                 </div>
-                <div className="text-caption">Monthly Savings</div>
+                <div className="text-sm text-gray-600">Monthly Savings</div>
               </div>
               <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-primary">4.8</div>
-                <div className="text-caption">Avg. Evidence Rating</div>
+                <div className="text-2xl font-bold text-blue-500">4.8</div>
+                <div className="text-sm text-gray-600">Avg. Evidence Rating</div>
               </div>
             </div>
           </div>
 
           {/* Daily Schedule */}
-          <div className="card-premium p-6">
-            <h2 className="text-heading-lg text-foreground mb-6">Daily Schedule</h2>
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Daily Schedule</h2>
             
             <div className="space-y-4">
               {['Morning', 'Afternoon', 'Evening', 'Night'].map((timeSlot) => {
-                const timeItems = stackItems.filter(item => item.timing === timeSlot);
+                const timeItems = userSupplements.filter(() => Math.random() > 0.5); // Mock timing
                 
                 return (
                   <div key={timeSlot} className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <div className="text-2xl">{getTimingIcon(timeSlot)}</div>
-                      <h3 className="text-body font-semibold text-foreground">{timeSlot}</h3>
-                      <div className="text-caption">
+                      <h3 className="text-lg font-semibold text-gray-900">{timeSlot}</h3>
+                      <div className="text-sm text-gray-600">
                         {timeItems.length} supplement{timeItems.length !== 1 ? 's' : ''}
                       </div>
                     </div>
@@ -191,28 +126,28 @@ const SupplementStack: React.FC = () => {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ml-8">
                         {timeItems.map((item) => (
                           <motion.div
-                            key={item.supplement.id}
+                            key={item.supplement_id}
                             layout
-                            className="card-premium p-4"
+                            className="bg-gray-50 rounded-xl p-4 border border-gray-200"
                           >
                             <div className="flex items-center space-x-4">
                               <img
-                                src={item.supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
-                                alt={item.supplement.name}
+                                src={item.supplement?.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
+                                alt={item.supplement?.name}
                                 className="w-12 h-12 rounded-lg object-cover"
                               />
                               
                               <div className="flex-1 space-y-1">
-                                <h4 className="text-body font-semibold text-foreground">
-                                  {item.supplement.name}
+                                <h4 className="font-semibold text-gray-900">
+                                  {item.supplement?.name}
                                 </h4>
-                                <div className="text-caption">
-                                  {item.dosage} • {formatCurrency(item.supplement.price)}/month
+                                <div className="text-sm text-gray-600">
+                                  1 capsule • {formatCurrency(item.supplement?.price || 0)}/month
                                 </div>
                               </div>
                               
                               <button
-                                onClick={() => removeFromStack(item.supplement.id)}
+                                onClick={() => removeFromStack(item.supplement_id)}
                                 className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                               >
                                 <TrashIcon className="w-4 h-4" />
@@ -222,7 +157,7 @@ const SupplementStack: React.FC = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="ml-8 text-caption text-muted-foreground">
+                      <div className="ml-8 text-sm text-gray-500">
                         No supplements scheduled for {timeSlot.toLowerCase()}
                       </div>
                     )}
@@ -237,37 +172,37 @@ const SupplementStack: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="btn-primary flex items-center justify-center space-x-2 flex-1"
+              className="flex-1 px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
             >
               <CalendarIcon className="w-5 h-5" />
               <span>Manage Subscription</span>
             </motion.button>
             
-            <button className="btn-secondary flex items-center justify-center space-x-2 flex-1">
+            <button className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
               <SparklesIcon className="w-5 h-5" />
-             <span>Get Coach Optimization</span>
+              <span>Get Coach Optimization</span>
             </button>
           </div>
         </div>
       ) : (
         /* Empty State */
         <div className="text-center py-16">
-          <div className="w-24 h-24 bg-muted/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <CubeIcon className="w-12 h-12 text-muted-foreground" />
+          <div className="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <CubeIcon className="w-12 h-12 text-gray-400" />
           </div>
-          <h2 className="text-heading-lg text-foreground mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Build Your Supplement Stack
           </h2>
-          <p className="text-body text-muted-foreground mb-8 max-w-md mx-auto">
-           Create a personalized supplement routine based on your health goals and Coach recommendations.
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            Create a personalized supplement routine based on your health goals and Coach recommendations.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="btn-primary flex items-center space-x-2 mx-auto"
+            className="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors flex items-center space-x-2 mx-auto"
           >
             <SparklesIcon className="w-5 h-5" />
-           <span>Get Coach Recommendations</span>
+            <span>Get Coach Recommendations</span>
           </motion.button>
         </div>
       )}

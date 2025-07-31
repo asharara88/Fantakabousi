@@ -4,22 +4,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ThemeSelector from '../settings/ThemeSelector';
+import { useToast } from '../../hooks/useToast';
 import { 
   UserCircleIcon,
   CameraIcon,
-  PencilIcon,
   ShieldCheckIcon,
   BellIcon,
-  GlobeAltIcon,
   DevicePhoneMobileIcon,
   HeartIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  CogIcon
 } from '@heroicons/react/24/outline';
 
 const ProfileSettings: React.FC = () => {
   const { user, signOut } = useAuth();
-  const { profile, updateProfile } = useProfile();
+  const { profile, updateProfile, loading: profileLoading } = useProfile();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('profile');
   const [formData, setFormData] = useState({
@@ -56,12 +57,32 @@ const ProfileSettings: React.FC = () => {
       });
       
       if (success) {
-        // Show success message
+        toast({
+          title: "Profile Updated",
+          description: "Your profile has been successfully updated.",
+        });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out.",
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
@@ -195,6 +216,55 @@ const ProfileSettings: React.FC = () => {
             </div>
           </div>
         );
+
+      case 'notifications':
+        return (
+          <div className="space-y-6">
+            <div className="space-y-4">
+              {[
+                { id: 'health_alerts', label: 'Health Alerts', description: 'Get notified about important health metrics' },
+                { id: 'supplement_reminders', label: 'Supplement Reminders', description: 'Daily reminders for your supplement stack' },
+                { id: 'workout_notifications', label: 'Workout Notifications', description: 'Reminders for scheduled workouts' },
+                { id: 'coach_messages', label: 'Coach Messages', description: 'Notifications from your AI coach' },
+              ].map((setting) => (
+                <div key={setting.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                  <div>
+                    <div className="font-medium text-gray-900">{setting.label}</div>
+                    <div className="text-sm text-gray-600">{setting.description}</div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'privacy':
+        return (
+          <div className="space-y-6">
+            <div className="space-y-4">
+              {[
+                { id: 'data_sharing', label: 'Data Sharing', description: 'Allow anonymous data sharing for research' },
+                { id: 'analytics', label: 'Analytics', description: 'Help improve the app with usage analytics' },
+                { id: 'marketing', label: 'Marketing Communications', description: 'Receive updates about new features' },
+              ].map((setting) => (
+                <div key={setting.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                  <div>
+                    <div className="font-medium text-gray-900">{setting.label}</div>
+                    <div className="text-sm text-gray-600">{setting.description}</div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
         
       case 'appearance':
         return (
@@ -213,6 +283,14 @@ const ProfileSettings: React.FC = () => {
         );
     }
   };
+
+  if (profileLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner size="xl" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -316,7 +394,7 @@ const ProfileSettings: React.FC = () => {
               Delete Account
             </button>
             <button 
-              onClick={signOut}
+              onClick={handleSignOut}
               className="px-6 py-3 bg-red-500 text-white font-medium rounded-xl hover:bg-red-600 transition-colors"
             >
               Sign Out
