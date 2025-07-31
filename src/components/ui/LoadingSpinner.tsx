@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   size = 'md', 
   className = '',
-  variant = 'premium'
+  variant = 'default'
 }) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
@@ -25,7 +25,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="w-2 h-2 bg-primary rounded-full"
+            className="w-2 h-2 bg-blue-500 rounded-full"
             animate={{
               scale: [1, 1.5, 1],
               opacity: [0.5, 1, 0.5],
@@ -42,29 +42,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     );
   }
 
-  if (variant === 'premium') {
-    return (
-      <div className={`flex items-center justify-center ${className}`}>
-        <div className="relative">
-          <motion.div
-            className={`${sizeClasses[size]} border-2 border-muted rounded-full`}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div
-            className={`absolute inset-0 ${sizeClasses[size]} border-2 border-transparent border-t-primary rounded-full`}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`flex items-center justify-center ${className}`}>
       <motion.div
-        className={`${sizeClasses[size]} border-2 border-muted border-t-primary rounded-full`}
+        className={`${sizeClasses[size]} border-2 border-gray-200 border-t-blue-500 rounded-full`}
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       />
