@@ -180,16 +180,18 @@ const Dashboard: React.FC = () => {
         />
         
         {/* Mobile Navigation */}
-        <MobileNavigation
-          currentView={activeTab}
-          onViewChange={handleTabChange}
-          isMenuOpen={isMobileMenuOpen}
-          onMenuToggle={handleMobileMenuToggle}
-        />
+        <div className="lg:hidden">
+          <MobileNavigation
+            currentView={activeTab}
+            onViewChange={handleTabChange}
+            isMenuOpen={isMobileMenuOpen}
+            onMenuToggle={handleMobileMenuToggle}
+          />
+        </div>
         
         {/* Main Content */}
-        <div className="lg:pl-72">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="lg:pl-72 pt-20 lg:pt-0">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 pb-24 lg:pb-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -203,9 +205,6 @@ const Dashboard: React.FC = () => {
             </AnimatePresence>
           </div>
         </div>
-
-        {/* Mobile spacing for bottom navigation */}
-        <div className="lg:hidden h-24" />
       </div>
     </AccessibilityProvider>
   );

@@ -47,19 +47,18 @@ export function MobileNavigation({
   const navigationItems = [
     { id: 'dashboard', label: 'Home', icon: HomeIcon, activeIcon: HomeSolidIcon },
     { id: 'health', label: 'Health', icon: HeartIcon, activeIcon: HeartSolidIcon },
-    { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon },
     { id: 'coach', label: 'Coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon },
+    { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon },
     { id: 'profile', label: 'Profile', icon: UserCircleIcon, activeIcon: UserSolidIcon },
   ];
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
-  if (!user) return null;
 
   return (
     <>
-      {/* Mobile Header */}
+      {/* Mobile Header - Always Visible */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="flex items-center justify-between px-4 py-4">
+        <div className="flex items-center justify-between px-6 py-4">
           <motion.div 
             className="flex items-center space-x-3"
             initial={{ opacity: 0, x: -20 }}
@@ -68,26 +67,33 @@ export function MobileNavigation({
             <img 
               src={logoUrl}
               alt="Biowell"
-              className="h-8 w-auto"
+              className="h-10 w-auto"
             />
-            <div className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Biowell
             </div>
           </motion.div>
           
-          <motion.button
-            onClick={onMenuToggle}
-            className="p-2 rounded-xl hover:bg-gray-100 transition-all duration-200"
-            aria-label="Toggle menu"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isMenuOpen ? (
-              <XMarkIcon className="w-6 h-6 text-gray-600" />
-            ) : (
-              <Bars3Icon className="w-6 h-6 text-gray-600" />
-            )}
-          </motion.button>
+          <div className="flex items-center space-x-3">
+            <button className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
+              <BellIcon className="w-6 h-6 text-gray-600" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+            </button>
+            
+            <motion.button
+              onClick={onMenuToggle}
+              className="p-2 rounded-xl hover:bg-gray-100 transition-all duration-200"
+              aria-label="Toggle menu"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isMenuOpen ? (
+                <XMarkIcon className="w-6 h-6 text-gray-600" />
+              ) : (
+                <Bars3Icon className="w-6 h-6 text-gray-600" />
+              )}
+            </motion.button>
+          </div>
         </div>
       </div>
 
@@ -179,6 +185,8 @@ export function MobileNavigation({
                     );
                   })}
                 </div>
+              </nav>
+
               {/* Bottom Actions */}
               <div className="p-6 border-t border-gray-200 space-y-2">
                 <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
@@ -202,10 +210,10 @@ export function MobileNavigation({
           </motion.div>
         )}
       </AnimatePresence>
-              </nav>
-      {/* Bottom Navigation Bar */}
+
+      {/* Bottom Navigation Bar - Always Visible */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg">
-        <div className="flex items-center justify-around px-4 py-2">
+        <div className="flex items-center justify-around px-2 py-2">
           {navigationItems.map((item) => {
             const Icon = currentView === item.id ? item.activeIcon : item.icon;
             const isActive = currentView === item.id;

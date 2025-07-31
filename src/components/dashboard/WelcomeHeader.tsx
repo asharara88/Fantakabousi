@@ -9,7 +9,12 @@ import {
   MoonIcon,
   CloudIcon,
   ChartBarIcon,
-  BoltIcon
+  BoltIcon,
+  ArrowRightIcon,
+  PlayIcon,
+  HeartIcon,
+  BeakerIcon,
+  CubeIcon
 } from '@heroicons/react/24/outline';
 
 const WelcomeHeader: React.FC = () => {
@@ -17,119 +22,231 @@ const WelcomeHeader: React.FC = () => {
   const { profile } = useProfile();
   const { actualTheme } = useTheme();
   
+  const logoUrl = actualTheme === 'dark' 
+    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
+    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
+  
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return { text: 'Good Morning', icon: SunIcon };
-    if (hour < 17) return { text: 'Good Afternoon', icon: SunIcon };
-    if (hour < 21) return { text: 'Good Evening', icon: CloudIcon };
-    return { text: 'Good Night', icon: MoonIcon };
+    if (hour < 12) return { text: 'Good Morning', icon: SunIcon, color: 'from-yellow-400 to-orange-500' };
+    if (hour < 17) return { text: 'Good Afternoon', icon: SunIcon, color: 'from-orange-400 to-red-500' };
+    if (hour < 21) return { text: 'Good Evening', icon: CloudIcon, color: 'from-purple-400 to-pink-500' };
+    return { text: 'Good Night', icon: MoonIcon, color: 'from-indigo-400 to-purple-500' };
   };
 
   const greeting = getGreeting();
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl border border-blue-100 shadow-lg">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+      <motion.div 
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 bg-gradient-to-r from-blue-400 to-purple-600"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.05, 0.15, 0.05],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
       
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 text-center space-y-6 py-12"
-      >
-        {/* Main Greeting */}
-        <div className="space-y-4">
-          <motion.div 
-            className="flex items-center justify-center space-x-4"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+      <div className="relative z-10 px-6 lg:px-12 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Welcome Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="space-y-6 lg:space-y-8 text-center lg:text-left"
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <greeting.icon className="w-7 h-7 text-white" />
-            </div>
-            <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
-              {greeting.text}, {firstName}!
-            </h1>
-            <motion.div
-              animate={{ 
-                rotate: [0, 10, -10, 0],
-                scale: [1, 1.1, 1]
-              }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity,
-                repeatDelay: 3
-              }}
+            {/* Logo and Brand */}
+            <motion.div 
+              className="flex items-center justify-center lg:justify-start space-x-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             >
-              <SparklesIcon className="w-10 h-10 text-yellow-500" />
+              <img 
+                src={logoUrl}
+                alt="Biowell"
+                className="h-16 lg:h-20 w-auto"
+              />
+              <div className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Biowell
+              </div>
+            </motion.div>
+            
+            {/* Main Greeting */}
+            <div className="space-y-4">
+              <motion.div 
+                className="flex items-center justify-center lg:justify-start space-x-3"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              >
+                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${greeting.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+                  <greeting.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
+                </div>
+                <h1 className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  {greeting.text}, {firstName}!
+                </h1>
+              </motion.div>
+              
+              <motion.p 
+                className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Your AI-powered wellness journey continues. Get personalized insights, track your health metrics, and optimize your supplement stack.
+              </motion.p>
+            </div>
+            
+            {/* CTA Buttons */}
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-3"
+              >
+                <PlayIcon className="w-5 h-5" />
+                <span>Start Your Day</span>
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white/80 backdrop-blur-sm border-2 border-blue-200 text-blue-600 font-bold rounded-2xl hover:bg-white hover:border-blue-300 transition-all duration-300 flex items-center justify-center space-x-3"
+              >
+                <ChartBarIcon className="w-5 h-5" />
+                <span>View Analytics</span>
+              </motion.button>
+            </motion.div>
+            
+            {/* Status Indicators */}
+            <motion.div 
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+            >
+              <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-green-200">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+                <span className="font-medium text-green-700">All systems active</span>
+              </div>
+              <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-blue-200">
+                <BoltIcon className="w-4 h-4 text-blue-600" />
+                <span className="font-medium text-blue-700">AI ready</span>
+              </div>
             </motion.div>
           </motion.div>
-          
-          <motion.p 
-            className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            Here's your personalized health overview and AI-powered wellness insights for today.
-          </motion.p>
-        </div>
-        
-        {/* Status Indicators */}
-        <motion.div 
-          className="flex items-center justify-center space-x-8 text-sm"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <div className="flex items-center space-x-3 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-green-200">
-            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
-            <span className="font-medium text-green-700">All systems active</span>
-          </div>
-          <div className="flex items-center space-x-3 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-blue-200">
-            <div className="w-3 h-3 bg-blue-500 rounded-full shadow-sm"></div>
-            <span className="font-medium text-blue-700">Data synchronized</span>
-          </div>
-          <div className="flex items-center space-x-3 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-purple-200">
-            <BoltIcon className="w-4 h-4 text-purple-600" />
-            <span className="font-medium text-purple-700">AI ready</span>
-          </div>
-        </motion.div>
 
-        {/* Quick Stats */}
-        <motion.div 
-          className="flex items-center justify-center space-x-8"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          {[
-            { label: 'Health Score', value: '62/100', color: 'text-yellow-600' },
-            { label: 'Days Active', value: '12', color: 'text-green-600' },
-            { label: 'Insights', value: '4 new', color: 'text-blue-600' },
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className={`text-2xl font-bold ${stat.color}`}>
-                {stat.value}
-              </div>
-              <div className="text-sm text-gray-600 font-medium">
-                {stat.label}
+          {/* Right Side - Health Overview */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+            className="space-y-6"
+          >
+            {/* Wellness Score Circle */}
+            <div className="relative flex items-center justify-center">
+              <div className="w-48 h-48 lg:w-64 lg:h-64 relative">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  {/* Background circle */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                    className="text-gray-200"
+                  />
+                  
+                  {/* Progress circle */}
+                  <motion.circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="url(#gradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    initial={{ strokeDasharray: "0 283" }}
+                    animate={{ strokeDasharray: "175 283" }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                  />
+                  
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                
+                {/* Score display */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                      className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                    >
+                      62
+                    </motion.div>
+                    <div className="text-sm lg:text-base font-semibold text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full mt-2">
+                      Needs Attention
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Wellness Score
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-};
-
-export default WelcomeHeader;
+            
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-pink-600' },
+                { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
+                { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
+                { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'from-purple-500 to-indigo-600' },
+              ].map((metric, index) => (
+                <motion.div
+                  key={metric.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 + index * 0.1 }}
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-white/50 shadow-sm"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                      <metric.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">{metric.value}</div>
+                      <div className="text-sm text-gray-600">{metric.label}</div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

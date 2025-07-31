@@ -78,32 +78,32 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex lg:fixed lg:inset-y-0 lg:z-50 lg:w-72 lg:flex-col">
+      <nav className="hidden lg:flex fixed inset-y-0 z-50 w-72 flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4 shadow-xl border-r border-gray-200">
           {/* Logo */}
-          <div className="flex h-16 shrink-0 items-center gap-3 pt-4">
+          <div className="flex h-20 shrink-0 items-center gap-4 pt-6">
             <img 
               src={logoUrl}
               alt="Biowell"
-              className="h-10 w-auto"
+              className="h-12 w-auto"
             />
-            <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Biowell
             </div>
           </div>
 
           {/* User Profile Section */}
-          <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-100 shadow-sm">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">
                 {firstName.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
+              <p className="text-base font-bold text-gray-900 truncate">
                 Welcome back, {firstName}
               </p>
-              <p className="text-xs text-gray-600 truncate">
+              <p className="text-sm text-gray-600 truncate">
                 {user?.email}
               </p>
             </div>
@@ -120,7 +120,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                 <li key={item.id}>
                   <motion.button
                   onClick={() => onTabChange(item.id)}
-                  className={`group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-semibold w-full transition-all duration-200 ${
+                  className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
                     isActive
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                       : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
@@ -128,10 +128,10 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Icon className={`h-6 w-6 shrink-0 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
+                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
                   <div className="flex-1 text-left">
                     <div>{item.label}</div>
-                    <div className={`text-xs ${isActive ? 'text-blue-100' : 'text-gray-500'}`}>
+                    <div className={`text-sm ${isActive ? 'text-blue-100' : 'text-gray-500'}`}>
                       {item.description}
                     </div>
                   </div>
@@ -149,19 +149,19 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </nav>
 
           {/* Bottom Section */}
-          <div className="space-y-3 pt-4 border-t border-gray-200">
-            <button className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
+          <div className="space-y-2 pt-6 border-t border-gray-200">
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
               <BellIcon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" />
               <span>Notifications</span>
               <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
+            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
               <Cog6ToothIcon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" />
               <span>Settings</span>
             </button>
             <button 
               onClick={signOut}
-              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-semibold w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+              className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
             >
               <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 text-red-500 group-hover:text-red-600" />
               <span>Sign Out</span>
@@ -169,45 +169,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </div>
         </div>
       </nav>
-
-      {/* Mobile Navigation */}
-      <div className="lg:hidden">
-        {/* Mobile Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 pb-4 pt-2">
-          <div className="flex items-center justify-around">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            const Icon = isActive ? item.activeIcon : item.icon;
-            
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => onTabChange(item.id)}
-                className={`flex flex-col items-center justify-center px-3 py-2 rounded-xl transition-all duration-200 min-w-0 flex-1 ${
-                  isActive 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ minHeight: '60px' }}
-              >
-                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
-                <span className={`text-xs font-medium mt-1 ${isActive ? 'text-blue-600' : 'text-gray-500'}`}>
-                  {item.label}
-                </span>
-                {isActive && (
-                  <motion.div
-                    layoutId="mobileActiveIndicator"
-                    className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"
-                  />
-                )}
-              </motion.button>
-            );
-          })}
-          </div>
-        </div>
-      </div>
     </>
   );
 };
