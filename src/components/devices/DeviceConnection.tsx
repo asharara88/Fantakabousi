@@ -84,7 +84,7 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       if (error) throw error;
 
       // Generate dummy data for the connected device
-      await generateDummyData(deviceId, user.id);
+      await generateRealisticHealthData(user.id, deviceId as 'apple-watch' | 'freestyle-libre');
 
       setConnectedDevices(prev => [...prev, deviceId]);
       
@@ -102,99 +102,6 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       });
     } finally {
       setConnecting(false);
-    }
-  };
-
-  const generateDummyData = async (deviceId: string, userId: string) => {
-    const now = new Date();
-    const dataPoints = [];
-
-    if (deviceId === 'apple-watch') {
-      // Generate Apple Watch data for the last 7 days
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - i);
-        
-        // Heart rate data (multiple readings per day)
-        for (let j = 0; j < 24; j += 2) {
-          const timestamp = new Date(date);
-          timestamp.setHours(j, Math.random() * 60);
-          
-          dataPoints.push({
-            user_id: userId,
-            metric_type: 'heart_rate',
-            value: 60 + Math.random() * 20 + (j > 6 && j < 22 ? 10 : 0), // Higher during day
-            unit: 'bpm',
-            timestamp: timestamp.toISOString(),
-            source: 'wearable',
-            metadata: { device: 'Apple Watch' }
-          });
-        }
-        
-        // Daily steps
-        dataPoints.push({
-          user_id: userId,
-          metric_type: 'steps',
-          value: 6000 + Math.random() * 8000,
-          unit: 'steps',
-          timestamp: date.toISOString(),
-          source: 'wearable',
-          metadata: { device: 'Apple Watch' }
-        });
-        
-        // Sleep score
-        dataPoints.push({
-          user_id: userId,
-          metric_type: 'sleep',
-          value: 70 + Math.random() * 25,
-          unit: 'score',
-          timestamp: date.toISOString(),
-          source: 'wearable',
-          metadata: { device: 'Apple Watch' }
-        });
-      }
-    }
-
-    if (deviceId === 'freestyle-libre') {
-      // Generate CGM data for the last 3 days (every 15 minutes)
-      for (let i = 0; i < 3; i++) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - i);
-        
-        for (let hour = 0; hour < 24; hour++) {
-          for (let minute = 0; minute < 60; minute += 15) {
-            const timestamp = new Date(date);
-            timestamp.setHours(hour, minute);
-            
-            // Realistic glucose patterns
-            let baseGlucose = 90;
-            if (hour >= 7 && hour <= 9) baseGlucose = 120; // Morning spike
-            if (hour >= 12 && hour <= 14) baseGlucose = 140; // Lunch spike
-            if (hour >= 18 && hour <= 20) baseGlucose = 130; // Dinner spike
-            
-            dataPoints.push({
-              user_id: userId,
-              metric_type: 'glucose',
-              value: baseGlucose + (Math.random() - 0.5) * 30,
-              unit: 'mg/dL',
-              timestamp: timestamp.toISOString(),
-              source: 'cgm',
-              metadata: { device: 'FreeStyle Libre' }
-            });
-          }
-        }
-      }
-    }
-
-    // Insert all data points
-    if (dataPoints.length > 0) {
-      const { error } = await supabase
-        .from('health_metrics')
-        .insert(dataPoints);
-      
-      if (error) {
-        console.error('Error inserting dummy data:', error);
-      }
     }
   };
 

@@ -332,11 +332,6 @@ const UnifiedHealthDashboard: React.FC = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Device Connection Modal */}
-      <DeviceConnection 
-        isOpen={showDeviceConnection}
-        onClose={() => setShowDeviceConnection(false)}
-      />
     </div>
   );
 };

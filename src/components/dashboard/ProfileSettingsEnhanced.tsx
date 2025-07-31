@@ -5,6 +5,7 @@ import { useProfile } from '../../hooks/useProfile';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ThemeSelector from '../settings/ThemeSelector';
 import AccessibilitySettings from '../ui/AccessibilitySettings';
+import DeviceConnection from '../devices/DeviceConnection';
 import { useToast } from '../../hooks/useToast';
 import { 
   UserCircleIcon,
@@ -27,6 +28,7 @@ const ProfileSettingsEnhanced: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('profile');
+  const [showDeviceConnection, setShowDeviceConnection] = useState(false);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -90,6 +92,12 @@ const ProfileSettingsEnhanced: React.FC = () => {
       name: 'Health Info', 
       icon: HeartIcon,
       description: 'Health details'
+    },
+    { 
+      id: 'devices', 
+      name: 'Connected Devices', 
+      icon: DevicePhoneMobileIcon,
+      description: 'Wearables & monitors'
     },
     { 
       id: 'notifications', 
@@ -437,6 +445,12 @@ const ProfileSettingsEnhanced: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Device Connection Modal */}
+      <DeviceConnection 
+        isOpen={showDeviceConnection}
+        onClose={() => setShowDeviceConnection(false)}
+      />
     </div>
   );
 };
