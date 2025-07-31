@@ -21,6 +21,7 @@ interface SupplementDetailProps {
   onAddToCart: (supplement: Supplement) => void;
   onClose: () => void;
   isInCart: boolean;
+  onAskCoach?: () => void;
 }
 
 const SupplementDetail: React.FC<SupplementDetailProps> = ({
@@ -28,6 +29,7 @@ const SupplementDetail: React.FC<SupplementDetailProps> = ({
   onAddToCart,
   onClose,
   isInCart,
+  onAskCoach,
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -320,7 +322,10 @@ const SupplementDetail: React.FC<SupplementDetailProps> = ({
               </div>
               
               <div className="flex items-center space-x-3">
-                <button className="btn-secondary">
+                <button 
+                  onClick={onAskCoach}
+                  className="btn-secondary"
+                >
                   Smart Coach
                 </button>
                 <motion.button

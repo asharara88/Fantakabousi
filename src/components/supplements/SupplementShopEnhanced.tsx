@@ -21,7 +21,11 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon, HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 
-const SupplementShopEnhanced: React.FC = () => {
+interface SupplementShopEnhancedProps {
+  onQuickAction?: (action: string) => void;
+}
+
+const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuickAction }) => {
   const { supplements, loading } = useSupplements();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');

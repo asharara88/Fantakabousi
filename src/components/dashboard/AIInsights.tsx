@@ -9,9 +9,10 @@ import {
   BeakerIcon,
   ChatBubbleLeftRightIcon,
   ArrowRightIcon
+  onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
 
-const AIInsights: React.FC = () => {
+const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
   const insights = [
     {
       type: 'success',
@@ -128,8 +129,9 @@ const AIInsights: React.FC = () => {
                   {insight.action}
                 </button>
                 <button className="btn-ghost flex items-center space-x-2">
+                  onClick={() => onQuickAction?.('coach')}
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  <span>Ask Coach</span>
+                  <span>Smart Coach</span>
                 </button>
               </div>
             </div>

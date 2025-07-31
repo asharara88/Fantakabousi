@@ -10,9 +10,10 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 
+  onQuickAction?: (action: string) => void;
 import { useToast } from '../../hooks/useToast';
 
-const HealthInsights: React.FC = () => {
+const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
   const { toast } = useToast();
   const insights = [
     {
@@ -129,8 +130,7 @@ const HealthInsights: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => {
-                    // Navigate to coach with pre-filled question about this insight
-                    window.location.href = '#coach';
+                    onQuickAction?.('coach');
                   }}
                   className="btn-ghost flex items-center space-x-2 cursor-pointer"
                 >

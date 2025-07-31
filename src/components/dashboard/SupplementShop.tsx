@@ -11,9 +11,10 @@ import {
   CubeIcon,
   ShoppingCartIcon,
   SparklesIcon
+  onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
 
-const SupplementShop: React.FC = () => {
+const SupplementShop: React.FC<SupplementShopProps> = ({ onQuickAction }) => {
   const [activeView, setActiveView] = useState<'browse' | 'stack'>('browse');
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
@@ -148,7 +149,7 @@ const SupplementShop: React.FC = () => {
             cartItems={cartItems}
           />
         ) : (
-          <SupplementStack />
+          <SupplementStack onQuickAction={onQuickAction} />
         )}
       </motion.div>
 

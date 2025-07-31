@@ -13,7 +13,11 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
 
-const SupplementStack: React.FC = () => {
+interface SupplementStackProps {
+  onQuickAction?: (action: string) => void;
+}
+
+const SupplementStack: React.FC<SupplementStackProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
   const { 
     userSupplements, 
@@ -179,8 +183,9 @@ const SupplementStack: React.FC = () => {
             </motion.button>
             
             <button className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
+              onClick={() => onQuickAction?.('coach')}
               <SparklesIcon className="w-5 h-5" />
-              <span>Get Coach Optimization</span>
+              <span>Get Smart Coach Optimization</span>
             </button>
           </div>
         </div>

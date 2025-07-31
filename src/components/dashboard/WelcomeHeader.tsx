@@ -310,7 +310,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
         <div className="lg:col-span-2 space-y-6 lg:space-y-8">
           <QuickActions onActionClick={handleQuickAction} />
           <TodaysGoals />
-          <HealthInsights />
+          <HealthInsights onQuickAction={handleQuickAction} />
         </div>
         
         {/* Right Column */}

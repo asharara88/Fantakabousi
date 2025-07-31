@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
       case 'health':
         return <HealthDashboard />;
       case 'shop':
-        return <SupplementShopEnhanced />;
+        return <SupplementShopEnhanced onQuickAction={handleQuickAction} />;
       case 'profile':
         return <ProfileSettingsEnhanced />;
       default:

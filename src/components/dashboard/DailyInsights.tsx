@@ -7,9 +7,10 @@ import {
   ClockIcon,
   ChatBubbleLeftRightIcon,
   ArrowRightIcon
+  onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
 
-const DailyInsights: React.FC = () => {
+const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
   const insights = [
     {
       type: 'success',
@@ -113,8 +114,9 @@ const DailyInsights: React.FC = () => {
                   Take Action
                 </button>
                 <button className="btn-ghost flex items-center space-x-2">
+                  onClick={() => onQuickAction?.('coach')}
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  <span>Ask Coach</span>
+                  <span>Smart Coach</span>
                 </button>
               </div>
             </div>
