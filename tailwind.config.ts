@@ -9,11 +9,11 @@ export default {
         display: ['Poppins', 'system-ui', 'sans-serif'],
       },
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
+        border: 'rgb(var(--border))',
+        input: 'rgb(var(--input))',
         ring: '#48C6FF',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        background: 'rgb(var(--background))',
+        foreground: 'rgb(var(--foreground))',
         // Exact Biowell Brand Colors
         'biowell-light': '#48C6FF',    // Top Dash - Light Blue
         'biowell-medium': '#2A7FFF',   // Middle Dash - Medium Blue  
@@ -48,16 +48,16 @@ export default {
           900: '#134e4a',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'rgb(var(--muted))',
+          foreground: 'rgb(var(--muted-foreground))',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          DEFAULT: 'rgb(var(--popover))',
+          foreground: 'rgb(var(--popover-foreground))',
         },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: 'rgb(var(--card))',
+          foreground: 'rgb(var(--card-foreground))',
         },
       },
       width: {
