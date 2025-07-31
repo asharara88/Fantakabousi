@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
+import NotificationCenter from '../notifications/NotificationCenter';
 import { 
   HomeIcon, 
   ChatBubbleLeftRightIcon, 
@@ -31,6 +32,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const { actualTheme } = useTheme();
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const [showNotifications, setShowNotifications] = React.useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -147,10 +149,13 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
           {/* Bottom Section */}
           <div className="space-y-2 pt-6 border-t border-border">
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200">
+            <button 
+              onClick={() => setShowNotifications(true)}
+              className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+            >
               <BellIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
               <span>Notifications</span>
-              <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></span>
             </button>
             <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200">
               <Cog6ToothIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
@@ -165,6 +170,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             </button>
           </div>
         </div>
+        
+        {/* Notification Center */}
+        <NotificationCenter 
+          isOpen={showNotifications}
+          onClose={() => setShowNotifications(false)}
+        />
       </nav>
     </>
   );

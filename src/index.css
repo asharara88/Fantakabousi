@@ -23,7 +23,7 @@
 
 .dark {
   /* Dark Theme */
-  --background: 15 23 42;
+  --background: 0 0 0;
   --foreground: 255 255 255;
   --card: 30 41 59;
   --card-foreground: 255 255 255;

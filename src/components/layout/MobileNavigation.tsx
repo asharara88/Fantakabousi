@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useProfile } from '../../hooks/useProfile';
+import NotificationCenter from '../notifications/NotificationCenter';
 import { 
   HomeIcon, 
   ChatBubbleLeftRightIcon, 
@@ -39,6 +40,7 @@ export function MobileNavigation({
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
   const { actualTheme } = useTheme();
+  const [showNotifications, setShowNotifications] = React.useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -72,9 +74,12 @@ export function MobileNavigation({
           </motion.div>
           
           <div className="flex items-center space-x-3">
-            <button className="relative p-2 rounded-xl hover:bg-muted transition-colors">
+            <button 
+              onClick={() => setShowNotifications(true)}
+              className="relative p-2 rounded-xl hover:bg-muted transition-colors"
+            >
               <BellIcon className="w-6 h-6 text-muted-foreground" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
             </button>
             
             <motion.button
@@ -186,10 +191,16 @@ export function MobileNavigation({
 
               {/* Bottom Actions */}
               <div className="p-6 border-t border-border space-y-2">
-                <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-foreground transition-all duration-200">
+                <button 
+                  onClick={() => {
+                    setShowNotifications(true);
+                    onMenuToggle();
+                  }}
+                  className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+                >
                   <BellIcon className="w-5 h-5" />
                   <span className="font-medium">Notifications</span>
-                  <span className="ml-auto w-2 h-2 bg-red-500 rounded-full"></span>
+                  <span className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></span>
                 </button>
                 <button className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-foreground transition-all duration-200">
                   <Cog6ToothIcon className="w-5 h-5" />
@@ -207,6 +218,12 @@ export function MobileNavigation({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Notification Center */}
+      <NotificationCenter 
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
 
       {/* Bottom Navigation Bar - Always Visible */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border shadow-lg">
