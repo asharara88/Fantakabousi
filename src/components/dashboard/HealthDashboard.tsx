@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useHealthMetrics } from '../../hooks/useHealthMetrics';
 import FoodLogger from '../nutrition/FoodLogger';
 import RecipeSearch from '../recipes/RecipeSearch';
+import DeviceConnection from '../devices/DeviceConnection';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   HeartIcon,
@@ -12,13 +13,17 @@ import {
   BeakerIcon,
   ChartBarIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
+  ArrowTrendingDownIcon,
+  PlusIcon,
+  WifiIcon,
+  CameraIcon
 } from '@heroicons/react/24/outline';
 
 const HealthDashboard: React.FC = () => {
   const [activeView, setActiveView] = useState('metrics');
   const [selectedMetric, setSelectedMetric] = useState('heart_rate');
   const [timeRange, setTimeRange] = useState('7d');
+  const [showDeviceConnection, setShowDeviceConnection] = useState(false);
   
   const { metrics, loading, getLatestMetric, getMetricTrend } = useHealthMetrics();
 
@@ -28,34 +33,108 @@ const HealthDashboard: React.FC = () => {
       name: 'Heart Rate', 
       unit: 'bpm', 
       icon: HeartIcon,
-      color: 'from-blue-light to-blue-medium',
-      target: 65
+      color: 'from-red-500 to-rose-600',
+      target: 65,
+      deviceType: 'Apple Watch'
     },
     { 
       key: 'steps', 
       name: 'Steps', 
       unit: 'steps', 
       icon: BoltIcon,
-      color: 'from-blue-medium to-blue-deep',
-      target: 10000
+      color: 'from-blue-500 to-cyan-600',
+      target: 10000,
+      deviceType: 'Fitness Tracker'
     },
     { 
       key: 'sleep', 
       name: 'Sleep Score', 
       unit: '/100', 
       icon: MoonIcon,
-      color: 'from-blue-deep to-blue-light',
-      target: 85
+      color: 'from-indigo-500 to-purple-600',
+      target: 85,
+      deviceType: 'Sleep Tracker'
     },
     { 
       key: 'glucose', 
       name: 'Glucose', 
       unit: 'mg/dL', 
       icon: BeakerIcon,
-      color: 'from-neon-green to-blue-light',
-      target: 100
+      color: 'from-green-500 to-emerald-600',
+      target: 100,
+      deviceType: 'CGM'
     },
   ];
+
+  const tabs = [
+    { id: 'metrics', label: 'Health Metrics', icon: HeartIcon },
+    { id: 'food', label: 'Food Logging', icon: BeakerIcon },
+    { id: 'recipes', label: 'Recipe Search', icon: FireIcon },
+  ];
+
+  const ConnectDeviceCard: React.FC<{ metric: any }> = ({ metric }) => (
+    <div className="bg-gradient-to-br from-muted/50 to-muted rounded-xl p-6 border-2 border-dashed border-border text-center">
+      <div className={`w-16 h-16 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center mx-auto mb-4 opacity-50`}>
+        <metric.icon className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-lg font-semibold text-foreground mb-2">{metric.name}</h3>
+      <p className="text-sm text-muted-foreground mb-4">Connect your {metric.deviceType} to track this metric</p>
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => setShowDeviceConnection(true)}
+        className="btn-primary flex items-center space-x-2 mx-auto cursor-pointer"
+      >
+        <PlusIcon className="w-4 h-4" />
+        <span>Connect Device</span>
+      </motion.button>
+    </div>
+  );
+
+  const MetricCard: React.FC<{ metric: any; value: number; trend: number }> = ({ metric, value, trend }) => (
+    <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+          <metric.icon className="w-6 h-6 text-white" />
+        </div>
+        <div className={`flex items-center space-x-1 text-sm font-semibold ${
+          trend >= 0 ? 'text-green-600' : 'text-red-600'
+        }`}>
+          {trend >= 0 ? (
+            <ArrowTrendingUpIcon className="w-4 h-4" />
+          ) : (
+            <ArrowTrendingDownIcon className="w-4 h-4" />
+          )}
+          <span>{trend >= 0 ? '+' : ''}{trend.toFixed(1)}%</span>
+        </div>
+      </div>
+      
+      <div className="space-y-3">
+        <div className="flex items-baseline space-x-2">
+          <span className="text-3xl font-bold text-foreground">
+            {value.toLocaleString()}
+          </span>
+          <span className="text-sm text-muted-foreground">{metric.unit}</span>
+        </div>
+        <div className="text-base font-semibold text-foreground">{metric.name}</div>
+        
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
+            <span>{Math.round((value / metric.target) * 100)}%</span>
+          </div>
+          <div className="w-full bg-muted rounded-full h-2">
+            <motion.div
+              className={`h-2 rounded-full bg-gradient-to-r ${metric.color}`}
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min((value / metric.target) * 100, 100)}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderContent = () => {
     switch (activeView) {
@@ -86,63 +165,11 @@ const HealthDashboard: React.FC = () => {
             const trend = getMetricTrend(metric.key);
             const value = latestMetric?.value || 0;
             
-            return (
-              <motion.div
-                key={metric.key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
-                onClick={() => setSelectedMetric(metric.key)}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                      <metric.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className={`flex items-center space-x-1 text-sm font-medium ${
-                      trend >= 0 ? 'text-neon-green' : 'text-red-500'
-                    }`}>
-                      {trend >= 0 ? (
-                        <ArrowTrendingUpIcon className="w-4 h-4" />
-                      ) : (
-                        <ArrowTrendingDownIcon className="w-4 h-4" />
-                      )}
-                      <span>{trend >= 0 ? '+' : ''}{trend.toFixed(1)}%</span>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-baseline space-x-2">
-                      <span className="text-2xl font-bold text-foreground">
-                        {value.toLocaleString()}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {metric.unit}
-                      </span>
-                    </div>
-                    <div className="text-base font-medium text-foreground">
-                      {metric.name}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
-                      <span>{Math.round((value / metric.target) * 100)}%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <motion.div
-                        className={`h-2 rounded-full bg-gradient-to-r ${metric.color}`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min((value / metric.target) * 100, 100)}%` }}
-                        transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
+            if (value === 0) {
+              return <ConnectDeviceCard key={metric.key} metric={metric} />;
+            }
+            
+            return <MetricCard key={metric.key} metric={metric} value={value} trend={trend} />;
           })}
         </div>
 
@@ -154,7 +181,7 @@ const HealthDashboard: React.FC = () => {
               <select 
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground"
+                className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-light bg-background text-foreground cursor-pointer"
               >
                 <option value="7d">7 Days</option>
                 <option value="30d">30 Days</option>
@@ -168,7 +195,7 @@ const HealthDashboard: React.FC = () => {
               <button
                 key={metric.key}
                 onClick={() => setSelectedMetric(metric.key)}
-                className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                className={`p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
                   selectedMetric === metric.key 
                     ? 'border-blue-light bg-blue-light/10' 
                     : 'border-border hover:border-blue-light/50'
@@ -243,45 +270,39 @@ const HealthDashboard: React.FC = () => {
               <HeartIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Health Dashboard</h1>
-              <p className="text-muted-foreground">Track your health metrics in real-time</p>
+              <h1 className="text-3xl font-bold text-foreground">Health Analytics</h1>
+              <p className="text-muted-foreground">Deep dive into your health data and trends</p>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-3">
           {/* View Toggle */}
           <div className="flex rounded-xl p-1 bg-muted">
-            <button
-              onClick={() => setActiveView('metrics')}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                activeView === 'metrics'
-                  ? 'bg-gradient-to-r from-blue-light to-blue-medium text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Metrics
-            </button>
-            <button
-              onClick={() => setActiveView('food')}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                activeView === 'food'
-                  ? 'bg-gradient-to-r from-blue-light to-blue-medium text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Food Log
-            </button>
-            <button
-              onClick={() => setActiveView('recipes')}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                activeView === 'recipes'
-                  ? 'bg-gradient-to-r from-blue-light to-blue-medium text-white shadow-lg'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Recipes
-            </button>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveView(tab.id)}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                  activeView === tab.id
+                    ? 'bg-gradient-to-r from-blue-light to-blue-medium text-white shadow-lg'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <div className="flex items-center space-x-2">
+                  <tab.icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </div>
+              </button>
+            ))}
           </div>
+          
+          <button
+            onClick={() => setShowDeviceConnection(true)}
+            className="btn-primary flex items-center space-x-2 cursor-pointer"
+          >
+            <WifiIcon className="w-4 h-4" />
+            <span>Connect Device</span>
+          </button>
         </div>
       </div>
 
@@ -294,6 +315,12 @@ const HealthDashboard: React.FC = () => {
       >
         {renderContent()}
       </motion.div>
+
+      {/* Device Connection Modal */}
+      <DeviceConnection 
+        isOpen={showDeviceConnection}
+        onClose={() => setShowDeviceConnection(false)}
+      />
     </div>
   );
 };

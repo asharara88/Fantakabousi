@@ -5,7 +5,8 @@ import { useProfile } from '../../hooks/useProfile';
 import { AccessibilityProvider } from '../ui/AccessibilityProvider';
 import Navigation from '../layout/Navigation';
 import { MobileNavigation } from '../layout/MobileNavigation';
-import UnifiedHealthDashboard from './UnifiedHealthDashboard';
+import WelcomeHeader from './WelcomeHeader';
+import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
@@ -32,17 +33,17 @@ const Dashboard: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <UnifiedHealthDashboard />;
+        return <WelcomeHeader />;
       case 'coach':
         return <AICoachEnhanced />;
       case 'health':
-        return <UnifiedHealthDashboard />;
+        return <HealthDashboard />;
       case 'shop':
         return <SupplementShopEnhanced />;
       case 'profile':
         return <ProfileSettingsEnhanced />;
       default:
-        return <UnifiedHealthDashboard />;
+        return <WelcomeHeader />;
     }
   };
 

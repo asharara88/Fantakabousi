@@ -3,6 +3,11 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
+import QuickActions from './QuickActions';
+import TodaysGoals from './TodaysGoals';
+import ReadinessScore from './ReadinessScore';
+import ActivityFeed from './ActivityFeed';
+import HealthInsights from './HealthInsights';
 import { 
   SparklesIcon,
   SunIcon,
@@ -37,210 +42,232 @@ const WelcomeHeader: React.FC = () => {
   const greeting = getGreeting();
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
 
+  const handleQuickAction = (action: string) => {
+    console.log(`Quick action: ${action}`);
+  };
+
   return (
-    <div className="relative overflow-hidden bg-card rounded-3xl border border-border shadow-lg">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-light/5 via-blue-medium/5 to-blue-deep/5"></div>
-      <motion.div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 bg-gradient-brand"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.15, 0.05],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
-      <div className="relative z-10 px-6 lg:px-12 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Side - Welcome Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="space-y-6 lg:space-y-8 text-center lg:text-left"
-          >
-            {/* Logo and Brand */}
-            <motion.div 
-              className="flex items-center justify-center lg:justify-start space-x-4"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+    <div className="space-y-8">
+      {/* Welcome Section */}
+      <div className="relative overflow-hidden bg-card rounded-3xl border border-border shadow-lg">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-light/5 via-blue-medium/5 to-blue-deep/5"></div>
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 bg-gradient-brand"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.05, 0.15, 0.05],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        <div className="relative z-10 px-6 lg:px-12 py-8 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Side - Welcome Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="space-y-6 lg:space-y-8 text-center lg:text-left"
             >
-              <img 
-                src={logoUrl}
-                alt="Biowell"
-                className="h-28 lg:h-35 w-auto"
-              />
-            </motion.div>
-            
-            {/* Main Greeting */}
-            <div className="space-y-4">
+              {/* Logo and Brand */}
               <motion.div 
-                className="flex items-center justify-center lg:justify-start space-x-3"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                className="flex items-center justify-center lg:justify-start space-x-4"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               >
-                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-blue-light rounded-2xl flex items-center justify-center shadow-lg`}>
-                  <greeting.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
-                </div>
-                <h1 className="text-3xl lg:text-5xl font-bold text-foreground">
-                  {greeting.text}, {firstName}!
-                </h1>
+                <img 
+                  src={logoUrl}
+                  alt="Biowell"
+                  className="h-28 lg:h-35 w-auto"
+                />
               </motion.div>
               
-              <motion.p 
-                className="text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                Your AI-powered wellness journey continues. Get personalized insights, track your health metrics, and optimize your supplement stack.
-              </motion.p>
-            </div>
-            
-            {/* CTA Buttons */}
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3"
-              >
-                <PlayIcon className="w-5 h-5" />
-                <span>Start Your Day</span>
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-secondary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3"
-              >
-                <ChartBarIcon className="w-5 h-5" />
-                <span>View Analytics</span>
-              </motion.button>
-            </motion.div>
-            
-            {/* Status Indicators */}
-            <motion.div 
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
-                <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse shadow-sm"></div>
-                <span className="font-medium accent-neon">All systems active</span>
-              </div>
-              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
-                <BoltIcon className="w-4 h-4 text-blue-light" />
-                <span className="font-medium text-blue-light">AI ready</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Side - Health Overview */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-            className="space-y-6"
-          >
-            {/* Wellness Score Circle */}
-            <div className="relative flex items-center justify-center">
-              <div className="w-48 h-48 lg:w-64 lg:h-64 relative">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  {/* Background circle */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    fill="none"
-                    className="text-gray-200"
-                  />
-                  
-                  {/* Progress circle */}
-                  <motion.circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    stroke="url(#gradient)"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: "0 283" }}
-                    animate={{ strokeDasharray: "175 283" }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                  />
-                  
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#8b5cf6" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+              {/* Main Greeting */}
+              <div className="space-y-4">
+                <motion.div 
+                  className="flex items-center justify-center lg:justify-start space-x-3"
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                >
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-blue-light rounded-2xl flex items-center justify-center shadow-lg`}>
+                    <greeting.icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
+                  </div>
+                  <h1 className="text-3xl lg:text-5xl font-bold text-foreground">
+                    {greeting.text}, {firstName}!
+                  </h1>
+                </motion.div>
                 
-                {/* Score display */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-                    >
-                      62
-                    </motion.div>
-                    <div className="text-sm lg:text-base font-semibold text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full mt-2">
-                      Needs Attention
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Wellness Score
+                <motion.p 
+                  className="text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  Welcome to your wellness dashboard. Track your health, get personalized insights, and optimize your daily routine.
+                </motion.p>
+              </div>
+              
+              {/* CTA Buttons */}
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-primary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3 cursor-pointer"
+                >
+                  <PlayIcon className="w-5 h-5" />
+                  <span>Start Your Day</span>
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-secondary px-8 py-4 rounded-2xl flex items-center justify-center space-x-3 cursor-pointer"
+                >
+                  <ChartBarIcon className="w-5 h-5" />
+                  <span>View Health Data</span>
+                </motion.button>
+              </motion.div>
+              
+              {/* Status Indicators */}
+              <motion.div 
+                className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+              >
+                <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
+                  <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse shadow-sm"></div>
+                  <span className="font-medium accent-neon">All systems active</span>
+                </div>
+                <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full shadow-sm border border-border">
+                  <BoltIcon className="w-4 h-4 text-blue-light" />
+                  <span className="font-medium text-blue-light">AI ready</span>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Side - Health Overview */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              className="space-y-6"
+            >
+              {/* Wellness Score Circle */}
+              <div className="relative flex items-center justify-center">
+                <div className="w-48 h-48 lg:w-64 lg:h-64 relative">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    {/* Background circle */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      fill="none"
+                      className="text-gray-200"
+                    />
+                    
+                    {/* Progress circle */}
+                    <motion.circle
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="url(#gradient)"
+                      strokeWidth="3"
+                      fill="none"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: "0 283" }}
+                      animate={{ strokeDasharray: "175 283" }}
+                      transition={{ duration: 2, ease: "easeOut" }}
+                    />
+                    
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#8b5cf6" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  
+                  {/* Score display */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                        className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                      >
+                        72
+                      </motion.div>
+                      <div className="text-sm lg:text-base font-semibold text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full mt-2">
+                        Good Progress
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Wellness Score
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Quick Metrics */}
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-blue-light' },
-                { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-accent-neon' },
-                { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-blue-medium' },
-                { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-blue-deep' },
-              ].map((metric, index) => (
-                <motion.div
-                  key={metric.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 + index * 0.1 }}
-                  className="bg-card rounded-2xl p-4 border border-border shadow-sm"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                      <metric.icon className="w-5 h-5 text-white" />
+              
+              {/* Quick Metrics */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'bg-gradient-blue-light' },
+                  { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'bg-accent-neon' },
+                  { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'bg-gradient-blue-medium' },
+                  { icon: CubeIcon, label: 'Stack', value: '6 items', color: 'bg-gradient-blue-deep' },
+                ].map((metric, index) => (
+                  <motion.div
+                    key={metric.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2 + index * 0.1 }}
+                    className="bg-card rounded-2xl p-4 border border-border shadow-sm"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                        <metric.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-foreground">{metric.value}</div>
+                        <div className="text-xs text-muted-foreground">{metric.label}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-lg font-bold text-foreground">{metric.value}</div>
-                      <div className="text-xs text-muted-foreground">{metric.label}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dashboard Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column */}
+        <div className="lg:col-span-2 space-y-8">
+          <QuickActions onActionClick={handleQuickAction} />
+          <TodaysGoals />
+          <HealthInsights />
+        </div>
+        
+        {/* Right Column */}
+        <div className="space-y-8">
+          <ReadinessScore score={72} />
+          <ActivityFeed />
         </div>
       </div>
     </div>
