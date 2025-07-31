@@ -15,7 +15,7 @@ import {
   CpuChipIcon,
   PlusIcon,
   LightBulbIcon,
-  TargetIcon,
+  FlagIcon,
   ClockIcon,
   FireIcon,
   MoonIcon
@@ -64,7 +64,7 @@ const AICoachEnhanced: React.FC = () => {
   const onboardingPrompts = [
     {
       category: 'Health Goals',
-      icon: TargetIcon,
+      icon: FlagIcon,
       color: 'from-blue-500 to-cyan-600',
       prompts: [
         'Help me optimize my sleep quality',
