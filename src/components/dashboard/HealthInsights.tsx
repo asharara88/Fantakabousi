@@ -10,8 +10,11 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 
-  onQuickAction?: (action: string) => void;
 import { useToast } from '../../hooks/useToast';
+
+interface HealthInsightsProps {
+  onQuickAction?: (action: string) => void;
+}
 
 const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
   const { toast } = useToast();
