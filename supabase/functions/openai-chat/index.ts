@@ -91,7 +91,7 @@ Guidelines for responses:
     })
 
     if (!openaiResponse.ok) {
-      throw new Error(`OpenAI API error: ${openaiResponse.status}`)
+      throw new Error(\`OpenAI API error: ${openaiResponse.status}`)
     }
 
     const openaiData = await openaiResponse.json()
@@ -133,3 +133,6 @@ Guidelines for responses:
     )
   }
 })
+  }
+}
+)
