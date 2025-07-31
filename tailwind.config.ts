@@ -38,10 +38,15 @@ export default {
       width: {
         '18': '4.5rem',
         '30': '7.5rem',
+        '35': '8.75rem',
       },
       height: {
         '18': '4.5rem', 
         '30': '7.5rem',
+        '35': '8.75rem',
+        '17': '4.25rem',
+        '21': '5.25rem',
+        '14': '3.5rem',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',

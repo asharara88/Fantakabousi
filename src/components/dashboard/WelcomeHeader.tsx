@@ -73,7 +73,7 @@ const WelcomeHeader: React.FC = () => {
               <img 
                 src={logoUrl}
                 alt="Biowell"
-                className="h-16 lg:h-20 w-auto"
+                className="h-28 lg:h-35 w-auto"
               />
             </motion.div>
             

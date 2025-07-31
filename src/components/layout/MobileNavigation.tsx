@@ -67,7 +67,7 @@ export function MobileNavigation({
             <img 
               src={logoUrl}
               alt="Biowell"
-              className="h-10 w-auto"
+              className="h-17 w-auto"
             />
           </motion.div>
           
@@ -124,7 +124,7 @@ export function MobileNavigation({
                   <img 
                     src={logoUrl}
                     alt="Biowell"
-                    className="h-8 w-auto"
+                    className="h-14 w-auto"
                   />
                   <span className="text-lg font-bold text-foreground">Menu</span>
                 </div>

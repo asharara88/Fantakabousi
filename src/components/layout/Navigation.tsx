@@ -85,7 +85,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             <img 
               src={logoUrl}
               alt="Biowell"
-              className="h-12 w-auto"
+              className="h-21 w-auto"
             />
           </div>
 

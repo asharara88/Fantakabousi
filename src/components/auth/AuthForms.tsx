@@ -73,7 +73,7 @@ const AuthForms: React.FC = () => {
             <img 
               src={logoUrl} 
               alt="Biowell" 
-              className="h-12 mx-auto mb-4"
+              className="h-21 mx-auto mb-4"
             />
             <h1 className="text-2xl font-bold text-foreground mb-2">
               Welcome to Your Wellness Journey
