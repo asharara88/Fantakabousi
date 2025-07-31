@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
+import { useTheme } from '../../contexts/ThemeContext';
 import NotificationCenter from '../notifications/NotificationCenter';
 import { 
   HomeIcon, 
@@ -12,7 +13,10 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
   BellIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -32,6 +36,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const { actualTheme } = useTheme();
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const { theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
   const [showNotifications, setShowNotifications] = React.useState(false);
 
   const logoUrl = actualTheme === 'dark' 
@@ -77,6 +82,51 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   ];
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
+  
+  const ThemeToggle = () => (
+    <div className="flex items-center space-x-1 bg-background rounded-lg p-1">
+      <button
+        onClick={() => {
+          setAutoSyncTime(false);
+          setTheme('light');
+        }}
+        className={`p-1.5 rounded transition-all ${
+          theme === 'light' && !autoSyncTime
+            ? 'bg-blue-light text-white shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Light theme"
+      >
+        <SunIcon className="w-3 h-3" />
+      </button>
+      <button
+        onClick={() => setAutoSyncTime(!autoSyncTime)}
+        className={`p-1.5 rounded transition-all ${
+          autoSyncTime
+            ? 'bg-blue-light text-white shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Auto day/night"
+      >
+        <ComputerDesktopIcon className="w-3 h-3" />
+      </button>
+      <button
+        onClick={() => {
+          setAutoSyncTime(false);
+          setTheme('dark');
+        }}
+        className={`p-1.5 rounded transition-all ${
+          theme === 'dark' && !autoSyncTime
+            ? 'bg-blue-light text-white shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Dark theme"
+      >
+        <MoonIcon className="w-3 h-3" />
+      </button>
+    </div>
+  );
+  
   return (
     <>
       {/* Desktop Navigation */}
@@ -148,24 +198,38 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </nav>
 
           {/* Bottom Section */}
-          <div className="space-y-2 pt-6 border-t border-border">
+          <div className="space-y-1 pt-6 border-t border-border">
+            {/* Quick Theme Toggle */}
+            <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-light rounded-full"></div>
+                  <span className="text-sm font-medium text-foreground">Theme</span>
+                </div>
+                <ThemeToggle />
+              </div>
+            </div>
+            
             <button 
               onClick={() => setShowNotifications(true)}
-              className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
             >
-              <BellIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
+              <BellIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-blue-light" />
               <span>Notifications</span>
               <span className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></span>
             </button>
-            <button className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200">
-              <Cog6ToothIcon className="h-6 w-6 shrink-0 text-muted-foreground group-hover:text-blue-light" />
+            <button 
+              onClick={() => onTabChange('profile')}
+              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-blue-light hover:bg-blue-light/10 transition-all duration-200"
+            >
+              <Cog6ToothIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-blue-light" />
               <span>Settings</span>
             </button>
             <button 
               onClick={signOut}
-              className="group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+              className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
             >
-              <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 text-red-500 group-hover:text-red-700" />
+              <ArrowRightOnRectangleIcon className="h-5 w-5 shrink-0 text-red-500 group-hover:text-red-700" />
               <span>Sign Out</span>
             </button>
           </div>

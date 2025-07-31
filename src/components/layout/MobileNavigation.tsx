@@ -15,7 +15,11 @@ import {
   XMarkIcon,
   BellIcon,
   Cog6ToothIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon,
+  ChefHatIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -40,7 +44,7 @@ export function MobileNavigation({
 }: MobileNavigationProps) {
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
-  const { actualTheme } = useTheme();
+  const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
   const [showNotifications, setShowNotifications] = React.useState(false);
 
   const logoUrl = actualTheme === 'dark' 
@@ -50,9 +54,9 @@ export function MobileNavigation({
   const navigationItems = [
     { id: 'dashboard', label: 'Home', icon: HomeIcon, activeIcon: HomeSolidIcon },
     { id: 'health', label: 'Health', icon: HeartIcon, activeIcon: HeartSolidIcon },
+    { id: 'recipes', label: 'Recipes', icon: ChefHatIcon, activeIcon: ChefHatIcon },
     { id: 'coach', label: 'Coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon },
-    { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon },
-    { id: 'profile', label: 'Profile', icon: UserCircleIcon, activeIcon: UserSolidIcon },
+    { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon }
   ];
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
