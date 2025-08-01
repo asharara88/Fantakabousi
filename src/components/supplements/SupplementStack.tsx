@@ -136,7 +136,7 @@ const SupplementStack: React.FC<SupplementStackProps> = ({ onQuickAction }) => {
                           >
                             <div className="flex items-center space-x-4">
                               <img
-                                src={item.supplement?.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
+                                src={item.supplement?.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
                                 alt={item.supplement?.name}
                                 className="w-12 h-12 rounded-lg object-cover"
                               />

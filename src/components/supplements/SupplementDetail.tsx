@@ -231,7 +231,7 @@ const SupplementDetail: React.FC<SupplementDetailProps> = ({
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-4">
                 <img
-                  src={supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
+                  src={supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
                   alt={supplement.name}
                   className="w-20 h-20 rounded-xl object-cover"
                 />

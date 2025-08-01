@@ -181,7 +181,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                 <div className="relative">
                   <div className="w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
                     <img
-                      src={supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
+                      src={supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
                       alt={supplement.name}
                       className="w-full h-full object-cover"
                     />

@@ -153,7 +153,7 @@ const getFallbackSupplements = (): SupplementData[] => [
     is_available: true,
     is_featured: true,
     is_bestseller: false,
-    image_url: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg',
+    image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
     nutrition_facts: {},
     certifications: 'Third-party tested',
     target_audience: 'Adults',
