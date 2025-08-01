@@ -317,7 +317,7 @@ const PlanYourDay: React.FC<PlanYourDayProps> = ({ isOpen, onClose }) => {
                 {/* Step Header */}
                 <div className="text-center space-y-3">
                   <div className={`w-16 h-16 bg-gradient-to-br ${steps[step - 1].color} rounded-2xl flex items-center justify-center mx-auto shadow-lg`}>
-                    <steps[step - 1].icon className="w-8 h-8 text-white" />
+                    {React.createElement(steps[step - 1].icon, { className: "w-8 h-8 text-white" })}
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-foreground mb-2">
