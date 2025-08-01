@@ -285,7 +285,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 + index * 0.1 }}
-            className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md hover:border-[#48C6FF]/20 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
+            className="card cursor-pointer"
           >
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>

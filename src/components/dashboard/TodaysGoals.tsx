@@ -210,10 +210,10 @@ const TodaysGoals: React.FC = () => {
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            className={`p-3 lg:p-4 rounded-xl border transition-all duration-200 cursor-pointer touch-target ${
+            className={`card transition-all duration-200 cursor-pointer touch-target ${
               goal.completed 
-                ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800 shadow-lg' 
-                : 'bg-card border-border hover:border-[#48C6FF]/30 hover:shadow-sm'
+                ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800' 
+                : ''
             }`}
             onClick={() => toggleGoal(goal.id)}
           >

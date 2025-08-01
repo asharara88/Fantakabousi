@@ -88,7 +88,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onActionClick?.(action.id)}
-            className="bg-card border border-border rounded-xl p-4 text-center relative cursor-pointer hover:shadow-md hover:border-[#48C6FF]/20 hover:-translate-y-1 transition-all duration-200 min-h-[120px] flex flex-col items-center justify-center gap-3"
+            className="card text-center relative cursor-pointer min-h-[120px] flex flex-col items-center justify-center gap-3"
           >
             {action.badge && (
               <div className="absolute top-2 right-2 px-2 py-1 bg-green-500/10 text-green-600 text-xs font-bold rounded-full border border-green-500/20">

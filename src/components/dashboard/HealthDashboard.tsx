@@ -195,8 +195,8 @@ const HealthDashboard: React.FC = () => {
                 onClick={() => setSelectedMetric(metric.key)}
                 className={`card text-center transition-all duration-200 cursor-pointer touch-target ${
                   selectedMetric === metric.key 
-                    ? 'border-blue-light bg-blue-light/10' 
-                    : 'border-border hover:border-blue-light/50'
+                    ? 'border-[#48C6FF] bg-[#48C6FF]/10' 
+                    : ''
                 }`}
               >
                 <metric.icon className={`w-6 h-6 mx-auto mb-2 ${

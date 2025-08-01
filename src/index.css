@@ -269,49 +269,54 @@ body {
 .card {
   background-color: rgb(var(--card));
   color: rgb(var(--card-foreground));
-  border: 1px solid rgb(var(--border));
-  border-radius: var(--radius-xl);
-  padding: 1.5rem 1.5rem;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid rgb(var(--border) / 0.8);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(8px);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-  border-color: rgb(var(--blue-light) / 0.3);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transform: translateY(-2px);
+  border-color: rgb(var(--blue-light) / 0.4);
+  background-color: rgb(var(--card) / 0.95);
 }
 
 .card-premium {
   background-color: rgb(var(--card));
   color: rgb(var(--card-foreground));
-  border: 1px solid rgb(var(--border));
-  border-radius: var(--radius-2xl);
-  padding: 2rem 2rem;
-  box-shadow: var(--shadow-lg);
+  border: 1px solid rgb(var(--border) / 0.6);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, rgb(var(--card)) 0%, rgb(var(--card) / 0.95) 100%);
 }
 
 .card-premium:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-  border-color: rgb(var(--blue-light) / 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-color: rgb(var(--blue-light) / 0.5);
+  background: linear-gradient(135deg, rgb(var(--card)) 0%, rgb(var(--card) / 0.98) 100%);
 }
 
 /* Mobile card adjustments */
 @media (max-width: 768px) {
   .card {
-    padding: 1.25rem 1rem;
-    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    border-radius: 1rem;
   }
   
   .card-premium {
-    padding: 1.5rem 1.25rem;
-    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    border-radius: 1.25rem;
   }
 }
 

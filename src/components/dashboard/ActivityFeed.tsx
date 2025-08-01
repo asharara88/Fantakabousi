@@ -87,21 +87,21 @@ const ActivityFeed: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+    <div className="card-premium">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
             <ClockIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
-            <p className="text-sm text-gray-600">Your latest health updates</p>
+            <h2 className="text-xl font-bold text-foreground">Recent Activity</h2>
+            <p className="text-sm text-muted-foreground">Your latest health updates</p>
           </div>
         </div>
         
         <button 
           onClick={() => window.location.href = '#health'}
-          className="text-sm text-blue-500 hover:text-blue-600 font-medium cursor-pointer"
+          className="text-sm text-[#48C6FF] hover:text-[#2A7FFF] font-medium cursor-pointer"
         >
           View All
         </button>
@@ -114,28 +114,28 @@ const ActivityFeed: React.FC = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex items-center space-x-4 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-4 p-3 rounded-xl hover:bg-muted/50 transition-colors"
           >
             <div className={`w-10 h-10 ${activity.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
               <activity.icon className="w-5 h-5 text-white" />
             </div>
             
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 truncate">
+              <h3 className="font-semibold text-foreground truncate">
                 {activity.title}
               </h3>
-              <p className="text-sm text-gray-600 truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 {activity.description}
               </p>
             </div>
             
             <div className="text-right flex-shrink-0">
               {activity.value && (
-                <div className="text-sm font-semibold text-gray-900">
+                <div className="text-sm font-semibold text-foreground">
                   {activity.value}
                 </div>
               )}
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 {formatTimeAgo(activity.timestamp)}
               </div>
             </div>
@@ -143,10 +143,10 @@ const ActivityFeed: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-200">
+      <div className="mt-6 pt-4 border-t border-border">
         <button 
           onClick={() => window.location.href = '#health'}
-          className="w-full text-center text-sm text-blue-500 hover:text-blue-600 font-medium py-2 cursor-pointer"
+          className="w-full text-center text-sm text-[#48C6FF] hover:text-[#2A7FFF] font-medium py-2 cursor-pointer"
         >
           Load More Activity
         </button>

@@ -26,7 +26,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+    <div className="card-premium">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -37,8 +37,8 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
             <SparklesIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Biowell Score</h2>
-            <p className="text-sm text-gray-600">Your daily wellness index</p>
+            <h2 className="text-xl font-bold text-foreground">Biowell Score</h2>
+            <p className="text-sm text-muted-foreground">Your daily wellness index</p>
           </div>
         </div>
         <div className={`px-3 py-1 text-sm font-medium rounded-full ${
@@ -58,7 +58,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
               cx="60"
               cy="60"
               r={radius}
-              stroke="#e5e7eb"
+              stroke="rgb(var(--muted))"
               strokeWidth="4"
               fill="none"
             />
@@ -86,10 +86,11 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 1, type: "spring", stiffness: 200 }}
                 className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-foreground"
               >
                 {score}
               </motion.div>
-              <div className="text-xs text-gray-500 font-medium">SCORE</div>
+              <div className="text-xs text-muted-foreground font-medium">SCORE</div>
             </div>
           </div>
         </div>
@@ -97,10 +98,10 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
         {/* Breakdown */}
         <div className="grid grid-cols-2 gap-4">
           {[
-            { label: 'Sleep', value: 68, color: '#6366f1' },
-            { label: 'Activity', value: 72, color: '#06b6d4' },
-            { label: 'Nutrition', value: 58, color: '#f59e0b' },
-            { label: 'Recovery', value: 52, color: '#ef4444' }
+            { label: 'Sleep', value: 68, color: '#48C6FF' },
+            { label: 'Activity', value: 72, color: '#2A7FFF' },
+            { label: 'Nutrition', value: 58, color: '#3BE6C5' },
+            { label: 'Recovery', value: 52, color: '#0026CC' }
           ].map((item, index) => (
             <motion.div
               key={item.label}
@@ -115,7 +116,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
               >
                 {item.value}
               </div>
-              <div className="text-xs text-gray-500">{item.label}</div>
+              <div className="text-xs text-muted-foreground">{item.label}</div>
             </motion.div>
           ))}
         </div>
