@@ -5,6 +5,7 @@ import { TooltipProvider } from './components/ui/Tooltip';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import LandingPage from './components/landing/LandingPage';
 import AuthForms from './components/auth/AuthForms';
 import Dashboard from './components/dashboard/Dashboard';
 import { registerServiceWorker, offlineManager } from './lib/offline';
@@ -33,10 +34,12 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // Show landing page for unauthenticated users
   if (!user) {
-    return <AuthForms />;
+    return <LandingPage />;
   }
 
+  // Show dashboard for authenticated users
   return <Dashboard />;
 };
 
