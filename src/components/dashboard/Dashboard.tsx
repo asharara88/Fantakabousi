@@ -13,6 +13,8 @@ import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
 import RecipeSearch from '../recipes/RecipeSearch';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
+import MemoryOptimizer from '../ui/MemoryOptimizer';
+import { cacheManager } from '../../lib/performance';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -20,9 +22,20 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Memory cleanup on tab change
+  useEffect(() => {
+    // Clean up memory when switching tabs
+    cacheManager.clearExpired();
+  }, [activeTab]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     setIsMobileMenuOpen(false);
+    
+    // Optimize memory on navigation
+    setTimeout(() => {
+      cacheManager.optimize();
+    }, 1000);
   };
 
   const handleMobileMenuToggle = () => {
@@ -118,6 +131,12 @@ const Dashboard: React.FC = () => {
           </div>
         </main>
       </SafeArea>
+      
+      {/* Memory Optimizer - Only show in development or when memory is high */}
+      {(process.env.NODE_ENV === 'development' || 
+        (performance as any).memory?.usedJSHeapSize > 50000000) && (
+        <MemoryOptimizer />
+      )}
     </AccessibilityProvider>
   );
 };

@@ -13,6 +13,15 @@ export const useSupplements = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Cleanup function to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      // Clear large data arrays when component unmounts
+      setSupplements([]);
+      setUserSupplements([]);
+    };
+  }, []);
+
   useEffect(() => {
     if (user) {
       fetchData();

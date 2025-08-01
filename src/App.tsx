@@ -10,6 +10,9 @@ import Dashboard from './components/dashboard/Dashboard';
 import { registerServiceWorker, offlineManager } from './lib/offline';
 import { performanceMonitor } from './lib/performance';
 
+// Memory management
+import { cacheManager } from './lib/performance';
+
 const queryClient = new QueryClient();
 
 // Initialize offline support and performance monitoring
@@ -17,6 +20,19 @@ if (typeof window !== 'undefined') {
   registerServiceWorker();
   offlineManager.init();
   performanceMonitor.startTime = Date.now();
+  
+  // Memory optimization
+  cacheManager.optimize();
+  
+  // Set up periodic cache cleanup
+  setInterval(() => {
+    cacheManager.clearExpired();
+    
+    // Force garbage collection if available
+    if (window.gc) {
+      window.gc();
+    }
+  }, 300000); // Every 5 minutes
 }
 
 const AppContent: React.FC = () => {
