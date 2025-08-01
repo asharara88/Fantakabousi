@@ -23,6 +23,7 @@ const HealthDashboard: React.FC = () => {
   const [activeView, setActiveView] = useState('metrics');
   const [selectedMetric, setSelectedMetric] = useState('heart_rate');
   const [timeRange, setTimeRange] = useState('7d');
+  const [showDeviceConnection, setShowDeviceConnection] = useState(false);
   
   const { metrics, loading, getLatestMetric, getMetricTrend } = useHealthMetrics();
 
