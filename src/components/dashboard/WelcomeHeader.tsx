@@ -182,11 +182,11 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               </button>
               
               <button 
-                onClick={() => onQuickAction?.('health')}
+                onClick={() => onQuickAction?.('plan')}
                 className="px-6 py-3 bg-card border border-border text-card-foreground font-semibold rounded-xl hover:bg-muted hover:border-[#48C6FF]/30 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
               >
                 <ChartBarIcon className="w-5 h-5" />
-                <span>View Analytics</span>
+                <span>Optimize Today</span>
               </button>
             </motion.div>
             
