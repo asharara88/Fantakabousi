@@ -92,7 +92,7 @@ export const loadComponentLazily = async (componentPath: string) => {
 
 // Cache management
 export const cacheManager = {
-  set: (key: string, data: any, ttl = 900000) => { // 15 minutes default
+  set: (key: string, data: any, ttl = 3600000) => { // 1 hour default
     const item = {
       data,
       timestamp: Date.now(),
@@ -122,59 +122,5 @@ export const cacheManager = {
     Object.keys(localStorage)
       .filter(key => key.startsWith('biowell_'))
       .forEach(key => localStorage.removeItem(key));
-  },
-
-  // Memory optimization methods
-  clearExpired: () => {
-    Object.keys(localStorage)
-      .filter(key => key.startsWith('biowell_'))
-      .forEach(key => {
-        try {
-          const item = localStorage.getItem(key);
-          if (item) {
-            const parsed = JSON.parse(item);
-            if (Date.now() - parsed.timestamp > parsed.ttl) {
-              localStorage.removeItem(key);
-            }
-          }
-        } catch {
-          localStorage.removeItem(key);
-        }
-      });
-  },
-
-  getSize: () => {
-    let total = 0;
-    Object.keys(localStorage)
-      .filter(key => key.startsWith('biowell_'))
-      .forEach(key => {
-        total += localStorage.getItem(key)?.length || 0;
-      });
-    return total;
-  },
-
-  optimize: () => {
-    // Clear expired items
-    cacheManager.clearExpired();
-    
-    // If still over 1MB, clear oldest items
-    if (cacheManager.getSize() > 1048576) {
-      const items = Object.keys(localStorage)
-        .filter(key => key.startsWith('biowell_'))
-        .map(key => {
-          try {
-            const item = localStorage.getItem(key);
-            return item ? { key, timestamp: JSON.parse(item).timestamp } : null;
-          } catch {
-            return null;
-          }
-        })
-        .filter(Boolean)
-        .sort((a, b) => a!.timestamp - b!.timestamp);
-      
-      // Remove oldest 50% of items
-      const toRemove = items.slice(0, Math.floor(items.length / 2));
-      toRemove.forEach(item => localStorage.removeItem(item!.key));
-    }
   }
 };

@@ -101,14 +101,7 @@ export const offlineManager = {
 export const offlineStorage = {
   // Store user profile for offline access
   storeProfile: (profile: any) => {
-    try {
-      const compressed = JSON.stringify(profile);
-      if (compressed.length < 50000) { // Only store if under 50KB
-        localStorage.setItem('biowell_offline_profile', compressed);
-      }
-    } catch (error) {
-      console.warn('Failed to store profile offline:', error);
-    }
+    localStorage.setItem('biowell_offline_profile', JSON.stringify(profile));
   },
 
   getProfile: () => {
@@ -122,14 +115,7 @@ export const offlineStorage = {
 
   // Store recent health metrics
   storeHealthMetrics: (metrics: any[]) => {
-    try {
-      const compressed = JSON.stringify(metrics.slice(0, 20)); // Reduced from 50 to 20
-      if (compressed.length < 100000) { // Only store if under 100KB
-        localStorage.setItem('biowell_offline_metrics', compressed);
-      }
-    } catch (error) {
-      console.warn('Failed to store metrics offline:', error);
-    }
+    localStorage.setItem('biowell_offline_metrics', JSON.stringify(metrics.slice(0, 50)));
   },
 
   getHealthMetrics: () => {
@@ -143,14 +129,7 @@ export const offlineStorage = {
 
   // Store chat history
   storeChatHistory: (messages: any[]) => {
-    try {
-      const compressed = JSON.stringify(messages.slice(-30)); // Reduced from 100 to 30
-      if (compressed.length < 200000) { // Only store if under 200KB
-        localStorage.setItem('biowell_offline_chat', compressed);
-      }
-    } catch (error) {
-      console.warn('Failed to store chat offline:', error);
-    }
+    localStorage.setItem('biowell_offline_chat', JSON.stringify(messages.slice(-100)));
   },
 
   getChatHistory: () => {
@@ -166,17 +145,6 @@ export const offlineStorage = {
   clear: () => {
     ['biowell_offline_profile', 'biowell_offline_metrics', 'biowell_offline_chat']
       .forEach(key => localStorage.removeItem(key));
-  },
-
-  // Get total storage size
-  getStorageSize: () => {
-    let total = 0;
-    ['biowell_offline_profile', 'biowell_offline_metrics', 'biowell_offline_chat']
-      .forEach(key => {
-        const item = localStorage.getItem(key);
-        if (item) total += item.length;
-      });
-    return total;
   }
 };
 

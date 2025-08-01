@@ -18,14 +18,6 @@ export const useHealthMetrics = (metricType?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Cleanup function to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      // Clear metrics data when component unmounts
-      setMetrics([]);
-    };
-  }, []);
-
   useEffect(() => {
     if (user) {
       fetchMetrics();

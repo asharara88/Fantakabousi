@@ -28,16 +28,6 @@ export const useChatSessions = () => {
   const [loading, setLoading] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
 
-  // Cleanup function to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      // Clear chat data when component unmounts
-      setSessions([]);
-      setMessages([]);
-      setCurrentSession(null);
-    };
-  }, []);
-
   useEffect(() => {
     if (user) {
       loadSessions();
