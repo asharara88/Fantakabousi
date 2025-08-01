@@ -204,7 +204,7 @@ const RecipeSearch: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="card">
+      <div className="card-premium">
         <div className="space-y-4">
           <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
             <div className="flex-1 relative">
@@ -247,7 +247,7 @@ const RecipeSearch: React.FC = () => {
                   setSearchQuery(tag.toLowerCase());
                   handleSearch();
                 }}
-                className="px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 hover:text-foreground transition-colors text-body-sm cursor-pointer touch-target"
+                className="px-4 py-2 bg-muted/50 text-muted-foreground rounded-lg hover:bg-[#48C6FF]/10 hover:text-[#48C6FF] transition-colors text-body-sm cursor-pointer touch-target"
               >
                 {tag}
               </button>
@@ -275,7 +275,7 @@ const RecipeSearch: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="card hover:shadow-lg transition-all duration-300"
+                className="card cursor-pointer"
               >
                 <div className="relative mb-4">
                   <img
