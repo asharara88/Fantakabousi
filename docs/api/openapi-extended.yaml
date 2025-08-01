@@ -1,0 +1,1381 @@
+openapi: 3.0.3
+info:
+  title: Biowell API
+  description: |
+    Comprehensive health and wellness platform API providing AI-powered coaching,
+    biometric tracking, nutrition analysis, and personalized recommendations.
+    
+    ## Features
+    - **Smart Coach**: AI-powered health guidance
+    - **Health Metrics**: Biometric data tracking and analysis
+    - **Nutrition**: Food logging with glucose impact analysis
+    - **Supplements**: Evidence-based supplement recommendations
+    - **Recipes**: Health-optimized meal planning
+    
+    ## Authentication
+    All endpoints require JWT authentication via Supabase.
+    
+    ## Rate Limits
+    - Smart Coach: 20 requests/minute
+    - Nutrition: 50 requests/minute
+    - General: 100 requests/minute
+    
+  version: 1.0.0
+  contact:
+    name: Biowell API Support
+    email: api@biowell.com
+    url: https://docs.biowell.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://biowell.com/terms
+
+servers:
+  - url: https://your-project.supabase.co/functions/v1
+    description: Production server
+  - url: https://your-staging-project.supabase.co/functions/v1
+    description: Staging server
+  - url: http://localhost:54321/functions/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Smart Coach
+    description: AI-powered health coaching endpoints
+    externalDocs:
+      description: Smart Coach Guide
+      url: https://docs.biowell.com/smart-coach
+  - name: Health Metrics
+    description: Biometric data tracking and retrieval
+  - name: Nutrition
+    description: Food logging and nutrition analysis
+  - name: Text-to-Speech
+    description: Voice synthesis for AI responses
+  - name: Recipes
+    description: Recipe search and recommendations
+  - name: User Management
+    description: User profiles and preferences
+  - name: Chat Sessions
+    description: Conversation management
+  - name: Supplements
+    description: Supplement stack management
+
+paths:
+  /openai-chat:
+    post:
+      summary: Send message to Smart Coach
+      description: |
+        Send a message to the Smart Coach and receive personalized health advice
+        based on the user's health data, goals, and preferences.
+        
+        The Smart Coach analyzes:
+        - Recent health metrics
+        - User profile and goals
+        - Historical patterns
+        - Evidence-based recommendations
+      tags:
+        - Smart Coach
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - userId
+              properties:
+                message:
+                  type: string
+                  description: User's message to the Smart Coach
+                  minLength: 1
+                  maxLength: 1000
+                  example: "How can I improve my sleep quality?"
+                userId:
+                  type: string
+                  format: uuid
+                  description: User's unique identifier
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                sessionId:
+                  type: string
+                  format: uuid
+                  description: Chat session identifier (optional)
+                  example: "987fcdeb-51a2-43d1-9f12-123456789abc"
+                context:
+                  type: object
+                  description: Additional context for the conversation
+                  properties:
+                    topic:
+                      type: string
+                      enum: [sleep, nutrition, exercise, supplements, stress, general]
+                    priority:
+                      type: string
+                      enum: [low, medium, high, urgent]
+            examples:
+              sleep_question:
+                summary: Sleep improvement question
+                value:
+                  message: "How can I improve my sleep quality?"
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  sessionId: "987fcdeb-51a2-43d1-9f12-123456789abc"
+                  context:
+                    topic: "sleep"
+                    priority: "high"
+              nutrition_advice:
+                summary: Nutrition guidance request
+                value:
+                  message: "What should I eat before my workout?"
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  context:
+                    topic: "nutrition"
+                    priority: "medium"
+      responses:
+        '200':
+          description: Successful response with Smart Coach advice
+          headers:
+            X-Response-Time:
+              description: Response time in milliseconds
+              schema:
+                type: integer
+            X-Coach-Confidence:
+              description: AI confidence score (0-1)
+              schema:
+                type: number
+                minimum: 0
+                maximum: 1
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      response:
+                        type: string
+                        description: Smart Coach response
+                        example: "Based on your recent sleep data showing 6.5 hours average, I recommend establishing a consistent bedtime routine..."
+                      timestamp:
+                        type: string
+                        format: date-time
+                        description: Response timestamp
+                      confidence:
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                        description: AI confidence score
+                        example: 0.94
+                      sources:
+                        type: array
+                        items:
+                          type: string
+                        description: Data sources used for response
+                        example: ["sleep_metrics", "hrv_data", "user_profile"]
+                      session_id:
+                        type: string
+                        format: uuid
+                        description: Chat session ID
+                      recommendations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum: [supplement, lifestyle, exercise, nutrition]
+                            action:
+                              type: string
+                            priority:
+                              type: string
+                              enum: [low, medium, high]
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+              examples:
+                sleep_response:
+                  summary: Sleep advice response
+                  value:
+                    data:
+                      response: "Based on your recent sleep data showing 6.5 hours average, I recommend establishing a consistent bedtime routine..."
+                      timestamp: "2025-01-30T12:00:00Z"
+                      confidence: 0.94
+                      sources: ["sleep_metrics", "hrv_data"]
+                      recommendations:
+                        - type: "supplement"
+                          action: "Take magnesium 30 minutes before bed"
+                          priority: "medium"
+                        - type: "lifestyle"
+                          action: "Reduce screen time after 9 PM"
+                          priority: "high"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /health-metrics:
+    post:
+      summary: Log health metric
+      description: Record a new health metric reading from wearables, manual input, or calculated values
+      tags:
+        - Health Metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - metricType
+                - value
+                - unit
+                - source
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  description: User's unique identifier
+                metricType:
+                  type: string
+                  enum: [heart_rate, steps, glucose, sleep, energy, stress, hrv, blood_pressure, weight, body_fat]
+                  description: Type of health metric
+                value:
+                  type: number
+                  description: Metric value
+                  minimum: 0
+                unit:
+                  type: string
+                  description: Unit of measurement
+                  example: "bpm"
+                source:
+                  type: string
+                  enum: [wearable, cgm, manual, calculated]
+                  description: Data source
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: When the metric was recorded (defaults to now)
+                metadata:
+                  type: object
+                  description: Additional metric information
+                  properties:
+                    device:
+                      type: string
+                      example: "Apple Watch Series 9"
+                    activity:
+                      type: string
+                      example: "rest"
+                    confidence:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+            examples:
+              heart_rate:
+                summary: Heart rate from Apple Watch
+                value:
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  metricType: "heart_rate"
+                  value: 72
+                  unit: "bpm"
+                  source: "wearable"
+                  metadata:
+                    device: "Apple Watch Series 9"
+                    activity: "rest"
+                    confidence: 0.98
+              glucose:
+                summary: Glucose reading from CGM
+                value:
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  metricType: "glucose"
+                  value: 142
+                  unit: "mg/dL"
+                  source: "cgm"
+                  metadata:
+                    device: "FreeStyle Libre 3"
+                    trend: "rising"
+      responses:
+        '201':
+          description: Health metric logged successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HealthMetric'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      summary: Get health metrics
+      description: Retrieve health metrics for a user with filtering and pagination
+      tags:
+        - Health Metrics
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User ID to fetch metrics for
+        - name: metricType
+          in: query
+          schema:
+            type: string
+            enum: [heart_rate, steps, glucose, sleep, energy, stress, hrv]
+          description: Filter by metric type
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start date for range filter
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End date for range filter
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Number of records to return
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+      responses:
+        '200':
+          description: Health metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HealthMetric'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+
+  /nutrition-analysis:
+    post:
+      summary: Analyze food nutrition
+      description: |
+        Analyze nutritional content and health impact of food items.
+        Provides detailed nutrition facts, glucose impact analysis,
+        and personalized health scores.
+      tags:
+        - Nutrition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - foodName
+                - userId
+              properties:
+                foodName:
+                  type: string
+                  description: Name of the food item
+                  minLength: 1
+                  maxLength: 200
+                  example: "grilled chicken breast"
+                quantity:
+                  type: string
+                  description: Quantity or serving size
+                  example: "150g"
+                userId:
+                  type: string
+                  format: uuid
+                  description: User's unique identifier
+                mealType:
+                  type: string
+                  enum: [breakfast, lunch, dinner, snack]
+                  description: Type of meal
+                  default: "snack"
+            examples:
+              protein_meal:
+                summary: High-protein meal analysis
+                value:
+                  foodName: "grilled chicken breast"
+                  quantity: "150g"
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  mealType: "lunch"
+              carb_food:
+                summary: Carbohydrate-rich food
+                value:
+                  foodName: "brown rice"
+                  quantity: "1 cup cooked"
+                  userId: "123e4567-e89b-12d3-a456-426614174000"
+                  mealType: "dinner"
+      responses:
+        '200':
+          description: Nutrition analysis completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NutritionAnalysis'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+        '404':
+          description: Food not found in database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  message: "Food not found"
+                  code: "FOOD_NOT_FOUND"
+                  details: "Unable to find nutritional data for the specified food"
+
+  /elevenlabs-tts:
+    post:
+      summary: Generate speech from text
+      description: |
+        Convert text to speech using ElevenLabs AI voices.
+        Supports multiple voice options and audio quality settings.
+      tags:
+        - Text-to-Speech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                  description: Text to convert to speech
+                  minLength: 1
+                  maxLength: 1000
+                  example: "Based on your sleep data, I recommend going to bed 30 minutes earlier tonight."
+                voiceId:
+                  type: string
+                  description: ElevenLabs voice ID
+                  default: "EXAVITQu4vr4xnSDxMaL"
+                  example: "EXAVITQu4vr4xnSDxMaL"
+                settings:
+                  type: object
+                  description: Voice generation settings
+                  properties:
+                    stability:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.5
+                      description: Voice stability (0-1)
+                    similarity_boost:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.5
+                      description: Voice similarity boost (0-1)
+                    style:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.0
+                      description: Voice style intensity (0-1)
+                    use_speaker_boost:
+                      type: boolean
+                      default: true
+                      description: Enable speaker boost for clarity
+      responses:
+        '200':
+          description: Audio generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      audioData:
+                        type: string
+                        format: base64
+                        description: Base64 encoded audio data
+                      contentType:
+                        type: string
+                        example: "audio/mpeg"
+                        description: Audio MIME type
+                      duration:
+                        type: number
+                        description: Audio duration in seconds
+                        example: 5.2
+                      voiceId:
+                        type: string
+                        description: Voice ID used for generation
+                      characterCount:
+                        type: integer
+                        description: Number of characters processed
+                      cost:
+                        type: number
+                        description: Generation cost in USD
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+
+  /spoonacular-recipes:
+    get:
+      summary: Search health-optimized recipes
+      description: |
+        Search for recipes optimized for specific health goals and dietary preferences.
+        Includes nutrition analysis, health scoring, and personalized recommendations.
+      tags:
+        - Recipes
+      parameters:
+        - name: query
+          in: query
+          description: Search term for recipes
+          schema:
+            type: string
+            default: "healthy"
+            example: "high protein"
+        - name: diet
+          in: query
+          description: Dietary preference
+          schema:
+            type: string
+            enum: [ketogenic, paleo, mediterranean, vegetarian, vegan, gluten-free, dairy-free]
+            example: "ketogenic"
+        - name: intolerances
+          in: query
+          description: Food intolerances (comma-separated)
+          schema:
+            type: string
+            example: "gluten,dairy"
+        - name: maxReadyTime
+          in: query
+          description: Maximum cooking time in minutes
+          schema:
+            type: integer
+            minimum: 5
+            maximum: 180
+            default: 45
+            example: 30
+        - name: number
+          in: query
+          description: Number of results to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 12
+        - name: minProtein
+          in: query
+          description: Minimum protein content in grams
+          schema:
+            type: integer
+            minimum: 0
+            example: 25
+        - name: maxCarbs
+          in: query
+          description: Maximum carbohydrate content in grams
+          schema:
+            type: integer
+            minimum: 0
+            example: 30
+        - name: healthGoals
+          in: query
+          description: Health goals for recipe optimization
+          schema:
+            type: string
+            enum: [muscle_building, weight_loss, insulin_optimization, fertility, heart_health]
+            example: "muscle_building"
+      responses:
+        '200':
+          description: Recipe search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RecipeSearchResults'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+
+  /users/{userId}/profile:
+    get:
+      summary: Get user profile
+      description: Retrieve comprehensive user profile including health information and preferences
+      tags:
+        - User Management
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User's unique identifier
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserProfile'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Update user profile
+      description: Update user profile information and health preferences
+      tags:
+        - User Management
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserProfile'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMeta'
+
+  /chat-sessions:
+    post:
+      summary: Create chat session
+      description: Create a new chat session with the Smart Coach
+      tags:
+        - Chat Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                  maxLength: 100
+                  default: "New Chat"
+                context:
+                  type: object
+                  properties:
+                    topic:
+                      type: string
+                    priority:
+                      type: string
+      responses:
+        '201':
+          description: Chat session created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ChatSession'
+
+    get:
+      summary: Get chat sessions
+      description: Retrieve user's chat sessions with pagination
+      tags:
+        - Chat Sessions
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Chat sessions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatSession'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Supabase JWT token obtained through authentication.
+        
+        Example: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+
+  schemas:
+    ResponseMeta:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Response timestamp
+        request_id:
+          type: string
+          description: Unique request identifier
+        version:
+          type: string
+          description: API version
+          example: "1.0.0"
+        processing_time_ms:
+          type: integer
+          description: Processing time in milliseconds
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        limit:
+          type: integer
+          description: Items per page
+        total:
+          type: integer
+          description: Total number of items
+        has_more:
+          type: boolean
+          description: Whether more pages are available
+
+    HealthMetric:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique metric identifier
+        userId:
+          type: string
+          format: uuid
+          description: User's unique identifier
+        metricType:
+          type: string
+          enum: [heart_rate, steps, glucose, sleep, energy, stress, hrv]
+          description: Type of health metric
+        value:
+          type: number
+          description: Metric value
+        unit:
+          type: string
+          description: Unit of measurement
+        timestamp:
+          type: string
+          format: date-time
+          description: When the metric was recorded
+        source:
+          type: string
+          enum: [wearable, cgm, manual, calculated]
+          description: Data source
+        metadata:
+          type: object
+          description: Additional metric information
+        createdAt:
+          type: string
+          format: date-time
+          description: When the record was created
+
+    NutritionAnalysis:
+      type: object
+      properties:
+        nutrition:
+          type: object
+          properties:
+            calories:
+              type: number
+              description: Total calories
+            protein:
+              type: number
+              description: Protein content in grams
+            carbohydrates:
+              type: number
+              description: Carbohydrate content in grams
+            fat:
+              type: number
+              description: Fat content in grams
+            fiber:
+              type: number
+              description: Fiber content in grams
+            sugar:
+              type: number
+              description: Sugar content in grams
+            sodium:
+              type: number
+              description: Sodium content in milligrams
+        glycemicImpact:
+          type: number
+          description: Glycemic load score (0-50+)
+        insights:
+          type: object
+          properties:
+            fertilityScore:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Fertility health score
+            muscleScore:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Muscle building score
+            insulinScore:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Insulin sensitivity score
+            recommendations:
+              type: array
+              items:
+                type: string
+              description: Personalized recommendations
+        foodName:
+          type: string
+          description: Standardized food name
+        image:
+          type: string
+          format: uri
+          description: Food image URL
+        savedToLog:
+          type: boolean
+          description: Whether the food was saved to user's log
+        logId:
+          type: string
+          description: Food log entry ID if saved
+
+    RecipeSearchResults:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipe'
+        totalResults:
+          type: integer
+          description: Total number of matching recipes
+        offset:
+          type: integer
+          description: Current offset
+        number:
+          type: integer
+          description: Number of results returned
+
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Recipe ID
+        title:
+          type: string
+          description: Recipe title
+        image:
+          type: string
+          format: uri
+          description: Recipe image URL
+        readyInMinutes:
+          type: integer
+          description: Preparation time in minutes
+        servings:
+          type: integer
+          description: Number of servings
+        summary:
+          type: string
+          description: Recipe summary
+        nutrition:
+          type: object
+          properties:
+            calories:
+              type: number
+            protein:
+              type: number
+            carbs:
+              type: number
+            fat:
+              type: number
+        healthTags:
+          type: array
+          items:
+            type: string
+          description: Health-related tags
+        fertilityScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Fertility health score
+        muscleScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Muscle building score
+        insulinScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Insulin sensitivity score
+        instructions:
+          type: array
+          items:
+            type: object
+            properties:
+              step:
+                type: integer
+              instruction:
+                type: string
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User's unique identifier
+        email:
+          type: string
+          format: email
+          description: User's email address
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        avatarUrl:
+          type: string
+          format: uri
+          description: Profile picture URL
+        healthProfile:
+          type: object
+          properties:
+            age:
+              type: integer
+              minimum: 13
+              maximum: 120
+            gender:
+              type: string
+              enum: [male, female, non-binary, prefer-not-to-say]
+            height:
+              type: number
+              description: Height in centimeters
+            weight:
+              type: number
+              description: Weight in kilograms
+            activityLevel:
+              type: string
+              enum: [sedentary, lightly-active, moderately-active, very-active, extremely-active]
+            healthGoals:
+              type: array
+              items:
+                type: string
+                enum: [weight_loss, muscle_building, insulin_optimization, fertility, heart_health, longevity]
+            medicalConditions:
+              type: array
+              items:
+                type: string
+            allergies:
+              type: array
+              items:
+                type: string
+        preferences:
+          type: object
+          properties:
+            units:
+              type: string
+              enum: [metric, imperial]
+              default: "metric"
+            timezone:
+              type: string
+              example: "Asia/Dubai"
+            notifications:
+              type: object
+              properties:
+                email:
+                  type: boolean
+                push:
+                  type: boolean
+                sms:
+                  type: boolean
+        onboardingCompleted:
+          type: boolean
+          description: Whether user has completed onboarding
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 50
+        lastName:
+          type: string
+          maxLength: 50
+        healthProfile:
+          type: object
+          properties:
+            age:
+              type: integer
+              minimum: 13
+              maximum: 120
+            weight:
+              type: number
+              minimum: 20
+              maximum: 300
+            activityLevel:
+              type: string
+              enum: [sedentary, lightly-active, moderately-active, very-active, extremely-active]
+            healthGoals:
+              type: array
+              items:
+                type: string
+        preferences:
+          type: object
+          properties:
+            units:
+              type: string
+              enum: [metric, imperial]
+            notifications:
+              type: object
+              properties:
+                email:
+                  type: boolean
+                push:
+                  type: boolean
+                sms:
+                  type: boolean
+
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Session unique identifier
+        userId:
+          type: string
+          format: uuid
+          description: User's unique identifier
+        title:
+          type: string
+          description: Session title
+        messageCount:
+          type: integer
+          description: Number of messages in session
+        lastMessage:
+          type: string
+          description: Last message content
+        lastMessageAt:
+          type: string
+          format: date-time
+          description: Timestamp of last message
+        context:
+          type: object
+          description: Session context and metadata
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+            code:
+              type: string
+              description: Machine-readable error code
+            details:
+              oneOf:
+                - type: string
+                - type: object
+              description: Additional error details
+            timestamp:
+              type: string
+              format: date-time
+              description: Error timestamp
+            request_id:
+              type: string
+              description: Request identifier for debugging
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            validation_error:
+              summary: Validation failed
+              value:
+                error:
+                  message: "Validation failed"
+                  code: "VALIDATION_ERROR"
+                  details:
+                    message: "Message is required"
+                    userId: "User ID must be a valid UUID"
+                  timestamp: "2025-01-30T12:00:00Z"
+            missing_fields:
+              summary: Missing required fields
+              value:
+                error:
+                  message: "Missing required fields"
+                  code: "MISSING_FIELDS"
+                  details: "message and userId are required"
+                  timestamp: "2025-01-30T12:00:00Z"
+
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: "Authentication required"
+              code: "UNAUTHORIZED"
+              details: "Valid JWT token required"
+              timestamp: "2025-01-30T12:00:00Z"
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: "Insufficient permissions"
+              code: "FORBIDDEN"
+              details: "User does not have access to this resource"
+              timestamp: "2025-01-30T12:00:00Z"
+
+    NotFound:
+      description: Not found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: "Resource not found"
+              code: "NOT_FOUND"
+              details: "The requested resource could not be found"
+              timestamp: "2025-01-30T12:00:00Z"
+
+    RateLimited:
+      description: Too many requests - Rate limit exceeded
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying
+          schema:
+            type: integer
+        X-RateLimit-Limit:
+          description: Request limit per window
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          description: Remaining requests in window
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          description: Unix timestamp when limit resets
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: "Rate limit exceeded"
+              code: "RATE_LIMIT_EXCEEDED"
+              details:
+                limit: 100
+                window: "1 minute"
+                retry_after: 45
+              timestamp: "2025-01-30T12:00:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: "Internal server error"
+              code: "INTERNAL_ERROR"
+              details: "An unexpected error occurred"
+              timestamp: "2025-01-30T12:00:00Z"
+
+  examples:
+    SmartCoachRequest:
+      summary: Smart Coach sleep advice request
+      value:
+        message: "I've been having trouble sleeping. My HRV is low and I feel tired during the day."
+        userId: "123e4567-e89b-12d3-a456-426614174000"
+        sessionId: "987fcdeb-51a2-43d1-9f12-123456789abc"
+        context:
+          topic: "sleep"
+          priority: "high"
+
+    HealthMetricRequest:
+      summary: Heart rate metric from Apple Watch
+      value:
+        userId: "123e4567-e89b-12d3-a456-426614174000"
+        metricType: "heart_rate"
+        value: 72
+        unit: "bpm"
+        source: "wearable"
+        timestamp: "2025-01-30T12:00:00Z"
+        metadata:
+          device: "Apple Watch Series 9"
+          activity: "rest"
+          confidence: 0.98
+
+    NutritionRequest:
+      summary: Analyze grilled chicken nutrition
+      value:
+        foodName: "grilled chicken breast"
+        quantity: "150g"
+        userId: "123e4567-e89b-12d3-a456-426614174000"
+        mealType: "lunch"
+
+# Webhook definitions
+webhooks:
+  healthMetricCreated:
+    post:
+      summary: Health metric created
+      description: Triggered when a new health metric is logged
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                  example: "health_metric.created"
+                timestamp:
+                  type: string
+                  format: date-time
+                data:
+                  $ref: '#/components/schemas/HealthMetric'
+      responses:
+        '200':
+          description: Webhook received successfully
+
+  chatSessionCompleted:
+    post:
+      summary: Chat session completed
+      description: Triggered when a chat session is marked as completed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                  example: "chat_session.completed"
+                timestamp:
+                  type: string
+                  format: date-time
+                data:
+                  type: object
+                  properties:
+                    sessionId:
+                      type: string
+                    userId:
+                      type: string
+                    messageCount:
+                      type: integer
+                    duration:
+                      type: integer
+                      description: Session duration in seconds
+                    topics:
+                      type: array
+                      items:
+                        type: string
+      responses:
+        '200':
+          description: Webhook received successfully

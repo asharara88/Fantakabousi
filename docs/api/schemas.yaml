@@ -1,0 +1,1256 @@
+# Shared OpenAPI Schemas for Biowell API
+
+components:
+  schemas:
+    # Core Response Schemas
+    ResponseMeta:
+      type: object
+      description: Standard metadata included in all responses
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Response timestamp
+          example: "2025-01-30T12:00:00Z"
+        request_id:
+          type: string
+          description: Unique request identifier for debugging
+          example: "req_123456789"
+        version:
+          type: string
+          description: API version
+          example: "1.0.0"
+        processing_time_ms:
+          type: integer
+          description: Processing time in milliseconds
+          example: 1250
+        rate_limit:
+          type: object
+          description: Rate limiting information
+          properties:
+            limit:
+              type: integer
+              example: 100
+            remaining:
+              type: integer
+              example: 95
+            reset:
+              type: integer
+              description: Unix timestamp when limit resets
+              example: 1643723400
+
+    Pagination:
+      type: object
+      description: Pagination information for list responses
+      properties:
+        page:
+          type: integer
+          description: Current page number (1-based)
+          minimum: 1
+          example: 1
+        limit:
+          type: integer
+          description: Items per page
+          minimum: 1
+          maximum: 100
+          example: 50
+        total:
+          type: integer
+          description: Total number of items
+          example: 150
+        has_more:
+          type: boolean
+          description: Whether more pages are available
+          example: true
+        next_page:
+          type: integer
+          description: Next page number (if available)
+          example: 2
+        prev_page:
+          type: integer
+          description: Previous page number (if available)
+          example: null
+
+    # Error Schemas
+    Error:
+      type: object
+      description: Standard error response format
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - code
+            - timestamp
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: "Validation failed"
+            code:
+              type: string
+              description: Machine-readable error code
+              example: "VALIDATION_ERROR"
+            details:
+              oneOf:
+                - type: string
+                - type: object
+              description: Additional error details
+              example: "Message field is required"
+            timestamp:
+              type: string
+              format: date-time
+              description: Error timestamp
+              example: "2025-01-30T12:00:00Z"
+            request_id:
+              type: string
+              description: Request identifier for debugging
+              example: "req_123456789"
+            trace_id:
+              type: string
+              description: Distributed tracing identifier
+              example: "trace_987654321"
+
+    ValidationError:
+      type: object
+      description: Validation error with field-specific details
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            error:
+              type: object
+              properties:
+                details:
+                  type: object
+                  description: Field-specific validation errors
+                  additionalProperties:
+                    type: string
+                  example:
+                    message: "Message is required"
+                    userId: "User ID must be a valid UUID"
+
+    # Health Metric Schemas
+    HealthMetric:
+      type: object
+      description: Health metric data point
+      required:
+        - id
+        - userId
+        - metricType
+        - value
+        - unit
+        - timestamp
+        - source
+      properties:
+        id:
+          type: string
+          description: Unique metric identifier
+          example: "metric_123456789"
+        userId:
+          type: string
+          format: uuid
+          description: User's unique identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        metricType:
+          type: string
+          enum: [heart_rate, steps, glucose, sleep, energy, stress, hrv, blood_pressure, weight, body_fat, temperature]
+          description: Type of health metric
+          example: "heart_rate"
+        value:
+          type: number
+          description: Metric value
+          minimum: 0
+          example: 72
+        unit:
+          type: string
+          description: Unit of measurement
+          example: "bpm"
+        timestamp:
+          type: string
+          format: date-time
+          description: When the metric was recorded
+          example: "2025-01-30T12:00:00Z"
+        source:
+          type: string
+          enum: [wearable, cgm, manual, calculated, imported]
+          description: Data source
+          example: "wearable"
+        metadata:
+          type: object
+          description: Additional metric information
+          properties:
+            device:
+              type: string
+              description: Device name
+              example: "Apple Watch Series 9"
+            device_id:
+              type: string
+              description: Unique device identifier
+              example: "AW_123456"
+            activity:
+              type: string
+              description: Activity context
+              example: "rest"
+            confidence:
+              type: number
+              minimum: 0
+              maximum: 1
+              description: Data confidence score
+              example: 0.98
+            location:
+              type: string
+              description: Location where metric was recorded
+              example: "home"
+            notes:
+              type: string
+              description: User notes about the metric
+              example: "Feeling stressed today"
+        createdAt:
+          type: string
+          format: date-time
+          description: When the record was created
+          example: "2025-01-30T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the record was last updated
+          example: "2025-01-30T12:00:00Z"
+
+    # Nutrition Schemas
+    NutritionFacts:
+      type: object
+      description: Detailed nutrition information
+      properties:
+        calories:
+          type: number
+          description: Total calories
+          minimum: 0
+          example: 231
+        macronutrients:
+          type: object
+          properties:
+            protein:
+              type: number
+              description: Protein content in grams
+              minimum: 0
+              example: 43.5
+            carbohydrates:
+              type: number
+              description: Total carbohydrate content in grams
+              minimum: 0
+              example: 0
+            fat:
+              type: number
+              description: Total fat content in grams
+              minimum: 0
+              example: 5.0
+            fiber:
+              type: number
+              description: Dietary fiber in grams
+              minimum: 0
+              example: 0
+            sugar:
+              type: number
+              description: Sugar content in grams
+              minimum: 0
+              example: 0
+        micronutrients:
+          type: object
+          properties:
+            sodium:
+              type: number
+              description: Sodium content in milligrams
+              example: 74
+            potassium:
+              type: number
+              description: Potassium content in milligrams
+              example: 256
+            calcium:
+              type: number
+              description: Calcium content in milligrams
+              example: 15
+            iron:
+              type: number
+              description: Iron content in milligrams
+              example: 0.9
+            vitamin_c:
+              type: number
+              description: Vitamin C content in milligrams
+              example: 0
+            vitamin_d:
+              type: number
+              description: Vitamin D content in IU
+              example: 0
+
+    HealthScores:
+      type: object
+      description: Personalized health scores for food items
+      properties:
+        fertilityScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Fertility and reproductive health score
+          example: 85
+        muscleScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Muscle building and protein quality score
+          example: 95
+        insulinScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Insulin sensitivity and glucose impact score
+          example: 90
+        heartScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Cardiovascular health score
+          example: 88
+        brainScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Cognitive health and brain function score
+          example: 82
+        longevityScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall longevity and anti-aging score
+          example: 87
+
+    NutritionAnalysis:
+      type: object
+      description: Complete nutrition analysis result
+      required:
+        - nutrition
+        - glycemicImpact
+        - insights
+        - foodName
+      properties:
+        nutrition:
+          $ref: '#/components/schemas/NutritionFacts'
+        glycemicImpact:
+          type: number
+          description: Glycemic load score (0-50+)
+          minimum: 0
+          example: 0
+        insights:
+          type: object
+          properties:
+            scores:
+              $ref: '#/components/schemas/HealthScores'
+            recommendations:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [timing, pairing, portion, preparation, alternative]
+                    description: Type of recommendation
+                  message:
+                    type: string
+                    description: Recommendation text
+                  priority:
+                    type: string
+                    enum: [low, medium, high]
+                    description: Recommendation priority
+              example:
+                - type: "timing"
+                  message: "Best consumed post-workout for muscle recovery"
+                  priority: "medium"
+                - type: "pairing"
+                  message: "Pair with vegetables for better nutrient absorption"
+                  priority: "low"
+            warnings:
+              type: array
+              items:
+                type: string
+              description: Health warnings or considerations
+              example: ["High in cholesterol - limit if you have heart disease"]
+        foodName:
+          type: string
+          description: Standardized food name
+          example: "Grilled Chicken Breast"
+        image:
+          type: string
+          format: uri
+          description: Food image URL
+          example: "https://api.spoonacular.com/..."
+        savedToLog:
+          type: boolean
+          description: Whether the food was saved to user's log
+          example: true
+        logId:
+          type: string
+          description: Food log entry ID if saved
+          example: "food_log_123456789"
+        alternatives:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              reason:
+                type: string
+              healthScore:
+                type: number
+          description: Healthier alternative suggestions
+
+    # Chat and Coaching Schemas
+    ChatMessage:
+      type: object
+      description: Chat message between user and Smart Coach
+      required:
+        - id
+        - role
+        - content
+        - timestamp
+      properties:
+        id:
+          type: string
+          description: Unique message identifier
+          example: "msg_123456789"
+        role:
+          type: string
+          enum: [user, assistant, system]
+          description: Message sender role
+          example: "user"
+        content:
+          type: string
+          description: Message content
+          example: "How can I improve my sleep quality?"
+        timestamp:
+          type: string
+          format: date-time
+          description: Message timestamp
+          example: "2025-01-30T12:00:00Z"
+        metadata:
+          type: object
+          description: Additional message metadata
+          properties:
+            confidence:
+              type: number
+              minimum: 0
+              maximum: 1
+              description: AI confidence score (for assistant messages)
+            sources:
+              type: array
+              items:
+                type: string
+              description: Data sources used for response
+              example: ["sleep_metrics", "hrv_data"]
+            intent:
+              type: string
+              description: Detected user intent
+              example: "sleep_improvement"
+            sentiment:
+              type: string
+              enum: [positive, neutral, negative]
+              description: Message sentiment
+            topics:
+              type: array
+              items:
+                type: string
+              description: Identified topics in the message
+              example: ["sleep", "recovery", "stress"]
+
+    ChatSession:
+      type: object
+      description: Chat session with Smart Coach
+      required:
+        - id
+        - userId
+        - title
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Session unique identifier
+          example: "session_123456789"
+        userId:
+          type: string
+          format: uuid
+          description: User's unique identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          description: Session title
+          maxLength: 100
+          example: "Sleep Optimization Discussion"
+        messageCount:
+          type: integer
+          description: Number of messages in session
+          minimum: 0
+          example: 15
+        lastMessage:
+          type: string
+          description: Last message content (truncated)
+          maxLength: 200
+          example: "Thank you for the sleep advice!"
+        lastMessageAt:
+          type: string
+          format: date-time
+          description: Timestamp of last message
+          example: "2025-01-30T11:45:00Z"
+        status:
+          type: string
+          enum: [active, completed, archived]
+          description: Session status
+          default: "active"
+          example: "active"
+        context:
+          type: object
+          description: Session context and metadata
+          properties:
+            topic:
+              type: string
+              enum: [sleep, nutrition, exercise, supplements, stress, general, fertility, recovery]
+              description: Primary session topic
+              example: "sleep"
+            priority:
+              type: string
+              enum: [low, medium, high, urgent]
+              description: Session priority
+              example: "high"
+            goals:
+              type: array
+              items:
+                type: string
+              description: User goals for this session
+              example: ["improve_sleep_quality", "reduce_stress"]
+            tags:
+              type: array
+              items:
+                type: string
+              description: Session tags
+              example: ["insomnia", "stress", "recovery"]
+        summary:
+          type: string
+          description: AI-generated session summary
+          example: "Discussion focused on sleep optimization strategies including bedtime routine and stress management"
+        createdAt:
+          type: string
+          format: date-time
+          description: Session creation timestamp
+          example: "2025-01-30T10:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-01-30T12:00:00Z"
+
+    # User and Profile Schemas
+    UserProfile:
+      type: object
+      description: Comprehensive user profile
+      required:
+        - id
+        - email
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User's unique identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "user@example.com"
+        firstName:
+          type: string
+          description: User's first name
+          maxLength: 50
+          example: "John"
+        lastName:
+          type: string
+          description: User's last name
+          maxLength: 50
+          example: "Doe"
+        avatarUrl:
+          type: string
+          format: uri
+          description: Profile picture URL
+          example: "https://example.com/avatar.jpg"
+        healthProfile:
+          type: object
+          description: Health-related profile information
+          properties:
+            age:
+              type: integer
+              minimum: 13
+              maximum: 120
+              description: User's age
+              example: 28
+            gender:
+              type: string
+              enum: [male, female, non-binary, prefer-not-to-say]
+              description: User's gender
+              example: "male"
+            height:
+              type: number
+              description: Height in centimeters
+              minimum: 50
+              maximum: 300
+              example: 180
+            weight:
+              type: number
+              description: Weight in kilograms
+              minimum: 20
+              maximum: 300
+              example: 75
+            activityLevel:
+              type: string
+              enum: [sedentary, lightly-active, moderately-active, very-active, extremely-active]
+              description: Physical activity level
+              example: "moderately-active"
+            healthGoals:
+              type: array
+              items:
+                type: string
+                enum: [weight_loss, muscle_building, insulin_optimization, fertility, heart_health, longevity, stress_reduction, sleep_improvement]
+              description: Primary health goals
+              example: ["muscle_building", "insulin_optimization"]
+            medicalConditions:
+              type: array
+              items:
+                type: string
+              description: Current medical conditions
+              example: ["insulin_resistance"]
+            medications:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  dosage:
+                    type: string
+                  frequency:
+                    type: string
+              description: Current medications
+            allergies:
+              type: array
+              items:
+                type: string
+              description: Known allergies
+              example: ["shellfish", "peanuts"]
+            dietaryRestrictions:
+              type: array
+              items:
+                type: string
+                enum: [vegetarian, vegan, gluten-free, dairy-free, keto, paleo, halal, kosher]
+              description: Dietary restrictions
+              example: ["gluten-free"]
+        preferences:
+          type: object
+          description: User preferences and settings
+          properties:
+            units:
+              type: string
+              enum: [metric, imperial]
+              description: Preferred unit system
+              default: "metric"
+              example: "metric"
+            timezone:
+              type: string
+              description: User's timezone
+              example: "Asia/Dubai"
+            language:
+              type: string
+              description: Preferred language (ISO 639-1)
+              default: "en"
+              example: "en"
+            notifications:
+              type: object
+              properties:
+                email:
+                  type: boolean
+                  description: Email notifications enabled
+                  default: true
+                push:
+                  type: boolean
+                  description: Push notifications enabled
+                  default: true
+                sms:
+                  type: boolean
+                  description: SMS notifications enabled
+                  default: false
+                frequency:
+                  type: string
+                  enum: [immediate, daily, weekly, never]
+                  description: Notification frequency
+                  default: "daily"
+            privacy:
+              type: object
+              properties:
+                dataSharing:
+                  type: boolean
+                  description: Allow anonymous data sharing for research
+                  default: false
+                analytics:
+                  type: boolean
+                  description: Allow usage analytics
+                  default: true
+                marketing:
+                  type: boolean
+                  description: Allow marketing communications
+                  default: false
+        subscription:
+          type: object
+          description: Subscription information
+          properties:
+            plan:
+              type: string
+              enum: [free, premium, pro]
+              description: Current subscription plan
+              example: "premium"
+            status:
+              type: string
+              enum: [active, cancelled, expired, trial]
+              description: Subscription status
+              example: "active"
+            expiresAt:
+              type: string
+              format: date-time
+              description: Subscription expiration date
+              example: "2025-12-30T23:59:59Z"
+        onboardingCompleted:
+          type: boolean
+          description: Whether user has completed onboarding
+          example: true
+        onboardingCompletedAt:
+          type: string
+          format: date-time
+          description: When onboarding was completed
+          example: "2025-01-15T14:30:00Z"
+        lastActiveAt:
+          type: string
+          format: date-time
+          description: Last activity timestamp
+          example: "2025-01-30T11:30:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+          example: "2025-01-15T10:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last profile update timestamp
+          example: "2025-01-30T12:00:00Z"
+
+    # Recipe Schemas
+    Recipe:
+      type: object
+      description: Recipe with health optimization data
+      required:
+        - id
+        - title
+        - readyInMinutes
+        - servings
+      properties:
+        id:
+          type: integer
+          description: Recipe ID from Spoonacular
+          example: 123456
+        title:
+          type: string
+          description: Recipe title
+          example: "High-Protein Salmon Bowl"
+        image:
+          type: string
+          format: uri
+          description: Recipe image URL
+          example: "https://spoonacular.com/recipeImages/123456-556x370.jpg"
+        readyInMinutes:
+          type: integer
+          description: Total preparation and cooking time
+          minimum: 1
+          example: 25
+        servings:
+          type: integer
+          description: Number of servings
+          minimum: 1
+          example: 2
+        summary:
+          type: string
+          description: Recipe summary/description
+          example: "Nutrient-dense salmon bowl packed with omega-3s and complete proteins"
+        sourceUrl:
+          type: string
+          format: uri
+          description: Original recipe URL
+          example: "https://example.com/recipe"
+        nutrition:
+          $ref: '#/components/schemas/NutritionFacts'
+        healthScores:
+          $ref: '#/components/schemas/HealthScores'
+        healthTags:
+          type: array
+          items:
+            type: string
+          description: Health-related tags
+          example: ["High Protein", "Low Carb", "Omega-3", "Anti-Inflammatory"]
+        dietaryInfo:
+          type: object
+          properties:
+            diets:
+              type: array
+              items:
+                type: string
+                enum: [vegetarian, vegan, gluten-free, dairy-free, keto, paleo, whole30]
+              description: Compatible diets
+              example: ["gluten-free", "keto"]
+            intolerances:
+              type: array
+              items:
+                type: string
+              description: Allergens and intolerances to avoid
+              example: ["dairy", "nuts"]
+        instructions:
+          type: array
+          items:
+            type: object
+            properties:
+              step:
+                type: integer
+                description: Step number
+              instruction:
+                type: string
+                description: Step instruction
+              equipment:
+                type: array
+                items:
+                  type: string
+                description: Required equipment
+              ingredients:
+                type: array
+                items:
+                  type: string
+                description: Ingredients used in this step
+              time:
+                type: integer
+                description: Time for this step in minutes
+          description: Step-by-step cooking instructions
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              amount:
+                type: number
+              unit:
+                type: string
+              original:
+                type: string
+                description: Original ingredient text
+          description: Recipe ingredients list
+        equipment:
+          type: array
+          items:
+            type: string
+          description: Required cooking equipment
+          example: ["oven", "baking sheet", "mixing bowl"]
+        tips:
+          type: array
+          items:
+            type: string
+          description: Cooking tips and suggestions
+          example: ["Let salmon rest for 5 minutes before serving"]
+
+    # Supplement Schemas
+    Supplement:
+      type: object
+      description: Supplement product information
+      required:
+        - id
+        - name
+        - price
+        - isAvailable
+      properties:
+        id:
+          type: string
+          description: Unique supplement identifier
+          example: "supp_123456789"
+        name:
+          type: string
+          description: Supplement name
+          example: "Vitamin D3"
+        brand:
+          type: string
+          description: Brand name
+          example: "Biowell"
+        description:
+          type: string
+          description: Short description
+          example: "High-potency vitamin D3 for immune support"
+        detailedDescription:
+          type: string
+          description: Detailed product description
+        category:
+          type: string
+          description: Supplement category
+          example: "Vitamins"
+        subcategory:
+          type: string
+          description: Supplement subcategory
+          example: "Fat-Soluble Vitamins"
+        price:
+          type: number
+          description: Price in AED
+          minimum: 0
+          example: 89
+        compareAtPrice:
+          type: number
+          description: Original price before discount
+          minimum: 0
+          example: 120
+        currency:
+          type: string
+          description: Currency code
+          default: "AED"
+          example: "AED"
+        dosage:
+          type: string
+          description: Recommended dosage
+          example: "4000 IU daily"
+        servingSize:
+          type: string
+          description: Serving size
+          example: "1 capsule"
+        servingsPerContainer:
+          type: integer
+          description: Number of servings per container
+          example: 30
+        stockQuantity:
+          type: integer
+          description: Available stock
+          minimum: 0
+          example: 150
+        isAvailable:
+          type: boolean
+          description: Whether product is available for purchase
+          example: true
+        isFeatured:
+          type: boolean
+          description: Whether product is featured
+          example: true
+        isBestseller:
+          type: boolean
+          description: Whether product is a bestseller
+          example: false
+        evidenceRating:
+          type: number
+          minimum: 1
+          maximum: 5
+          description: Scientific evidence rating
+          example: 4.8
+        tier:
+          type: string
+          enum: [green, yellow, orange, red]
+          description: Evidence tier classification
+          example: "green"
+        benefits:
+          type: array
+          items:
+            type: string
+          description: Key health benefits
+          example: ["Immune support", "Bone health", "Mood regulation"]
+        ingredients:
+          type: string
+          description: Ingredient list
+          example: "Vitamin D3 (Cholecalciferol), MCT Oil, Gelatin Capsule"
+        warnings:
+          type: string
+          description: Safety warnings and contraindications
+          example: "Consult physician if pregnant, nursing, or taking medications"
+        imageUrl:
+          type: string
+          format: uri
+          description: Product image URL
+          example: "https://example.com/vitamin-d3.jpg"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Product tags
+          example: ["immune", "bone-health", "mood"]
+        targetAudience:
+          type: string
+          description: Target audience
+          example: "Adults with vitamin D deficiency"
+        healthConditions:
+          type: array
+          items:
+            type: string
+          description: Health conditions this supplement may help
+          example: ["vitamin_d_deficiency", "seasonal_depression"]
+        certifications:
+          type: array
+          items:
+            type: string
+          description: Product certifications
+          example: ["Third-party tested", "GMP certified", "Non-GMO"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    # Audio/TTS Schemas
+    AudioResponse:
+      type: object
+      description: Text-to-speech audio response
+      required:
+        - audioData
+        - contentType
+        - duration
+      properties:
+        audioData:
+          type: string
+          format: base64
+          description: Base64 encoded audio data
+        contentType:
+          type: string
+          description: Audio MIME type
+          enum: ["audio/mpeg", "audio/wav", "audio/ogg"]
+          example: "audio/mpeg"
+        duration:
+          type: number
+          description: Audio duration in seconds
+          minimum: 0
+          example: 5.2
+        voiceId:
+          type: string
+          description: ElevenLabs voice ID used
+          example: "EXAVITQu4vr4xnSDxMaL"
+        characterCount:
+          type: integer
+          description: Number of characters processed
+          minimum: 0
+          example: 89
+        cost:
+          type: number
+          description: Generation cost in USD
+          minimum: 0
+          example: 0.0089
+        settings:
+          type: object
+          description: Voice generation settings used
+          properties:
+            stability:
+              type: number
+              minimum: 0
+              maximum: 1
+            similarity_boost:
+              type: number
+              minimum: 0
+              maximum: 1
+            style:
+              type: number
+              minimum: 0
+              maximum: 1
+            use_speaker_boost:
+              type: boolean
+
+  # Response Templates
+  responses:
+    SuccessResponse:
+      description: Standard success response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                description: Response payload
+              meta:
+                $ref: '#/components/schemas/ResponseMeta'
+
+    PaginatedResponse:
+      description: Paginated list response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+              pagination:
+                $ref: '#/components/schemas/Pagination'
+              meta:
+                $ref: '#/components/schemas/ResponseMeta'
+
+  # Parameter Templates
+  parameters:
+    UserIdPath:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: User's unique identifier
+      example: "123e4567-e89b-12d3-a456-426614174000"
+
+    UserIdQuery:
+      name: userId
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: User's unique identifier
+      example: "123e4567-e89b-12d3-a456-426614174000"
+
+    LimitQuery:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+      description: Number of items to return
+      example: 20
+
+    PageQuery:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Page number for pagination
+      example: 1
+
+    StartDateQuery:
+      name: startDate
+      in: query
+      schema:
+        type: string
+        format: date-time
+      description: Start date for filtering (ISO 8601)
+      example: "2025-01-01T00:00:00Z"
+
+    EndDateQuery:
+      name: endDate
+      in: query
+      schema:
+        type: string
+        format: date-time
+      description: End date for filtering (ISO 8601)
+      example: "2025-01-30T23:59:59Z"
+
+  # Security Schemes
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Supabase JWT token obtained through authentication.
+        
+        To get a token:
+        1. Sign in via `/auth/signin`
+        2. Extract `access_token` from response
+        3. Include in Authorization header: `Bearer <token>`
+        
+        Token expires after 1 hour and must be refreshed.
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: |
+        API key for server-to-server authentication.
+        Contact support to obtain an API key.
+
+  # Common Examples
+  examples:
+    UserProfileExample:
+      summary: Complete user profile
+      value:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        email: "john.doe@example.com"
+        firstName: "John"
+        lastName: "Doe"
+        healthProfile:
+          age: 28
+          gender: "male"
+          height: 180
+          weight: 75
+          activityLevel: "moderately-active"
+          healthGoals: ["muscle_building", "insulin_optimization"]
+          medicalConditions: ["insulin_resistance"]
+        preferences:
+          units: "metric"
+          timezone: "Asia/Dubai"
+          notifications:
+            email: true
+            push: true
+            sms: false
+        onboardingCompleted: true
+
+    HealthMetricExample:
+      summary: Heart rate metric from wearable
+      value:
+        id: "metric_123456789"
+        userId: "123e4567-e89b-12d3-a456-426614174000"
+        metricType: "heart_rate"
+        value: 72
+        unit: "bpm"
+        timestamp: "2025-01-30T12:00:00Z"
+        source: "wearable"
+        metadata:
+          device: "Apple Watch Series 9"
+          activity: "rest"
+          confidence: 0.98
+
+    NutritionAnalysisExample:
+      summary: Chicken breast nutrition analysis
+      value:
+        nutrition:
+          calories: 231
+          macronutrients:
+            protein: 43.5
+            carbohydrates: 0
+            fat: 5.0
+            fiber: 0
+            sugar: 0
+          micronutrients:
+            sodium: 74
+            potassium: 256
+        glycemicImpact: 0
+        insights:
+          scores:
+            fertilityScore: 85
+            muscleScore: 95
+            insulinScore: 90
+          recommendations:
+            - type: "timing"
+              message: "Excellent post-workout protein source"
+              priority: "medium"
+        foodName: "Grilled Chicken Breast"
+        savedToLog: true
