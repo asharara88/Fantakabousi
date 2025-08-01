@@ -199,11 +199,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             >
               <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-[#3BE6C5]">All systems active</span>
-              </div>
-              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
-                <BoltIcon className="w-4 h-4 text-[#48C6FF]" />
-                <span className="text-sm font-medium text-[#48C6FF]">AI ready</span>
+                <span>Wearable connected</span>
               </div>
             </motion.div>
           </motion.div>

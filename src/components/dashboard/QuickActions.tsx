@@ -26,6 +26,13 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
       badge: 'New'
     },
     {
+      id: 'plan',
+      title: 'Plan Your Day',
+      icon: CalendarIcon,
+      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+      badge: null
+    },
+    {
       id: 'health',
       title: 'View Analytics',
       icon: ChartBarIcon,

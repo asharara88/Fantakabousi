@@ -11,6 +11,7 @@ import AICoachEnhanced from './AICoachEnhanced';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
 import RecipeSearch from '../recipes/RecipeSearch';
+import PlanYourDay from './PlanYourDay';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
 
@@ -19,6 +20,7 @@ const Dashboard: React.FC = () => {
   const { profile } = useProfile();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showPlanYourDay, setShowPlanYourDay] = useState(false);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -31,6 +33,9 @@ const Dashboard: React.FC = () => {
 
   const handleQuickAction = (action: string) => {
     switch (action) {
+      case 'plan':
+        setShowPlanYourDay(true);
+        break;
       case 'coach':
         setActiveTab('coach');
         break;
@@ -118,6 +123,12 @@ const Dashboard: React.FC = () => {
           </div>
         </main>
       </SafeArea>
+      
+      {/* Plan Your Day Modal */}
+      <PlanYourDay 
+        isOpen={showPlanYourDay}
+        onClose={() => setShowPlanYourDay(false)}
+      />
     </AccessibilityProvider>
   );
 };
