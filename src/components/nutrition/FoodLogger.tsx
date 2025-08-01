@@ -200,7 +200,6 @@ const FoodLogger: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="card-premium"
         >
-          <h3 className="text-lg font-bold text-gray-900 mb-4">
           <h3 className="text-lg font-bold text-foreground mb-4">
             Nutrition Analysis: {foodName}
           </h3>
