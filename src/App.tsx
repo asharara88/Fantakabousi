@@ -5,8 +5,10 @@ import { TooltipProvider } from './components/ui/Tooltip';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { useProfile } from './hooks/useProfile';
 import LandingPage from './components/landing/LandingPage';
 import AuthForms from './components/auth/AuthForms';
+import OnboardingFlow from './components/onboarding/OnboardingFlow';
 import Dashboard from './components/dashboard/Dashboard';
 import { registerServiceWorker, offlineManager } from './lib/offline';
 import { performanceMonitor } from './lib/performance';
@@ -22,6 +24,7 @@ if (typeof window !== 'undefined') {
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
+  const { profile } = useProfile();
 
   if (loading) {
     return (
@@ -37,6 +40,11 @@ const AppContent: React.FC = () => {
   // Show landing page for unauthenticated users
   if (!user) {
     return <LandingPage />;
+  }
+
+  // Show onboarding for new users
+  if (user && profile && !profile.onboarding_completed) {
+    return <OnboardingFlow onComplete={() => window.location.reload()} />;
   }
 
   // Show dashboard for authenticated users

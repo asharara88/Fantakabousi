@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useHealthMetrics } from '../../hooks/useHealthMetrics';
 import FoodLogger from '../nutrition/FoodLogger';
 import RecipeSearch from '../recipes/RecipeSearch';
+import AdvancedCharts from '../health/AdvancedCharts';
+import RealDeviceIntegration from '../devices/RealDeviceIntegration';
 import DeviceConnection from '../devices/DeviceConnection';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
@@ -68,6 +70,8 @@ const HealthDashboard: React.FC = () => {
 
   const tabs = [
     { id: 'metrics', label: 'Health Metrics', icon: HeartIcon },
+    { id: 'analytics', label: 'Analytics', icon: ChartBarIcon },
+    { id: 'devices', label: 'Devices', icon: WifiIcon },
     { id: 'food', label: 'Food Logging', icon: BeakerIcon },
     { id: 'recipes', label: 'Find Recipes', icon: MagnifyingGlassIcon },
   ];
@@ -138,8 +142,14 @@ const HealthDashboard: React.FC = () => {
 
   const renderContent = () => {
     switch (activeView) {
+      case 'analytics':
+        return <AdvancedCharts />;
+      case 'devices':
+        return <RealDeviceIntegration />;
       case 'food':
         return <FoodLogger />;
+      case 'recipes':
+        return <RecipeSearch />;
       default:
         return renderMetricsView();
     }

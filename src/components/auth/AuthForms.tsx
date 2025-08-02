@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import PasswordReset from './PasswordReset';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   EnvelopeIcon, 
@@ -17,6 +18,7 @@ import {
 
 const AuthForms: React.FC = () => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +35,30 @@ const AuthForms: React.FC = () => {
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Light_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0xpZ2h0X1RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODYyOSwiZXhwIjoxNzg1MzA0NjI5fQ.8vQZQCJqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI";
+
+  if (showPasswordReset) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-card border border-border rounded-2xl shadow-2xl p-8">
+            <div className="text-center mb-8">
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-21 mx-auto mb-4"
+              />
+            </div>
+            <PasswordReset onBack={() => setShowPasswordReset(false)} />
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,6 +218,18 @@ const AuthForms: React.FC = () => {
               )}
             </button>
           </form>
+
+          {/* Forgot Password Link */}
+          {isSignIn && (
+            <div className="text-center">
+              <button
+                onClick={() => setShowPasswordReset(true)}
+                className="text-sm text-blue-light hover:text-blue-medium transition-colors"
+              >
+                Forgot your password?
+              </button>
+            </div>
+          )}
 
           {/* Features */}
           <div className="mt-8 pt-6 border-t border-border">
