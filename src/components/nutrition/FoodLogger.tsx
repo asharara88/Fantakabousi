@@ -119,12 +119,12 @@ const FoodLogger: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Food Logger</h2>
-        <p className="text-gray-600">Track what you eat and get nutrition insights</p>
+        <h2 className="text-xl lg:text-2xl font-bold text-foreground">Food Logger</h2>
+        <p className="text-muted-foreground">Track what you eat and get nutrition insights</p>
       </div>
 
       {/* Input Form */}
-      <div className="card-premium">
+      <div className="card">
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="space-y-2">

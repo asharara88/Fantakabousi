@@ -1145,6 +1145,11 @@ a:visited {
 .dark .input {
   background-color: rgb(var(--card));
   border-color: rgb(var(--border));
+  color: rgb(var(--foreground));
+}
+
+.dark .input::placeholder {
+  color: rgb(var(--muted-foreground));
 }
 
 .dark .mobile-nav {

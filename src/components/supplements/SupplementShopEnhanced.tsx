@@ -308,8 +308,8 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
       {/* Cart Summary */}
       {cartItems.size > 0 && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+              ? 'border-primary bg-primary/10 text-primary'
+              : 'border-border bg-card hover:border-muted-foreground text-foreground'
           className="fixed bottom-20 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-80 bg-white rounded-xl p-4 shadow-2xl border border-gray-200 z-40"
         >
           <div className="space-y-3">
@@ -331,11 +331,11 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
             </div>
             
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              selectedCategory === category.id ? 'text-primary' : 'text-muted-foreground'
               whileTap={{ scale: 0.98 }}
               className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-200"
             >
-              Checkout
+              <div className="text-xs text-muted-foreground">{category.count}</div>
             </motion.button>
           </div>
         </motion.div>

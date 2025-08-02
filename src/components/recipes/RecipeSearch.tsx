@@ -204,7 +204,7 @@ const RecipeSearch: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="card-premium">
+      <div className="card">
         <div className="space-y-4">
           <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
             <div className="flex-1 relative">
@@ -214,7 +214,7 @@ const RecipeSearch: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for healthy recipes..."
-                className="input-mobile lg:input pl-10"
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 bg-background text-foreground"
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>

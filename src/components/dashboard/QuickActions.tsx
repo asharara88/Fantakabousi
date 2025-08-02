@@ -143,7 +143,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
                 toggleActionExpansion(action.id);
               }
             }}
-            className={`card text-center relative cursor-pointer transition-all duration-300 ${
+                ? 'border-primary bg-primary/10'
               expandedAction === action.id ? 'lg:col-span-2' : 'min-h-[120px]'
             } flex flex-col items-center justify-center gap-3`}
           >

@@ -345,7 +345,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 </div>
                 <div className="flex-1">
                   <div className="text-lg lg:text-xl font-bold text-foreground font-inter">{metric.value}</div>
-                  <div className="text-sm text-muted-foreground font-medium">{metric.label}</div>
+                  <div className="text-sm text-muted-foreground">{metric.label}</div>
                 </div>
                 <div className={`transform transition-transform duration-200 ${
                   expandedMetric === metric.id ? 'rotate-180' : ''

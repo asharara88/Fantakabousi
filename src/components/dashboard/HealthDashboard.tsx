@@ -343,17 +343,17 @@ const HealthDashboard: React.FC = () => {
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+      <div className="p-4 lg:p-6 border-b border-border bg-card">
         <div className="space-y-2">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center">
               <HeartIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-heading-2xl lg:text-heading-3xl text-foreground">Health Analytics</h1>
+              <h1 className="text-xl lg:text-2xl font-bold text-foreground">Smart Coach</h1>
               <p className="text-body text-muted-foreground">Deep dive into your health data and trends</p>
             </div>
-          </div>
+                <span className="text-sm text-muted-foreground">Ready to help</span>
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">

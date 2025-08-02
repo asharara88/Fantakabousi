@@ -214,7 +214,7 @@ const TodaysGoals: React.FC = () => {
             whileTap={{ scale: 0.99 }}
             className={`card transition-all duration-200 cursor-pointer touch-target ${
               goal.completed 
-                ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800' 
+                ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
                 : ''
             }`}
             onClick={() => toggleGoal(goal.id)}
