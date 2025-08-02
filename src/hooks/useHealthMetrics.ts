@@ -35,7 +35,7 @@ export const useHealthMetrics = (metricType?: string) => {
       setHasData(data.length > 0);
       
       // If no data exists, generate comprehensive demo data
-      if (data.length === 0 && profile) {
+      if (data.length === 0 && profile && !profile.isMock) {
         console.log('No health data found, generating comprehensive demo data...');
         await generateComprehensiveHealthData(user!.id);
         // Refetch after generating data

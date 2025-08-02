@@ -40,7 +40,8 @@ export const useProfile = () => {
           mobile: null,
           onboarding_completed_at: new Date().toISOString(),
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          isMock: true
         };
         setProfile(mockProfile);
         setLoading(false);
@@ -72,7 +73,8 @@ export const useProfile = () => {
           mobile: null,
           onboarding_completed_at: new Date().toISOString(),
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          isMock: true
         };
         setProfile(mockProfile);
       } else {
