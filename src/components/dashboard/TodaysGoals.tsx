@@ -26,43 +26,43 @@ const TodaysGoals: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([
     {
       id: '1',
-      title: 'Morning Workout',
-      description: '30min strength training',
-      completed: true,
+      title: 'Hydrate with Electrolytes',
+      description: 'LMNT or HUMANTRA electrolyte drink',
+      completed: false,
       priority: 'high',
-      category: 'Fitness'
+      category: 'Hydration'
     },
     {
       id: '2',
-      title: 'Breakfast Logging',
-      description: 'Track morning meal',
-      completed: false,
-      priority: 'medium',
-      category: 'Nutrition'
-    },
-    {
-      id: '3',
-      title: 'Evening Supplements',
-      description: 'Magnesium + sleep stack',
+      title: 'Morning Supplements',
+      description: 'Take your morning supplement stack',
       completed: false,
       priority: 'high',
       category: 'Supplements'
     },
     {
+      id: '3',
+      title: 'Get Sunlight Exposure',
+      description: '10-15 mins outside (no sunglasses, avoid direct eye contact)',
+      completed: false,
+      priority: 'high',
+      category: 'Circadian'
+    },
+    {
       id: '4',
+      title: 'Evening Supplements',
+      description: 'Magnesium + sleep stack',
+      completed: false,
+      priority: 'medium',
+      category: 'Supplements'
+    },
+    {
+      id: '5',
       title: 'Cognitive Training',
       description: '15min brain exercises',
       completed: false,
       priority: 'low',
       category: 'Cognition'
-    },
-    {
-      id: '5',
-      title: 'Afternoon Snack',
-      description: 'Protein-rich snack',
-      completed: false,
-      priority: 'medium',
-      category: 'Nutrition'
     },
     {
       id: '6',
@@ -120,8 +120,10 @@ const TodaysGoals: React.FC = () => {
     // Reward toast with category-specific messages
     const rewardMessages = {
       'Fitness': ['💪 Beast mode activated!', '🔥 Crushing those gains!', '⚡ Energy levels rising!'],
+      'Hydration': ['💧 Hydration optimized!', '⚡ Electrolytes balanced!', '🌊 Cellular hydration complete!'],
       'Nutrition': ['🥗 Fueling excellence!', '🧠 Brain food consumed!', '💚 Nourishing your body!'],
       'Supplements': ['💊 Stack optimized!', '🧬 Cellular support active!', '⚗️ Biomarkers improving!'],
+      'Circadian': ['☀️ Circadian rhythm activated!', '🌅 Light therapy complete!', '⏰ Biological clock synced!'],
       'Cognition': ['🧠 Neural pathways strengthened!', '🎯 Focus enhanced!', '🚀 Mental clarity boosted!'],
       'Recovery': ['😴 Recovery mode engaged!', '🧘 Stress melting away!', '💤 Sleep quality improving!']
     };
