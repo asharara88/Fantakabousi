@@ -20,7 +20,6 @@ import {
   PlusIcon,
   ArrowRightIcon,
   LightBulbIcon,
-  CoffeeIcon,
   EyeIcon,
   WalkIcon,
   DropletIcon,
@@ -135,7 +134,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
         time: '13:00',
         completed: currentHour >= 13,
         category: 'nutrition',
-        icon: CoffeeIcon,
+        icon: BeakerIcon,
         color: 'from-amber-500 to-orange-600',
         priority: 'high',
         points: 30
