@@ -329,7 +329,6 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
             </div>
             
             <motion.button
-              selectedCategory === category.id ? 'text-primary' : 'text-muted-foreground'
               whileTap={{ scale: 0.98 }}
               className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-200"
             >
