@@ -184,11 +184,20 @@ export function MobileNavigation({
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center space-x-3">
-                  <img 
-                    src={logoUrl}
-                    alt="Biowell"
-                    className="h-10 w-auto"
-                  />
+                  <button
+                    onClick={() => {
+                      window.location.href = '/';
+                      onMenuToggle();
+                    }}
+                    className="hover:opacity-80 transition-opacity cursor-pointer"
+                    title="Back to Home"
+                  >
+                    <img 
+                      src={logoUrl}
+                      alt="Biowell"
+                      className="h-10 w-auto"
+                    />
+                  </button>
                   <span className="text-heading-md text-foreground">Menu</span>
                 </div>
                 <button

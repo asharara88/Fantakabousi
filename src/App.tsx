@@ -38,7 +38,7 @@ const AppContent: React.FC = () => {
   }
 
   // Show landing page for unauthenticated users
-  if (!user) {
+  if (!user || showLanding) {
     return <LandingPage />;
   }
 
