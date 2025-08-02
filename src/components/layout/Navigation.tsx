@@ -157,6 +157,18 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             </div>
             <div className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></div>
           </div>
+
+          {/* Quick Theme Toggle */}
+          <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-light rounded-full"></div>
+                <span className="text-sm font-medium text-foreground">Theme</span>
+              </div>
+              <ThemeToggle />
+            </div>
+          </div>
+
           {/* Navigation Items */}
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-2">
@@ -198,17 +210,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
           {/* Bottom Section */}
           <div className="space-y-1 pt-6 border-t border-border">
-            {/* Quick Theme Toggle */}
-            <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-light rounded-full"></div>
-                  <span className="text-sm font-medium text-foreground">Theme</span>
-                </div>
-                <ThemeToggle />
-              </div>
-            </div>
-            
             <button 
               onClick={() => setShowNotifications(true)}
               className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200"

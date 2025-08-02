@@ -27,7 +27,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
   const [autoSyncTime, setAutoSyncTime] = useState(() => {
     const saved = localStorage.getItem('biowell-auto-sync-time');
-    return saved === 'true';
+    return saved !== null ? saved === 'true' : true; // Default to true for auto sync
   });
 
   const [actualTheme, setActualTheme] = useState<'light' | 'dark'>('light');
