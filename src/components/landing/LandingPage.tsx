@@ -171,7 +171,7 @@ const LandingPage: React.FC = () => {
                   onClick={() => setShowAuthForms(true)}
                   className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                 >
-                  <span>Start Your Journey</span>
+                  <span>Get Started</span>
                   <ArrowRightIcon className="w-5 h-5" />
                 </motion.button>
                 
@@ -424,7 +424,7 @@ const LandingPage: React.FC = () => {
                 onClick={() => setShowAuthForms(true)}
                 className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
               >
-                <span>Start Free Trial</span>
+                <span>Get Started</span>
                 <ArrowRightIcon className="w-5 h-5" />
               </motion.button>
               
