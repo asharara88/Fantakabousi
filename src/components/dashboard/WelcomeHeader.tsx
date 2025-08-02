@@ -3,40 +3,196 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
-import QuickActions from './QuickActions';
-import TodaysGoals from './TodaysGoals';
-import ReadinessScore from './ReadinessScore';
-import ActivityFeed from './ActivityFeed';
-import HealthInsights from './HealthInsights';
+import { useToast } from '../../hooks/useToast';
 import { 
   SparklesIcon,
   SunIcon,
   MoonIcon,
-  CloudIcon,
-  ChartBarIcon,
+  ClockIcon,
+  CheckCircleIcon,
   BoltIcon,
-  PlayIcon,
   HeartIcon,
-  CubeIcon,
   BeakerIcon,
-  CameraIcon
+  CubeIcon,
+  FireIcon,
+  CameraIcon,
+  PlayIcon,
+  PlusIcon,
+  ArrowRightIcon,
+  LightBulbIcon,
+  CoffeeIcon,
+  EyeIcon,
+  WalkIcon,
+  DropletIcon,
+  BriefcaseIcon,
+  HomeIcon,
+  CalendarDaysIcon,
+  TrophyIcon
 } from '@heroicons/react/24/outline';
+import { CheckCircleIcon as CheckCircleSolidIcon } from '@heroicons/react/24/solid';
 
 interface WelcomeHeaderProps {
   onQuickAction?: (action: string) => void;
+}
+
+interface DailyWin {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  completed: boolean;
+  category: 'circadian' | 'movement' | 'hydration' | 'work' | 'nutrition' | 'supplements' | 'exercise';
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  priority: 'high' | 'medium' | 'low';
+  points: number;
 }
 
 const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const { actualTheme } = useTheme();
+  const { toast } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bedtimeCountdown, setBedtimeCountdown] = useState('');
-  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
+  const [dailyWins, setDailyWins] = useState<DailyWin[]>([]);
+  const [totalPoints, setTotalPoints] = useState(0);
   
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
+  
+  // Initialize daily wins based on current time
+  useEffect(() => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    const wins: DailyWin[] = [
+      {
+        id: 'light-exposure',
+        title: 'Morning Light Exposure',
+        description: 'Get 10-15 mins sunlight before caffeine',
+        time: '07:00',
+        completed: currentHour >= 7,
+        category: 'circadian',
+        icon: SunIcon,
+        color: 'from-yellow-500 to-orange-600',
+        priority: 'high',
+        points: 25
+      },
+      {
+        id: 'morning-walk',
+        title: 'Morning Movement',
+        description: '10-minute walk to activate metabolism',
+        time: '07:30',
+        completed: currentHour >= 8,
+        category: 'movement',
+        icon: BoltIcon,
+        color: 'from-green-500 to-emerald-600',
+        priority: 'high',
+        points: 20
+      },
+      {
+        id: 'hydration',
+        title: 'Hydrate with Electrolytes',
+        description: 'LMNT or HUMANTRA electrolyte drink',
+        time: '08:00',
+        completed: currentHour >= 8,
+        category: 'hydration',
+        icon: DropletIcon,
+        color: 'from-blue-500 to-cyan-600',
+        priority: 'high',
+        points: 15
+      },
+      {
+        id: 'morning-supplements',
+        title: 'Morning Stack',
+        description: 'Take your morning supplements',
+        time: '08:30',
+        completed: currentHour >= 9,
+        category: 'supplements',
+        icon: CubeIcon,
+        color: 'from-purple-500 to-indigo-600',
+        priority: 'high',
+        points: 20
+      },
+      {
+        id: 'work-start',
+        title: 'Deep Work Block',
+        description: 'Start your most important work',
+        time: '09:00',
+        completed: currentHour >= 9,
+        category: 'work',
+        icon: BriefcaseIcon,
+        color: 'from-indigo-500 to-purple-600',
+        priority: 'medium',
+        points: 15
+      },
+      {
+        id: 'last-coffee',
+        title: 'Last Coffee (1 PM)',
+        description: 'Final caffeine for optimal sleep',
+        time: '13:00',
+        completed: currentHour >= 13,
+        category: 'nutrition',
+        icon: CoffeeIcon,
+        color: 'from-amber-500 to-orange-600',
+        priority: 'high',
+        points: 30
+      },
+      {
+        id: 'lunch',
+        title: 'Protein-Rich Lunch',
+        description: 'High protein meal for sustained energy',
+        time: '12:30',
+        completed: currentHour >= 13,
+        category: 'nutrition',
+        icon: BeakerIcon,
+        color: 'from-green-500 to-teal-600',
+        priority: 'medium',
+        points: 20
+      },
+      {
+        id: 'workout',
+        title: 'Training Session',
+        description: 'Strength or cardio workout',
+        time: '18:00',
+        completed: currentHour >= 18,
+        category: 'exercise',
+        icon: FireIcon,
+        color: 'from-red-500 to-pink-600',
+        priority: 'medium',
+        points: 25
+      },
+      {
+        id: 'dinner',
+        title: 'Light Dinner',
+        description: 'Balanced meal 3 hours before bed',
+        time: '19:30',
+        completed: currentHour >= 20,
+        category: 'nutrition',
+        icon: HeartIcon,
+        color: 'from-rose-500 to-pink-600',
+        priority: 'medium',
+        points: 15
+      },
+      {
+        id: 'evening-supplements',
+        title: 'Evening Stack',
+        description: 'Magnesium + sleep optimization',
+        time: '21:30',
+        completed: currentHour >= 22,
+        category: 'supplements',
+        icon: MoonIcon,
+        color: 'from-indigo-500 to-purple-600',
+        priority: 'high',
+        points: 20
+      }
+    ];
+    
+    setDailyWins(wins);
+    setTotalPoints(wins.filter(w => w.completed).reduce((sum, w) => sum + w.points, 0));
+  }, []);
   
   // Live time and bedtime countdown
   useEffect(() => {
@@ -55,214 +211,139 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       const diff = bedtime.getTime() - now.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       
-      setBedtimeCountdown(`${hours}h ${minutes}m ${seconds}s`);
+      setBedtimeCountdown(`${hours}h ${minutes}m`);
     };
     
     updateTime();
-    const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(updateTime, 60000); // Update every minute
     
     return () => clearInterval(interval);
   }, []);
   
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
+  const completedWins = dailyWins.filter(w => w.completed).length;
+  const progressPercentage = (completedWins / dailyWins.length) * 100;
 
-  const handleQuickAction = (action: string) => {
-    switch (action) {
-      case 'coach':
-        onQuickAction?.('coach');
-        break;
-      case 'health':
-        onQuickAction?.('health');
-        break;
-      case 'shop':
-        onQuickAction?.('shop');
-        break;
-      case 'profile':
-        onQuickAction?.('profile');
-        break;
-      default:
-        onQuickAction?.(action);
-    }
+  const toggleWin = (winId: string) => {
+    setDailyWins(prev => prev.map(win => {
+      if (win.id === winId) {
+        const newCompleted = !win.completed;
+        
+        if (newCompleted) {
+          // Celebration for completing a win
+          toast({
+            title: `🎉 ${win.title} Complete!`,
+            description: `+${win.points} points earned. Great job!`,
+          });
+          setTotalPoints(prev => prev + win.points);
+        } else {
+          setTotalPoints(prev => prev - win.points);
+        }
+        
+        return { ...win, completed: newCompleted };
+      }
+      return win;
+    }));
   };
 
-  const toggleMetricExpansion = (metricId: string) => {
-    setExpandedMetric(expandedMetric === metricId ? null : metricId);
+  const getTimeBasedGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    if (hour < 21) return 'Good evening';
+    return 'Good night';
   };
 
-  const getExpandedMetricData = (metricId: string) => {
-    switch (metricId) {
-      case 'heart_rate':
-        return {
-          additional: [
-            { label: 'Resting HR', value: '68 bpm' },
-            { label: 'Max HR Today', value: '142 bpm' },
-            { label: 'HR Zones', value: '4 zones' },
-            { label: 'Recovery Time', value: '2h 15m' }
-          ]
-        };
-      case 'glucose':
-        return {
-          additional: [
-            { label: 'Time in Range', value: '78%' },
-            { label: 'Avg Glucose', value: '142 mg/dL' },
-            { label: 'Peak Today', value: '186 mg/dL' },
-            { label: 'Variability', value: 'Moderate' }
-          ]
-        };
-      case 'steps':
-        return {
-          additional: [
-            { label: 'Distance', value: '6.2 km' },
-            { label: 'Flights Climbed', value: '12 flights' },
-            { label: 'Avg Pace', value: '8:45 /km' },
-            { label: 'Active Time', value: '2h 34m' }
-          ]
-        };
-      case 'supplements':
-        return {
-          additional: [
-            { label: 'Morning Stack', value: '4 items' },
-            { label: 'Evening Stack', value: '2 items' },
-            { label: 'Monthly Cost', value: 'AED 267' },
-            { label: 'Next Delivery', value: 'Feb 15' }
-          ]
-        };
-      default:
-        return { additional: [] };
+  const getNextWin = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+    const currentTimeInMinutes = currentHour * 60 + currentMinutes;
+    
+    return dailyWins.find(win => {
+      const [winHour, winMinute] = win.time.split(':').map(Number);
+      const winTimeInMinutes = winHour * 60 + winMinute;
+      return !win.completed && winTimeInMinutes > currentTimeInMinutes;
+    });
+  };
+
+  const nextWin = getNextWin();
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'circadian': return SunIcon;
+      case 'movement': return BoltIcon;
+      case 'hydration': return DropletIcon;
+      case 'work': return BriefcaseIcon;
+      case 'nutrition': return BeakerIcon;
+      case 'supplements': return CubeIcon;
+      case 'exercise': return FireIcon;
+      default: return CheckCircleIcon;
     }
   };
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      {/* Welcome Section */}
+    <div className="space-y-6">
+      {/* Hero Section with Time & Greeting */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-2xl">
-        {/* Floating orbs for 2026 aesthetic */}
+        {/* Floating orbs */}
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-2xl"></div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-          {/* Left Side - Welcome Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-10 space-y-6 text-center lg:text-left p-8"
-          >
-            {/* 2026 Pro Header */}
-            <div className="space-y-4">
-              {/* Main Greeting */}
-              <motion.h1 
-                className="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent font-inter tracking-tight"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              >
-                Hi {firstName}
-              </motion.h1>
-              
-              {/* Optimize Today */}
-              <motion.div
-                className="text-xl lg:text-2xl font-semibold text-foreground/80 font-inter"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                Optimize today
-              </motion.div>
-              
-              {/* Date & Time Display */}
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <div className="text-lg font-medium text-foreground/70 font-inter">
-                  {currentTime.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </div>
-                <div className="text-2xl font-bold text-foreground font-mono tracking-wider">
-                  {currentTime.toLocaleTimeString('en-US', { 
-                    hour12: false,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                  })}
-                </div>
-              </motion.div>
-              
-              {/* Bedtime Countdown */}
-              <motion.div
-                className="inline-flex items-center space-x-3 px-6 py-3 bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8 }}
-              >
-                <MoonIcon className="w-5 h-5 text-[#48C6FF]" />
-                <div className="text-center">
-                  <div className="text-sm font-medium text-foreground/60 font-inter">Bedtime in</div>
-                  <div className="text-lg font-bold text-[#48C6FF] font-mono tracking-wider">
-                    {bedtimeCountdown}
+        <div className="relative z-10 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            {/* Left - Greeting & Time */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="space-y-4">
+                <motion.h1 
+                  className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent font-inter tracking-tight"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                >
+                  {getTimeBasedGreeting()}, {firstName}
+                </motion.h1>
+                
+                <motion.div
+                  className="space-y-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <div className="text-lg font-medium text-foreground/70 font-inter">
+                    {currentTime.toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
                   </div>
-                </div>
-              </motion.div>
-            </div>
-            
-            {/* CTA Buttons */}
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <button 
-                onClick={() => onQuickAction?.('coach')}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
-              >
-                <SparklesIcon className="w-5 h-5" />
-                <span>Smart Coach</span>
-              </button>
-              
-              <button 
-                onClick={() => onQuickAction?.('plan')}
-                className="px-6 py-3 bg-card border border-border text-card-foreground font-semibold rounded-xl hover:bg-muted hover:border-[#48C6FF]/30 transition-all duration-200 flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
-              >
-                <ChartBarIcon className="w-5 h-5" />
-                <span>Optimize Today</span>
-              </button>
-            </motion.div>
-            
-            {/* Status Indicators */}
-            <motion.div 
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <div className="flex items-center space-x-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Wearable connected</span>
+                  <div className="text-3xl font-bold text-foreground font-mono tracking-wider">
+                    {currentTime.toLocaleTimeString('en-US', { 
+                      hour12: false,
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
-          </motion.div>
 
-          {/* Right Side - Health Score */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="flex justify-center"
-          >
-            <div className="relative">
-              <div className="w-48 h-48 lg:w-56 lg:h-56 relative">
+            {/* Center - Progress Ring */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="flex justify-center"
+            >
+              <div className="relative w-48 h-48">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  {/* Background circle */}
                   <circle
                     cx="50"
                     cy="50"
@@ -271,8 +352,6 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                     strokeWidth="3"
                     fill="none"
                   />
-                  
-                  {/* Progress circle */}
                   <motion.circle
                     cx="50"
                     cy="50"
@@ -282,10 +361,9 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                     fill="none"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: "0 283" }}
-                    animate={{ strokeDasharray: "203 283" }}
+                    animate={{ strokeDasharray: `${(progressPercentage / 100) * 283} 283` }}
                     transition={{ duration: 2, ease: "easeOut" }}
                   />
-                  
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#48C6FF" />
@@ -295,118 +373,282 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   </defs>
                 </svg>
                 
-                {/* Score display */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <motion.div
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-heading-3xl lg:text-5xl font-bold text-gradient-brand"
+                      className="text-4xl font-bold text-gradient-brand"
                     >
-                      72
+                      {completedWins}/{dailyWins.length}
                     </motion.div>
-                    <div className="status-indicator status-warning mt-2">
-                      Good Progress
+                    <div className="text-sm font-medium text-foreground/60 mt-1">
+                      Daily Wins
                     </div>
-                    <div className="text-caption mt-1">
-                      Wellness Score
+                    <div className="text-lg font-bold text-[#3BE6C5] mt-2">
+                      {totalPoints} pts
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Right - Bedtime Countdown & Next Win */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="space-y-6"
+            >
+              {/* Bedtime Countdown */}
+              <div className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6 text-center">
+                <MoonIcon className="w-8 h-8 text-[#48C6FF] mx-auto mb-3" />
+                <div className="text-sm font-medium text-foreground/60 mb-2">Bedtime in</div>
+                <div className="text-2xl font-bold text-[#48C6FF] font-mono">
+                  {bedtimeCountdown}
+                </div>
+              </div>
+
+              {/* Next Win */}
+              {nextWin && (
+                <div className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className={`w-8 h-8 bg-gradient-to-br ${nextWin.color} rounded-lg flex items-center justify-center`}>
+                      <nextWin.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="text-sm font-medium text-foreground/60">Next Win</div>
+                  </div>
+                  <div className="text-base font-semibold text-foreground mb-1">{nextWin.title}</div>
+                  <div className="text-sm text-foreground/70 mb-3">{nextWin.description}</div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-[#48C6FF]">{nextWin.time}</span>
+                    <span className="text-sm font-bold text-[#3BE6C5]">+{nextWin.points} pts</span>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Quick Metrics Grid */}
-      <div className="mobile-grid-2 lg:grid-cols-4">
+      {/* Daily Wins Grid */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <TrophyIcon className="w-6 h-6 text-[#48C6FF]" />
+            <h2 className="text-2xl font-bold text-foreground">Today's Wins</h2>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold text-[#3BE6C5]">{totalPoints} points</div>
+            <div className="text-sm text-muted-foreground">{Math.round(progressPercentage)}% complete</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {dailyWins.map((win, index) => (
+            <motion.div
+              key={win.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              onClick={() => toggleWin(win.id)}
+              className={`card cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+                win.completed 
+                  ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
+                  : 'hover:border-[#48C6FF]/30'
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${win.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                    <win.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {win.completed ? (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 500 }}
+                      >
+                        <CheckCircleSolidIcon className="w-6 h-6 text-green-500" />
+                      </motion.div>
+                    ) : (
+                      <div className="w-6 h-6 border-2 border-border rounded-full hover:border-[#48C6FF] transition-colors" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className={`font-bold text-foreground ${win.completed ? 'line-through opacity-75' : ''}`}>
+                    {win.title}
+                  </h3>
+                  <p className={`text-sm ${win.completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                    {win.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <ClockIcon className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-foreground">{win.time}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-bold text-[#3BE6C5]">+{win.points}</span>
+                    <span className={`px-2 py-1 text-xs font-bold rounded-full ${
+                      win.priority === 'high' ? 'bg-red-100 text-red-700 border border-red-200' :
+                      win.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
+                      'bg-green-100 text-green-700 border border-green-200'
+                    }`}>
+                      {win.priority}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Action Shortcuts */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { id: 'heart_rate', icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-rose-600' },
-          { id: 'glucose', icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
-          { id: 'steps', icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
-          { id: 'supplements', label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'from-purple-500 to-indigo-600' },
-        ].map((metric, index) => (
-          <motion.div
-            key={metric.label}
+          { 
+            id: 'coach', 
+            title: 'Smart Coach', 
+            icon: SparklesIcon, 
+            color: 'from-purple-500 to-indigo-600',
+            description: 'Get personalized advice'
+          },
+          { 
+            id: 'food', 
+            title: 'Log Food', 
+            icon: CameraIcon, 
+            color: 'from-green-500 to-emerald-600',
+            description: 'Track your nutrition'
+          },
+          { 
+            id: 'health', 
+            title: 'View Analytics', 
+            icon: HeartIcon, 
+            color: 'from-red-500 to-pink-600',
+            description: 'Check your metrics'
+          },
+          { 
+            id: 'shop', 
+            title: 'Supplements', 
+            icon: CubeIcon, 
+            color: 'from-orange-500 to-red-600',
+            description: 'Optimize your stack'
+          }
+        ].map((action, index) => (
+          <motion.button
+            key={action.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 + index * 0.1 }}
-            className={`card cursor-pointer transition-all duration-300 ${
-              expandedMetric === metric.id ? 'lg:col-span-2' : ''
-            }`}
-            onClick={() => toggleMetricExpansion(metric.id)}
+            onClick={() => onQuickAction?.(action.id)}
+            className="card hover:shadow-xl hover:-translate-y-2 transition-all duration-300 text-center"
           >
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                  <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-lg lg:text-xl font-bold text-foreground font-inter">{metric.value}</div>
-                  <div className="text-sm text-muted-foreground">{metric.label}</div>
-                </div>
-                <div className={`transform transition-transform duration-200 ${
-                  expandedMetric === metric.id ? 'rotate-180' : ''
-                }`}>
-                  <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+            <div className="space-y-3">
+              <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-xl flex items-center justify-center mx-auto shadow-lg`}>
+                <action.icon className="w-6 h-6 text-white" />
               </div>
-              
-              <AnimatePresence>
-                {expandedMetric === metric.id && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="border-t border-border pt-4"
-                  >
-                    <div className="grid grid-cols-2 gap-3">
-                      {getExpandedMetricData(metric.id).additional.map((item, idx) => (
-                        <div key={idx} className="text-center p-3 bg-muted/30 rounded-lg">
-                          <div className="text-sm font-bold text-foreground">{item.value}</div>
-                          <div className="text-xs text-muted-foreground">{item.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-3 text-center">
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onQuickAction?.('health');
-                        }}
-                        className="text-sm text-blue-light hover:text-blue-medium font-medium"
-                      >
-                        View Detailed Analytics →
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div>
+                <h3 className="font-bold text-foreground">{action.title}</h3>
+                <p className="text-sm text-muted-foreground">{action.description}</p>
+              </div>
             </div>
-          </motion.div>
+          </motion.button>
         ))}
       </div>
 
-      {/* Dashboard Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Left Column */}
-        <div className="lg:col-span-2 space-y-6 lg:space-y-8">
-          <QuickActions onActionClick={handleQuickAction} />
-          <TodaysGoals />
-          <HealthInsights onQuickAction={handleQuickAction} />
-        </div>
-        
-        {/* Right Column */}
-        <div className="space-y-6 lg:space-y-8">
-          <ReadinessScore score={72} />
-          <ActivityFeed />
-        </div>
-      </div>
+      {/* Achievement Celebration */}
+      {completedWins === dailyWins.length && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="card-premium bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800 text-center relative overflow-hidden"
+        >
+          {/* Celebration particles */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+                style={{
+                  left: `${15 + i * 12}%`,
+                  top: `${25 + (i % 2) * 50}%`,
+                }}
+                animate={{
+                  y: [-10, 10, -10],
+                  opacity: [0.3, 1, 0.3],
+                  scale: [0.8, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: 2 + i * 0.3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+          
+          <div className="relative z-10 space-y-4">
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.6, repeat: 3 }}
+            >
+              <TrophyIcon className="w-16 h-16 text-yellow-500 mx-auto" />
+            </motion.div>
+            <div>
+              <h3 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
+                🎉 Perfect Day Achieved!
+              </h3>
+              <p className="text-green-600 dark:text-green-500 mb-4">
+                All daily wins completed! You've earned {totalPoints} points and built incredible momentum.
+              </p>
+              <div className="flex items-center justify-center space-x-4">
+                <div className="px-4 py-2 bg-yellow-100 dark:bg-yellow-950/20 rounded-full">
+                  <span className="text-sm font-bold text-yellow-700">🏆 Daily Champion</span>
+                </div>
+                <div className="px-4 py-2 bg-blue-100 dark:bg-blue-950/20 rounded-full">
+                  <span className="text-sm font-bold text-blue-700">⚡ {totalPoints} XP Earned</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Smart Notifications */}
+      {nextWin && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
+              <LightBulbIcon className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-blue-700 dark:text-blue-300">
+                ⏰ Upcoming: {nextWin.title}
+              </h3>
+              <p className="text-sm text-blue-600 dark:text-blue-400">
+                {nextWin.description} • {nextWin.time} • +{nextWin.points} points
+              </p>
+            </div>
+            <button
+              onClick={() => toggleWin(nextWin.id)}
+              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Complete Now
+            </button>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 };
