@@ -118,11 +118,17 @@ export function MobileNavigation({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <img 
-              src={logoUrl}
-              alt="Biowell"
-              className="h-10 w-auto"
-            />
+            <button
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+              title="Back to Home"
+            >
+              <img 
+                src={logoUrl}
+                alt="Biowell"
+                className="h-10 w-auto"
+              />
+            </button>
           </motion.div>
           
           <div className="flex items-center space-x-2">

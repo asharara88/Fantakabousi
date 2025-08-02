@@ -135,13 +135,17 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       <nav className="hidden lg:flex fixed inset-y-0 z-50 w-72 flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 pb-4 shadow-xl border-r border-border">
           {/* Logo */}
-          <div className="flex h-20 shrink-0 items-center gap-4 pt-6">
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="flex h-20 shrink-0 items-center gap-4 pt-6 hover:opacity-80 transition-opacity cursor-pointer"
+            title="Back to Home"
+          >
             <img 
               src={logoUrl}
               alt="Biowell"
               className="h-12 w-auto"
             />
-          </div>
+          </button>
 
           {/* User Profile Section */}
           <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-2xl border border-[#48C6FF]/20 shadow-sm">
