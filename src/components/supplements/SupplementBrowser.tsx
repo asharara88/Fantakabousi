@@ -138,12 +138,15 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
               <div className="space-y-4">
                 {/* Image */}
                 <div className="relative">
-                  <div className="w-full h-48 bg-gray-100 rounded-xl overflow-hidden">
-                    <img
-                      src={supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
-                      alt={supplement.name}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="w-full h-48 bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-xl flex items-center justify-center p-4">
+                    <div className="text-center space-y-2">
+                      <div className="text-lg font-bold text-gray-900 leading-tight line-clamp-3">
+                        {supplement.name}
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                        {supplement.category || 'Supplement'}
+                      </div>
+                    </div>
                   </div>
                   
                   <button 
