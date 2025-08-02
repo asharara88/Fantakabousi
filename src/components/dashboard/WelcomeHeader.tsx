@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -387,32 +387,6 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Dashboard Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Left Column */}
-        <div className="lg:col-span-2 space-y-6 lg:space-y-8">
-          <QuickActions onActionClick={handleQuickAction} />
-          <TodaysGoals />
-          <HealthInsights onQuickAction={handleQuickAction} />
-        </div>
-        
-        {/* Right Column */}
-        <div className="space-y-6 lg:space-y-8">
-          <ReadinessScore score={72} />
-          <ActivityFeed />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default WelcomeHeader;
-              </div>
             </div>
           </motion.div>
         ))}
