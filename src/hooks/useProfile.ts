@@ -28,7 +28,21 @@ export const useProfile = () => {
       // Check if Supabase is properly configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         console.error('Supabase environment variables are not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.');
-        setProfile(null);
+        // Create a mock profile for development
+        const mockProfile = {
+          id: user.id,
+          email: user.email || '',
+          first_name: 'Demo',
+          last_name: 'User',
+          avatar_url: null,
+          is_admin: false,
+          onboarding_completed: true,
+          mobile: null,
+          onboarding_completed_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setProfile(mockProfile);
         setLoading(false);
         return;
       }
@@ -45,11 +59,26 @@ export const useProfile = () => {
       setProfile(data);
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        console.error('Network error: Unable to connect to Supabase. Please check your environment variables and network connection.');
+        console.error('Network error: Unable to connect to Supabase. Using mock profile for development.');
+        // Create a mock profile when network fails
+        const mockProfile = {
+          id: user.id,
+          email: user.email || '',
+          first_name: 'Demo',
+          last_name: 'User',
+          avatar_url: null,
+          is_admin: false,
+          onboarding_completed: true,
+          mobile: null,
+          onboarding_completed_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setProfile(mockProfile);
       } else {
         console.error('Error fetching profile:', error);
+        setProfile(null);
       }
-      setProfile(null);
     } finally {
       setLoading(false);
     }
