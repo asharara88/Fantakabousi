@@ -128,12 +128,12 @@ const SupplementStack: React.FC = () => {
 
                 <div className="space-y-4">
                   <div className="relative">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center mx-auto shadow-lg">
-                      <img
-                        src={supplement.image_url || 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg'}
-                        alt={supplement.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-white/90 to-white/70 border-2 border-white/30 flex items-center justify-center mx-auto shadow-lg">
+                      <div className="text-center p-1">
+                        <div className="text-xs font-bold text-gray-800 leading-tight line-clamp-2">
+                          {supplement.name}
+                        </div>
+                      </div>
                     </div>
                     {supplement.is_featured && (
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">

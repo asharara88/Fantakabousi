@@ -230,11 +230,13 @@ const SupplementDetail: React.FC<SupplementDetailProps> = ({
           <div className="p-6 border-b border-border">
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-4">
-                <img
-                  src={supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
-                  alt={supplement.name}
-                  className="w-20 h-20 rounded-xl object-cover"
-                />
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl flex items-center justify-center p-2">
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-blue-700 leading-tight line-clamp-2">
+                      {supplement.name}
+                    </div>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <h1 className="text-heading-xl text-foreground">{supplement.name}</h1>
                   <div className="flex items-center space-x-4">

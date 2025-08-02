@@ -135,11 +135,11 @@ const SupplementStack: React.FC<SupplementStackProps> = ({ onQuickAction }) => {
                             className="bg-gray-50 rounded-xl p-4 border border-gray-200"
                           >
                             <div className="flex items-center space-x-4">
-                              <img
-                                src={item.supplement?.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
-                                alt={item.supplement?.name}
-                                className="w-12 h-12 rounded-lg object-cover"
-                              />
+                              <div className="w-12 h-12 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg flex items-center justify-center">
+                                <div className="text-xs font-bold text-green-700 text-center leading-tight">
+                                  {item.supplement?.name?.split(' ').slice(0, 2).join(' ')}
+                                </div>
+                              </div>
                               
                               <div className="flex-1 space-y-1">
                                 <h4 className="font-semibold text-gray-900">

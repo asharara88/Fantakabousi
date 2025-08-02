@@ -91,11 +91,11 @@ const SupplementCart: React.FC<SupplementCartProps> = ({
                       className="card-premium p-4"
                     >
                       <div className="flex items-center space-x-4">
-                        <img
-                          src={item.supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'}
-                          alt={item.supplement.name}
-                          className="w-16 h-16 rounded-lg object-cover"
-                        />
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg flex items-center justify-center">
+                          <div className="text-xs font-bold text-blue-700 text-center leading-tight">
+                            {item.supplement?.name?.split(' ').slice(0, 2).join(' ')}
+                          </div>
+                        </div>
                         
                         <div className="flex-1 space-y-2">
                           <h3 className="text-body font-semibold text-foreground line-clamp-2">
