@@ -143,7 +143,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick }) => {
                 toggleActionExpansion(action.id);
               }
             }}
+            className={`relative p-4 lg:p-6 rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${expandedAction === action.id
                 ? 'border-primary bg-primary/10'
+                : 'border-border bg-card hover:border-primary/50'} ${
               expandedAction === action.id ? 'lg:col-span-2' : 'min-h-[120px]'
             } flex flex-col items-center justify-center gap-3`}
           >

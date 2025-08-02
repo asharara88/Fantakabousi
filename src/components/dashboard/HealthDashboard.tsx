@@ -353,6 +353,7 @@ const HealthDashboard: React.FC = () => {
               <h1 className="text-xl lg:text-2xl font-bold text-foreground">Smart Coach</h1>
               <p className="text-body text-muted-foreground">Deep dive into your health data and trends</p>
             </div>
+          </div>
                 <span className="text-sm text-muted-foreground">Ready to help</span>
         </div>
         
