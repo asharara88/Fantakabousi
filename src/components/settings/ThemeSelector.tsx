@@ -44,7 +44,7 @@ const ThemeSelector: React.FC = () => {
           <div className="space-y-1">
             <h4 className="font-medium text-foreground">Auto Day/Night Mode</h4>
             <p className="text-sm text-muted-foreground">
-              Light theme during day (6 AM - 6 PM), dark theme at night
+              Automatically switches: Light theme during day (6 AM - 6 PM), dark theme at night
             </p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -59,11 +59,39 @@ const ThemeSelector: React.FC = () => {
         </div>
       </div>
       
+      {/* Current Theme Status */}
+      <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-xl border border-blue-200 dark:border-blue-800">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-blue-light rounded-lg flex items-center justify-center">
+            {autoSyncTime ? (
+              <ComputerDesktopIcon className="w-4 h-4 text-white" />
+            ) : theme === 'light' ? (
+              <SunIcon className="w-4 h-4 text-white" />
+            ) : (
+              <MoonIcon className="w-4 h-4 text-white" />
+            )}
+          </div>
+          <div>
+            <h4 className="font-medium text-blue-700 dark:text-blue-300">
+              Current: {autoSyncTime ? 'Auto Mode' : theme === 'light' ? 'Light Theme' : 'Dark Theme'}
+            </h4>
+            <p className="text-sm text-blue-600 dark:text-blue-400">
+              {autoSyncTime ? 'Synced with time of day' : 'Manual selection active'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 gap-3">
         {themes.map((themeOption) => (
           <motion.button
             key={themeOption.value}
-            onClick={() => setTheme(themeOption.value)}
+            onClick={() => {
+              if (themeOption.value !== 'auto') {
+                setAutoSyncTime(false);
+              }
+              setTheme(themeOption.value);
+            }}
             type="button"
             className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
               theme === themeOption.value && !autoSyncTime

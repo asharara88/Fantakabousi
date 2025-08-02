@@ -83,45 +83,48 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
   
   const ThemeToggle = () => (
-    <div className="flex items-center space-x-1 bg-background rounded-lg p-1">
+    <div className="flex items-center space-x-0.5 bg-background rounded-lg p-1 border border-border">
       <button
         onClick={() => {
           setAutoSyncTime(false);
           setTheme('light');
         }}
-        className={`p-1.5 rounded transition-all ${
+        className={`p-2 rounded-md transition-all ${
           theme === 'light' && !autoSyncTime
             ? 'bg-blue-light text-white shadow-sm'
             : 'text-muted-foreground hover:text-foreground'
         }`}
         title="Light theme"
       >
-        <SunIcon className="w-3 h-3" />
+        <SunIcon className="w-4 h-4" />
       </button>
       <button
-        onClick={() => setAutoSyncTime(!autoSyncTime)}
-        className={`p-1.5 rounded transition-all ${
+        onClick={() => {
+          setAutoSyncTime(true);
+          setTheme('auto');
+        }}
+        className={`p-2 rounded-md transition-all ${
           autoSyncTime
             ? 'bg-blue-light text-white shadow-sm'
             : 'text-muted-foreground hover:text-foreground'
         }`}
-        title="Auto day/night"
+        title="Auto theme (follows time)"
       >
-        <ComputerDesktopIcon className="w-3 h-3" />
+        <ComputerDesktopIcon className="w-4 h-4" />
       </button>
       <button
         onClick={() => {
           setAutoSyncTime(false);
           setTheme('dark');
         }}
-        className={`p-1.5 rounded transition-all ${
+        className={`p-2 rounded-md transition-all ${
           theme === 'dark' && !autoSyncTime
             ? 'bg-blue-light text-white shadow-sm'
             : 'text-muted-foreground hover:text-foreground'
         }`}
         title="Dark theme"
       >
-        <MoonIcon className="w-3 h-3" />
+        <MoonIcon className="w-4 h-4" />
       </button>
     </div>
   );
