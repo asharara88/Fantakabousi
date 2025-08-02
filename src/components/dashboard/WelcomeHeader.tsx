@@ -32,6 +32,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const { actualTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bedtimeCountdown, setBedtimeCountdown] = useState('');
+  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
   
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -83,6 +84,53 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
         break;
       default:
         onQuickAction?.(action);
+    }
+  };
+
+  const toggleMetricExpansion = (metricId: string) => {
+    setExpandedMetric(expandedMetric === metricId ? null : metricId);
+  };
+
+  const getExpandedMetricData = (metricId: string) => {
+    switch (metricId) {
+      case 'heart_rate':
+        return {
+          additional: [
+            { label: 'Resting HR', value: '68 bpm' },
+            { label: 'Max HR Today', value: '142 bpm' },
+            { label: 'HR Zones', value: '4 zones' },
+            { label: 'Recovery Time', value: '2h 15m' }
+          ]
+        };
+      case 'glucose':
+        return {
+          additional: [
+            { label: 'Time in Range', value: '78%' },
+            { label: 'Avg Glucose', value: '142 mg/dL' },
+            { label: 'Peak Today', value: '186 mg/dL' },
+            { label: 'Variability', value: 'Moderate' }
+          ]
+        };
+      case 'steps':
+        return {
+          additional: [
+            { label: 'Distance', value: '6.2 km' },
+            { label: 'Flights Climbed', value: '12 flights' },
+            { label: 'Avg Pace', value: '8:45 /km' },
+            { label: 'Active Time', value: '2h 34m' }
+          ]
+        };
+      case 'supplements':
+        return {
+          additional: [
+            { label: 'Morning Stack', value: '4 items' },
+            { label: 'Evening Stack', value: '2 items' },
+            { label: 'Monthly Cost', value: 'AED 267' },
+            { label: 'Next Delivery', value: 'Feb 15' }
+          ]
+        };
+      default:
+        return { additional: [] };
     }
   };
 
@@ -275,25 +323,95 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       {/* Quick Metrics Grid */}
       <div className="mobile-grid-2 lg:grid-cols-4">
         {[
-          { icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-rose-600' },
-          { icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
-          { icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
-          { label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'from-purple-500 to-indigo-600' },
+          { id: 'heart_rate', icon: HeartIcon, label: 'Heart Rate', value: '68 bpm', color: 'from-red-500 to-rose-600' },
+          { id: 'glucose', icon: BeakerIcon, label: 'Glucose', value: '142 mg/dL', color: 'from-green-500 to-emerald-600' },
+          { id: 'steps', icon: BoltIcon, label: 'Steps', value: '8,234', color: 'from-blue-500 to-cyan-600' },
+          { id: 'supplements', label: 'Supplements', value: '6 items', icon: CubeIcon, color: 'from-purple-500 to-indigo-600' },
         ].map((metric, index) => (
           <motion.div
             key={metric.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 + index * 0.1 }}
-            className="card cursor-pointer"
+            className={`card cursor-pointer transition-all duration-300 ${
+              expandedMetric === metric.id ? 'lg:col-span-2' : ''
+            }`}
+            onClick={() => toggleMetricExpansion(metric.id)}
           >
-            <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-lg lg:text-xl font-bold text-foreground font-inter">{metric.value}</div>
+                  <div className="text-sm text-muted-foreground font-medium">{metric.label}</div>
+                </div>
+                <div className={`transform transition-transform duration-200 ${
+                  expandedMetric === metric.id ? 'rotate-180' : ''
+                }`}>
+                  <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
-              <div>
-                <div className="text-lg lg:text-xl font-bold text-foreground font-inter">{metric.value}</div>
-                <div className="text-sm text-muted-foreground font-medium">{metric.label}</div>
+              
+              <AnimatePresence>
+                {expandedMetric === metric.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="border-t border-border pt-4"
+                  >
+                    <div className="grid grid-cols-2 gap-3">
+                      {getExpandedMetricData(metric.id).additional.map((item, idx) => (
+                        <div key={idx} className="text-center p-3 bg-muted/30 rounded-lg">
+                          <div className="text-sm font-bold text-foreground">{item.value}</div>
+                          <div className="text-xs text-muted-foreground">{item.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 text-center">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onQuickAction?.('health');
+                        }}
+                        className="text-sm text-blue-light hover:text-blue-medium font-medium"
+                      >
+                        View Detailed Analytics →
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Dashboard Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* Left Column */}
+        <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+          <QuickActions onActionClick={handleQuickAction} />
+          <TodaysGoals />
+          <HealthInsights onQuickAction={handleQuickAction} />
+        </div>
+        
+        {/* Right Column */}
+        <div className="space-y-6 lg:space-y-8">
+          <ReadinessScore score={72} />
+          <ActivityFeed />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WelcomeHeader;
               </div>
             </div>
           </motion.div>

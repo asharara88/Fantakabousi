@@ -26,6 +26,7 @@ const HealthDashboard: React.FC = () => {
   const [selectedMetric, setSelectedMetric] = useState('heart_rate');
   const [timeRange, setTimeRange] = useState('7d');
   const [showDeviceConnection, setShowDeviceConnection] = useState(false);
+  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
   
   const { metrics, loading, getLatestMetric, getMetricTrend } = useHealthMetrics();
 
@@ -95,21 +96,71 @@ const HealthDashboard: React.FC = () => {
     </div>
   );
 
-  const MetricCard: React.FC<{ metric: any; value: number; trend: number }> = ({ metric, value, trend }) => (
-    <div className="metric-card">
+  const MetricCard: React.FC<{ metric: any; value: number; trend: number }> = ({ metric, value, trend }) => {
+    const isExpanded = expandedMetric === metric.key;
+    
+    const getExpandedData = (metricKey: string) => {
+      switch (metricKey) {
+        case 'heart_rate':
+          return [
+            { label: 'Resting HR', value: '68 bpm' },
+            { label: 'Max HR Today', value: '142 bpm' },
+            { label: 'HR Variability', value: '42 ms' },
+            { label: 'Recovery Time', value: '2h 15m' }
+          ];
+        case 'steps':
+          return [
+            { label: 'Distance', value: '6.2 km' },
+            { label: 'Flights Climbed', value: '12 flights' },
+            { label: 'Avg Pace', value: '8:45 /km' },
+            { label: 'Active Calories', value: '342 kcal' }
+          ];
+        case 'sleep':
+          return [
+            { label: 'Deep Sleep', value: '1h 45m' },
+            { label: 'REM Sleep', value: '2h 12m' },
+            { label: 'Sleep Efficiency', value: '89%' },
+            { label: 'Bedtime', value: '10:45 PM' }
+          ];
+        case 'glucose':
+          return [
+            { label: 'Time in Range', value: '78%' },
+            { label: 'Avg Glucose', value: '142 mg/dL' },
+            { label: 'Peak Today', value: '186 mg/dL' },
+            { label: 'Variability', value: 'Moderate' }
+          ];
+        default:
+          return [];
+      }
+    };
+
+    return (
+    <div 
+      className={`bg-card rounded-xl p-6 shadow-lg border border-border hover:shadow-xl transition-all duration-300 cursor-pointer ${
+        isExpanded ? 'md:col-span-2' : ''
+      }`}
+      onClick={() => setExpandedMetric(isExpanded ? null : metric.key)}
+    >
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
           <metric.icon className="w-6 h-6 text-white" />
         </div>
-        <div className={`flex items-center space-x-1 text-body-sm font-semibold ${
-          trend >= 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
-          {trend >= 0 ? (
-            <ArrowTrendingUpIcon className="w-4 h-4" />
-          ) : (
-            <ArrowTrendingDownIcon className="w-4 h-4" />
-          )}
-          <span>{trend >= 0 ? '+' : ''}{trend.toFixed(1)}%</span>
+        <div className="flex items-center space-x-2">
+          <div className={`flex items-center space-x-1 text-sm font-semibold ${
+            trend >= 0 ? 'text-green-600' : 'text-red-600'
+          }`}>
+            {trend >= 0 ? (
+              <ArrowTrendingUpIcon className="w-4 h-4" />
+            ) : (
+              <ArrowTrendingDownIcon className="w-4 h-4" />
+            )}
+            <span>{trend >= 0 ? '+' : ''}{trend.toFixed(1)}%</span>
+          </div>
+          <div className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
         </div>
       </div>
       
@@ -137,8 +188,29 @@ const HealthDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="border-t border-border pt-4 mt-4"
+          >
+            <div className="grid grid-cols-2 gap-3">
+              {getExpandedData(metric.key).map((item, idx) => (
+                <div key={idx} className="text-center p-3 bg-muted/30 rounded-lg">
+                  <div className="text-sm font-bold text-foreground">{item.value}</div>
+                  <div className="text-xs text-muted-foreground">{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  );
+  )};
 
   const renderContent = () => {
     switch (activeView) {
