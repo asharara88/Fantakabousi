@@ -308,8 +308,6 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
       {/* Cart Summary */}
       {cartItems.size > 0 && (
         <motion.div
-              ? 'border-primary bg-primary/10 text-primary'
-              : 'border-border bg-card hover:border-muted-foreground text-foreground'
           className="fixed bottom-20 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-80 bg-white rounded-xl p-4 shadow-2xl border border-gray-200 z-40"
         >
           <div className="space-y-3">
