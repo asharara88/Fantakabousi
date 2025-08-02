@@ -43,7 +43,7 @@ const AppContent: React.FC = () => {
   }
 
   // Show onboarding for new users
-  if (user && profile && !profile.onboarding_completed) {
+  if (profile && !profile.onboarding_completed) {
     return <OnboardingFlow onComplete={() => window.location.reload()} />;
   }
 
