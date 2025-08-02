@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useProfile } from './useProfile';
 import { getHealthMetrics, generateComprehensiveHealthData } from '../lib/api';
 
 export interface HealthMetric {
@@ -13,16 +14,17 @@ export interface HealthMetric {
 
 export const useHealthMetrics = (metricType?: string) => {
   const { user } = useAuth();
+  const { profile } = useProfile();
   const [metrics, setMetrics] = useState<HealthMetric[]>([]);
   const [hasData, setHasData] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
+    if (user && profile) {
       fetchMetrics();
     }
-  }, [user, metricType]);
+  }, [user, profile, metricType]);
 
   const fetchMetrics = async () => {
     try {
@@ -33,7 +35,7 @@ export const useHealthMetrics = (metricType?: string) => {
       setHasData(data.length > 0);
       
       // If no data exists, generate comprehensive demo data
-      if (data.length === 0) {
+      if (data.length === 0 && profile) {
         console.log('No health data found, generating comprehensive demo data...');
         await generateComprehensiveHealthData(user!.id);
         // Refetch after generating data
