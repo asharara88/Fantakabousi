@@ -207,12 +207,13 @@ const AICoachEnhanced: React.FC = () => {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickPrompt(prompt.text)}
                       className="p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left"
+                      className="p-4 bg-card rounded-xl border border-border hover:border-blue-light/30 hover:shadow-md transition-all duration-200 text-left"
                     >
                       <div className="flex items-center space-x-3">
                         <div className={`w-10 h-10 ${prompt.color} rounded-lg flex items-center justify-center`}>
                           <prompt.icon className="w-5 h-5 text-white" />
                         </div>
-                        <span className="font-medium text-gray-900">{prompt.text}</span>
+                        <span className="font-medium text-foreground">{prompt.text}</span>
                       </div>
                     </motion.button>
                   ))}
@@ -242,9 +243,9 @@ const AICoachEnhanced: React.FC = () => {
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                       onClick={() => handleQuickPrompt(question)}
-                      className="w-full text-left p-3 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-all duration-200"
+                      className="w-full text-left p-3 bg-muted/50 hover:bg-blue-light/10 rounded-lg border border-border hover:border-blue-light/30 transition-all duration-200"
                     >
-                      <span className="text-gray-700 hover:text-blue-700">{question}</span>
+                      <span className="text-foreground hover:text-blue-light">{question}</span>
                     </motion.button>
                   ))}
                 </div>
@@ -281,12 +282,13 @@ const AICoachEnhanced: React.FC = () => {
                       </div>
                       
                       <div className={`bg-white rounded-2xl p-4 shadow-sm border border-gray-100 ${
+                      <div className={`bg-card rounded-2xl p-4 shadow-sm border border-border ${
                         message.role === 'user' 
-                          ? 'bg-gradient-to-br from-blue-50 to-cyan-50' 
+                          ? 'bg-gradient-to-br from-blue-light/10 to-cyan-500/10' 
                           : ''
                       }`}>
                         <div className="space-y-3">
-                          <p className="text-gray-900 leading-relaxed">
+                          <p className="text-foreground leading-relaxed">
                             {message.message}
                           </p>
                           
@@ -295,22 +297,22 @@ const AICoachEnhanced: React.FC = () => {
                               <button
                                 onClick={() => handlePlayAudio(message.message)}
                                 disabled={isPlayingAudio}
-                                className="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors disabled:opacity-50"
+                                className="p-2 bg-blue-light/10 hover:bg-blue-light/20 rounded-lg transition-colors disabled:opacity-50"
                                 title="Play audio response"
                               >
                                 {isPlayingAudio ? (
-                                  <StopIcon className="w-4 h-4 text-blue-600" />
+                                  <StopIcon className="w-4 h-4 text-blue-light" />
                                 ) : (
-                                  <SpeakerWaveIcon className="w-4 h-4 text-blue-600" />
+                                  <SpeakerWaveIcon className="w-4 h-4 text-blue-light" />
                                 )}
                               </button>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted-foreground">
                                 {isPlayingAudio ? 'Playing...' : 'Play audio'}
                               </span>
                             </div>
                           )}
                         </div>
-                        <div className="text-xs text-gray-500 mt-2">
+                        <div className="text-xs text-muted-foreground mt-2">
                           {new Date(message.timestamp).toLocaleTimeString([], { 
                             hour: '2-digit', 
                             minute: '2-digit' 
@@ -331,10 +333,10 @@ const AICoachEnhanced: React.FC = () => {
                       <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
                         <CpuChipIcon className="w-5 h-5 text-white" />
                       </div>
-                      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                      <div className="bg-card rounded-2xl p-4 shadow-sm border border-border">
                         <div className="flex items-center space-x-3">
                           <LoadingSpinner size="sm" variant="dots" />
-                          <span className="text-gray-600">Thinking...</span>
+                          <span className="text-muted-foreground">Thinking...</span>
                         </div>
                       </div>
                     </div>
@@ -345,8 +347,8 @@ const AICoachEnhanced: React.FC = () => {
               </div>
             </div>
 
-            {/* Input */}
-            <div className="p-4 lg:p-6 border-t border-gray-200 bg-white">
+          <div className="p-4 lg:p-6 border-b border-border bg-card">
+            <div className="bg-card border-t border-border p-4 lg:p-6">
               <div className="flex items-center space-x-3">
                 <div className="flex-1 relative">
                   <input
@@ -355,12 +357,12 @@ const AICoachEnhanced: React.FC = () => {
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Ask me anything about your health..."
-                    className="w-full px-4 py-3 lg:py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                    className="w-full px-4 py-3 lg:py-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light focus:border-transparent text-base bg-background text-foreground"
                     disabled={sendingMessage}
                   />
                 </div>
                 
-                <motion.button
+                  <h1 className="text-xl lg:text-2xl font-bold text-foreground">Smart Coach</h1>
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSendMessage}
@@ -370,7 +372,7 @@ const AICoachEnhanced: React.FC = () => {
                   {sendingMessage ? (
                     <LoadingSpinner size="sm" />
                   ) : (
-                    <PaperAirplaneIcon className="w-5 h-5 lg:w-6 lg:h-6" />
+                    <span className="text-sm text-muted-foreground">Ready to help</span>
                   )}
                 </motion.button>
               </div>
