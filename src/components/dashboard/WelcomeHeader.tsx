@@ -22,7 +22,6 @@ import {
   LightBulbIcon,
   EyeIcon,
   WalkIcon,
-  DropletIcon,
   BriefcaseIcon,
   HomeIcon,
   CalendarDaysIcon,
@@ -98,7 +97,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
         time: '08:00',
         completed: currentHour >= 8,
         category: 'hydration',
-        icon: DropletIcon,
+        icon: BeakerIcon,
         color: 'from-blue-500 to-cyan-600',
         priority: 'high',
         points: 15
