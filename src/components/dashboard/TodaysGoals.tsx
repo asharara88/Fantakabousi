@@ -172,23 +172,23 @@ const TodaysGoals: React.FC = () => {
     <div id="todays-goals" className="card-premium">
       <div className="flex items-center justify-between mb-4 lg:mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
             {showCelebration ? (
               <motion.div
                 animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
                 transition={{ duration: 0.6 }}
               >
-                <TrophyIcon className="w-5 h-5 text-yellow-300" />
+                <TrophyIcon className="w-6 h-6 text-white" />
               </motion.div>
             ) : (
-              <FlagIcon className="w-5 h-5 text-white" />
+              <FlagIcon className="w-6 h-6 text-white" />
             )}
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-foreground font-inter">Today's Goals</h2>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white font-inter">Today's Goals</h2>
             <div className="flex items-center space-x-3">
-              <p className="text-sm text-muted-foreground">{completedCount} of {goals.length} completed</p>
-              <div className="flex items-center space-x-1 px-2 py-1 bg-orange-100 dark:bg-orange-950/20 rounded-full">
+              <p className="text-sm text-gray-600 dark:text-gray-300">{completedCount} of {goals.length} completed</p>
+              <div className="flex items-center space-x-1 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 rounded-full">
                 <FireIcon className="w-3 h-3 text-orange-500" />
                 <span className="text-xs font-bold text-orange-600">{streakCount} day streak</span>
               </div>
@@ -198,7 +198,7 @@ const TodaysGoals: React.FC = () => {
         
         <button 
           onClick={addNewGoal}
-          className="p-2 text-muted-foreground hover:text-[#48C6FF] hover:bg-muted rounded-lg transition-all duration-200 cursor-pointer"
+          className="p-2 text-gray-400 hover:text-[#48C6FF] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200 cursor-pointer"
           title="Add new goal"
         >
           <PlusIcon className="w-5 h-5" />
@@ -207,11 +207,11 @@ const TodaysGoals: React.FC = () => {
 
       {/* Progress Bar */}
       <div className="mb-4 lg:mb-6">
-        <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
           <span>Progress</span>
           <span>{Math.round(progressPercentage)}%</span>
         </div>
-        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-full"
             initial={{ width: 0 }}
@@ -233,7 +233,7 @@ const TodaysGoals: React.FC = () => {
             whileTap={{ scale: 0.99 }}
             className={`card transition-all duration-200 cursor-pointer touch-target ${
               goal.completed 
-                ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
                 : ''
             }`}
             onClick={() => toggleGoal(goal.id)}

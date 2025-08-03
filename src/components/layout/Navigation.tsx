@@ -179,7 +179,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
           {/* User Profile Section - Complementary */}
           <aside role="complementary" aria-label="User profile information">
-            <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-2xl border border-[#48C6FF]/20 shadow-sm">
+            <div className="flex items-center gap-4 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 rounded-2xl border border-gray-200/20 dark:border-gray-700/20 shadow-lg">
               <div 
                 className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-lg"
                 role="img"
@@ -198,7 +198,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                 </p>
               </div>
               <div 
-                className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"
+                className="w-2 h-2 bg-green-500 rounded-full animate-pulse"
                 role="status"
                 aria-label="Online status indicator"
               ></div>
@@ -207,11 +207,11 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
           {/* Quick Theme Toggle - Form */}
           <section role="region" aria-label="Theme settings">
-            <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
+            <div className="px-4 py-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-xl mb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-light rounded-full"></div>
-                  <span className="text-sm font-medium text-foreground">Theme</span>
+                  <div className="w-2 h-2 bg-[#48C6FF] rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">Theme</span>
                 </div>
                 <ThemeToggle />
               </div>

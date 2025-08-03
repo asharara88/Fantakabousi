@@ -42,30 +42,30 @@ const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ onQuickAction }
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
             <BeakerIcon className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Nutrition & Recipes</h1>
-            <p className="text-muted-foreground">Track your food and discover healthy recipes</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Nutrition & Recipes</h1>
+            <p className="text-gray-600 dark:text-gray-300">Track your food and discover healthy recipes</p>
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex bg-muted rounded-xl p-1">
+      <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveView(tab.id)}
-            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${
+            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
               activeView === tab.id
-                ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-md'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             <tab.icon className="w-5 h-5" />
-            <span>{tab.label}</span>
+            <span className="hidden sm:inline text-sm">{tab.label}</span>
           </button>
         ))}
       </div>

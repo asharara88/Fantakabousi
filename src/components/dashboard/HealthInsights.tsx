@@ -82,15 +82,15 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
             <BeakerIcon className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-foreground font-inter">Health Insights</h2>
-            <p className="text-muted-foreground font-inter">AI recommendations from your data</p>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white font-inter">Health Insights</h2>
+            <p className="text-gray-600 dark:text-gray-300 font-inter">AI recommendations from your data</p>
           </div>
         </div>
-        <button className="btn-ghost flex items-center space-x-2">
+        <button className="text-[#48C6FF] hover:text-[#2A7FFF] font-medium flex items-center space-x-2 transition-colors">
           <span>View All Insights</span>
           <ArrowRightIcon className="w-4 h-4" />
         </button>
@@ -110,11 +110,11 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
               {/* Header */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${insight.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <div className={`w-12 h-12 bg-gradient-to-r ${insight.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <insight.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-foreground font-inter">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white font-inter">
                       {insight.title}
                     </h3>
                     <div className="flex items-center space-x-3">
@@ -131,7 +131,7 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
               </div>
               
               {/* Message */}
-              <p className="text-base text-muted-foreground leading-relaxed font-inter">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-inter">
                 {insight.message}
               </p>
               

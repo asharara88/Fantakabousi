@@ -240,7 +240,7 @@ export function MobileNavigation({
 
                 {/* User Profile */}
                 <section role="region" aria-label="User profile information">
-                  <div className="p-6 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 border-b border-border">
+                  <div className="p-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border-b border-gray-200/20 dark:border-gray-700/20">
                     <div className="flex items-center space-x-4">
                       <div 
                         className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg"

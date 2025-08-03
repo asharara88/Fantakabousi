@@ -1387,5 +1387,3 @@ a:visited {
     --muted: 55 65 81;
   }
 }
-
-export default url
