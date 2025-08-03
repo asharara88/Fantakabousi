@@ -93,14 +93,18 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       {
         id: 'hydration',
         title: 'Hydrate with Electrolytes',
-        description: 'LMNT or HUMANTRA electrolyte drink',
+        description: 'Get premium electrolyte supplements',
         time: '08:00',
         completed: currentHour >= 8,
         category: 'hydration',
         icon: BeakerIcon,
         color: 'from-blue-500 to-cyan-600',
         priority: 'high',
-        points: 15
+        points: 15,
+        supplementShortcut: {
+          products: ['LMNT', 'HUMANTRA'],
+          category: 'electrolytes'
+        }
       },
       {
         id: 'morning-supplements',

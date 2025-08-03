@@ -47,7 +47,11 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
       message: 'Deep sleep at 45min vs 90min target. Consider magnesium supplementation.',
       confidence: 88,
       color: 'from-blue-500 to-cyan-600',
-      priority: 'medium'
+      priority: 'medium',
+      supplementShortcut: {
+        products: ['Magnesium Glycinate', 'ZMA'],
+        category: 'sleep'
+      }
     }
   ];
 
@@ -58,6 +62,19 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
       low: 'bg-green-100 text-green-700 border-green-200',
     };
     return variants[priority as keyof typeof variants] || variants.medium;
+  };
+
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('shop');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements in our shop`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('shop')
+      }
+    });
   };
 
   return (
@@ -120,17 +137,27 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
               
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
-                <button 
-                  onClick={() => {
-                    toast({
-                      title: "Action Started",
-                      description: `Taking action on: ${insight.title}`,
-                    });
-                  }}
-                  className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter cursor-pointer`}
-                >
-                  Take Action
-                </button>
+                {insight.supplementShortcut ? (
+                  <button 
+                    onClick={() => handleSupplementShortcut(insight.supplementShortcut.products, insight.supplementShortcut.category)}
+                    className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter cursor-pointer flex items-center space-x-2`}
+                  >
+                    <CubeIcon className="w-4 h-4" />
+                    <span>Buy {insight.supplementShortcut.products[0]}</span>
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      toast({
+                        title: "Action Started",
+                        description: `Taking action on: ${insight.title}`,
+                      });
+                    }}
+                    className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter cursor-pointer`}
+                  >
+                    Take Action
+                  </button>
+                )}
                 <button 
                   onClick={() => {
                     onQuickAction?.('coach');

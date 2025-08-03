@@ -44,6 +44,17 @@ const FoodLogger: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<FoodAnalysis | null>(null);
 
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements in our shop`,
+      action: {
+        label: "Shop Now",
+        onClick: () => window.location.href = '#shop'
+      }
+    });
+  };
+
   const analyzeFood = async () => {
     if (!foodName.trim() || !user) return;
 
@@ -260,7 +271,27 @@ const FoodLogger: React.FC = () => {
             {analysis.insights.recommendations.map((rec, index) => (
               <div key={index} className="flex items-start space-x-3 p-3 bg-[#48C6FF]/10 rounded-lg">
                 <LightBulbIcon className="w-4 h-4 text-[#48C6FF] mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-foreground">{rec}</span>
+                <div className="flex-1">
+                  <span className="text-sm text-foreground">{rec}</span>
+                  {rec.toLowerCase().includes('protein') && (
+                    <button
+                      onClick={() => handleSupplementShortcut(['Whey Protein', 'Plant Protein'], 'protein')}
+                      className="block mt-2 text-xs text-blue-light hover:text-blue-medium font-medium flex items-center space-x-1"
+                    >
+                      <CubeIcon className="w-3 h-3" />
+                      <span>Shop Protein Supplements</span>
+                    </button>
+                  )}
+                  {rec.toLowerCase().includes('magnesium') && (
+                    <button
+                      onClick={() => handleSupplementShortcut(['Magnesium Glycinate', 'ZMA'], 'sleep')}
+                      className="block mt-2 text-xs text-blue-light hover:text-blue-medium font-medium flex items-center space-x-1"
+                    >
+                      <CubeIcon className="w-3 h-3" />
+                      <span>Shop Magnesium Supplements</span>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
