@@ -19,7 +19,8 @@ import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
-  BookOpenIcon
+  BeakerIcon,
+  BoltIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -54,9 +55,11 @@ export function MobileNavigation({
   const navigationItems = [
     { id: 'dashboard', label: 'Home', icon: HomeIcon, activeIcon: HomeSolidIcon },
     { id: 'health', label: 'Health', icon: HeartIcon, activeIcon: HeartSolidIcon },
-    { id: 'recipes', label: 'Recipes', icon: BookOpenIcon, activeIcon: BookOpenIcon },
+    { id: 'nutrition', label: 'Nutrition', icon: BeakerIcon, activeIcon: BeakerIcon },
     { id: 'coach', label: 'Coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon },
-    { id: 'shop', label: 'Shop', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon }
+    { id: 'supplements', label: 'Supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon },
+    { id: 'fitness', label: 'Fitness', icon: BoltIcon, activeIcon: BoltIcon },
+    { id: 'sleep', label: 'Sleep', icon: MoonIcon, activeIcon: MoonIcon }
   ];
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';

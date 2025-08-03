@@ -15,7 +15,9 @@ import {
   ArrowRightOnRectangleIcon,
   SunIcon,
   MoonIcon,
-  ComputerDesktopIcon
+  ComputerDesktopIcon,
+  BeakerIcon,
+  BoltIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -65,11 +67,32 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       description: 'Track your progress'
     },
     { 
-      id: 'shop', 
+      id: 'nutrition', 
+      label: 'Nutrition', 
+      icon: BeakerIcon, 
+      activeIcon: BeakerIcon,
+      description: 'Food & recipes'
+    },
+    { 
+      id: 'supplements', 
       label: 'Supplements', 
       icon: ShoppingBagIcon, 
       activeIcon: ShoppingSolidIcon,
-      description: 'Browse products'
+      description: 'Browse supplements'
+    },
+    { 
+      id: 'fitness', 
+      label: 'Fitness', 
+      icon: BoltIcon, 
+      activeIcon: BoltIcon,
+      description: 'Workouts & training'
+    },
+    { 
+      id: 'sleep', 
+      label: 'Sleep', 
+      icon: MoonIcon, 
+      activeIcon: MoonIcon,
+      description: 'Sleep optimization'
     },
     { 
       id: 'profile', 

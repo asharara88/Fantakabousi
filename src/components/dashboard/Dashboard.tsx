@@ -8,9 +8,11 @@ import { MobileNavigation } from '../layout/MobileNavigation';
 import WelcomeHeader from './WelcomeHeader';
 import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
+import NutritionDashboard from '../nutrition/NutritionDashboard';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
+import FitnessDashboard from '../fitness/FitnessDashboard';
+import SleepOptimization from '../sleep/SleepOptimization';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
-import RecipeSearch from '../recipes/RecipeSearch';
 import PlanYourDay from './PlanYourDay';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
@@ -42,14 +44,23 @@ const Dashboard: React.FC = () => {
       case 'health':
         setActiveTab('health');
         break;
-      case 'shop':
-        setActiveTab('shop');
+      case 'nutrition':
+        setActiveTab('nutrition');
+        break;
+      case 'supplements':
+        setActiveTab('supplements');
         break;
       case 'food':
-        setActiveTab('health');
+        setActiveTab('nutrition');
         break;
       case 'recipes':
-        setActiveTab('health');
+        setActiveTab('nutrition');
+        break;
+      case 'fitness':
+        setActiveTab('fitness');
+        break;
+      case 'sleep':
+        setActiveTab('sleep');
         break;
       case 'profile':
         setActiveTab('profile');
@@ -67,8 +78,14 @@ const Dashboard: React.FC = () => {
         return <AICoachEnhanced />;
       case 'health':
         return <HealthDashboard />;
-      case 'shop':
+      case 'nutrition':
+        return <NutritionDashboard onQuickAction={handleQuickAction} />;
+      case 'supplements':
         return <SupplementShopEnhanced onQuickAction={handleQuickAction} />;
+      case 'fitness':
+        return <FitnessDashboard onQuickAction={handleQuickAction} />;
+      case 'sleep':
+        return <SleepOptimization onQuickAction={handleQuickAction} />;
       case 'profile':
         return <ProfileSettingsEnhanced />;
       default:
@@ -81,7 +98,10 @@ const Dashboard: React.FC = () => {
       case 'dashboard': return 'Health Dashboard';
       case 'coach': return 'AI Wellness Coach';
       case 'health': return 'Health Analytics';
-      case 'shop': return 'Supplement Shop';
+      case 'nutrition': return 'Nutrition & Recipes';
+      case 'supplements': return 'Supplement Shop';
+      case 'fitness': return 'Fitness & Training';
+      case 'sleep': return 'Sleep Optimization';
       case 'profile': return 'Profile Settings';
       default: return 'Biowell Dashboard';
     }

@@ -214,6 +214,7 @@ const HealthDashboard: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
+    </div>
   )};
 
   const renderContent = () => {
