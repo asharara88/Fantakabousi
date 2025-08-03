@@ -380,13 +380,6 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               <div className="relative w-48 h-48">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" stroke="rgb(229 231 235)" strokeWidth="2" fill="none" />
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    stroke="rgb(var(--muted))"
-                    strokeWidth="3"
-                    fill="none"
-                  />
                   <motion.circle
                     cx="50"
                     cy="50"
