@@ -176,6 +176,7 @@ const HealthDashboard: React.FC = () => {
         </div>
         <div className="text-body font-semibold text-foreground">{metric.name}</div>
         
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-caption">
             <span>Target: {metric.target.toLocaleString()}{metric.unit}</span>
@@ -364,10 +365,6 @@ const HealthDashboard: React.FC = () => {
               <p className="text-body text-muted-foreground">Deep dive into your health data and trends</p>
             </div>
           </div>
-                <span className="text-sm text-muted-foreground">Ready to help</span>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
           {/* View Toggle */}
           <div className="flex rounded-xl p-1 bg-muted">
             {tabs.map((tab) => (

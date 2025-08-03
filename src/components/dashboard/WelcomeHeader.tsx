@@ -21,9 +21,7 @@ import {
   ArrowRightIcon,
   LightBulbIcon,
   EyeIcon,
-  WalkIcon,
   BriefcaseIcon,
-  HomeIcon,
   CalendarDaysIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
@@ -293,7 +291,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
     switch (category) {
       case 'circadian': return SunIcon;
       case 'movement': return BoltIcon;
-      case 'hydration': return DropletIcon;
+      case 'hydration': return BeakerIcon;
       case 'work': return BriefcaseIcon;
       case 'nutrition': return BeakerIcon;
       case 'supplements': return CubeIcon;

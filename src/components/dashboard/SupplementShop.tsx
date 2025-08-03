@@ -14,6 +14,10 @@ import {
   onQuickAction?: (action: string) => void;
 } from '@heroicons/react/24/outline';
 
+interface SupplementShopProps {
+  onQuickAction?: (action: string) => void;
+}
+
 const SupplementShop: React.FC<SupplementShopProps> = ({ onQuickAction }) => {
   const [activeView, setActiveView] = useState<'browse' | 'stack'>('browse');
   const [cartOpen, setCartOpen] = useState(false);

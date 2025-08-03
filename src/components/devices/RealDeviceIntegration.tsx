@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabase } from '../../lib/supabase';
+import { generateRealisticHealthData } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/useToast';
 import { 
