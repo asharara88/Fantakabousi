@@ -110,7 +110,7 @@ const TodaysGoals: React.FC = () => {
 
   const handleSupplementShortcut = (products: string[], category: string) => {
     // Navigate to supplement shop with pre-filtered products
-    onQuickAction?.('shop');
+    onQuickAction?.('supplements');
     
     // Show toast with purchase shortcut
     toast({
@@ -118,7 +118,7 @@ const TodaysGoals: React.FC = () => {
       description: `Tap to view ${category} supplements in our shop`,
       action: {
         label: "Shop Now",
-        onClick: () => onQuickAction?.('shop')
+        onClick: () => onQuickAction?.('supplements')
       }
     });
   };

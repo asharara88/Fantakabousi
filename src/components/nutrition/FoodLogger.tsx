@@ -35,7 +35,11 @@ interface FoodAnalysis {
   };
 }
 
-const FoodLogger: React.FC = () => {
+interface FoodLoggerProps {
+  onQuickAction?: (action: string) => void;
+}
+
+const FoodLogger: React.FC<FoodLoggerProps> = ({ onQuickAction }) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [foodName, setFoodName] = useState('');

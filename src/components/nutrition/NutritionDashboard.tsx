@@ -27,13 +27,13 @@ const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ onQuickAction }
   const renderContent = () => {
     switch (activeView) {
       case 'logger':
-        return <FoodLogger />;
+        return <FoodLogger onQuickAction={onQuickAction} />;
       case 'recipes':
         return <RecipeSearch />;
       case 'history':
         return <FoodLogsTable />;
       default:
-        return <FoodLogger />;
+        return <FoodLogger onQuickAction={onQuickAction} />;
     }
   };
 

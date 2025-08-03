@@ -70,14 +70,14 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
   };
 
   const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('shop');
+    onQuickAction?.('supplements');
     
     toast({
       title: `🛒 ${products.join(' or ')} Available`,
       description: `Premium ${category} supplements ready to order`,
       action: {
         label: "Shop Now",
-        onClick: () => onQuickAction?.('shop')
+        onClick: () => onQuickAction?.('supplements')
       }
     });
   };

@@ -65,14 +65,14 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
   };
 
   const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('shop');
+    onQuickAction?.('supplements');
     
     toast({
       title: `🛒 ${products.join(' or ')} Available`,
       description: `Premium ${category} supplements in our shop`,
       action: {
         label: "Shop Now",
-        onClick: () => onQuickAction?.('shop')
+        onClick: () => onQuickAction?.('supplements')
       }
     });
   };
