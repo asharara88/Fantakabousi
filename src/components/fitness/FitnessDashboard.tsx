@@ -13,7 +13,8 @@ import {
   PauseIcon,
   CheckCircleIcon,
   PlusIcon,
-  CalendarIcon
+  CalendarIcon,
+  CubeIcon
 } from '@heroicons/react/24/outline';
 
 interface FitnessDashboardProps {
