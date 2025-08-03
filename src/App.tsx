@@ -40,9 +40,6 @@ const AppContent: React.FC = () => {
 
   // Show landing page for unauthenticated users
   if (!user) {
-    if (showAuth) {
-      return <AuthForms onBack={() => setShowAuth(false)} />;
-    }
     return <LandingPage onShowAuth={() => setShowAuth(true)} />;
   }
 
