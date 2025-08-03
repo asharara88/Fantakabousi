@@ -286,7 +286,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             onClose={() => setShowNotifications(false)}
           />
         </aside>
-      </div>
       </nav>
     </>
   );
