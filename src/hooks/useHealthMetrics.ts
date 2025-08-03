@@ -31,24 +31,12 @@ export const useHealthMetrics = (metricType?: string) => {
       setLoading(true);
       setError(null);
       
-      // First, ensure user has connected devices
-      await ensureConnectedDevices();
-      
       const data = await getHealthMetrics(user!.id, metricType);
       setMetrics(data);
       setHasData(data.length > 0);
-      
-      // If no data exists, generate comprehensive demo data
-      if (data.length === 0) {
-        console.log('No health data found, generating comprehensive demo data...');
-        await generateComprehensiveHealthData(user!.id);
-        // Refetch after generating data
-        const newData = await getHealthMetrics(user!.id, metricType);
-        setMetrics(newData);
-        setHasData(newData.length > 0);
-      }
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error in fetchMetrics:', err);
+      setError('Unable to load health metrics');
     } finally {
       setLoading(false);
     }
