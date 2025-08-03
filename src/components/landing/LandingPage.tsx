@@ -23,6 +23,7 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   const { actualTheme } = useTheme();
+  const [showAuthForms, setShowAuthForms] = useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -95,6 +96,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
     { number: '4.9★', label: 'User Rating' }
   ];
 
+  // Show auth forms if requested
+  if (showAuthForms) {
+    return <AuthForms onBack={() => setShowAuthForms(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-background" role="document">
       {/* Navigation */}
@@ -114,14 +120,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               <div className="flex items-center space-x-4">
                 <button 
                 aria-label="Sign in to your account"
-                onClick={onShowAuth}
+                onClick={() => setShowAuthForms(true)}
                 className="text-muted-foreground hover:text-foreground font-medium transition-colors"
               >
                 Sign In
                 </button>
                 <button 
                 aria-label="Get started with Biowell"
-                onClick={onShowAuth}
+                onClick={() => setShowAuthForms(true)}
                 className="btn-primary"
               >
                 Get Started
@@ -180,7 +186,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={onShowAuth}
+                  onClick={() => setShowAuthForms(true)}
                   aria-label="Get started with Biowell"
                   className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                 >
@@ -511,7 +517,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </ul>
                 
                 <button
-                  onClick={onShowAuth}
+                  onClick={() => setShowAuthForms(true)}
                   aria-label="Get started with free plan"
                   className="w-full btn-secondary"
                 >
@@ -562,7 +568,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </ul>
                 
                 <button
-                  onClick={onShowAuth}
+                  onClick={() => setShowAuthForms(true)}
                   aria-label="Start 14-day free trial of premium plan"
                   className="w-full btn-primary"
                 >
@@ -605,7 +611,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </ul>
                 
                 <button
-                  onClick={onShowAuth}
+                  onClick={() => setShowAuthForms(true)}
                   aria-label="Start pro plan trial"
                   className="w-full btn-secondary"
                 >
