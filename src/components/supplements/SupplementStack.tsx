@@ -183,7 +183,13 @@ const SupplementStack: React.FC<SupplementStackProps> = ({ onQuickAction }) => {
             </motion.button>
             
             <button className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
-              onClick={() => onQuickAction?.('coach')}
+              onClick={() => {
+                onQuickAction?.('coach');
+                toast({
+                  title: "AI Coach Ready",
+                  description: "Ask your coach about supplement optimization.",
+                });
+              }}
               <SparklesIcon className="w-5 h-5" />
               <span>Get Smart Coach Optimization</span>
             </button>

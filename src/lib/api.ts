@@ -528,19 +528,27 @@ export const generateRealisticHealthData = async (userId: string, deviceType: 'a
 
   // Insert all data points in batches to avoid timeout
   const batchSize = 100;
+  let totalInserted = 0;
   for (let i = 0; i < dataPoints.length; i += batchSize) {
     const batch = dataPoints.slice(i, i + batchSize);
-    const { error } = await supabase
-      .from('health_metrics')
-      .insert(batch);
-    
-    if (error) {
-      console.error('Error inserting realistic data batch:', error);
-      throw error;
+    try {
+      const { error } = await supabase
+        .from('health_metrics')
+        .insert(batch);
+      
+      if (error) {
+        console.error('Error inserting realistic data batch:', error);
+        // Continue with next batch instead of throwing
+      } else {
+        totalInserted += batch.length;
+      }
+    } catch (error) {
+      console.error('Batch insert failed:', error);
+      // Continue processing
     }
   }
 
-  return dataPoints.length;
+  return totalInserted;
 };
 
 // Generate comprehensive demo data for all metrics

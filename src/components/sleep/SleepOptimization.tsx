@@ -41,6 +41,19 @@ const SleepOptimization: React.FC<SleepOptimizationProps> = ({ onQuickAction }) 
     { label: 'REM Sleep', value: 1.5, unit: 'hours', target: 1.5, color: 'from-pink-500 to-rose-600' }
   ];
 
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements for better sleep`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
+
   const sleepOptimizations = [
     {
       id: 'magnesium',

@@ -236,7 +236,10 @@ const SupplementBrowser: React.FC<SupplementBrowserProps> = ({ onAddToCart, cart
                   )}
                   
                   <button className="w-full py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
-                    onClick={onAskCoach}
+                    onClick={() => toast({
+                      title: "AI Coach Available",
+                      description: "Ask your AI coach about this supplement.",
+                    })}
                     <InformationCircleIcon className="w-5 h-5" />
                     <span>Ask Smart Coach</span>
                   </button>

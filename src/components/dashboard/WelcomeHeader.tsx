@@ -231,14 +231,14 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
 
   const toggleWin = (winId: string) => {
     const handleSupplementShortcut = (products: string[], category: string) => {
-      onQuickAction?.('shop');
+      onQuickAction?.('supplements');
       
       toast({
         title: `🛒 ${products.join(' or ')} Available`,
         description: `Premium ${category} supplements ready to order`,
         action: {
           label: "Shop Now",
-          onClick: () => onQuickAction?.('shop')
+          onClick: () => onQuickAction?.('supplements')
         }
       });
     };
@@ -614,7 +614,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             description: 'Check your metrics'
           },
           { 
-            id: 'shop', 
+            id: 'supplements', 
             title: 'Supplements', 
             icon: CubeIcon, 
             color: 'from-orange-500 to-red-600',

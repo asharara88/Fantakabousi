@@ -79,12 +79,21 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
   };
 
   const toggleFavorite = (supplementId: string) => {
+    const supplement = supplements.find(s => s.id === supplementId);
     setFavorites(prev => {
       const newSet = new Set(prev);
       if (newSet.has(supplementId)) {
         newSet.delete(supplementId);
+        toast({
+          title: "Removed from Favorites",
+          description: `${supplement?.name} removed from favorites.`,
+        });
       } else {
         newSet.add(supplementId);
+        toast({
+          title: "Added to Favorites",
+          description: `${supplement?.name} added to favorites.`,
+        });
       }
       return newSet;
     });

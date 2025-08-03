@@ -10,6 +10,7 @@ import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
 import NutritionDashboard from '../nutrition/NutritionDashboard';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
+import SupplementShop from './SupplementShop';
 import FitnessDashboard from '../fitness/FitnessDashboard';
 import SleepOptimization from '../sleep/SleepOptimization';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';

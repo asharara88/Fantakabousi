@@ -84,7 +84,9 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       if (error) throw error;
 
       // Generate dummy data for the connected device
-      await generateRealisticHealthData(user.id, deviceId as 'apple-watch' | 'freestyle-libre');
+      const insertedCount = await generateRealisticHealthData(user.id, deviceId as 'apple-watch' | 'freestyle-libre');
+      
+      console.log(`Generated ${insertedCount} health data points for ${device.name}`);
 
       setConnectedDevices(prev => [...prev, deviceId]);
       

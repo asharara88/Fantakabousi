@@ -62,6 +62,17 @@ const AICoachEnhanced: React.FC = () => {
   };
 
   const handleQuickPrompt = async (prompt: string) => {
+    const promptData = quickPrompts.find(p => p.text === prompt);
+    if (promptData?.action) {
+      // Navigate to relevant section after sending message
+      setTimeout(() => {
+        if (promptData.action === 'sleep') window.location.hash = '#sleep';
+        if (promptData.action === 'fitness') window.location.hash = '#fitness';
+        if (promptData.action === 'supplements') window.location.hash = '#supplements';
+        if (promptData.action === 'nutrition') window.location.hash = '#nutrition';
+      }, 2000);
+    }
+    
     setInputMessage(prompt);
     setShowOnboarding(false);
     await sendMessage(prompt);

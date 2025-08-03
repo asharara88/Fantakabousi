@@ -36,6 +36,19 @@ const FitnessDashboard: React.FC<FitnessDashboardProps> = ({ onQuickAction }) =>
     { id: 'progress', label: 'Progress', icon: TrophyIcon },
   ];
 
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements for better performance`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
+
   const workoutPrograms = [
     {
       id: 'strength',

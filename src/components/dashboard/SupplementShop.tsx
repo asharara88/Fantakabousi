@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSupplements } from '../../hooks/useSupplements';
 import SupplementBrowser from '../supplements/SupplementBrowser';
+import SupplementBrowser from '../supplements/SupplementBrowser';
 import SupplementStack from '../supplements/SupplementStack';
 import SupplementCart from '../supplements/SupplementCart';
 import LoadingSpinner from '../ui/LoadingSpinner';
