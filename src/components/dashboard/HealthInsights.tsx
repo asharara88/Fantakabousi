@@ -146,6 +146,15 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
                     <span>Buy {insight.supplementShortcut.products[0]}</span>
                   </button>
                 ) : (
+                {insight.supplementShortcut ? (
+                  <button 
+                    onClick={() => handleSupplementShortcut(insight.supplementShortcut.products, insight.supplementShortcut.category)}
+                    className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter cursor-pointer flex items-center space-x-2`}
+                  >
+                    <CubeIcon className="w-4 h-4" />
+                    <span>Buy {insight.supplementShortcut.products[0]}</span>
+                  </button>
+                ) : (
                   <button 
                     onClick={() => {
                       toast({
@@ -157,6 +166,7 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
                   >
                     Take Action
                   </button>
+                )}
                 )}
                 <button 
                   onClick={() => {

@@ -44,6 +44,10 @@ interface DailyWin {
   color: string;
   priority: 'high' | 'medium' | 'low';
   points: number;
+  supplementShortcut?: {
+    products: string[];
+    category: string;
+  };
 }
 
 const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
@@ -228,6 +232,19 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const progressPercentage = (completedWins / dailyWins.length) * 100;
 
   const toggleWin = (winId: string) => {
+    const handleSupplementShortcut = (products: string[], category: string) => {
+      onQuickAction?.('shop');
+      
+      toast({
+        title: `🛒 ${products.join(' or ')} Available`,
+        description: `Premium ${category} supplements ready to order`,
+        action: {
+          label: "Shop Now",
+          onClick: () => onQuickAction?.('shop')
+        }
+      });
+    };
+
     setDailyWins(prev => prev.map(win => {
       if (win.id === winId) {
         const newCompleted = !win.completed;

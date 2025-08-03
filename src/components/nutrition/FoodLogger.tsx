@@ -291,6 +291,24 @@ const FoodLogger: React.FC = () => {
                       <span>Shop Magnesium Supplements</span>
                     </button>
                   )}
+                  {rec.toLowerCase().includes('protein') && (
+                    <button
+                      onClick={() => handleSupplementShortcut(['Whey Protein', 'Plant Protein'], 'protein')}
+                      className="block mt-2 text-xs text-blue-light hover:text-blue-medium font-medium flex items-center space-x-1"
+                    >
+                      <CubeIcon className="w-3 h-3" />
+                      <span>Shop Protein Supplements</span>
+                    </button>
+                  )}
+                  {rec.toLowerCase().includes('magnesium') && (
+                    <button
+                      onClick={() => handleSupplementShortcut(['Magnesium Glycinate', 'ZMA'], 'sleep')}
+                      className="block mt-2 text-xs text-blue-light hover:text-blue-medium font-medium flex items-center space-x-1"
+                    >
+                      <CubeIcon className="w-3 h-3" />
+                      <span>Shop Magnesium Supplements</span>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

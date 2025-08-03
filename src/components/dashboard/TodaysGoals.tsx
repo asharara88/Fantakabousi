@@ -307,9 +307,22 @@ const TodaysGoals: React.FC = () => {
                     <span>Buy {goal.supplementShortcut.products.join(' or ')}</span>
                   </button>
                 ) : (
+                {goal.supplementShortcut ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSupplementShortcut(goal.supplementShortcut.products, goal.supplementShortcut.category);
+                    }}
+                    className="text-xs text-blue-light hover:text-blue-medium font-medium flex items-center space-x-1"
+                  >
+                    <CubeIcon className="w-3 h-3" />
+                    <span>Buy {goal.supplementShortcut.products.join(' or ')}</span>
+                  </button>
+                ) : (
                   <div className="text-xs text-muted-foreground">
                     Tap anywhere to {goal.completed ? 'undo' : 'complete'}
                   </div>
+                )}
                 )}
                 {!goal.completed && (
                   <motion.button
