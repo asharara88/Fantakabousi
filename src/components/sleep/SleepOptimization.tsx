@@ -1,448 +1,1389 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { useToast } from '../../hooks/useToast';
-import { 
-  MoonIcon,
-  SunIcon,
-  ClockIcon,
-  ChartBarIcon,
-  BeakerIcon,
-  LightBulbIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  CubeIcon,
-  SparklesIcon,
-  BoltIcon
-} from '@heroicons/react/24/outline';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-interface SleepOptimizationProps {
-  onQuickAction?: (action: string) => void;
+/* === CSS VARIABLES === */
+:root {
+  /* Light Theme */
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --border: 226 232 240;
+  --primary: 59 130 246;
+  --primary-foreground: 255 255 255;
+  
+  /* Biowell Brand Colors */
+  --blue-light: 72 198 255;
+  --blue-medium: 42 127 255;
+  --blue-deep: 0 38 204;
+  --neon-green: 59 230 197;
+  
+  /* Semantic Colors */
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --error: 239 68 68;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 }
 
-const SleepOptimization: React.FC<SleepOptimizationProps> = ({ onQuickAction }) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [activeView, setActiveView] = useState('overview');
-  const [bedtimeCountdown, setBedtimeCountdown] = useState('');
-  const [sleepScore, setSleepScore] = useState(68);
+.dark {
+  /* Dark Theme */
+  --background: 2 6 23;
+  --foreground: 248 250 252;
+  --card: 15 23 42;
+  --card-foreground: 248 250 252;
+  --muted: 30 41 59;
+  --muted-foreground: 148 163 184;
+  --border: 51 65 85;
+}
 
-  const tabs = [
-    { id: 'overview', label: 'Sleep Overview', icon: ChartBarIcon },
-    { id: 'optimization', label: 'Optimization', icon: SparklesIcon },
-    { id: 'schedule', label: 'Sleep Schedule', icon: ClockIcon },
-    { id: 'environment', label: 'Environment', icon: MoonIcon },
-  ];
+/* Light theme explicit class */
+.light {
+  /* Light Theme */
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --border: 226 232 240;
+}
 
-  const sleepMetrics = [
-    { label: 'Sleep Score', value: sleepScore, unit: '/100', target: 85, color: 'from-indigo-500 to-purple-600' },
-    { label: 'Duration', value: 7.2, unit: 'hours', target: 8, color: 'from-blue-500 to-cyan-600' },
-    { label: 'Deep Sleep', value: 1.8, unit: 'hours', target: 2, color: 'from-purple-500 to-indigo-600' },
-    { label: 'REM Sleep', value: 1.5, unit: 'hours', target: 1.5, color: 'from-pink-500 to-rose-600' }
-  ];
+/* === BASE STYLES === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('supplements');
-    
-    toast({
-      title: `🛒 ${products.join(' or ')} Available`,
-      description: `Premium ${category} supplements for better sleep`,
-      action: {
-        label: "Shop Now",
-        onClick: () => onQuickAction?.('supplements')
-      }
-    });
-  };
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Start with auto theme detection */
+  color-scheme: light dark;
+}
 
-  const sleepOptimizations = [
-    {
-      id: 'magnesium',
-      title: 'Magnesium Supplementation',
-      description: 'Take 400mg magnesium glycinate 30 minutes before bed for deeper sleep.',
-      priority: 'high',
-      impact: 'High',
-      color: 'from-green-500 to-emerald-600',
-      supplementShortcut: {
-        products: ['Magnesium Glycinate', 'ZMA'],
-        category: 'sleep'
-      }
-    },
-    {
-      id: 'blue-light',
-      title: 'Blue Light Blocking',
-      description: 'Use blue light blocking glasses 2 hours before bedtime.',
-      priority: 'medium',
-      impact: 'Medium',
-      color: 'from-blue-500 to-cyan-600'
-    },
-    {
-      id: 'temperature',
-      title: 'Room Temperature',
-      description: 'Keep bedroom between 65-68°F (18-20°C) for optimal sleep.',
-      priority: 'medium',
-      impact: 'Medium',
-      color: 'from-cyan-500 to-blue-600'
-    },
-    {
-      id: 'melatonin',
-      title: 'Melatonin Timing',
-      description: 'Take 0.5-1mg melatonin 90 minutes before desired sleep time.',
-      priority: 'low',
-      impact: 'Low',
-      color: 'from-purple-500 to-indigo-600',
-      supplementShortcut: {
-        products: ['Melatonin', 'Sleep Stack'],
-        category: 'sleep'
-      }
-    }
-  ];
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-  const sleepSchedule = {
-    bedtime: '22:30',
-    wakeTime: '06:30',
-    windDownStart: '21:00',
-    lastCaffeine: '14:00',
-    lastMeal: '19:30'
-  };
+/* === MOBILE-FIRST RESPONSIVE DESIGN === */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const bedtime = new Date();
-      const [hour, minute] = sleepSchedule.bedtime.split(':').map(Number);
-      bedtime.setHours(hour, minute, 0, 0);
-      
-      if (now > bedtime) {
-        bedtime.setDate(bedtime.getDate() + 1);
-      }
-      
-      const diff = bedtime.getTime() - now.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      
-      setBedtimeCountdown(`${hours}h ${minutes}m`);
-    };
-    
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 60000);
-    
-    return () => clearInterval(interval);
-  }, []);
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+    padding: 0 1.5rem;
+  }
+}
 
-  const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('supplements');
-    
-    toast({
-      title: `🛒 ${products.join(' or ')} Available`,
-      description: `Premium ${category} supplements for better sleep`,
-      action: {
-        label: "Shop Now",
-        onClick: () => onQuickAction?.('supplements')
-      }
-    });
-  };
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 2rem;
+  }
+}
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700 border-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-700 border-green-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
-    }
-  };
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
 
-  const renderOverview = () => (
-    <div className="space-y-6">
-      {/* Sleep Score Ring */}
-      <div className="card-premium text-center">
-        <div className="space-y-6">
-          <div className="relative w-48 h-48 mx-auto">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" stroke="rgb(var(--muted))" strokeWidth="3" fill="none" />
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="url(#sleepGradient)"
-                strokeWidth="3"
-                fill="none"
-                strokeLinecap="round"
-                initial={{ strokeDasharray: "0 283" }}
-                animate={{ strokeDasharray: `${(sleepScore / 100) * 283} 283` }}
-                transition={{ duration: 2, ease: "easeOut" }}
-              />
-              <defs>
-                <linearGradient id="sleepGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#6366f1" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
-                </linearGradient>
-              </defs>
-            </svg>
-            
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-foreground">{sleepScore}</div>
-                <div className="text-sm text-muted-foreground">Sleep Score</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-foreground">Sleep Quality</h2>
-            <p className="text-muted-foreground">
-              {sleepScore >= 85 ? 'Excellent sleep quality!' : 
-               sleepScore >= 70 ? 'Good sleep, room for improvement' : 
-               'Sleep needs optimization'}
-            </p>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-6">
-            <div className="text-center">
-              <div className="text-lg font-bold text-indigo-600">{bedtimeCountdown}</div>
-              <div className="text-sm text-muted-foreground">Until bedtime</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-purple-600">7h 23m</div>
-              <div className="text-sm text-muted-foreground">Last night</div>
-            </div>
-          </div>
-        </div>
-      </div>
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
 
-      {/* Sleep Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {sleepMetrics.map((metric, index) => (
-          <motion.div
-            key={metric.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="card text-center"
-          >
-            <div className="space-y-3">
-              <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center mx-auto`}>
-                <MoonIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div className="text-xl font-bold text-foreground">
-                  {metric.value}{metric.unit}
-                </div>
-                <div className="text-sm text-muted-foreground">{metric.label}</div>
-                <div className="text-xs text-muted-foreground">Target: {metric.target}{metric.unit}</div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
+/* === MOBILE OPTIMIZATIONS === */
+.mobile-container {
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-  const renderOptimization = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {sleepOptimizations.map((optimization, index) => (
-          <motion.div
-            key={optimization.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="card-premium"
-          >
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${optimization.color} rounded-xl flex items-center justify-center`}>
-                    <LightBulbIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground">{optimization.title}</h3>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className={`px-2 py-1 text-xs font-bold rounded-full border ${getPriorityColor(optimization.priority)}`}>
-                        {optimization.priority.toUpperCase()}
-                      </span>
-                      <span className="text-xs text-muted-foreground">Impact: {optimization.impact}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground">{optimization.description}</p>
-              
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                {optimization.supplementShortcut ? (
-                  <button
-                    onClick={() => handleSupplementShortcut(optimization.supplementShortcut.products, optimization.supplementShortcut.category)}
-                    className={`px-4 py-2 bg-gradient-to-r ${optimization.color} text-white font-semibold rounded-lg hover:opacity-90 transition-all flex items-center space-x-2`}
-                  >
-                    <CubeIcon className="w-4 h-4" />
-                    <span>Buy {optimization.supplementShortcut.products[0]}</span>
-                  </button>
-                ) : (
-                  <button className={`px-4 py-2 bg-gradient-to-r ${optimization.color} text-white font-semibold rounded-lg hover:opacity-90 transition-all`}>
-                    Apply Tip
-                  </button>
-                )}
-                
-                <button 
-                  onClick={() => onQuickAction?.('coach')}
-                  className="btn-ghost flex items-center space-x-2"
-                >
-                  <SparklesIcon className="w-4 h-4" />
-                  <span>Ask Coach</span>
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
+.mobile-section {
+  margin-bottom: 1.5rem;
+  padding: 0;
+}
 
-  const renderSchedule = () => (
-    <div className="space-y-6">
-      <div className="card-premium">
-        <h2 className="text-xl font-bold text-foreground mb-6">Optimal Sleep Schedule</h2>
-        
-        <div className="space-y-4">
-          {[
-            { time: sleepSchedule.lastCaffeine, label: 'Last Caffeine', icon: BeakerIcon, color: 'text-amber-600' },
-            { time: sleepSchedule.lastMeal, label: 'Last Meal', icon: BeakerIcon, color: 'text-green-600' },
-            { time: sleepSchedule.windDownStart, label: 'Wind Down Starts', icon: MoonIcon, color: 'text-indigo-600' },
-            { time: sleepSchedule.bedtime, label: 'Bedtime', icon: MoonIcon, color: 'text-purple-600' },
-            { time: sleepSchedule.wakeTime, label: 'Wake Time', icon: SunIcon, color: 'text-yellow-600' }
-          ].map((item, index) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="flex items-center justify-between p-4 bg-muted/30 rounded-xl"
-            >
-              <div className="flex items-center space-x-3">
-                <item.icon className={`w-6 h-6 ${item.color}`} />
-                <span className="font-medium text-foreground">{item.label}</span>
-              </div>
-              <div className="text-lg font-bold text-foreground font-mono">{item.time}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+.mobile-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
-      {/* Sleep Supplements */}
-      <div className="card-premium bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800">
-        <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
-            <MoonIcon className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-purple-700 dark:text-purple-300 mb-2">
-              Sleep Stack Optimization
-            </h3>
-            <p className="text-sm text-purple-600 dark:text-purple-400 mb-4">
-              Your sleep score of {sleepScore}/100 suggests magnesium and melatonin could help improve deep sleep quality.
-            </p>
-            <div className="flex space-x-3">
-              <button
-                onClick={() => handleSupplementShortcut(['Magnesium Glycinate'], 'sleep')}
-                className="px-4 py-2 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600 transition-colors flex items-center space-x-2"
-              >
-                <CubeIcon className="w-4 h-4" />
-                <span>Shop Magnesium</span>
-              </button>
-              <button
-                onClick={() => handleSupplementShortcut(['Melatonin'], 'sleep')}
-                className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600 transition-colors flex items-center space-x-2"
-              >
-                <CubeIcon className="w-4 h-4" />
-                <span>Shop Melatonin</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+.mobile-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <MoonIcon className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Sleep Optimization</h1>
-            <p className="text-muted-foreground">Improve your sleep quality and recovery</p>
-          </div>
-        </div>
-        
-        <div className="text-right">
-          <div className="text-lg font-bold text-indigo-600">{bedtimeCountdown}</div>
-          <div className="text-sm text-muted-foreground">Until bedtime</div>
-        </div>
-      </div>
+@media (min-width: 640px) {
+  .mobile-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-      {/* Tab Navigation */}
-      <div className="flex bg-muted rounded-xl p-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveView(tab.id)}
-            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${
-              activeView === tab.id
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            <tab.icon className="w-5 h-5" />
-            <span className="hidden sm:inline">{tab.label}</span>
-          </button>
-        ))}
-      </div>
+.mobile-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
-      {/* Content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeView}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeView === 'overview' && renderOverview()}
-          {activeView === 'optimization' && renderOptimization()}
-          {activeView === 'schedule' && renderSchedule()}
-          {activeView === 'environment' && renderSchedule()}
-        </motion.div>
-      </AnimatePresence>
+.mobile-scroll-container::-webkit-scrollbar {
+  display: none;
+}
 
-      {/* Sleep Insights */}
-      <div className="card-premium bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
-        <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
-            <LightBulbIcon className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-blue-700 dark:text-blue-300 mb-2">
-              AI Sleep Insight
-            </h3>
-            <p className="text-sm text-blue-600 dark:text-blue-400 mb-4">
-              Your sleep score has improved 12% this week! Your new bedtime routine is working. 
-              Consider adding magnesium for even deeper sleep.
-            </p>
-            <button
-              onClick={() => onQuickAction?.('coach')}
-              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
-            >
-              <SparklesIcon className="w-4 h-4" />
-              <span>Get More Insights</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+/* === TOUCH TARGETS === */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
 
-export default SleepOptimization;
+.touch-target-large {
+  min-height: 56px;
+  min-width: 56px;
+}
+
+/* === BUTTONS === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn:focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #48C6FF 0%, #2A7FFF 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+  opacity: 0.95;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: rgb(var(--card));
+  color: rgb(var(--card-foreground));
+  border: 1px solid rgb(var(--border));
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background-color: rgb(var(--muted));
+  border-color: rgb(var(--blue-light));
+}
+
+.btn-ghost {
+  background: transparent;
+  color: rgb(var(--muted-foreground));
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.btn-ghost:hover {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--foreground));
+}
+
+/* Mobile button sizes */
+.btn-mobile-primary {
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  min-height: 56px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #48C6FF 0%, #2A7FFF 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-mobile-secondary {
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  min-height: 56px;
+  border-radius: var(--radius-xl);
+  background-color: rgb(var(--card));
+  color: rgb(var(--card-foreground));
+  border: 1px solid rgb(var(--border));
+  font-weight: 600;
+}
+
+/* === CARDS === */
+.card {
+  background-color: rgb(var(--card));
+  color: rgb(var(--card-foreground));
+  border: 1px solid rgb(var(--border) / 0.1);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dark .card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgb(var(--border) / 0.2);
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transform: translateY(-1px);
+  border-color: rgb(var(--blue-light) / 0.3);
+}
+
+.card-premium {
+  background-color: rgb(var(--card));
+  color: rgb(var(--card-foreground));
+  border: 1px solid rgb(var(--border) / 0.1);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, rgb(var(--card)) 0%, rgb(var(--card) / 0.95) 100%);
+}
+
+.card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-color: rgb(var(--blue-light) / 0.5);
+  background: linear-gradient(135deg, rgb(var(--card)) 0%, rgb(var(--card) / 0.98) 100%);
+}
+
+/* Mobile card adjustments */
+@media (max-width: 768px) {
+  .card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+  
+  .card-premium {
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+  }
+}
+
+/* === INPUTS === */
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgb(var(--border));
+  border-radius: var(--radius-lg);
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  cursor: text;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #48C6FF;
+  box-shadow: 0 0 0 3px rgba(72, 198, 255, 0.1);
+}
+
+.input::placeholder {
+  color: rgb(var(--muted-foreground));
+  font-weight: 400;
+}
+
+.input-mobile {
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+  min-height: 56px;
+  border-radius: var(--radius-xl);
+  border: 2px solid rgb(var(--border));
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+.input-mobile:focus {
+  border-color: #48C6FF;
+  box-shadow: 0 0 0 4px rgba(72, 198, 255, 0.1);
+}
+
+/* === NAVIGATION === */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-lg);
+  color: rgb(var(--muted-foreground));
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.nav-item:hover {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--foreground));
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgb(var(--blue-light)) 0%, rgb(var(--blue-medium)) 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+/* === METRIC CARDS === */
+.metric-card {
+  background-color: rgb(var(--card));
+  color: rgb(var(--card-foreground));
+  border: 1px solid rgb(var(--border));
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 140px;
+}
+
+.metric-card:hover {
+  border-color: rgb(var(--blue-light));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Mobile metric cards */
+@media (max-width: 768px) {
+  .metric-card {
+    padding: 1rem;
+    min-height: 120px;
+  }
+}
+
+/* === GRID SYSTEMS === */
+.grid-premium {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Responsive grid adjustments */
+@media (max-width: 640px) {
+  .grid-cols-2 { grid-template-columns: 1fr; }
+  .grid-cols-3 { grid-template-columns: 1fr; }
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid-cols-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* === TYPOGRAPHY === */
+/* === ACCESSIBLE TYPOGRAPHY === */
+/* Improved heading hierarchy with better contrast and spacing */
+h1, .text-heading-3xl { 
+  font-size: 2.25rem; 
+  font-weight: 700; 
+  line-height: 1.2; 
+  letter-spacing: -0.025em;
+  margin-bottom: 1.5rem;
+  color: rgb(var(--foreground));
+}
+
+h2, .text-heading-2xl { 
+  font-size: 1.875rem; 
+  font-weight: 600; 
+  line-height: 1.25; 
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  margin-top: 2rem;
+  color: rgb(var(--foreground));
+}
+
+h3, .text-heading-xl { 
+  font-size: 1.5rem; 
+  font-weight: 600; 
+  line-height: 1.3; 
+  letter-spacing: -0.015em;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  color: rgb(var(--foreground));
+}
+
+h4, .text-heading-lg { 
+  font-size: 1.25rem; 
+  font-weight: 600; 
+  line-height: 1.4; 
+  letter-spacing: -0.01em;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+  color: rgb(var(--foreground));
+}
+
+h5, .text-heading-md { 
+  font-size: 1.125rem; 
+  font-weight: 600; 
+  line-height: 1.45; 
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  color: rgb(var(--foreground));
+}
+
+h6, .text-heading-sm { 
+  font-size: 1rem; 
+  font-weight: 600; 
+  line-height: 1.5; 
+  margin-bottom: 0.5rem;
+  margin-top: 0.75rem;
+  color: rgb(var(--foreground));
+}
+
+/* Body text with improved readability */
+p, .text-body { 
+  font-size: 1rem; 
+  line-height: 1.75; 
+  margin-bottom: 1.25rem;
+  color: rgb(var(--foreground));
+  max-width: 65ch; /* Optimal reading width */
+}
+
+.text-body-sm { 
+  font-size: 0.875rem; 
+  line-height: 1.6; 
+  margin-bottom: 1rem;
+  color: rgb(var(--foreground));
+}
+
+.text-body-lg { 
+  font-size: 1.125rem; 
+  line-height: 1.8; 
+  margin-bottom: 1.5rem;
+  color: rgb(var(--foreground));
+}
+
+.text-caption { 
+  font-size: 0.875rem; 
+  line-height: 1.5; 
+  color: rgb(var(--muted-foreground));
+  margin-bottom: 0.75rem;
+}
+
+.text-label { 
+  font-size: 0.75rem; 
+  line-height: 1.4; 
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(var(--muted-foreground));
+}
+
+/* Lists with proper spacing */
+ul, ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  line-height: 1.75;
+  margin-bottom: 0.5rem;
+  color: rgb(var(--foreground));
+}
+
+/* Links with sufficient contrast */
+a {
+  color: rgb(var(--blue-medium));
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: rgb(var(--blue-light));
+  text-decoration-thickness: 2px;
+}
+
+a:focus {
+  outline: 2px solid rgb(var(--blue-light));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Mobile typography adjustments */
+@media (max-width: 768px) {
+  .text-heading-3xl { font-size: 1.875rem; }
+  .text-heading-2xl { font-size: 1.5rem; }
+  .text-heading-xl { font-size: 1.25rem; }
+}
+
+/* === STATUS INDICATORS === */
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.success { background-color: rgb(var(--success)); }
+.status-dot.warning { background-color: rgb(var(--warning)); }
+.status-dot.error { background-color: rgb(var(--error)); }
+
+.status-indicator {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-success {
+  background-color: rgb(var(--success) / 0.1);
+  color: rgb(var(--success));
+  border: 1px solid rgb(var(--success) / 0.2);
+}
+
+.status-warning {
+  background-color: rgb(var(--warning) / 0.1);
+  color: rgb(var(--warning));
+  border: 1px solid rgb(var(--warning) / 0.2);
+}
+
+.status-error {
+  background-color: rgb(var(--error) / 0.1);
+  color: rgb(var(--error));
+  border: 1px solid rgb(var(--error) / 0.2);
+}
+
+/* === PROGRESS BARS === */
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: rgb(var(--muted));
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgb(var(--blue-light)) 0%, rgb(var(--blue-medium)) 100%);
+  border-radius: var(--radius-sm);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === GRADIENTS === */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, #48C6FF 0%, #2A7FFF 50%, #0026CC 100%);
+}
+
+.bg-gradient-blue-light {
+  background: linear-gradient(135deg, #48C6FF 0%, #2A7FFF 100%);
+}
+
+.bg-gradient-blue-medium {
+  background: linear-gradient(135deg, #2A7FFF 0%, #0026CC 100%);
+}
+
+.bg-gradient-blue-deep {
+  background: linear-gradient(135deg, #0026CC 0%, #48C6FF 100%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, #48C6FF 0%, #2A7FFF 50%, #0026CC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.accent-neon {
+  color: #3BE6C5;
+}
+
+.bg-accent-neon {
+  background-color: #3BE6C5;
+}
+
+/* === CURSOR FIXES === */
+button, .btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-mobile-primary, .btn-mobile-secondary,
+[role="button"], .cursor-pointer, .nav-item, .metric-card, .card, .card-premium,
+[onclick], [data-clickable="true"], .clickable, a, [role="link"] {
+  cursor: pointer !important;
+}
+
+input, textarea, select, .input, .input-mobile {
+  cursor: text !important;
+}
+
+div, span, p, h1, h2, h3, h4, h5, h6, label, .text-foreground, .text-muted-foreground {
+  cursor: default !important;
+}
+
+/* === MOBILE NAVIGATION === */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: rgb(var(--card) / 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgb(var(--border));
+  padding: 0.5rem 1rem 1.5rem;
+  box-shadow: var(--shadow-xl);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 60px;
+  flex: 1;
+}
+
+.mobile-nav-item.active {
+  background-color: rgb(var(--blue-light) / 0.1);
+  color: rgb(var(--blue-light));
+}
+
+.mobile-nav-item:not(.active) {
+  color: rgb(var(--muted-foreground));
+}
+
+.mobile-nav-item:not(.active):hover {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--foreground));
+}
+
+/* === MOBILE HEADER === */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: rgb(var(--card) / 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgb(var(--border));
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* === SAFE AREAS FOR iOS === */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* === MOBILE CONTENT SPACING === */
+.mobile-content {
+  padding-top: calc(80px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* === ACCESSIBILITY === */
+/* Enhanced accessibility features */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --foreground: 0 0 0;
+    --background: 255 255 255;
+    --border: 0 0 0;
+    --muted-foreground: 64 64 64;
+  }
+  
+  .dark {
+    --foreground: 255 255 255;
+    --background: 0 0 0;
+    --border: 255 255 255;
+    --muted-foreground: 192 192 192;
+  }
+  
+  /* Ensure sufficient contrast for all text */
+  .text-muted-foreground {
+    color: rgb(64 64 64) !important;
+  }
+  
+  .dark .text-muted-foreground {
+    color: rgb(192 192 192) !important;
+  }
+}
+
+/* Dyslexia-friendly features */
+.dyslexia-friendly {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif;
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+  line-height: 2;
+}
+
+.dyslexia-friendly h1, 
+.dyslexia-friendly h2, 
+.dyslexia-friendly h3, 
+.dyslexia-friendly h4, 
+.dyslexia-friendly h5, 
+.dyslexia-friendly h6 {
+  font-weight: 600; /* Avoid bold text which can be harder to read */
+  margin-bottom: 1.5rem;
+}
+
+.dyslexia-friendly p {
+  margin-bottom: 1.5rem;
+  text-align: left; /* Avoid justified text */
+}
+
+/* Large text mode */
+.large-text {
+  font-size: 1.25rem !important;
+}
+
+.large-text .text-body {
+  font-size: 1.375rem !important;
+  line-height: 1.8 !important;
+}
+
+.large-text .text-heading-xl {
+  font-size: 2rem !important;
+}
+
+.large-text .text-heading-2xl {
+  font-size: 2.5rem !important;
+}
+
+/* Focus indicators for keyboard navigation */
+.focus-visible:focus-visible {
+  outline: 3px solid rgb(var(--blue-light));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip links for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: rgb(var(--blue-medium));
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Improved color contrast ratios */
+:root {
+  /* Ensure WCAG AA compliance (4.5:1 ratio) */
+  --text-high-contrast: 15 23 42; /* #0f172a - 16.75:1 ratio on white */
+  --text-medium-contrast: 51 65 85; /* #334155 - 8.49:1 ratio on white */
+  --text-low-contrast: 100 116 139; /* #64748b - 4.54:1 ratio on white */
+}
+
+.dark {
+  --text-high-contrast: 248 250 252; /* #f8fafc - 18.7:1 ratio on dark */
+  --text-medium-contrast: 203 213 225; /* #cbd5e1 - 9.85:1 ratio on dark */
+  --text-low-contrast: 148 163 184; /* #94a3b8 - 5.74:1 ratio on dark */
+}
+
+/* Apply high contrast colors */
+.text-foreground {
+  color: rgb(var(--text-high-contrast)) !important;
+}
+
+.text-muted-foreground {
+  color: rgb(var(--text-medium-contrast)) !important;
+}
+
+/* Ensure interactive elements have sufficient contrast */
+button, .btn {
+  border: 2px solid transparent;
+}
+
+button:focus-visible, .btn:focus-visible {
+  border-color: rgb(var(--blue-light));
+  box-shadow: 0 0 0 2px rgba(72, 198, 255, 0.2);
+}
+
+/* Text selection styling */
+::selection {
+  background-color: rgba(72, 198, 255, 0.3);
+  color: rgb(var(--text-high-contrast));
+}
+
+/* Improved link contrast */
+a {
+  color: rgb(var(--blue-medium));
+  font-weight: 500;
+}
+
+a:hover {
+  color: rgb(var(--blue-deep));
+}
+
+a:visited {
+  color: rgb(var(--blue-deep));
+}
+
+/* Status indicators with better contrast */
+.status-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(21, 128, 61); /* Higher contrast green */
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgb(146, 64, 14); /* Higher contrast amber */
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(153, 27, 27); /* Higher contrast red */
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Dark mode status indicators */
+.dark .status-success {
+  color: rgb(74, 222, 128);
+}
+
+.dark .status-warning {
+  color: rgb(251, 191, 36);
+}
+
+.dark .status-error {
+  color: rgb(248, 113, 113);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible:focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-slide-up { animation: slideUp 0.4s ease-out; }
+.animate-scale-in { animation: scaleIn 0.3s ease-out; }
+
+/* === UTILITY CLASSES === */
+.text-foreground { color: rgb(var(--foreground)); }
+.text-muted-foreground { color: rgb(var(--muted-foreground)); }
+.bg-background { background-color: rgb(var(--background)); }
+.bg-card { background-color: rgb(var(--card)); }
+.bg-muted { background-color: rgb(var(--muted)); }
+.border-border { border-color: rgb(var(--border)); }
+
+/* === ACCESSIBILITY UTILITIES === */
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background-color: rgb(var(--blue-medium));
+  color: white;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+/* Text truncation with accessibility */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-height: 1.5;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.5;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.5;
+}
+
+/* Ensure truncated text has proper contrast */
+.line-clamp-1,
+.line-clamp-2,
+.line-clamp-3 {
+  color: rgb(var(--text-high-contrast));
+}
+
+/* Reading width constraints */
+.reading-width {
+  max-width: 65ch;
+}
+
+.reading-width-narrow {
+  max-width: 45ch;
+}
+
+.reading-width-wide {
+  max-width: 75ch;
+}
+
+/* Text spacing utilities */
+.text-spacing-tight {
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+}
+
+.text-spacing-normal {
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.text-spacing-loose {
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+}
+
+/* Content hierarchy helpers */
+.content-hierarchy h1 { font-size: 2.25rem; margin-bottom: 1.5rem; }
+.content-hierarchy h2 { font-size: 1.875rem; margin-bottom: 1.25rem; margin-top: 2.5rem; }
+.content-hierarchy h3 { font-size: 1.5rem; margin-bottom: 1rem; margin-top: 2rem; }
+.content-hierarchy h4 { font-size: 1.25rem; margin-bottom: 0.75rem; margin-top: 1.5rem; }
+.content-hierarchy h5 { font-size: 1.125rem; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+.content-hierarchy h6 { font-size: 1rem; margin-bottom: 0.5rem; margin-top: 1rem; }
+
+.content-hierarchy p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+}
+
+.content-hierarchy ul,
+.content-hierarchy ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
+}
+
+.content-hierarchy li {
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+}
+
+/* === MOBILE OPTIMIZATIONS === */
+@media (max-width: 1024px) {
+  /* Ensure proper spacing on mobile */
+  .lg\\:pl-72 {
+    padding-left: 0 !important;
+  }
+  
+  .lg\\:pt-8 {
+    padding-top: 0 !important;
+  }
+  
+  /* Mobile-specific layouts */
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .mobile-main {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* === HAPTIC FEEDBACK === */
+.haptic-light { -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1); }
+.haptic-medium { -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2); }
+.haptic-heavy { -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3); }
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.will-change-transform { will-change: transform; }
+.will-change-opacity { will-change: opacity; }
+.gpu-accelerated { transform: translateZ(0); }
+
+/* === DARK MODE ADJUSTMENTS === */
+.dark .card {
+  background-color: rgb(var(--card));
+  border-color: rgb(var(--border));
+}
+
+.dark .input {
+  background-color: rgb(var(--card));
+  border-color: rgb(var(--border));
+  color: rgb(var(--foreground));
+}
+
+.dark .input::placeholder {
+  color: rgb(var(--muted-foreground));
+}
+
+.dark .mobile-nav {
+  background-color: rgb(var(--card) / 0.95);
+  border-top-color: rgb(var(--border));
+}
+
+.dark .mobile-header {
+  background-color: rgb(var(--card) / 0.95);
+  border-bottom-color: rgb(var(--border));
+}
+
+/* Dark mode text contrast improvements */
+.dark {
+  --text-high-contrast: 248 250 252;
+  --text-medium-contrast: 203 213 225;
+  --text-low-contrast: 148 163 184;
+}
+
+.dark .prose {
+  color: rgb(var(--text-high-contrast));
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: rgb(var(--text-high-contrast));
+}
+
+.dark .prose blockquote {
+  color: rgb(var(--text-medium-contrast));
+  border-left-color: rgb(var(--blue-light));
+}
+
+.dark .prose code {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--text-high-contrast));
+}
+
+.dark .prose pre {
+  background-color: rgb(var(--muted));
+}
+
+/* Dark mode link improvements */
+.dark a {
+  color: rgb(var(--blue-light));
+}
+
+.dark a:hover {
+  color: rgb(var(--neon-green));
+}
+
+.dark a:visited {
+  color: rgb(var(--blue-medium));
+}
+
+/* === REDUCE MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable transforms that can cause motion sickness */
+  .card:hover,
+  .card-premium:hover,
+  .btn:hover {
+    transform: none !important;
+  }
+}
+
+/* === READING PREFERENCES === */
+/* Improved text spacing for better readability */
+.readable-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+  word-spacing: 0.1em;
+  max-width: 60ch;
+  margin-bottom: 1.5rem;
+}
+
+.readable-text h1,
+.readable-text h2,
+.readable-text h3,
+.readable-text h4,
+.readable-text h5,
+.readable-text h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.readable-text p {
+  margin-bottom: 1.5rem;
+}
+
+.readable-text ul,
+.readable-text ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+.readable-text li {
+  margin-bottom: 0.75rem;
+  line-height: 1.8;
+}
+
+/* Content spacing utilities */
+.content-spacing > * + * {
+  margin-top: 1.5rem;
+}
+
+.content-spacing h1,
+.content-spacing h2,
+.content-spacing h3,
+.content-spacing h4,
+.content-spacing h5,
+.content-spacing h6 {
+  margin-top: 2.5rem;
+}
+
+.content-spacing h1:first-child,
+.content-spacing h2:first-child,
+.content-spacing h3:first-child,
+.content-spacing h4:first-child,
+.content-spacing h5:first-child,
+.content-spacing h6:first-child {
+  margin-top: 0;
+}
+
+/* Text alignment utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Improved readability for long content */
+.prose {
+  max-width: 65ch;
+  line-height: 1.75;
+  color: rgb(var(--text-high-contrast));
+}
+
+.prose h1 { font-size: 2.25rem; line-height: 1.2; margin-bottom: 1rem; }
+.prose h2 { font-size: 1.875rem; line-height: 1.25; margin-bottom: 0.875rem; margin-top: 2rem; }
+.prose h3 { font-size: 1.5rem; line-height: 1.3; margin-bottom: 0.75rem; margin-top: 1.75rem; }
+.prose h4 { font-size: 1.25rem; line-height: 1.4; margin-bottom: 0.625rem; margin-top: 1.5rem; }
+.prose h5 { font-size: 1.125rem; line-height: 1.45; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+.prose h6 { font-size: 1rem; line-height: 1.5; margin-bottom: 0.5rem; margin-top: 1rem; }
+
+.prose p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+}
+
+.prose blockquote {
+  border-left: 4px solid rgb(var(--blue-light));
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: rgb(var(--text-medium-contrast));
+}
+
+.prose code {
+  background-color: rgb(var(--muted));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+.prose pre {
+  background-color: rgb(var(--muted));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0 0;
+    --muted: 229 231 235;
+  }
+  
+  .dark {
+    --border: 255 255 255;
+    --muted: 55 65 81;
+  }
+}
