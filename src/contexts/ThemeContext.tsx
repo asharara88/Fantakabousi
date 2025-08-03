@@ -23,11 +23,11 @@ export const useTheme = () => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('biowell-theme');
-    return (saved as Theme) || 'auto';
+    return (saved as Theme) || 'auto'; // Always start with auto
   });
   const [autoSyncTime, setAutoSyncTime] = useState(() => {
     const saved = localStorage.getItem('biowell-auto-sync-time');
-    return saved !== null ? saved === 'true' : true; // Default to true for auto sync
+    return saved !== null ? saved === 'true' : true; // Default to true for time-based auto sync
   });
 
   const [actualTheme, setActualTheme] = useState<'light' | 'dark'>('light');
@@ -36,7 +36,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updateTheme = () => {
       let newActualTheme: 'light' | 'dark';
       
-      if (theme === 'auto' || autoSyncTime) {
+      if (theme === 'auto') {
         if (autoSyncTime) {
           // Auto-sync with time: light during day (6 AM - 6 PM), dark at night
           const hour = new Date().getHours();
@@ -67,16 +67,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     updateTheme();
 
     // Set up listeners for system preference changes
-    if (theme === 'auto' && !autoSyncTime) {
+    if (theme === 'auto') {
+      if (!autoSyncTime) {
+        // Listen for system preference changes
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       mediaQuery.addEventListener('change', updateTheme);
       return () => mediaQuery.removeEventListener('change', updateTheme);
-    }
-    
-    // Set up timer for time-based auto-sync
-    if (autoSyncTime) {
+      } else {
+        // Set up timer for time-based auto-sync
       const interval = setInterval(updateTheme, 60000); // Check every minute
       return () => clearInterval(interval);
+      }
     }
   }, [theme, autoSyncTime]);
 

@@ -164,7 +164,12 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isSignIn && (
-              <div className="relative">
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="relative"
+              >
                 <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <input
                   type="text"
@@ -175,7 +180,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
                   className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
                   required={!isSignIn}
                 />
-              </div>
+              </motion.div>
             )}
 
             <div className="relative">
@@ -233,7 +238,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
 
           {/* Forgot Password Link */}
           {isSignIn && (
-            <div className="text-center">
+            <div className="text-center mt-4">
               <button
                 onClick={() => setShowPasswordReset(true)}
                 className="text-sm text-blue-light hover:text-blue-medium transition-colors"
