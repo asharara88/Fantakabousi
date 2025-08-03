@@ -6,6 +6,8 @@ import RecipeSearch from '../recipes/RecipeSearch';
 import AdvancedCharts from '../health/AdvancedCharts';
 import RealDeviceIntegration from '../devices/RealDeviceIntegration';
 import DeviceConnection from '../devices/DeviceConnection';
+import HealthMetricsTable from '../health/HealthMetricsTable';
+import FoodLogsTable from '../nutrition/FoodLogsTable';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   HeartIcon,
@@ -72,6 +74,7 @@ const HealthDashboard: React.FC = () => {
   const tabs = [
     { id: 'metrics', label: 'Health Metrics', icon: HeartIcon },
     { id: 'analytics', label: 'Analytics', icon: ChartBarIcon },
+    { id: 'data', label: 'Data Tables', icon: ChartBarIcon },
     { id: 'devices', label: 'Devices', icon: WifiIcon },
     { id: 'food', label: 'Food Logging', icon: BeakerIcon },
     { id: 'recipes', label: 'Find Recipes', icon: MagnifyingGlassIcon },
@@ -216,6 +219,13 @@ const HealthDashboard: React.FC = () => {
     switch (activeView) {
       case 'analytics':
         return <AdvancedCharts />;
+      case 'data':
+        return (
+          <div className="space-y-8">
+            <HealthMetricsTable />
+            <FoodLogsTable />
+          </div>
+        );
       case 'devices':
         return <RealDeviceIntegration />;
       case 'food':
