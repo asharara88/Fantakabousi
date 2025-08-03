@@ -95,6 +95,72 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
     return { text: 'Out of Stock', color: 'text-gray-500' };
   };
 
+  const renderGridView = () => (
+    <div className="space-y-6">
+      {/* Search */}
+      <div className="card p-4">
+        <div className="relative">
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search supplements..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        {categories.map((category) => (
+          <motion.button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+              selectedCategory === category.id
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+            }`}
+          >
+            <div className="flex flex-col items-center space-y-2">
+              <category.icon className={`w-6 h-6 ${
+                selectedCategory === category.id ? 'text-blue-600' : 'text-gray-500'
+              }`} />
+              <div className="text-center">
+                <div className="font-medium text-sm">{category.name}</div>
+                <div className="text-xs text-gray-500">{category.count}</div>
+              </div>
+            </div>
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {filteredSupplements.map((supplement, index) => {
+          const isInCart = cartItems.has(supplement.id);
+          const isFavorite = favorites.has(supplement.id);
+          const stockStatus = getStockStatus(supplement.stock_quantity);
+          
+          return (
+            <motion.div
+              key={supplement.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="card cursor-pointer"
+            >
+              {/* Existing grid card content */}
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">

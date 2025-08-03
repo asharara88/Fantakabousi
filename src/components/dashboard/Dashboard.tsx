@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
-import { AccessibilityProvider } from '../ui/AccessibilityProvider';
+import AccessibilityProvider from '../ui/AccessibilityProvider';
 import Navigation from '../layout/Navigation';
 import { MobileNavigation } from '../layout/MobileNavigation';
 import WelcomeHeader from './WelcomeHeader';

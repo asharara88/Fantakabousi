@@ -172,3 +172,5 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     </AccessibilityContext.Provider>
   );
 };
+
+export default AccessibilityProvider;

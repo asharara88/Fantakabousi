@@ -311,6 +311,7 @@ const ProfileSettingsEnhanced: React.FC = () => {
               </div>
             </div>
             <ThemeSelector />
+            <AccessibilitySettings />
           </div>
         );
         
