@@ -60,6 +60,18 @@
   --border: 51 65 85;
 }
 
+/* Light theme explicit class */
+.light {
+  /* Light Theme */
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --border: 226 232 240;
+}
+
 /* === BASE STYLES === */
 * {
   box-sizing: border-box;
@@ -72,6 +84,8 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Start with auto theme detection */
+  color-scheme: light dark;
 }
 
 body {
@@ -80,6 +94,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* === MOBILE-FIRST RESPONSIVE DESIGN === */
