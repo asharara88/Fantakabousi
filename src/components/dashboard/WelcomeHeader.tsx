@@ -303,12 +303,18 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="region" aria-labelledby="welcome-section-title">
+      <h2 id="welcome-section-title" className="sr-only">Welcome Dashboard</h2>
+      
       {/* Hero Section with Time & Greeting */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-2xl">
+      <section 
+        role="banner" 
+        aria-labelledby="hero-title"
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-2xl"
+      >
         {/* Floating orbs */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-2xl"></div>
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl" aria-hidden="true"></div>
+        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-2xl" aria-hidden="true"></div>
         
         <div className="relative z-10 p-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
@@ -321,6 +327,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             >
               <div className="space-y-4">
                 <motion.h1 
+                  id="hero-title"
                   className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent font-inter tracking-tight"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -335,21 +342,27 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <div className="text-lg font-medium text-foreground/70 font-inter">
+                  <time 
+                    className="text-lg font-medium text-foreground/70 font-inter"
+                    dateTime={currentTime.toISOString()}
+                  >
                     {currentTime.toLocaleDateString('en-US', { 
                       weekday: 'long', 
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric' 
                     })}
-                  </div>
-                  <div className="text-3xl font-bold text-foreground font-mono tracking-wider">
+                  </time>
+                  <time 
+                    className="text-3xl font-bold text-foreground font-mono tracking-wider"
+                    dateTime={currentTime.toISOString()}
+                  >
                     {currentTime.toLocaleTimeString('en-US', { 
                       hour12: false,
                       hour: '2-digit',
                       minute: '2-digit'
                     })}
-                  </div>
+                  </time>
                 </motion.div>
               </div>
             </motion.div>
@@ -360,7 +373,12 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="flex justify-center"
+              role="img"
+              aria-labelledby="progress-label"
             >
+              <div id="progress-label" className="sr-only">
+                Daily progress: {completedWins} out of {dailyWins.length} goals completed, {Math.round(progressPercentage)}% complete
+              </div>
               <div className="relative w-48 h-48">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle
@@ -419,29 +437,39 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
               className="space-y-6"
+              role="complementary"
+              aria-label="Time and upcoming goals"
             >
               {/* Bedtime Countdown */}
-              <div className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6 text-center">
+              <div 
+                className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6 text-center"
+                role="timer"
+                aria-labelledby="bedtime-countdown-label"
+              >
                 <MoonIcon className="w-8 h-8 text-[#48C6FF] mx-auto mb-3" />
-                <div className="text-sm font-medium text-foreground/60 mb-2">Bedtime in</div>
-                <div className="text-2xl font-bold text-[#48C6FF] font-mono">
+                <div id="bedtime-countdown-label" className="text-sm font-medium text-foreground/60 mb-2">Bedtime in</div>
+                <time className="text-2xl font-bold text-[#48C6FF] font-mono">
                   {bedtimeCountdown}
-                </div>
+                </time>
               </div>
 
               {/* Next Win */}
               {nextWin && (
-                <div className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6">
+                <div 
+                  className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6"
+                  role="region"
+                  aria-labelledby="next-win-title"
+                >
                   <div className="flex items-center space-x-3 mb-3">
                     <div className={`w-8 h-8 bg-gradient-to-br ${nextWin.color} rounded-lg flex items-center justify-center`}>
                       <nextWin.icon className="w-4 h-4 text-white" />
                     </div>
-                    <div className="text-sm font-medium text-foreground/60">Next Win</div>
+                    <div id="next-win-title" className="text-sm font-medium text-foreground/60">Next Win</div>
                   </div>
                   <div className="text-base font-semibold text-foreground mb-1">{nextWin.title}</div>
                   <div className="text-sm text-foreground/70 mb-3">{nextWin.description}</div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-[#48C6FF]">{nextWin.time}</span>
+                    <time className="text-sm font-bold text-[#48C6FF]">{nextWin.time}</time>
                     <span className="text-sm font-bold text-[#3BE6C5]">+{nextWin.points} pts</span>
                   </div>
                 </div>
@@ -449,14 +477,14 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             </motion.div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Daily Wins Grid */}
-      <div className="space-y-6">
+      <section role="region" aria-labelledby="daily-wins-title" className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <TrophyIcon className="w-6 h-6 text-[#48C6FF]" />
-            <h2 className="text-2xl font-bold text-foreground">Today's Wins</h2>
+            <h2 id="daily-wins-title" className="text-2xl font-bold text-foreground">Today's Wins</h2>
           </div>
           <div className="text-right">
             <div className="text-lg font-bold text-[#3BE6C5]">{totalPoints} points</div>
@@ -464,14 +492,29 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <ul 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
+          role="list"
+          aria-label="Daily wellness goals"
+        >
           {dailyWins.map((win, index) => (
-            <motion.div
-              key={win.id}
+            <li key={win.id} role="listitem">
+              <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               onClick={() => toggleWin(win.id)}
+              role="button"
+              aria-pressed={win.completed}
+              aria-labelledby={`win-${win.id}-title`}
+              aria-describedby={`win-${win.id}-description`}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleWin(win.id);
+                }
+              }}
               className={`card cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
                 win.completed 
                   ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
@@ -489,20 +532,32 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 500 }}
+                        role="img"
+                        aria-label="Goal completed"
                       >
                         <CheckCircleSolidIcon className="w-6 h-6 text-green-500" />
                       </motion.div>
                     ) : (
-                      <div className="w-6 h-6 border-2 border-border rounded-full hover:border-[#48C6FF] transition-colors" />
+                      <div 
+                        className="w-6 h-6 border-2 border-border rounded-full hover:border-[#48C6FF] transition-colors"
+                        role="img"
+                        aria-label="Goal not completed"
+                      />
                     )}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className={`font-bold text-foreground ${win.completed ? 'line-through opacity-75' : ''}`}>
+                  <h3 
+                    id={`win-${win.id}-title`}
+                    className={`font-bold text-foreground ${win.completed ? 'line-through opacity-75' : ''}`}
+                  >
                     {win.title}
                   </h3>
-                  <p className={`text-sm ${win.completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                  <p 
+                    id={`win-${win.id}-description`}
+                    className={`text-sm ${win.completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
+                  >
                     {win.description}
                   </p>
                 </div>
@@ -510,7 +565,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <ClockIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium text-foreground">{win.time}</span>
+                    <time className="text-sm font-medium text-foreground">{win.time}</time>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm font-bold text-[#3BE6C5]">+{win.points}</span>
@@ -524,13 +579,20 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+              </motion.div>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
 
       {/* Quick Action Shortcuts */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <section role="region" aria-labelledby="quick-actions-title">
+        <h2 id="quick-actions-title" className="sr-only">Quick Actions</h2>
+        <ul 
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+          role="list"
+          aria-label="Quick action shortcuts"
+        >
         {[
           { 
             id: 'coach', 
@@ -561,12 +623,14 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             description: 'Optimize your stack'
           }
         ].map((action, index) => (
-          <motion.button
-            key={action.id}
+          <li key={action.id} role="listitem">
+            <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 + index * 0.1 }}
             onClick={() => onQuickAction?.(action.id)}
+            aria-labelledby={`action-${action.id}-title`}
+            aria-describedby={`action-${action.id}-description`}
             className="card hover:shadow-xl hover:-translate-y-2 transition-all duration-300 text-center"
           >
             <div className="space-y-3">
@@ -574,23 +638,30 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 <action.icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-foreground">{action.title}</h3>
-                <p className="text-sm text-muted-foreground">{action.description}</p>
+                <h3 id={`action-${action.id}-title`} className="font-bold text-foreground">{action.title}</h3>
+                <p id={`action-${action.id}-description`} className="text-sm text-muted-foreground">{action.description}</p>
               </div>
             </div>
-          </motion.button>
+            </motion.button>
+          </li>
         ))}
-      </div>
+        </ul>
+      </section>
 
       {/* Achievement Celebration */}
       {completedWins === dailyWins.length && (
-        <motion.div
+        <section 
+          role="alert"
+          aria-labelledby="achievement-title"
+          aria-describedby="achievement-description"
+        >
+          <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="card-premium bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800 text-center relative overflow-hidden"
         >
           {/* Celebration particles */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
@@ -617,14 +688,16 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
             <motion.div
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.6, repeat: 3 }}
+              role="img"
+              aria-label="Trophy celebration"
             >
               <TrophyIcon className="w-16 h-16 text-yellow-500 mx-auto" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
+              <h3 id="achievement-title" className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
                 🎉 Perfect Day Achieved!
               </h3>
-              <p className="text-green-600 dark:text-green-500 mb-4">
+              <p id="achievement-description" className="text-green-600 dark:text-green-500 mb-4">
                 All daily wins completed! You've earned {totalPoints} points and built incredible momentum.
               </p>
               <div className="flex items-center justify-center space-x-4">
@@ -637,12 +710,18 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               </div>
             </div>
           </div>
-        </motion.div>
+          </motion.div>
+        </section>
       )}
 
       {/* Smart Notifications */}
       {nextWin && (
-        <motion.div
+        <section 
+          role="region" 
+          aria-labelledby="upcoming-goal-title"
+          aria-describedby="upcoming-goal-description"
+        >
+          <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="card bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800"
@@ -652,21 +731,23 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               <LightBulbIcon className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-blue-700 dark:text-blue-300">
+              <h3 id="upcoming-goal-title" className="font-bold text-blue-700 dark:text-blue-300">
                 ⏰ Upcoming: {nextWin.title}
               </h3>
-              <p className="text-sm text-blue-600 dark:text-blue-400">
+              <p id="upcoming-goal-description" className="text-sm text-blue-600 dark:text-blue-400">
                 {nextWin.description} • {nextWin.time} • +{nextWin.points} points
               </p>
             </div>
             <button
               onClick={() => toggleWin(nextWin.id)}
+              aria-label={`Complete ${nextWin.title} now`}
               className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
             >
               Complete Now
             </button>
           </div>
-        </motion.div>
+          </motion.div>
+        </section>
       )}
     </div>
   );

@@ -134,18 +134,22 @@ const AICoachEnhanced: React.FC = () => {
   }
 
   return (
-    <div className="h-full flex flex-col max-w-4xl mx-auto">
+    <div className="h-full flex flex-col max-w-4xl mx-auto" role="region" aria-labelledby="ai-coach-title">
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b border-gray-200 bg-white">
+      <header role="banner" className="p-4 lg:p-6 border-b border-gray-200 bg-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
               <CpuChipIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Smart Coach</h1>
+              <h1 id="ai-coach-title" className="text-xl lg:text-2xl font-bold text-gray-900">Smart Coach</h1>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <div 
+                  className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                  role="status"
+                  aria-label="AI coach is online and ready"
+                ></div>
                 <span className="text-sm text-gray-600">Ready to help</span>
               </div>
             </div>
@@ -153,6 +157,7 @@ const AICoachEnhanced: React.FC = () => {
           
           {sessions.length > 0 && (
             <button
+              aria-label="Start a new chat session"
               onClick={() => createNewSession()}
               className="btn-primary flex items-center space-x-2"
             >
@@ -161,13 +166,13 @@ const AICoachEnhanced: React.FC = () => {
             </button>
           )}
         </div>
-      </div>
+      </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
+      <main role="main" className="flex-1 overflow-hidden">
         {showOnboarding ? (
           /* Welcome Screen */
-          <div className="h-full overflow-y-auto p-4 lg:p-6">
+          <section role="region" aria-labelledby="welcome-title" className="h-full overflow-y-auto p-4 lg:p-6">
             <div className="max-w-2xl mx-auto space-y-8">
               {/* Welcome */}
               <motion.div
@@ -179,7 +184,7 @@ const AICoachEnhanced: React.FC = () => {
                   <SparklesIcon className="w-10 h-10 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
+                  <h2 id="welcome-title" className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
                     Hi! I'm your Smart Coach
                   </h2>
                   <p className="text-lg text-gray-600">
@@ -195,17 +200,22 @@ const AICoachEnhanced: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="space-y-4"
               >
-                <h3 className="text-lg font-semibold text-gray-900 text-center">What can I help you with?</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <h3 id="quick-prompts-title" className="text-lg font-semibold text-gray-900 text-center">What can I help you with?</h3>
+                <ul 
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                  role="list"
+                  aria-labelledby="quick-prompts-title"
+                >
                   {quickPrompts.map((prompt, index) => (
-                    <motion.button
-                      key={index}
+                    <li key={index} role="listitem">
+                      <motion.button
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + index * 0.1 }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickPrompt(prompt.text)}
+                      aria-label={`Ask about ${prompt.text}`}
                       className="p-4 bg-card rounded-xl border border-border hover:border-blue-light/30 hover:shadow-md transition-all duration-200 text-left"
                     >
                       <div className="flex items-center space-x-3">
@@ -214,9 +224,10 @@ const AICoachEnhanced: React.FC = () => {
                         </div>
                         <span className="font-medium text-foreground">{prompt.text}</span>
                       </div>
-                    </motion.button>
+                      </motion.button>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </motion.div>
 
               {/* Example Questions */}
@@ -226,44 +237,59 @@ const AICoachEnhanced: React.FC = () => {
                 transition={{ delay: 0.4 }}
                 className="space-y-4"
               >
-                <h3 className="text-lg font-semibold text-gray-900 text-center">Or ask me anything:</h3>
-                <div className="space-y-2">
+                <h3 id="example-questions-title" className="text-lg font-semibold text-gray-900 text-center">Or ask me anything:</h3>
+                <ul 
+                  className="space-y-2"
+                  role="list"
+                  aria-labelledby="example-questions-title"
+                >
                   {[
                     "What should I eat for breakfast?",
                     "How can I sleep better?",
                     "What supplements do I need?",
                     "Plan my workout routine"
                   ].map((question, index) => (
-                    <motion.button
-                      key={index}
+                    <li key={index} role="listitem">
+                      <motion.button
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.5 + index * 0.1 }}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                       onClick={() => handleQuickPrompt(question)}
+                      aria-label={`Ask: ${question}`}
                       className="w-full text-left p-3 bg-muted/50 hover:bg-blue-light/10 rounded-lg border border-border hover:border-blue-light/30 transition-all duration-200"
                     >
                       <span className="text-foreground hover:text-blue-light">{question}</span>
-                    </motion.button>
+                      </motion.button>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </motion.div>
             </div>
-          </div>
+          </section>
         ) : (
           /* Chat Interface */
-          <div className="h-full flex flex-col">
+          <section role="region" aria-labelledby="chat-interface-title" className="h-full flex flex-col">
+            <h2 id="chat-interface-title" className="sr-only">Chat Interface</h2>
+            
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 lg:p-6">
-              <div className="space-y-4">
+            <div 
+              className="flex-1 overflow-y-auto p-4 lg:p-6"
+              role="log"
+              aria-label="Chat conversation"
+              aria-live="polite"
+            >
+              <ul className="space-y-4" role="list">
                 {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
+                  <li key={message.id} role="listitem">
+                    <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    role="article"
+                    aria-labelledby={`message-${message.id}-author`}
                   >
                     <div className={`flex items-start space-x-3 max-w-[85%] ${
                       message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
@@ -286,6 +312,9 @@ const AICoachEnhanced: React.FC = () => {
                           : ''
                       }`}>
                         <div className="space-y-3">
+                          <div id={`message-${message.id}-author`} className="sr-only">
+                            {message.role === 'user' ? 'You said' : 'AI Coach said'}
+                          </div>
                           <p className="text-foreground leading-relaxed">
                             {message.message}
                           </p>
@@ -295,8 +324,8 @@ const AICoachEnhanced: React.FC = () => {
                               <button
                                 onClick={() => handlePlayAudio(message.message)}
                                 disabled={isPlayingAudio}
+                                aria-label={isPlayingAudio ? "Stop audio playback" : "Play message as audio"}
                                 className="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors disabled:opacity-50"
-                                title="Play audio response"
                               >
                                 {isPlayingAudio ? (
                                   <StopIcon className="w-4 h-4 text-blue-600" />
@@ -310,22 +339,26 @@ const AICoachEnhanced: React.FC = () => {
                             </div>
                           )}
                         </div>
-                        <div className="text-xs text-gray-500 mt-2">
+                        <time className="text-xs text-gray-500 mt-2" dateTime={message.timestamp}>
                           {new Date(message.timestamp).toLocaleTimeString([], { 
                             hour: '2-digit', 
                             minute: '2-digit' 
                           })}
-                        </div>
+                        </time>
                       </div>
                     </div>
-                  </motion.div>
+                    </motion.div>
+                  </li>
                 ))}
                 
                 {sendingMessage && (
-                  <motion.div
+                  <li role="listitem">
+                    <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex justify-start"
+                    role="status"
+                    aria-label="AI is thinking"
                   >
                     <div className="flex items-start space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -338,17 +371,22 @@ const AICoachEnhanced: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                    </motion.div>
+                  </li>
                 )}
                 
                 <div ref={messagesEndRef} />
-              </div>
+              </ul>
             </div>
 
-            <div className="bg-card border-t border-border p-4 lg:p-6">
+            <footer role="contentinfo" className="bg-card border-t border-border p-4 lg:p-6">
               <div className="flex items-center space-x-3">
-                <div className="flex-1 relative">
+                <div className="flex-1 relative" role="search">
+                  <label htmlFor="chat-input" className="sr-only">
+                    Type your message to the AI coach
+                  </label>
                   <input
+                    id="chat-input"
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
@@ -356,7 +394,11 @@ const AICoachEnhanced: React.FC = () => {
                     placeholder="Ask me anything about your health..."
                     className="w-full px-4 py-3 lg:py-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-light focus:border-transparent text-base bg-background text-foreground"
                     disabled={sendingMessage}
+                    aria-describedby="chat-input-help"
                   />
+                  <div id="chat-input-help" className="sr-only">
+                    Press Enter to send your message to the AI coach
+                  </div>
                 </div>
                 
                 <motion.button
@@ -364,6 +406,7 @@ const AICoachEnhanced: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || sendingMessage}
+                  aria-label={sendingMessage ? "Sending message" : "Send message to AI coach"}
                   className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                 >
                   {sendingMessage ? (
@@ -373,10 +416,10 @@ const AICoachEnhanced: React.FC = () => {
                   )}
                 </motion.button>
               </div>
-            </div>
-          </div>
+            </footer>
+          </section>
         )}
-      </div>
+      </main>
     </div>
   );
 };

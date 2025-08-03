@@ -96,39 +96,52 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" role="document">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <img 
-              src={logoUrl} 
-              alt="Biowell" 
-              className="h-12 w-auto"
-            />
-            <div className="flex items-center space-x-4">
-              <button 
+      <header role="banner">
+        <nav 
+          role="navigation" 
+          aria-label="Main navigation"
+          className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
+        >
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-12 w-auto"
+              />
+              <div className="flex items-center space-x-4">
+                <button 
+                aria-label="Sign in to your account"
                 onClick={onShowAuth}
                 className="text-muted-foreground hover:text-foreground font-medium transition-colors"
               >
                 Sign In
-              </button>
-              <button 
+                </button>
+                <button 
+                aria-label="Get started with Biowell"
                 onClick={onShowAuth}
                 className="btn-primary"
               >
                 Get Started
-              </button>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 relative overflow-hidden">
+      <main role="main">
+        <section 
+          role="region" 
+          aria-labelledby="hero-title"
+          className="pt-32 pb-20 relative overflow-hidden"
+        >
         {/* Background Elements */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl" aria-hidden="true"></div>
+        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-3xl" aria-hidden="true"></div>
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -150,7 +163,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   <span className="text-sm font-semibold text-[#48C6FF]">AI-Powered Wellness Platform</span>
                 </motion.div>
 
-                <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+                <h1 id="hero-title" className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
                   Your Personal
                   <span className="block text-gradient-brand">
                     Wellness Coach
@@ -168,20 +181,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={onShowAuth}
+                  aria-label="Get started with Biowell"
                   className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                 >
                   <span>Get Started</span>
                   <ArrowRightIcon className="w-5 h-5" />
                 </motion.button>
                 
-                <button className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors flex items-center justify-center space-x-2">
+                <button 
+                  aria-label="Watch product demo video"
+                  className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors flex items-center justify-center space-x-2"
+                >
                   <PlayIcon className="w-5 h-5" />
                   <span>Watch Demo</span>
                 </button>
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-4 gap-6 pt-8">
+              <div 
+                className="grid grid-cols-4 gap-6 pt-8"
+                role="region"
+                aria-label="Platform statistics"
+              >
                 {stats.map((stat, index) => (
                   <motion.div
                     key={index}
@@ -203,6 +224,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="relative"
+              role="img"
+              aria-label="Dashboard preview showing health metrics"
             >
               <div className="relative bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl rounded-3xl p-8 border border-border shadow-2xl">
                 {/* Mock Dashboard Preview */}
@@ -236,10 +259,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </motion.div>
           </div>
         </div>
-      </section>
+        </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+        <section 
+          role="region" 
+          aria-labelledby="features-title"
+          className="py-20 bg-muted/30"
+        >
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -248,7 +275,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground">
+            <h2 id="features-title" className="text-3xl lg:text-5xl font-bold text-foreground">
               Everything You Need for
               <span className="block text-gradient-brand">Optimal Wellness</span>
             </h2>
@@ -258,10 +285,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <ul 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            role="list"
+            aria-label="Platform features"
+          >
             {features.map((feature, index) => (
-              <motion.div
-                key={index}
+              <li key={index} role="listitem">
+                <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -277,14 +308,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                     <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                   </div>
                 </div>
-              </motion.div>
+                </motion.div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-      </section>
+        </section>
 
       {/* How It Works */}
-      <section className="py-20">
+        <section 
+          role="region" 
+          aria-labelledby="how-it-works-title"
+          className="py-20"
+        >
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -293,7 +329,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground">
+            <h2 id="how-it-works-title" className="text-3xl lg:text-5xl font-bold text-foreground">
               How Biowell Works
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -301,7 +337,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <ol 
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            role="list"
+            aria-label="How Biowell works steps"
+          >
             {[
               {
                 step: '01',
@@ -322,8 +362,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 icon: CheckCircleIcon
               }
             ].map((step, index) => (
-              <motion.div
-                key={index}
+              <li key={index} role="listitem">
+                <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
@@ -334,7 +374,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   <div className="w-20 h-20 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center mx-auto shadow-xl">
                     <step.icon className="w-10 h-10 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-[#3BE6C5] rounded-full flex items-center justify-center text-black font-bold text-sm">
+                  <div 
+                    className="absolute -top-2 -right-2 w-8 h-8 bg-[#3BE6C5] rounded-full flex items-center justify-center text-black font-bold text-sm"
+                    aria-label={`Step ${step.step}`}
+                  >
                     {step.step}
                   </div>
                 </div>
@@ -342,14 +385,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                 </div>
-              </motion.div>
+                </motion.div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
-      </section>
+        </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-muted/30">
+        <section 
+          role="region" 
+          aria-labelledby="testimonials-title"
+          className="py-20 bg-muted/30"
+        >
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -358,7 +406,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground">
+            <h2 id="testimonials-title" className="text-3xl lg:text-5xl font-bold text-foreground">
               Trusted by Thousands
             </h2>
             <p className="text-xl text-muted-foreground">
@@ -366,17 +414,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <ul 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            role="list"
+            aria-label="User testimonials"
+          >
             {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
+              <li key={index} role="listitem">
+                <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="card text-center space-y-4"
+                role="article"
               >
-                <div className="flex justify-center space-x-1">
+                <div className="flex justify-center space-x-1" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
@@ -388,15 +441,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   <div className="font-semibold text-foreground">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">{testimonial.role}</div>
                 </div>
-              </motion.div>
+                </motion.div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-      </section>
+        </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#48C6FF]/10 via-[#2A7FFF]/10 to-[#0026CC]/10"></div>
+        <section 
+          role="region" 
+          aria-labelledby="cta-title"
+          className="py-20 relative overflow-hidden"
+        >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#48C6FF]/10 via-[#2A7FFF]/10 to-[#0026CC]/10" aria-hidden="true"></div>
         
         {/* Pricing Section */}
         <div className="container mx-auto px-6 relative z-10 mb-20">
@@ -407,7 +465,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground">
+            <h2 id="pricing-title" className="text-3xl lg:text-5xl font-bold text-foreground">
               Choose Your Plan
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -415,7 +473,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            role="region"
+            aria-labelledby="pricing-title"
+          >
             {/* Free Plan */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -423,15 +485,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
               className="card text-center"
+              role="article"
+              aria-labelledby="free-plan-title"
             >
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Free</h3>
+                  <h3 id="free-plan-title" className="text-2xl font-bold text-foreground mb-2">Free</h3>
                   <div className="text-4xl font-bold text-foreground mb-2">AED 0</div>
                   <div className="text-muted-foreground">Forever free</div>
                 </div>
                 
-                <div className="space-y-3 text-left">
+                <ul className="space-y-3 text-left" role="list" aria-label="Free plan features">
                   {[
                     'Basic health tracking',
                     'AI coach (5 messages/day)',
@@ -439,15 +503,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                     'Basic insights',
                     'Community support'
                   ].map((feature, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
+                    <li key={idx} className="flex items-center space-x-3" role="listitem">
                       <CheckCircleIcon className="w-5 h-5 text-green-500" />
                       <span className="text-muted-foreground">{feature}</span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
                 
                 <button
                   onClick={onShowAuth}
+                  aria-label="Get started with free plan"
                   className="w-full btn-secondary"
                 >
                   Get Started Free
@@ -462,19 +527,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
               className="card text-center border-2 border-[#48C6FF] relative"
+              role="article"
+              aria-labelledby="premium-plan-title"
             >
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white text-sm font-bold rounded-full">
+              <div 
+                className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white text-sm font-bold rounded-full"
+                role="img"
+                aria-label="Most popular plan"
+              >
                 Most Popular
               </div>
               
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Premium</h3>
+                  <h3 id="premium-plan-title" className="text-2xl font-bold text-foreground mb-2">Premium</h3>
                   <div className="text-4xl font-bold text-foreground mb-2">AED 99</div>
                   <div className="text-muted-foreground">per month</div>
                 </div>
                 
-                <div className="space-y-3 text-left">
+                <ul className="space-y-3 text-left" role="list" aria-label="Premium plan features">
                   {[
                     'Everything in Free',
                     'Unlimited AI coach',
@@ -483,15 +554,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                     'Supplement recommendations',
                     'Priority support'
                   ].map((feature, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
+                    <li key={idx} className="flex items-center space-x-3" role="listitem">
                       <CheckCircleIcon className="w-5 h-5 text-[#48C6FF]" />
                       <span className="text-foreground">{feature}</span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
                 
                 <button
                   onClick={onShowAuth}
+                  aria-label="Start 14-day free trial of premium plan"
                   className="w-full btn-primary"
                 >
                   Start 14-Day Free Trial
@@ -506,15 +578,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
               className="card text-center"
+              role="article"
+              aria-labelledby="pro-plan-title"
             >
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Pro</h3>
+                  <h3 id="pro-plan-title" className="text-2xl font-bold text-foreground mb-2">Pro</h3>
                   <div className="text-4xl font-bold text-foreground mb-2">AED 199</div>
                   <div className="text-muted-foreground">per month</div>
                 </div>
                 
-                <div className="space-y-3 text-left">
+                <ul className="space-y-3 text-left" role="list" aria-label="Pro plan features">
                   {[
                     'Everything in Premium',
                     'Lab result analysis',
@@ -523,15 +597,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                     'Telehealth consultations',
                     'White-glove support'
                   ].map((feature, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
+                    <li key={idx} className="flex items-center space-x-3" role="listitem">
                       <CheckCircleIcon className="w-5 h-5 text-purple-500" />
                       <span className="text-muted-foreground">{feature}</span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
                 
                 <button
                   onClick={onShowAuth}
+                  aria-label="Start pro plan trial"
                   className="w-full btn-secondary"
                 >
                   Start Pro Trial
@@ -550,7 +625,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-8"
           >
             <div className="space-y-6">
-              <h2 className="text-3xl lg:text-5xl font-bold text-foreground">
+              <h2 id="cta-title" className="text-3xl lg:text-5xl font-bold text-foreground">
                 Ready to Transform
                 <span className="block text-gradient-brand">Your Health?</span>
               </h2>
@@ -565,37 +640,46 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowAuthForms(true)}
+                aria-label="Get started with Biowell"
                 className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
               >
                 <span>Get Started</span>
                 <ArrowRightIcon className="w-5 h-5" />
               </motion.button>
               
-              <button className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors">
+              <button 
+                aria-label="Schedule a product demo"
+                className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors"
+              >
                 Schedule Demo
               </button>
             </div>
 
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground">
-              <div className="flex items-center space-x-2">
+            <ul 
+              className="flex items-center justify-center space-x-8 text-sm text-muted-foreground"
+              role="list"
+              aria-label="Trial benefits"
+            >
+              <li className="flex items-center space-x-2" role="listitem">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 <span>Free 14-day trial</span>
-              </div>
-              <div className="flex items-center space-x-2">
+              </li>
+              <li className="flex items-center space-x-2" role="listitem">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 <span>No credit card required</span>
-              </div>
-              <div className="flex items-center space-x-2">
+              </li>
+              <li className="flex items-center space-x-2" role="listitem">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 <span>Cancel anytime</span>
-              </div>
-            </div>
+              </li>
+            </ul>
           </motion.div>
         </div>
-      </section>
+        </section>
+      </main>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-border">
+      <footer role="contentinfo" className="py-12 border-t border-border">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-4">
@@ -607,17 +691,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               <span className="text-muted-foreground">© 2025 Biowell. All rights reserved.</span>
             </div>
             
-            <div className="flex items-center space-x-6">
-              <button className="text-muted-foreground hover:text-foreground transition-colors">
+            <nav role="navigation" aria-label="Footer links" className="flex items-center space-x-6">
+              <button 
+                aria-label="View privacy policy"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Privacy Policy
               </button>
-              <button className="text-muted-foreground hover:text-foreground transition-colors">
+              <button 
+                aria-label="View terms of service"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Terms of Service
               </button>
-              <button className="text-muted-foreground hover:text-foreground transition-colors">
+              <button 
+                aria-label="Contact support"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Contact
               </button>
-            </div>
+            </nav>
           </div>
         </div>
       </footer>

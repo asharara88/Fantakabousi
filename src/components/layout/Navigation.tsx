@@ -132,60 +132,82 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex fixed inset-y-0 z-50 w-72 flex-col">
+      <nav 
+        className="hidden lg:flex fixed inset-y-0 z-50 w-72 flex-col"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 pb-4 shadow-xl border-r border-border">
-          {/* Logo */}
-          <button 
-            onClick={() => window.location.href = '/'}
-            className="flex h-20 shrink-0 items-center gap-4 pt-6 hover:opacity-80 transition-opacity cursor-pointer"
-            title="Back to Home"
-          >
-            <img 
-              src={logoUrl}
-              alt="Biowell"
-              className="h-12 w-auto"
-            />
-          </button>
+          {/* Logo - Banner */}
+          <header role="banner" className="flex h-20 shrink-0 items-center gap-4 pt-6">
+            <button 
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+              title="Back to Home"
+              aria-label="Biowell home page"
+            >
+              <img 
+                src={logoUrl}
+                alt="Biowell"
+                className="h-12 w-auto"
+              />
+            </button>
+          </header>
 
-          {/* User Profile Section */}
-          <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-2xl border border-[#48C6FF]/20 shadow-sm">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">
-                {firstName.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-foreground truncate font-inter">
-                Welcome back, {firstName}
-              </p>
-              <p className="text-sm text-muted-foreground truncate font-inter">
-                {user?.email}
-              </p>
-            </div>
-            <div className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></div>
-          </div>
-
-          {/* Quick Theme Toggle */}
-          <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-light rounded-full"></div>
-                <span className="text-sm font-medium text-foreground">Theme</span>
+          {/* User Profile Section - Complementary */}
+          <aside role="complementary" aria-label="User profile information">
+            <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-2xl border border-[#48C6FF]/20 shadow-sm">
+              <div 
+                className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-lg"
+                role="img"
+                aria-label={`${firstName} profile avatar`}
+              >
+                <span className="text-white font-bold text-lg">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
               </div>
-              <ThemeToggle />
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-bold text-foreground truncate font-inter">
+                  Welcome back, {firstName}
+                </p>
+                <p className="text-sm text-muted-foreground truncate font-inter">
+                  {user?.email}
+                </p>
+              </div>
+              <div 
+                className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"
+                role="status"
+                aria-label="Online status indicator"
+              ></div>
             </div>
-          </div>
+          </aside>
 
-          {/* Navigation Items */}
-          <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-2">
+          {/* Quick Theme Toggle - Form */}
+          <section role="region" aria-label="Theme settings">
+            <div className="px-4 py-3 bg-muted/30 rounded-xl mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-light rounded-full"></div>
+                  <span className="text-sm font-medium text-foreground">Theme</span>
+                </div>
+                <ThemeToggle />
+              </div>
+            </div>
+          </section>
+
+          {/* Main Navigation Items */}
+          <section role="region" aria-label="Main navigation menu" className="flex flex-1 flex-col">
+            <ul role="menubar" className="flex flex-1 flex-col gap-y-2" aria-label="Navigation menu">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               const Icon = isActive ? item.activeIcon : item.icon;
               
               return (
-                <li key={item.id}>
+                <li key={item.id} role="none">
                   <motion.button
+                  role="menuitem"
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-describedby={`nav-${item.id}-description`}
                   onClick={() => onTabChange(item.id)}
                   className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
                     isActive
@@ -198,7 +220,10 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-[#48C6FF]'}`} />
                   <div className="flex-1 text-left">
                     <div className="font-inter">{item.label}</div>
-                    <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
+                    <div 
+                      id={`nav-${item.id}-description`}
+                      className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}
+                    >
                       {item.description}
                     </div>
                   </div>
@@ -206,6 +231,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                     <motion.div
                       layoutId="activeIndicator"
                       className="w-1 h-6 bg-white rounded-full shadow-sm"
+                      aria-hidden="true"
                     />
                   )}
                 </motion.button>
@@ -213,40 +239,54 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
               );
             })}
             </ul>
-          </nav>
+          </section>
 
-          {/* Bottom Section */}
-          <div className="space-y-1 pt-6 border-t border-border">
-            <button 
+          {/* Secondary Navigation */}
+          <nav role="navigation" aria-label="Secondary navigation and account actions">
+            <div className="space-y-1 pt-6 border-t border-border">
+              <button 
+              role="menuitem"
               onClick={() => setShowNotifications(true)}
               className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200"
+              aria-label="Open notifications panel"
             >
               <BellIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-[#48C6FF]" />
               <span>Notifications</span>
-              <span className="ml-auto w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></span>
-            </button>
-            <button 
+              <span 
+                className="ml-auto w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"
+                role="status"
+                aria-label="New notifications available"
+              ></span>
+              </button>
+              <button 
+              role="menuitem"
               onClick={() => onTabChange('profile')}
               className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10 transition-all duration-200"
             >
               <Cog6ToothIcon className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-[#48C6FF]" />
               <span>Settings</span>
-            </button>
-            <button 
+              </button>
+              <button 
+              role="menuitem"
               onClick={signOut}
               className="group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium w-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+              aria-label="Sign out of your account"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5 shrink-0 text-red-500 group-hover:text-red-700" />
               <span>Sign Out</span>
-            </button>
-          </div>
+              </button>
+            </div>
+          </nav>
         </div>
         
-        {/* Notification Center */}
-        <NotificationCenter 
-          isOpen={showNotifications}
-          onClose={() => setShowNotifications(false)}
-        />
+        {/* Notification Center - Complementary */}
+        <aside role="complementary" aria-label="Notification center">
+          <NotificationCenter 
+            isOpen={showNotifications}
+            onClose={() => setShowNotifications(false)}
+          />
+        </aside>
+      </div>
       </nav>
     </>
   );
