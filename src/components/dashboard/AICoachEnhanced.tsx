@@ -147,21 +147,21 @@ const AICoachEnhanced: React.FC = () => {
   return (
     <div className="h-full flex flex-col max-w-4xl mx-auto" role="region" aria-labelledby="ai-coach-title">
       {/* Header */}
-      <header role="banner" className="p-4 lg:p-6 border-b border-gray-200 bg-white">
+      <header role="banner" className="p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
               <CpuChipIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 id="ai-coach-title" className="text-xl lg:text-2xl font-bold text-gray-900">Smart Coach</h1>
+              <h1 id="ai-coach-title" className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">Smart Coach</h1>
               <div className="flex items-center space-x-2">
                 <div 
-                  className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                  className="w-2 h-2 bg-green-500 rounded-full animate-pulse"
                   role="status"
                   aria-label="AI coach is online and ready"
                 ></div>
-                <span className="text-sm text-gray-600">Ready to help</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Ready to help</span>
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ const AICoachEnhanced: React.FC = () => {
             <button
               aria-label="Start a new chat session"
               onClick={() => createNewSession()}
-              className="btn-primary flex items-center space-x-2"
+              className="px-4 py-2 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-200 flex items-center space-x-2"
             >
               <PlusIcon className="w-4 h-4" />
               <span className="hidden sm:inline">New Chat</span>
@@ -319,14 +319,14 @@ const AICoachEnhanced: React.FC = () => {
                       
                       <div className={`bg-card rounded-2xl p-4 shadow-sm border border-border ${
                         message.role === 'user' 
-                          ? 'bg-gradient-to-br from-blue-light/10 to-cyan-500/10' 
+                          ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800' 
                           : ''
                       }`}>
                         <div className="space-y-3">
                           <div id={`message-${message.id}-author`} className="sr-only">
                             {message.role === 'user' ? 'You said' : 'AI Coach said'}
                           </div>
-                          <p className="text-foreground leading-relaxed">
+                          <p className="text-gray-900 dark:text-white leading-relaxed">
                             {message.message}
                           </p>
                           

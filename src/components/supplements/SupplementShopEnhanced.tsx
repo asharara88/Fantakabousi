@@ -184,12 +184,12 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Supplement Shop</h1>
-        <p className="text-gray-600">{supplements.length} products available</p>
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Supplement Shop</h1>
+        <p className="text-gray-600 dark:text-gray-300">{supplements.length} products available</p>
       </div>
 
       {/* Search */}
-      <div className="card p-4">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border border-gray-200/20 dark:border-gray-700/20 rounded-2xl p-6 shadow-lg">
         <div className="relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
@@ -197,7 +197,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
             placeholder="Search supplements..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#48C6FF]/20 focus:border-[#48C6FF] bg-white dark:bg-slate-900 text-gray-900 dark:text-white"
           />
         </div>
       </div>
@@ -210,19 +210,19 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
             onClick={() => setSelectedCategory(category.id)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+            className={`p-4 rounded-xl border transition-all duration-200 ${
               selectedCategory === category.id
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                ? 'border-[#48C6FF] bg-[#48C6FF]/10 text-[#48C6FF]'
+                : 'border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-slate-900/80 hover:border-[#48C6FF]/50 text-gray-700 dark:text-gray-300'
             }`}
           >
             <div className="flex flex-col items-center space-y-2">
               <category.icon className={`w-6 h-6 ${
-                selectedCategory === category.id ? 'text-blue-600' : 'text-gray-500'
+                selectedCategory === category.id ? 'text-[#48C6FF]' : 'text-gray-500 dark:text-gray-400'
               }`} />
               <div className="text-center">
                 <div className="font-medium text-sm">{category.name}</div>
-                <div className="text-xs text-gray-500">{category.count}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">{category.count}</div>
               </div>
             </div>
           </motion.button>

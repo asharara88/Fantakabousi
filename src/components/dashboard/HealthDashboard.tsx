@@ -355,27 +355,27 @@ const HealthDashboard: React.FC = () => {
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b border-border bg-card">
+      <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 rounded-t-2xl">
         <div className="space-y-2">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-blue-light rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
               <HeartIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground">Smart Coach</h1>
-              <p className="text-body text-muted-foreground">Deep dive into your health data and trends</p>
+              <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">Health Analytics</h1>
+              <p className="text-gray-600 dark:text-gray-300">Deep dive into your health data and trends</p>
             </div>
           </div>
           {/* View Toggle */}
-          <div className="flex rounded-xl p-1 bg-muted">
+          <div className="flex rounded-xl p-1 bg-gray-100 dark:bg-gray-800">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveView(tab.id)}
-                className={`flex-1 px-3 lg:px-4 py-2 rounded-lg text-body-sm font-semibold transition-all cursor-pointer touch-target ${
+                className={`flex-1 px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                   activeView === tab.id
-                    ? 'bg-gradient-brand text-white'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-md'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 <div className="flex items-center justify-center space-x-2">
@@ -388,7 +388,7 @@ const HealthDashboard: React.FC = () => {
           
           <button
             onClick={() => setShowDeviceConnection(true)}
-            className="btn-primary cursor-pointer"
+            className="px-4 py-2 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-200 flex items-center space-x-2"
           >
             <WifiIcon className="w-4 h-4" />
             <span className="hidden sm:inline">Connect Device</span>

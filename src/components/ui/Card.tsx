@@ -5,9 +5,10 @@ import { cn } from '../../lib/utils';
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'glass' | 'elevated' | 'premium';
+  variant?: 'default' | 'glass' | 'elevated' | 'premium' | 'minimal';
   hover?: boolean;
   gradient?: boolean;
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const Card: React.FC<CardProps> = ({ 
@@ -15,13 +16,23 @@ const Card: React.FC<CardProps> = ({
   className = '', 
   variant = 'default',
   hover = true,
-  gradient = false
+  gradient = false,
+  padding = 'lg'
 }) => {
   const variants = {
-    default: 'bg-card text-card-foreground border border-border shadow-sm hover:shadow-md hover:border-[#48C6FF]/20',
-    glass: 'bg-card/80 backdrop-blur-sm text-foreground border border-border/50 shadow-lg',
-    elevated: 'bg-card text-card-foreground border border-border shadow-lg hover:shadow-xl hover:border-[#48C6FF]/30 transition-all duration-300',
-    premium: 'bg-card text-foreground shadow-xl border border-border hover:shadow-2xl hover:border-[#48C6FF]/20',
+    default: 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border border-gray-200/20 dark:border-gray-700/20',
+    glass: 'bg-white/10 dark:bg-slate-900/10 backdrop-blur-20 border border-white/20 dark:border-gray-700/20',
+    elevated: 'bg-white dark:bg-slate-900 border border-gray-200/50 dark:border-gray-700/50 shadow-lg',
+    premium: 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-20 border border-gray-200/30 dark:border-gray-700/30 shadow-xl',
+    minimal: 'bg-transparent border-0'
+  };
+
+  const paddings = {
+    none: 'p-0',
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
+    xl: 'p-10'
   };
 
   const Component = hover ? motion.div : 'div';
@@ -35,10 +46,11 @@ const Card: React.FC<CardProps> = ({
   return (
     <Component
       className={cn(
-        'rounded-2xl p-6 relative overflow-hidden font-inter',
+        'rounded-2xl relative overflow-hidden transition-all duration-300',
         variants[variant],
-        gradient && 'bg-gradient-to-br from-white/10 to-white/5',
-        hover && 'cursor-pointer',
+        paddings[padding],
+        hover && 'hover:shadow-lg hover:border-blue-light/30',
+        gradient && 'bg-gradient-to-br from-white/20 to-white/5',
         className
       )}
       {...motionProps}

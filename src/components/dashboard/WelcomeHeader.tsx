@@ -308,13 +308,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       <section 
         role="banner" 
         aria-labelledby="hero-title"
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-2xl"
+        className="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border border-gray-200/20 dark:border-gray-700/20 shadow-lg"
       >
         {/* Floating orbs */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl" aria-hidden="true"></div>
-        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-2xl" aria-hidden="true"></div>
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-full blur-3xl" aria-hidden="true"></div>
+        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/10 to-[#0026CC]/10 rounded-full blur-2xl" aria-hidden="true"></div>
         
-        <div className="relative z-10 p-8">
+        <div className="relative z-10 p-6 lg:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
             {/* Left - Greeting & Time */}
             <motion.div
@@ -326,7 +326,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               <div className="space-y-4">
                 <motion.h1 
                   id="hero-title"
-                  className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent font-inter tracking-tight"
+                  className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white font-inter"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
@@ -341,7 +341,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   transition={{ delay: 0.4 }}
                 >
                   <time 
-                    className="text-lg font-medium text-foreground/70 font-inter"
+                    className="text-base font-medium text-gray-600 dark:text-gray-300 font-inter"
                     dateTime={currentTime.toISOString()}
                   >
                     {currentTime.toLocaleDateString('en-US', { 
@@ -352,7 +352,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                     })}
                   </time>
                   <time 
-                    className="text-3xl font-bold text-foreground font-mono tracking-wider"
+                    className="text-2xl font-bold text-gray-900 dark:text-white font-mono"
                     dateTime={currentTime.toISOString()}
                   >
                     {currentTime.toLocaleTimeString('en-US', { 
@@ -379,7 +379,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               </div>
               <div className="relative w-48 h-48">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle
+                  <circle cx="50" cy="50" r="45" stroke="rgb(229 231 235)" strokeWidth="2" fill="none" />
                     cx="50"
                     cy="50"
                     r="45"
@@ -392,7 +392,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                     cy="50"
                     r="45"
                     stroke="url(#gradient)"
-                    strokeWidth="3"
+                    strokeWidth="2"
                     fill="none"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: "0 283" }}
@@ -414,14 +414,14 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-4xl font-bold text-gradient-brand"
+                      className="text-3xl font-bold text-gray-900 dark:text-white"
                     >
                       {completedWins}/{dailyWins.length}
                     </motion.div>
-                    <div className="text-sm font-medium text-foreground/60 mt-1">
+                    <div className="text-sm font-medium text-gray-600 dark:text-gray-300 mt-1">
                       Daily Wins
                     </div>
-                    <div className="text-lg font-bold text-[#3BE6C5] mt-2">
+                    <div className="text-base font-bold text-[#48C6FF] mt-2">
                       {totalPoints} pts
                     </div>
                   </div>
