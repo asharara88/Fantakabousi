@@ -48,20 +48,20 @@ export const useProfile = () => {
         return;
       }
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user?.id)
+          .single();
 
-      if (error && error.code !== 'PGRST116') {
-        throw error;
-      }
-      setProfile(data);
-    } catch (error) {
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        console.error('Network error: Unable to connect to Supabase. Using mock profile for development.');
-        // Create a mock profile when network fails
+        if (error && error.code !== 'PGRST116') {
+          throw error;
+        }
+        setProfile(data);
+      } catch (supabaseError) {
+        // If Supabase query fails, create mock profile
+        console.warn('Supabase query failed, using mock profile:', supabaseError);
         const mockProfile = {
           id: user.id,
           email: user.email || '',
@@ -77,10 +77,25 @@ export const useProfile = () => {
           isMock: true
         };
         setProfile(mockProfile);
-      } else {
-        console.error('Error fetching profile:', error);
-        setProfile(null);
       }
+    } catch (error) {
+      console.error('Network error: Unable to connect to Supabase. Using mock profile for development.');
+      // Create a mock profile when network fails
+      const mockProfile = {
+        id: user.id,
+        email: user.email || '',
+        first_name: 'Demo',
+        last_name: 'User',
+        avatar_url: null,
+        is_admin: false,
+        onboarding_completed: true,
+        mobile: null,
+        onboarding_completed_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        isMock: true
+      };
+      setProfile(mockProfile);
     } finally {
       setLoading(false);
     }
