@@ -21,7 +21,7 @@ export const useHealthMetrics = (metricType?: string) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user && profile) {
+    if (user && profile && !profile.isMock) {
       fetchMetrics();
     }
   }, [user, profile, metricType]);
@@ -30,12 +30,16 @@ export const useHealthMetrics = (metricType?: string) => {
     try {
       setLoading(true);
       setError(null);
+      
+      // First, ensure user has connected devices
+      await ensureConnectedDevices();
+      
       const data = await getHealthMetrics(user!.id, metricType);
       setMetrics(data);
       setHasData(data.length > 0);
       
       // If no data exists, generate comprehensive demo data
-      if (data.length === 0 && profile && !profile.isMock) {
+      if (data.length === 0) {
         console.log('No health data found, generating comprehensive demo data...');
         await generateComprehensiveHealthData(user!.id);
         // Refetch after generating data
@@ -47,6 +51,54 @@ export const useHealthMetrics = (metricType?: string) => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const ensureConnectedDevices = async () => {
+    try {
+      // Check if devices are already connected
+      const { data: existingDevices } = await supabase
+        .from('device_connections')
+        .select('*')
+        .eq('user_id', user!.id);
+
+      if (!existingDevices || existingDevices.length === 0) {
+        // Add Apple Watch connection
+        await supabase.from('device_connections').insert({
+          user_id: user!.id,
+          device_type: 'wearable',
+          provider: 'apple',
+          device_id: 'apple-watch-series-9',
+          device_name: 'Apple Watch Series 9',
+          access_token: 'connected_apple_watch',
+          metadata: {
+            model: 'Series 9',
+            features: ['heart_rate', 'steps', 'sleep', 'hrv', 'workouts'],
+            battery_level: 78,
+            last_sync: new Date().toISOString()
+          },
+          is_active: true
+        });
+
+        // Add FreeStyle Libre CGM connection
+        await supabase.from('device_connections').insert({
+          user_id: user!.id,
+          device_type: 'cgm',
+          provider: 'abbott',
+          device_id: 'freestyle-libre-3',
+          device_name: 'FreeStyle Libre 3',
+          access_token: 'connected_freestyle_libre',
+          metadata: {
+            model: 'FreeStyle Libre 3',
+            features: ['glucose', 'trends', 'alerts'],
+            sensor_age_days: 5,
+            last_sync: new Date().toISOString()
+          },
+          is_active: true
+        });
+      }
+    } catch (error) {
+      console.error('Error ensuring connected devices:', error);
     }
   };
 

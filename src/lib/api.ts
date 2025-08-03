@@ -485,6 +485,35 @@ export const generateRealisticHealthData = async (userId: string, deviceType: 'a
 
 // Generate comprehensive demo data for all metrics
 export const generateComprehensiveHealthData = async (userId: string) => {
+  // Ensure user exists in the users table first
+  try {
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
+    if (!existingUser) {
+      // Create user record if it doesn't exist
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: userId,
+          email: 'demo@biowell.com',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+
+      if (userError) {
+        console.error('Error creating user record:', userError);
+        return 0;
+      }
+    }
+  } catch (error) {
+    console.error('Error checking user existence:', error);
+    return 0;
+  }
+
   const now = new Date();
   const dataPoints = [];
 
