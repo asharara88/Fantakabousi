@@ -16,7 +16,11 @@ import {
   ArrowRightIcon
 } from '@heroicons/react/24/outline';
 
-const AuthForms: React.FC = () => {
+interface AuthFormsProps {
+  onBack?: () => void;
+}
+
+const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -101,6 +105,14 @@ const AuthForms: React.FC = () => {
               alt="Biowell" 
               className="h-21 mx-auto mb-4"
             />
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="mb-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                ← Back to Home
+              </button>
+            )}
             <h1 className="text-2xl font-bold text-foreground mb-2">
               Welcome to Your Wellness Journey
             </h1>
