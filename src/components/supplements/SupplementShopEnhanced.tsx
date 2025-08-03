@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSupplements } from '../../hooks/useSupplements';
+import AccessibleDropdown from '../ui/AccessibleDropdown';
+import AccessibleInfiniteScroll from '../ui/AccessibleInfiniteScroll';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { formatCurrency } from '../../lib/utils';
 import { 
@@ -398,7 +400,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
               whileTap={{ scale: 0.98 }}
               className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-200"
             >
-              <div className="text-xs text-muted-foreground">{category.count}</div>
+              Proceed to Checkout
             </motion.button>
           </div>
         </motion.div>
