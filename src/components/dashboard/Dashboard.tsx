@@ -4,9 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import AccessibilityProvider from '../ui/AccessibilityProvider';
 import ImprovedNavigation from '../layout/ImprovedNavigation';
-import Breadcrumbs from '../ui/Breadcrumbs';
-import FloatingActionButton from '../ui/FloatingActionButton';
-import SearchBar from '../ui/SearchBar';
+import NavigationBreadcrumbs from '../ui/NavigationBreadcrumbs';
+import QuickActionMenu from '../ui/QuickActionMenu';
+import SmartSearch from '../ui/SmartSearch';
+import AdaptiveNavigation from '../ui/AdaptiveNavigation';
+import { NavigationProvider } from '../layout/NavigationProvider';
 import WelcomeHeader from './WelcomeHeader';
 import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
@@ -139,7 +141,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <AccessibilityProvider>
+    <NavigationProvider>
+      <AccessibilityProvider>
       <div className="min-h-screen bg-background" role="application" aria-label="Biowell Health Dashboard">
         {/* Skip Links */}
         <div className="sr-only focus:not-sr-only">
@@ -188,7 +191,7 @@ const Dashboard: React.FC = () => {
                 <div className="container">
                   {/* Search Bar - Desktop Only */}
                   <div className="hidden lg:block mb-6">
-                    <SearchBar 
+                    <SmartSearch 
                       onNavigate={handleTabChange}
                       onSearch={(query) => console.log('Search:', query)}
                     />
@@ -196,7 +199,7 @@ const Dashboard: React.FC = () => {
 
                   {/* Breadcrumbs */}
                   <div className="mb-6">
-                    <Breadcrumbs 
+                    <NavigationBreadcrumbs 
                       items={getBreadcrumbs()}
                       onNavigate={handleTabChange}
                     />
@@ -237,7 +240,10 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Floating Action Button */}
-        <FloatingActionButton onQuickAction={handleQuickAction} />
+        <QuickActionMenu onQuickAction={handleQuickAction} />
+        
+        {/* Adaptive Navigation Suggestions */}
+        <AdaptiveNavigation userId={user?.id} />
 
         {/* Complementary Content - Modals and Overlays */}
         <aside 
@@ -263,7 +269,8 @@ const Dashboard: React.FC = () => {
         </footer>
       </div>
       
-    </AccessibilityProvider>
+      </AccessibilityProvider>
+    </NavigationProvider>
   );
 };
 
