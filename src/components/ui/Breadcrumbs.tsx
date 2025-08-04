@@ -45,10 +45,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '', onNavi
               </span>
             ) : (
               <button
-                  rounded-md px-2 py-1 hover:bg-[#48C6FF]/5
-                className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-blue-light/20 rounded-md px-1"
-                  flex items-center space-x-1 text-muted-foreground
-                  hover:text-[#48C6FF] transition-colors 
+                className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-blue-light/20 rounded-md px-2 py-1 hover:bg-[#48C6FF]/5 flex items-center space-x-1 text-muted-foreground hover:text-[#48C6FF] transition-colors"
+              >
                 {item.icon && <item.icon className="w-4 h-4" />}
                 <span>{item.label}</span>
               </button>
