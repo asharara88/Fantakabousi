@@ -9,7 +9,7 @@ import { useProfile } from './hooks/useProfile';
 import AuthForms from './components/auth/AuthForms';
 import LandingPage from './components/landing/LandingPage';
 import OnboardingFlow from './components/onboarding/OnboardingFlow';
-import Dashboard from './components/dashboard/Dashboard';
+import UnifiedHealthDashboard from './components/dashboard/UnifiedHealthDashboard';
 import { registerServiceWorker, offlineManager } from './lib/offline';
 import { performanceMonitor } from './lib/performance';
 
@@ -49,7 +49,7 @@ const AppContent: React.FC = () => {
   }
 
   // Show dashboard for authenticated users
-  return <Dashboard />;
+  return <UnifiedHealthDashboard />;
 };
 
 function App() {
