@@ -148,6 +148,24 @@ const UnifiedHealthDashboard: React.FC = () => {
 
   const handleQuickAction = (action: string) => {
     setActiveView(action);
+  };
+
+  const ThemeToggle = () => (
+    <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-xl rounded-2xl p-1 border border-white/20">
+      <button
+        onClick={() => {
+          setAutoSyncTime(false);
+          setTheme('light');
+        }}
+        className={`p-3 rounded-xl transition-all duration-300 ${
+          theme === 'light' && !autoSyncTime
+            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg scale-110'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
+        }`}
+        title="Light theme"
+        aria-label="Switch to light theme"
+      >
+        <SunIcon className="w-5 h-5" />
       </button>
       <button
         onClick={() => {
