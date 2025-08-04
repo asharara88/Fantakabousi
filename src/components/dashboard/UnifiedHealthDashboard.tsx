@@ -222,7 +222,9 @@ const UnifiedHealthDashboard: React.FC = () => {
   );
 
   const renderContent = () => {
-    return performanceMonitor.measureComponentRender('DashboardContent', () => {
+    return performan
+  }
+}ceMonitor.measureComponentRender('DashboardContent', () => {
     try {
     switch (activeView) {
       case 'coach':
