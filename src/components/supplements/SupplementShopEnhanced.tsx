@@ -147,7 +147,6 @@ const UnifiedHealthDashboard: React.FC = () => {
   };
 
   const handleQuickAction = (action: string) => {
-  const { toast } = useToast();
     setActiveView(action);
   };
 
