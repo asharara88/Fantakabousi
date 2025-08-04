@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
-import { cn } from '../../lib/utils';
 
 interface BreadcrumbItem {
   label: string;
@@ -13,15 +12,16 @@ interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
+  onNavigate?: (href: string) => void;
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '', onNavigate }) => {
   return (
     <nav 
       aria-label="Breadcrumb" 
-      className={cn("flex items-center space-x-2 text-sm", className)}
+      className={`flex items-center space-x-2 text-sm ${className}`}
     >
-      <ol className="flex items-center space-x-2">
+      <ol className="flex items-center space-x-2" role="list">
         {items.map((item, index) => (
           <motion.li
             key={index}
@@ -29,9 +29,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
             className="flex items-center space-x-2"
+            role="listitem"
           >
             {index > 0 && (
-              <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
+              <ChevronRightIcon className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
             )}
             
             {item.current ? (
@@ -44,11 +45,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
               </span>
             ) : (
               <button
-                className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => {
-                  // Handle navigation - you can integrate with your routing system
-                  console.log(`Navigate to: ${item.href}`);
-                }}
+                onClick={() => item.href && onNavigate?.(item.href)}
+                className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-blue-light/20 rounded-md px-1"
+                aria-label={`Navigate to ${item.label}`}
               >
                 {item.icon && <item.icon className="w-4 h-4" />}
                 <span>{item.label}</span>
