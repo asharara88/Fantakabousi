@@ -154,12 +154,7 @@ const UnifiedHealthDashboard: React.FC = () => {
     <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-xl rounded-2xl p-1 border border-white/20">
       <button
         onClick={() => {
-  // Show auth forms if requested
-  if (showAuth) {
-    return <AuthForms onBack={() => setShowAuth(false)} />;
-  }
-
-  // Show landing page for unauthenticated users
+          setAutoSyncTime(false);
           setTheme('light');
         }}
         className={`p-3 rounded-xl transition-all duration-300 ${
