@@ -417,7 +417,7 @@ const AICoachEnhanced: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || sendingMessage}
-                  aria-label={sendingMessage ? "Sending message" : "Send message to AI coach"}
+                  aria-label={sendingMessage ? "Sending message" : "Send message to Smart Coach"}
                   className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                 >
                   {sendingMessage ? (

@@ -357,7 +357,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               },
               {
                 step: '02',
-                title: 'AI Analyzes Your Data',
+                title: 'Smart Coach Analyzes Your Data',
                 description: 'Our advanced AI processes your biometrics to understand your unique patterns.',
                 icon: SparklesIcon
               },

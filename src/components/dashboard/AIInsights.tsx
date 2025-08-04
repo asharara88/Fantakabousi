@@ -133,7 +133,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
                       </div>
                       <div className="flex items-center space-x-2 text-caption">
                         <ClockIcon className="w-3 h-3" />
-                        <span>AI Confidence: {insight.confidence}%</span>
+                        <span>Smart Coach Confidence: {insight.confidence}%</span>
                       </div>
                     </div>
                   </div>

@@ -43,7 +43,7 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
     },
     {
       id: 'coach',
-      label: 'Ask Coach',
+      label: 'Ask Smart Coach',
       icon: ChatBubbleLeftRightIcon,
       color: 'from-purple-500 to-indigo-600',
       shortcut: 'C',

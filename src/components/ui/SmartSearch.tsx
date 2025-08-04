@@ -304,7 +304,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
                   </div>
                   {[
                     { label: 'Log Food', action: () => onNavigate?.('nutrition'), icon: BeakerIcon },
-                    { label: 'Ask Coach', action: () => onNavigate?.('coach'), icon: ChatBubbleLeftRightIcon },
+                    { label: 'Ask Smart Coach', action: () => onNavigate?.('coach'), icon: ChatBubbleLeftRightIcon },
                     { label: 'View Health Data', action: () => onNavigate?.('health'), icon: HeartIcon },
                     { label: 'Browse Supplements', action: () => onNavigate?.('supplements'), icon: CubeIcon }
                   ].map((action, index) => (
