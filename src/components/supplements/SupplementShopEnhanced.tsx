@@ -1,769 +1,590 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { useProfile } from '../../hooks/useProfile';
-import { useTheme } from '../../contexts/ThemeContext';
-import WelcomeHeader from './WelcomeHeader';
-import HealthMetrics from './HealthMetrics';
-import AIInsights from './AIInsights';
-import TodaysPlan from './TodaysPlan';
-import QuickActions from './QuickActions';
-import ActivityFeed from './ActivityFeed';
-import ReadinessScore from './ReadinessScore';
-import BiometricChart from './BiometricChart';
-import SupplementStack from './SupplementStack';
-import AICoachEnhanced from './AICoachEnhanced';
-import HealthDashboard from './HealthDashboard';
-import NutritionDashboard from '../nutrition/NutritionDashboard';
-import FitnessDashboard from '../fitness/FitnessDashboard';
-import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
-import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
-import NotificationCenter from '../notifications/NotificationCenter';
-import QuickActionMenu from '../ui/QuickActionMenu';
-import SmartSearch from '../ui/SmartSearch';
-import OfflineIndicator from '../ui/OfflineIndicator';
-import SafeArea from '../ui/SafeArea';
+import { useSupplements } from '../../hooks/useSupplements';
+import { useToast } from '../../hooks/useToast';
+import { supabase } from '../../lib/supabase';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
-  HomeIcon,
-  ChatBubbleLeftRightIcon,
-  ChartBarIcon,
   ShoppingBagIcon,
-  UserCircleIcon,
-  Bars3Icon,
-  XMarkIcon,
-  BellIcon,
-  MagnifyingGlassIcon,
-  SparklesIcon,
   HeartIcon,
+  StarIcon,
+  MagnifyingGlassIcon,
+  FunnelIcon,
+  PlusIcon,
+  MinusIcon,
+  CheckIcon,
+  SparklesIcon,
   BeakerIcon,
-  BoltIcon,
-  CubeIcon,
-  FireIcon,
-  MoonIcon,
-  SunIcon,
-  ComputerDesktopIcon,
-  Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  DevicePhoneMobileIcon
+  ShieldCheckIcon,
+  TruckIcon,
+  CreditCardIcon
 } from '@heroicons/react/24/outline';
-import {
-  HomeIcon as HomeSolidIcon,
-  ChatBubbleLeftRightIcon as ChatSolidIcon,
-  ChartBarIcon as ChartSolidIcon,
-  ShoppingBagIcon as ShoppingSolidIcon,
-  UserCircleIcon as UserSolidIcon,
-  BellIcon as BellSolidIcon
-} from '@heroicons/react/24/solid';
+import { HeartIcon as HeartSolidIcon, StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
-const UnifiedHealthDashboard: React.FC = () => {
-  const { user, signOut } = useAuth();
-  const { profile } = useProfile();
-  const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
-  const [activeView, setActiveView] = useState('dashboard');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
+interface Supplement {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url?: string;
+  benefits?: string[];
+  dosage?: string;
+  form_type?: string;
+  category?: string;
+  tier?: string;
+  evidence_rating?: number;
+  is_featured?: boolean;
+  is_bestseller?: boolean;
+  stock_quantity: number;
+  is_available: boolean;
+}
 
-  const logoUrl = actualTheme === 'dark' 
-    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
-    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
+interface CartItem {
+  id: string;
+  supplement_id: string;
+  quantity: number;
+  supplement: Supplement;
+}
 
-  // Premium navigation structure following UX best practices
-  const navigationItems = [
-    {
-      id: 'dashboard',
-      label: 'Home',
-      icon: HomeIcon,
-      activeIcon: HomeSolidIcon,
-      description: 'Your wellness overview',
-      gradient: 'from-blue-500 via-purple-500 to-pink-500'
-    },
-    {
-      id: 'coach',
-      label: 'AI Coach',
-      icon: ChatBubbleLeftRightIcon,
-      activeIcon: ChatSolidIcon,
-      description: 'Personalized guidance',
-      badge: 'AI',
-      gradient: 'from-purple-500 via-indigo-500 to-blue-500'
-    },
-    {
-      id: 'health',
-      label: 'Health',
-      icon: ChartBarIcon,
-      activeIcon: ChartSolidIcon,
-      description: 'Analytics & insights',
-      gradient: 'from-emerald-500 via-teal-500 to-cyan-500',
-      children: [
-        { id: 'metrics', label: 'Live Metrics', description: 'Real-time biometric data' },
-        { id: 'analytics', label: 'Advanced Analytics', description: 'Deep health insights' },
-        { id: 'devices', label: 'Connected Devices', description: 'Wearables & monitors' }
-      ]
-    },
-    {
-      id: 'nutrition',
-      label: 'Nutrition',
-      icon: BeakerIcon,
-      activeIcon: BeakerIcon,
-      description: 'Food & recipes',
-      gradient: 'from-green-500 via-emerald-500 to-teal-500',
-      children: [
-        { id: 'logger', label: 'Food Logger', description: 'Track your meals' },
-        { id: 'recipes', label: 'Recipe Search', description: 'Healthy meal ideas' }
-      ]
-    },
-    {
-      id: 'supplements',
-      label: 'Shop',
-      icon: ShoppingBagIcon,
-      activeIcon: ShoppingSolidIcon,
-      description: 'Premium supplements',
-      gradient: 'from-orange-500 via-red-500 to-pink-500'
-    },
-    {
-      id: 'fitness',
-      label: 'Fitness',
-      icon: BoltIcon,
-      activeIcon: BoltIcon,
-      description: 'Training & workouts',
-      gradient: 'from-red-500 via-orange-500 to-yellow-500'
+interface SupplementShopEnhancedProps {
+  onQuickAction?: (action: string) => void;
+}
+
+const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuickAction }) => {
+  const { user } = useAuth();
+  const { supplements, loading: supplementsLoading } = useSupplements();
+  const { toast } = useToast();
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTier, setSelectedTier] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('featured');
+  const [showCart, setShowCart] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      fetchCartItems();
     }
+  }, [user]);
+
+  const fetchCartItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('cart_items')
+        .select(`
+          *,
+          supplement:supplements(*)
+        `)
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+      setCartItems(data || []);
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    }
+  };
+
+  const addToCart = async (supplement: Supplement) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to add items to cart",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      
+      // Check if item already exists in cart
+      const existingItem = cartItems.find(item => item.supplement_id === supplement.id);
+      
+      if (existingItem) {
+        // Update quantity
+        const { error } = await supabase
+          .from('cart_items')
+          .update({ quantity: existingItem.quantity + 1 })
+          .eq('id', existingItem.id);
+
+        if (error) throw error;
+      } else {
+        // Add new item
+        const { error } = await supabase
+          .from('cart_items')
+          .insert([{
+            user_id: user.id,
+            supplement_id: supplement.id,
+            quantity: 1
+          }]);
+
+        if (error) throw error;
+      }
+
+      toast({
+        title: "Added to Cart",
+        description: `${supplement.name} has been added to your cart`
+      });
+
+      fetchCartItems();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateCartQuantity = async (itemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('cart_items')
+        .update({ quantity: newQuantity })
+        .eq('id', itemId);
+
+      if (error) throw error;
+      fetchCartItems();
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update cart",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const removeFromCart = async (itemId: string) => {
+    try {
+      const { error } = await supabase
+        .from('cart_items')
+        .delete()
+        .eq('id', itemId);
+
+      if (error) throw error;
+      fetchCartItems();
+      
+      toast({
+        title: "Removed from Cart",
+        description: "Item has been removed from your cart"
+      });
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove item from cart",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const categories = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'vitamins', label: 'Vitamins' },
+    { value: 'minerals', label: 'Minerals' },
+    { value: 'herbs', label: 'Herbs & Botanicals' },
+    { value: 'protein', label: 'Protein & Fitness' },
+    { value: 'cognitive', label: 'Cognitive Health' },
+    { value: 'immune', label: 'Immune Support' }
   ];
 
-  const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
+  const tiers = [
+    { value: 'all', label: 'All Tiers', color: 'from-slate-400 to-slate-600' },
+    { value: 'green', label: 'Green Tier', color: 'from-green-400 to-emerald-600' },
+    { value: 'yellow', label: 'Yellow Tier', color: 'from-yellow-400 to-orange-500' },
+    { value: 'orange', label: 'Orange Tier', color: 'from-orange-400 to-red-500' },
+    { value: 'red', label: 'Red Tier', color: 'from-red-400 to-pink-600' }
+  ];
 
-  const handleMenuToggle = (menuId: string) => {
-    setExpandedMenu(expandedMenu === menuId ? null : menuId);
-  };
+  const filteredSupplements = supplements
+    .filter(supplement => {
+      const matchesSearch = supplement.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           supplement.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || supplement.category === selectedCategory;
+      const matchesTier = selectedTier === 'all' || supplement.tier === selectedTier;
+      return matchesSearch && matchesCategory && matchesTier && supplement.is_available;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return a.price - b.price;
+        case 'price-high':
+          return b.price - a.price;
+        case 'rating':
+          return (b.evidence_rating || 0) - (a.evidence_rating || 0);
+        case 'name':
+          return a.name.localeCompare(b.name);
+        default: // featured
+          return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0);
+      }
+    });
 
-  const handleNavigation = (itemId: string, subItemId?: string) => {
-    const targetView = subItemId ? `${itemId}-${subItemId}` : itemId;
-    setActiveView(targetView);
-    setIsMobileMenuOpen(false);
-    setExpandedMenu(null);
-  };
+  const cartTotal = cartItems.reduce((total, item) => total + (item.supplement.price * item.quantity), 0);
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-  const handleQuickAction = (action: string) => {
-    setActiveView(action);
-  };
-
-  const ThemeToggle = () => (
-    <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-xl rounded-2xl p-1 border border-white/20">
-      <button
-        onClick={() => {
-          setAutoSyncTime(false);
-          setTheme('light');
-        }}
-        className={`p-3 rounded-xl transition-all duration-300 ${
-          theme === 'light' && !autoSyncTime
-            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg scale-110'
-            : 'text-white/60 hover:text-white hover:bg-white/10'
-        }`}
-        title="Light theme"
-        aria-label="Switch to light theme"
-      >
-        <SunIcon className="w-5 h-5" />
-      </button>
-      <button
-        onClick={() => {
-          setAutoSyncTime(true);
-          setTheme('auto');
-        }}
-        className={`p-3 rounded-xl transition-all duration-300 ${
-          autoSyncTime
-            ? 'bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg scale-110'
-            : 'text-white/60 hover:text-white hover:bg-white/10'
-        }`}
-        title="Auto theme"
-        aria-label="Switch to automatic theme"
-      >
-        <ComputerDesktopIcon className="w-5 h-5" />
-      </button>
-      <button
-        onClick={() => {
-          setAutoSyncTime(false);
-          setTheme('dark');
-        }}
-        className={`p-3 rounded-xl transition-all duration-300 ${
-          theme === 'dark' && !autoSyncTime
-            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg scale-110'
-            : 'text-white/60 hover:text-white hover:bg-white/10'
-        }`}
-        title="Dark theme"
-        aria-label="Switch to dark theme"
-      >
-        <MoonIcon className="w-5 h-5" />
-      </button>
-    </div>
-  );
-
-  const renderContent = () => {
-    switch (activeView) {
-      case 'coach':
-        return <AICoachEnhanced />;
-      case 'health':
-      case 'health-metrics':
-      case 'health-analytics':
-      case 'health-devices':
-        return <HealthDashboard />;
-      case 'nutrition':
-      case 'nutrition-logger':
-      case 'nutrition-recipes':
-        return <NutritionDashboard onQuickAction={handleQuickAction} />;
-      case 'supplements':
-        return <SupplementShopEnhanced onQuickAction={handleQuickAction} />;
-      case 'fitness':
-        return <FitnessDashboard onQuickAction={handleQuickAction} />;
-      case 'profile':
-        return <ProfileSettingsEnhanced />;
-      default:
-        return (
-          <div className="space-y-8">
-            <WelcomeHeader onQuickAction={handleQuickAction} />
-            
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              {/* Left Column */}
-              <div className="xl:col-span-2 space-y-8">
-                <HealthMetrics />
-                <AIInsights onQuickAction={handleQuickAction} />
-              </div>
-              
-              {/* Right Column */}
-              <div className="space-y-8">
-                <ReadinessScore score={87} />
-                <TodaysPlan />
-                <ActivityFeed />
-              </div>
-            </div>
-          </div>
-        );
-    }
-  };
+  if (supplementsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 relative overflow-hidden">
-      {/* Ultra-Premium Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Primary Aurora */}
-        <motion.div 
-          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-600/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-            opacity: [0.3, 0.6, 0.3]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+            Premium Supplements
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-2">
+            Evidence-based supplements for optimal health
+          </p>
+        </div>
         
-        {/* Secondary Aurora */}
-        <motion.div 
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-400/25 to-cyan-600/25 rounded-full blur-3xl"
-          animate={{
-            scale: [1.1, 0.9, 1.1],
-            rotate: [360, 180, 0],
-            opacity: [0.4, 0.7, 0.4]
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        
-        {/* Floating Orbs */}
-        <motion.div 
-          className="absolute top-1/4 right-1/3 w-32 h-32 bg-gradient-to-r from-pink-400/20 to-violet-600/20 rounded-full blur-2xl"
-          animate={{
-            y: [-20, 20, -20],
-            x: [-10, 10, -10],
-            scale: [0.8, 1.2, 0.8]
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        
-        {/* Mesh Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" />
+        <motion.button
+          onClick={() => setShowCart(true)}
+          className="relative flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ShoppingBagIcon className="w-5 h-5" />
+          <span>Cart ({cartItemCount})</span>
+          {cartItemCount > 0 && (
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+              {cartItemCount}
+            </div>
+          )}
+        </motion.button>
       </div>
 
-      {/* Desktop Navigation - Ultra Premium */}
-      <nav 
-        className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
-          {/* Logo Section */}
-          <header role="banner" className="flex h-24 shrink-0 items-center gap-4 pt-8">
-            <motion.button
-              onClick={() => window.location.href = '/'}
-              className="hover:opacity-80 transition-opacity cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400 }}
-              aria-label="Biowell home page"
-            >
-              <img 
-                src={logoUrl} 
-                alt="Biowell" 
-                className="h-14 w-auto"
-              />
-            </motion.button>
-          </header>
-
-          {/* Premium User Profile Card */}
-          <motion.div 
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 via-purple-600 to-pink-600 p-6 shadow-2xl"
-            whileHover={{ scale: 1.02, y: -2 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            role="region"
-            aria-label="User profile information"
-          >
-            {/* Animated background overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent animate-gradient-shift" />
-            
-            {/* Floating particles */}
-            <div className="absolute inset-0 pointer-events-none">
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white/40 rounded-full"
-                  style={{
-                    left: `${20 + i * 30}%`,
-                    top: `${30 + i * 20}%`,
-                  }}
-                  animate={{
-                    y: [-5, 5, -5],
-                    opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
-                    duration: 3 + i * 0.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              ))}
-            </div>
-            
-            <div className="relative flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
-                <span className="text-white font-bold text-xl">
-                  {firstName.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xl font-bold text-white truncate">
-                  Welcome back, {firstName}
-                </p>
-                <p className="text-white/80 truncate text-sm">
-                  {user?.email}
-                </p>
-              </div>
-              <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse shadow-lg" />
-            </div>
-          </motion.div>
-
-          {/* Premium Theme Toggle */}
-          <div className="px-6 py-4 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Appearance</span>
-            </div>
-            <ThemeToggle />
-          </div>
-
-          {/* Main Navigation with Premium Effects */}
-          <div className="flex flex-1 flex-col">
-            <nav role="navigation" aria-label="Primary navigation" className="flex flex-1 flex-col gap-y-3">
-              {navigationItems.map((item) => {
-                const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
-                const Icon = isActive ? item.activeIcon : item.icon;
-                
-                return (
-                  <div key={item.id}>
-                    <motion.button
-                      onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
-                      className={`group relative w-full flex items-center gap-x-4 rounded-2xl p-4 text-left font-semibold transition-all duration-300 ${
-                        isActive
-                          ? `bg-gradient-to-r ${item.gradient} text-white shadow-2xl scale-105`
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 hover:scale-102'
-                      }`}
-                      whileHover={{ x: isActive ? 0 : 4 }}
-                      whileTap={{ scale: 0.98 }}
-                      aria-current={isActive ? 'page' : undefined}
-                      aria-expanded={item.children ? expandedMenu === item.id : undefined}
-                    >
-                      {/* Premium glow effect for active item */}
-                      {isActive && (
-                        <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-2xl blur-xl opacity-30 -z-10`} />
-                      )}
-                      
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                        isActive 
-                          ? 'bg-white/20 backdrop-blur-xl shadow-lg' 
-                          : 'bg-slate-100/80 dark:bg-slate-800/80 group-hover:bg-white/30 dark:group-hover:bg-slate-700/30'
-                      }`}>
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg">{item.label}</span>
-                          {item.badge && (
-                            <span className="px-3 py-1 bg-emerald-400 text-slate-900 text-xs font-bold rounded-full animate-pulse">
-                              {item.badge}
-                            </span>
-                          )}
-                          {item.children && (
-                            <ChevronDownIcon 
-                              className={`w-5 h-5 transition-transform duration-300 ${
-                                expandedMenu === item.id ? 'rotate-180' : ''
-                              }`} 
-                            />
-                          )}
-                        </div>
-                        <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
-                          {item.description}
-                        </div>
-                      </div>
-                    </motion.button>
-
-                    {/* Premium Sub-menu */}
-                    <AnimatePresence>
-                      {item.children && expandedMenu === item.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="ml-8 mt-2 space-y-2"
-                        >
-                          {item.children.map((subItem) => (
-                            <motion.button
-                              key={subItem.id}
-                              onClick={() => handleNavigation(item.id, subItem.id)}
-                              className="w-full flex items-center space-x-3 p-3 rounded-xl text-left hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
-                              whileHover={{ x: 4 }}
-                            >
-                              <ChevronRightIcon className="w-4 h-4 text-slate-400" />
-                              <div>
-                                <div className="font-medium text-slate-700 dark:text-slate-300">{subItem.label}</div>
-                                <div className="text-sm text-slate-500 dark:text-slate-400">{subItem.description}</div>
-                              </div>
-                            </motion.button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Premium Secondary Actions */}
-          <nav role="navigation" aria-label="Secondary navigation" className="space-y-2 pt-6 border-t border-white/20 dark:border-slate-700/20">
-            <motion.button 
-              onClick={() => setShowNotifications(true)}
-              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
-              whileHover={{ x: 4 }}
-              aria-label="Open notifications"
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <BellIcon className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-medium">Notifications</span>
-              <span className="ml-auto w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            </motion.button>
-            
-            <motion.button 
-              onClick={() => handleNavigation('profile')}
-              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
-              whileHover={{ x: 4 }}
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-slate-500 to-slate-700 rounded-xl flex items-center justify-center">
-                <Cog6ToothIcon className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-medium">Settings</span>
-            </motion.button>
-            
-            <motion.button 
-              onClick={signOut}
-              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200"
-              whileHover={{ x: 4 }}
-              aria-label="Sign out of your account"
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
-                <ArrowRightOnRectangleIcon className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-medium">Sign Out</span>
-            </motion.button>
-          </nav>
-        </div>
-      </nav>
-
-      {/* Mobile Header - Ultra Premium */}
-      <header 
-        className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-b border-white/20 dark:border-slate-700/20 shadow-xl"
-        role="banner"
-        aria-label="Mobile application header"
-      >
-        <SafeArea top>
-          <div className="flex items-center justify-between p-6">
-            <motion.button
-              onClick={() => window.location.href = '/'}
-              className="hover:opacity-80 transition-opacity cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              aria-label="Biowell home page"
-            >
-              <img 
-                src={logoUrl} 
-                alt="Biowell" 
-                className="h-10 w-auto"
-              />
-            </motion.button>
-            
-            <div className="flex items-center space-x-3">
-              <motion.button
-                onClick={() => setShowSearch(true)}
-                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Open search"
-              >
-                <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-              </motion.button>
-              
-              <motion.button
-                onClick={() => setShowNotifications(true)}
-                className="relative p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Open notifications"
-              >
-                <BellIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
-              </motion.button>
-              
-              <motion.button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-                aria-expanded={isMobileMenuOpen}
-              >
-                {isMobileMenuOpen ? (
-                  <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-                ) : (
-                  <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-                )}
-              </motion.button>
-            </div>
-          </div>
-        </SafeArea>
-      </header>
-
-      {/* Premium Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            <motion.div 
-              className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+      {/* Filters */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="lg:col-span-2">
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search supplements..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
             />
-            
-            <motion.aside 
-              className="lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl z-50 shadow-2xl border-l border-white/20 dark:border-slate-700/20"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Mobile navigation menu"
-            >
-              <SafeArea top bottom right>
-                <div className="flex flex-col h-full p-6">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Menu</h2>
-                    <button
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors"
-                      aria-label="Close menu"
-                    >
-                      <XMarkIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                    </button>
-                  </div>
-
-                  {/* Navigation Items */}
-                  <nav role="navigation" aria-label="Mobile navigation" className="flex-1 space-y-3">
-                    {navigationItems.map((item, index) => {
-                      const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
-                      const Icon = isActive ? item.activeIcon : item.icon;
-                      
-                      return (
-                        <motion.button
-                          key={item.id}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
-                          className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-300 ${
-                            isActive
-                              ? `bg-gradient-to-r ${item.gradient} text-white shadow-xl`
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20'
-                          }`}
-                          aria-current={isActive ? 'page' : undefined}
-                        >
-                          <div className="flex items-center space-x-4">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                              isActive ? 'bg-white/20' : 'bg-slate-100/80 dark:bg-slate-800/80'
-                            }`}>
-                              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
-                            </div>
-                            <div>
-                              <div className="font-semibold text-lg">{item.label}</div>
-                              <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
-                                {item.description}
-                              </div>
-                            </div>
-                          </div>
-                          {item.children && (
-                            <ChevronDownIcon 
-                              className={`w-5 h-5 transition-transform ${
-                                expandedMenu === item.id ? 'rotate-180' : ''
-                              }`} 
-                            />
-                          )}
-                        </motion.button>
-                      );
-                    })}
-                  </nav>
-                </div>
-              </SafeArea>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Premium Mobile Bottom Navigation */}
-      <nav 
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-t border-white/20 dark:border-slate-700/20 shadow-2xl"
-        role="navigation"
-        aria-label="Primary navigation"
-      >
-        <SafeArea bottom>
-          <div className="flex items-center justify-around p-4">
-            {[
-              { id: 'dashboard', icon: HomeIcon, activeIcon: HomeSolidIcon, label: 'Home' },
-              { id: 'health', icon: HeartIcon, activeIcon: HeartIcon, label: 'Health' },
-              { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'Coach' },
-              { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Shop' }
-            ].map((item) => {
-              const Icon = activeView === item.id ? item.activeIcon : item.icon;
-              const isActive = activeView === item.id;
-              
-              return (
-                <motion.button
-                  key={item.id}
-                  onClick={() => handleNavigation(item.id)}
-                  className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 relative ${
-                    isActive ? 'bg-gradient-to-t from-blue-500 to-purple-600 text-white shadow-xl scale-110' : 'text-slate-600 dark:text-slate-400'
-                  }`}
-                  whileHover={{ scale: isActive ? 1.1 : 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-current={isActive ? 'page' : undefined}
-                  aria-label={`Navigate to ${item.label}`}
-                >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-xs font-semibold">{item.label}</span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="mobileActiveIndicator"
-                      className="absolute -top-1 w-1 h-1 bg-emerald-400 rounded-full"
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
           </div>
-        </SafeArea>
-      </nav>
+        </div>
+        
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="px-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+        >
+          {categories.map(category => (
+            <option key={category.value} value={category.value}>
+              {category.label}
+            </option>
+          ))}
+        </select>
+        
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="px-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+        >
+          <option value="featured">Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Highest Rated</option>
+          <option value="name">Name A-Z</option>
+        </select>
+      </div>
 
-      {/* Main Content with Premium Spacing */}
-      <main 
-        className="lg:pl-80 pt-24 lg:pt-8 pb-24 lg:pb-8"
-        role="main"
-        id="main-content"
-      >
-        <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+      {/* Tier Filter */}
+      <div className="flex flex-wrap gap-3">
+        {tiers.map((tier) => (
+          <button
+            key={tier.value}
+            onClick={() => setSelectedTier(tier.value)}
+            className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+              selectedTier === tier.value
+                ? `bg-gradient-to-r ${tier.color} text-white shadow-lg`
+                : 'bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:bg-white/80 dark:hover:bg-slate-800/80'
+            }`}
+          >
+            {tier.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Supplements Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredSupplements.map((supplement, index) => (
           <motion.div
-            key={activeView}
+            key={supplement.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ delay: index * 0.05 }}
+            className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 group"
           >
-            {renderContent()}
-          </motion.div>
-        </div>
-      </main>
+            {/* Badges */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex space-x-2">
+                {supplement.is_featured && (
+                  <span className="px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full">
+                    Featured
+                  </span>
+                )}
+                {supplement.is_bestseller && (
+                  <span className="px-2 py-1 bg-gradient-to-r from-emerald-400 to-teal-500 text-white text-xs font-bold rounded-full">
+                    Bestseller
+                  </span>
+                )}
+              </div>
+              
+              {supplement.tier && (
+                <div className={`w-3 h-3 rounded-full ${
+                  supplement.tier === 'green' ? 'bg-green-500' :
+                  supplement.tier === 'yellow' ? 'bg-yellow-500' :
+                  supplement.tier === 'orange' ? 'bg-orange-500' :
+                  supplement.tier === 'red' ? 'bg-red-500' : 'bg-slate-500'
+                }`} />
+              )}
+            </div>
 
-      {/* Premium Floating Elements */}
-      <QuickActionMenu onQuickAction={handleQuickAction} />
-      <OfflineIndicator />
-      
-      {/* Premium Search Modal */}
+            {/* Product Image */}
+            <div className="w-full h-48 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+              {supplement.image_url ? (
+                <img 
+                  src={supplement.image_url} 
+                  alt={supplement.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <BeakerIcon className="w-16 h-16 text-slate-400" />
+              )}
+            </div>
+
+            {/* Product Info */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white line-clamp-2">
+                {supplement.name}
+              </h3>
+              
+              <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">
+                {supplement.description}
+              </p>
+
+              {/* Evidence Rating */}
+              {supplement.evidence_rating && (
+                <div className="flex items-center space-x-2">
+                  <div className="flex space-x-1">
+                    {[...Array(5)].map((_, i) => (
+                      <StarIcon
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < supplement.evidence_rating! 
+                            ? 'text-yellow-400 fill-current' 
+                            : 'text-slate-300 dark:text-slate-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                    Evidence Rating
+                  </span>
+                </div>
+              )}
+
+              {/* Benefits */}
+              {supplement.benefits && supplement.benefits.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {supplement.benefits.slice(0, 3).map((benefit, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 text-xs rounded-full"
+                    >
+                      {benefit}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Price and Actions */}
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div>
+                  <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                    ${supplement.price}
+                  </span>
+                  {supplement.dosage && (
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {supplement.dosage}
+                    </p>
+                  )}
+                </div>
+                
+                <motion.button
+                  onClick={() => addToCart(supplement)}
+                  disabled={isLoading || !supplement.is_available}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  <span>Add</span>
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredSupplements.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-24 h-24 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BeakerIcon className="w-12 h-12 text-white" />
+          </div>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">No supplements found</h3>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">Try adjusting your search or filters</p>
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedCategory('all');
+              setSelectedTier('all');
+            }}
+            className="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300"
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+
+      {/* Cart Modal */}
       <AnimatePresence>
-        {showSearch && (
+        {showCart && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20"
-            onClick={() => setShowSearch(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Search dialog"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowCart(false)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-2xl mx-4"
+              className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/20 dark:border-slate-700/20 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <SmartSearch 
-                onNavigate={(path) => {
-                  handleNavigation(path);
-                  setShowSearch(false);
-                }}
-                className="w-full"
-              />
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Shopping Cart</h2>
+                <button
+                  onClick={() => setShowCart(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors"
+                >
+                  ×
+                </button>
+              </div>
+
+              {cartItems.length === 0 ? (
+                <div className="text-center py-8">
+                  <ShoppingBagIcon className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                  <p className="text-slate-600 dark:text-slate-400">Your cart is empty</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                      <div className="w-16 h-16 bg-slate-200 dark:bg-slate-600 rounded-xl flex items-center justify-center">
+                        {item.supplement.image_url ? (
+                          <img 
+                            src={item.supplement.image_url} 
+                            alt={item.supplement.name}
+                            className="w-full h-full object-cover rounded-xl"
+                          />
+                        ) : (
+                          <BeakerIcon className="w-8 h-8 text-slate-400" />
+                        )}
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-slate-900 dark:text-white">
+                          {item.supplement.name}
+                        </h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          ${item.supplement.price} each
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                          className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+                        >
+                          <MinusIcon className="w-4 h-4" />
+                        </button>
+                        <span className="w-8 text-center font-semibold">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                          className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+                        >
+                          <PlusIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                      
+                      <div className="text-right">
+                        <p className="font-bold text-slate-900 dark:text-white">
+                          ${(item.supplement.price * item.quantity).toFixed(2)}
+                        </p>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-red-500 hover:text-red-700 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <div className="flex items-center justify-between text-xl font-bold text-slate-900 dark:text-white">
+                      <span>Total:</span>
+                      <span>${cartTotal.toFixed(2)}</span>
+                    </div>
+                    
+                    <button
+                      onClick={() => {
+                        toast({
+                          title: "Checkout",
+                          description: "Checkout functionality coming soon!"
+                        });
+                      }}
+                      className="w-full mt-4 bg-gradient-to-r from-orange-500 to-pink-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                    >
+                      Proceed to Checkout
+                    </button>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Premium Notification Center */}
-      <NotificationCenter 
-        isOpen={showNotifications}
-        onClose={() => setShowNotifications(false)}
-      />
     </div>
   );
 };
 
-export default UnifiedHealthDashboard;
+export default SupplementShopEnhanced;
