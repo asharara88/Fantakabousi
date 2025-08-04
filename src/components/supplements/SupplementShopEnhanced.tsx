@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
 import WelcomeHeader from '../dashboard/WelcomeHeader';
-import HealthMetrics from './HealthMetrics';
+import HealthMetrics from '../dashboard/HealthMetrics';
 import AIInsights from './AIInsights';
 import TodaysPlan from './TodaysPlan';
 import QuickActions from './QuickActions';
