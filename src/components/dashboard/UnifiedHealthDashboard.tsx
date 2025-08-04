@@ -5,7 +5,7 @@ import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
 import WelcomeHeader from './WelcomeHeader';
 import HealthMetrics from './HealthMetrics';
-import AIInsights from './AIInsights';
+import DailyInsights from './DailyInsights';
 import TodaysPlan from './TodaysPlan';
 import QuickActions from './QuickActions';
 import ActivityFeed from './ActivityFeed';
