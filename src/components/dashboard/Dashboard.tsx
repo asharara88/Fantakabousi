@@ -5,6 +5,10 @@ import { useProfile } from '../../hooks/useProfile';
 import AccessibilityProvider from '../ui/AccessibilityProvider';
 import Navigation from '../layout/Navigation';
 import { MobileNavigation } from '../layout/MobileNavigation';
+import ImprovedNavigation from '../layout/ImprovedNavigation';
+import Breadcrumbs from '../ui/Breadcrumbs';
+import FloatingActionButton from '../ui/FloatingActionButton';
+import SearchBar from '../ui/SearchBar';
 import WelcomeHeader from './WelcomeHeader';
 import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
@@ -35,6 +39,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleQuickAction = (action: string) => {
+    // Enhanced navigation with breadcrumb support
     switch (action) {
       case 'plan':
         setShowPlanYourDay(true);
@@ -65,6 +70,9 @@ const Dashboard: React.FC = () => {
         break;
       case 'profile':
         setActiveTab('profile');
+        break;
+      case 'search':
+        // Handle search functionality
         break;
       default:
         setActiveTab('dashboard');
@@ -105,7 +113,39 @@ const Dashboard: React.FC = () => {
       case 'sleep': return 'Sleep Optimization';
       case 'profile': return 'Profile Settings';
       default: return 'Biowell Dashboard';
+  const getBreadcrumbs = () => {
+    const breadcrumbs = [
+      { label: 'Home', href: 'dashboard', icon: HomeIcon }
+    ];
+
+    switch (activeTab) {
+      case 'coach':
+        breadcrumbs.push({ label: 'AI Coach', href: 'coach', current: true });
+        break;
+      case 'health':
+        breadcrumbs.push({ label: 'Health Analytics', href: 'health', current: true });
+        break;
+      case 'nutrition':
+        breadcrumbs.push({ label: 'Nutrition & Recipes', href: 'nutrition', current: true });
+        break;
+      case 'supplements':
+        breadcrumbs.push({ label: 'Supplement Shop', href: 'supplements', current: true });
+        break;
+      case 'fitness':
+        breadcrumbs.push({ label: 'Fitness & Training', href: 'fitness', current: true });
+        break;
+      case 'sleep':
+        breadcrumbs.push({ label: 'Sleep Optimization', href: 'sleep', current: true });
+        break;
+      case 'profile':
+        breadcrumbs.push({ label: 'Profile Settings', href: 'profile', current: true });
+        break;
+      default:
+        breadcrumbs[0].current = true;
     }
+    }
+    return breadcrumbs;
+  };
   };
   return (
     <AccessibilityProvider>
@@ -132,31 +172,17 @@ const Dashboard: React.FC = () => {
         <OfflineIndicator />
         
         {/* Primary Navigation */}
-        <nav 
-          id="navigation"
-          role="navigation" 
-          aria-label="Primary navigation"
-          className="hidden lg:block"
-        >
-          <Navigation 
-            activeTab={activeTab} 
-            onTabChange={handleTabChange}
-          />
-        </nav>
+        <ImprovedNavigation 
+          activeTab={activeTab} 
+          onTabChange={handleTabChange}
+        />
         
         {/* Mobile Navigation */}
-        <nav 
-          role="navigation" 
-          aria-label="Mobile navigation"
-          className="lg:hidden"
-        >
-          <MobileNavigation
-            currentView={activeTab}
-            onViewChange={handleTabChange}
-            isMenuOpen={isMobileMenuOpen}
-            onMenuToggle={handleMobileMenuToggle}
-          />
-        </nav>
+        <ImprovedNavigation 
+          activeTab={activeTab} 
+          onTabChange={handleTabChange}
+          isMobile={true}
+        />
         
         {/* Main Content Area */}
         <div className="mobile-layout lg:pl-72">
@@ -169,6 +195,22 @@ const Dashboard: React.FC = () => {
             <div className="mobile-content">
               <SafeArea top bottom left right>
                 <div className="container">
+                  {/* Search Bar - Desktop Only */}
+                  <div className="hidden lg:block mb-6">
+                    <SearchBar 
+                      onNavigate={handleTabChange}
+                      onSearch={(query) => console.log('Search:', query)}
+                    />
+                  </div>
+
+                  {/* Breadcrumbs */}
+                  <div className="mb-6">
+                    <Breadcrumbs 
+                      items={getBreadcrumbs()}
+                      onNavigate={handleTabChange}
+                    />
+                  </div>
+
                   {/* Page Header */}
                   <header role="banner" className="sr-only">
                     <h2>{getPageTitle()}</h2>
@@ -202,6 +244,9 @@ const Dashboard: React.FC = () => {
             </div>
           </main>
         </div>
+
+        {/* Floating Action Button */}
+        <FloatingActionButton onQuickAction={handleQuickAction} />
 
         {/* Complementary Content - Modals and Overlays */}
         <aside 
