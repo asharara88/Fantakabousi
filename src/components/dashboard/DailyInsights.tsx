@@ -577,13 +577,24 @@ const UnifiedHealthDashboard: React.FC = () => {
                 {isMobileMenuOpen ? (
                   <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
                 ) : (
+                  <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </SafeArea>
+      </header>
+
+      {/* Premium Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" 
               onClick={() => setIsMobileMenuOpen(false)}
-                  <span onClick={() => onQuickAction?.('coach')}>
-              exit={{ opacity: 0 }}
             />
             
             <motion.aside 
