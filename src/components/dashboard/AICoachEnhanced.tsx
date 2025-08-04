@@ -159,7 +159,7 @@ const AICoachEnhanced: React.FC = () => {
                 <div 
                   className="w-2 h-2 bg-green-500 rounded-full animate-pulse"
                   role="status"
-                  aria-label="AI coach is online and ready"
+                  aria-label="Smart coach is online and ready"
                 ></div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Ready to help</span>
               </div>
@@ -195,10 +195,10 @@ const AICoachEnhanced: React.FC = () => {
                   <SparklesIcon className="w-10 h-10 text-white" />
                 </div>
                 <div>
-                  <h2 id="welcome-title" className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
+                  <h2 id="welcome-title" className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">
                     Hi! I'm your Smart Coach
                   </h2>
-                  <p className="text-lg text-gray-600">
+                  <p className="text-lg text-gray-600 dark:text-gray-300">
                     I can help you with nutrition, exercise, sleep, and wellness questions.
                   </p>
                 </div>
