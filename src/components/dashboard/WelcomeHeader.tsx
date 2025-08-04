@@ -1,773 +1,769 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useToast } from '../../hooks/useToast';
+import WelcomeHeader from './WelcomeHeader';
+import HealthMetrics from './HealthMetrics';
+import AIInsights from './AIInsights';
+import TodaysPlan from './TodaysPlan';
+import QuickActions from './QuickActions';
+import ActivityFeed from './ActivityFeed';
+import ReadinessScore from './ReadinessScore';
+import BiometricChart from './BiometricChart';
+import SupplementStack from './SupplementStack';
+import AICoachEnhanced from './AICoachEnhanced';
+import HealthDashboard from './HealthDashboard';
+import NutritionDashboard from '../nutrition/NutritionDashboard';
+import FitnessDashboard from '../fitness/FitnessDashboard';
+import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
+import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
+import NotificationCenter from '../notifications/NotificationCenter';
+import QuickActionMenu from '../ui/QuickActionMenu';
+import SmartSearch from '../ui/SmartSearch';
+import OfflineIndicator from '../ui/OfflineIndicator';
+import SafeArea from '../ui/SafeArea';
 import { 
+  HomeIcon,
+  ChatBubbleLeftRightIcon,
+  ChartBarIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+  Bars3Icon,
+  XMarkIcon,
+  BellIcon,
+  MagnifyingGlassIcon,
   SparklesIcon,
-  SunIcon,
-  MoonIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  BoltIcon,
   HeartIcon,
   BeakerIcon,
+  BoltIcon,
   CubeIcon,
   FireIcon,
-  CameraIcon,
-  PlayIcon,
-  PlusIcon,
-  ArrowRightIcon,
-  LightBulbIcon,
-  EyeIcon,
-  BriefcaseIcon,
-  CalendarDaysIcon,
-  TrophyIcon
+  MoonIcon,
+  SunIcon,
+  ComputerDesktopIcon,
+  Cog6ToothIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  DevicePhoneMobileIcon
 } from '@heroicons/react/24/outline';
-import { CheckCircleIcon as CheckCircleSolidIcon } from '@heroicons/react/24/solid';
+import {
+  HomeIcon as HomeSolidIcon,
+  ChatBubbleLeftRightIcon as ChatSolidIcon,
+  ChartBarIcon as ChartSolidIcon,
+  ShoppingBagIcon as ShoppingSolidIcon,
+  UserCircleIcon as UserSolidIcon,
+  BellIcon as BellSolidIcon
+} from '@heroicons/react/24/solid';
 
-interface WelcomeHeaderProps {
-  onQuickAction?: (action: string) => void;
-}
-
-interface DailyWin {
-  id: string;
-  title: string;
-  description: string;
-  time: string;
-  completed: boolean;
-  category: 'circadian' | 'movement' | 'hydration' | 'work' | 'nutrition' | 'supplements' | 'exercise';
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-  priority: 'high' | 'medium' | 'low';
-  points: number;
-  supplementShortcut?: {
-    products: string[];
-    category: string;
-  };
-}
-
-const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
-  const { user } = useAuth();
+const UnifiedHealthDashboard: React.FC = () => {
+  const { user, signOut } = useAuth();
   const { profile } = useProfile();
-  const { actualTheme } = useTheme();
-  const { toast } = useToast();
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [bedtimeCountdown, setBedtimeCountdown] = useState('');
-  const [dailyWins, setDailyWins] = useState<DailyWin[]>([]);
-  const [totalPoints, setTotalPoints] = useState(0);
-  
+  const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
+  const [activeView, setActiveView] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  const [showSearch, setShowSearch] = useState(false);
+
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
-  
-  // Initialize daily wins based on current time
-  useEffect(() => {
-    const now = new Date();
-    const currentHour = now.getHours();
-    
-    const wins: DailyWin[] = [
-      {
-        id: 'light-exposure',
-        title: 'Morning Light Exposure',
-        description: 'Get 10-15 mins sunlight before caffeine',
-        time: '07:00',
-        completed: currentHour >= 7,
-        category: 'circadian',
-        icon: SunIcon,
-        color: 'from-yellow-500 to-orange-600',
-        priority: 'high',
-        points: 25
-      },
-      {
-        id: 'morning-walk',
-        title: 'Morning Movement',
-        description: '10-minute walk to activate metabolism',
-        time: '07:30',
-        completed: currentHour >= 8,
-        category: 'movement',
-        icon: BoltIcon,
-        color: 'from-green-500 to-emerald-600',
-        priority: 'high',
-        points: 20
-      },
-      {
-        id: 'hydration',
-        title: 'Hydrate with Electrolytes',
-        description: 'Get premium electrolyte supplements',
-        time: '08:00',
-        completed: currentHour >= 8,
-        category: 'hydration',
-        icon: BeakerIcon,
-        color: 'from-blue-500 to-cyan-600',
-        priority: 'high',
-        points: 15,
-        supplementShortcut: {
-          products: ['LMNT', 'HUMANTRA'],
-          category: 'electrolytes'
-        }
-      },
-      {
-        id: 'morning-supplements',
-        title: 'Morning Stack',
-        description: 'Take your morning supplements',
-        time: '08:30',
-        completed: currentHour >= 9,
-        category: 'supplements',
-        icon: CubeIcon,
-        color: 'from-purple-500 to-indigo-600',
-        priority: 'high',
-        points: 20
-      },
-      {
-        id: 'work-start',
-        title: 'Deep Work Block',
-        description: 'Start your most important work',
-        time: '09:00',
-        completed: currentHour >= 9,
-        category: 'work',
-        icon: BriefcaseIcon,
-        color: 'from-indigo-500 to-purple-600',
-        priority: 'medium',
-        points: 15
-      },
-      {
-        id: 'last-coffee',
-        title: 'Last Coffee (1 PM)',
-        description: 'Final caffeine for optimal sleep',
-        time: '13:00',
-        completed: currentHour >= 13,
-        category: 'nutrition',
-        icon: BeakerIcon,
-        color: 'from-amber-500 to-orange-600',
-        priority: 'high',
-        points: 30
-      },
-      {
-        id: 'lunch',
-        title: 'Protein-Rich Lunch',
-        description: 'High protein meal for sustained energy',
-        time: '12:30',
-        completed: currentHour >= 13,
-        category: 'nutrition',
-        icon: BeakerIcon,
-        color: 'from-green-500 to-teal-600',
-        priority: 'medium',
-        points: 20
-      },
-      {
-        id: 'workout',
-        title: 'Training Session',
-        description: 'Strength or cardio workout',
-        time: '18:00',
-        completed: currentHour >= 18,
-        category: 'exercise',
-        icon: FireIcon,
-        color: 'from-red-500 to-pink-600',
-        priority: 'medium',
-        points: 25
-      },
-      {
-        id: 'dinner',
-        title: 'Light Dinner',
-        description: 'Balanced meal 3 hours before bed',
-        time: '19:30',
-        completed: currentHour >= 20,
-        category: 'nutrition',
-        icon: HeartIcon,
-        color: 'from-rose-500 to-pink-600',
-        priority: 'medium',
-        points: 15
-      },
-      {
-        id: 'evening-supplements',
-        title: 'Evening Stack',
-        description: 'Magnesium + sleep optimization',
-        time: '21:30',
-        completed: currentHour >= 22,
-        category: 'supplements',
-        icon: MoonIcon,
-        color: 'from-indigo-500 to-purple-600',
-        priority: 'high',
-        points: 20
-      }
-    ];
-    
-    setDailyWins(wins);
-    setTotalPoints(wins.filter(w => w.completed).reduce((sum, w) => sum + w.points, 0));
-  }, []);
-  
-  // Live time and bedtime countdown
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now);
-      
-      // Calculate bedtime countdown (11 PM)
-      const bedtime = new Date();
-      bedtime.setHours(23, 0, 0, 0);
-      
-      if (now > bedtime) {
-        bedtime.setDate(bedtime.getDate() + 1);
-      }
-      
-      const diff = bedtime.getTime() - now.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      
-      setBedtimeCountdown(`${hours}h ${minutes}m`);
-    };
-    
-    updateTime();
-    const interval = setInterval(updateTime, 60000); // Update every minute
-    
-    return () => clearInterval(interval);
-  }, []);
-  
-  const firstName = profile?.first_name || user?.email?.split('@')[0] || 'there';
-  const completedWins = dailyWins.filter(w => w.completed).length;
-  const progressPercentage = (completedWins / dailyWins.length) * 100;
 
-  const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('supplements');
-    
-    toast({
-      title: `🛒 ${products.join(' or ')} Available`,
-      description: `Premium ${category} supplements ready to order`,
-      action: {
-        label: "Shop Now",
-        onClick: () => onQuickAction?.('supplements')
-      }
-    });
+  // Premium navigation structure following UX best practices
+  const navigationItems = [
+    {
+      id: 'dashboard',
+      label: 'Home',
+      icon: HomeIcon,
+      activeIcon: HomeSolidIcon,
+      description: 'Your wellness overview',
+      gradient: 'from-blue-500 via-purple-500 to-pink-500'
+    },
+    {
+      id: 'coach',
+      label: 'AI Coach',
+      icon: ChatBubbleLeftRightIcon,
+      activeIcon: ChatSolidIcon,
+      description: 'Personalized guidance',
+      badge: 'AI',
+      gradient: 'from-purple-500 via-indigo-500 to-blue-500'
+    },
+    {
+      id: 'health',
+      label: 'Health',
+      icon: ChartBarIcon,
+      activeIcon: ChartSolidIcon,
+      description: 'Analytics & insights',
+      gradient: 'from-emerald-500 via-teal-500 to-cyan-500',
+      children: [
+        { id: 'metrics', label: 'Live Metrics', description: 'Real-time biometric data' },
+        { id: 'analytics', label: 'Advanced Analytics', description: 'Deep health insights' },
+        { id: 'devices', label: 'Connected Devices', description: 'Wearables & monitors' }
+      ]
+    },
+    {
+      id: 'nutrition',
+      label: 'Nutrition',
+      icon: BeakerIcon,
+      activeIcon: BeakerIcon,
+      description: 'Food & recipes',
+      gradient: 'from-green-500 via-emerald-500 to-teal-500',
+      children: [
+        { id: 'logger', label: 'Food Logger', description: 'Track your meals' },
+        { id: 'recipes', label: 'Recipe Search', description: 'Healthy meal ideas' }
+      ]
+    },
+    {
+      id: 'supplements',
+      label: 'Shop',
+      icon: ShoppingBagIcon,
+      activeIcon: ShoppingSolidIcon,
+      description: 'Premium supplements',
+      gradient: 'from-orange-500 via-red-500 to-pink-500'
+    },
+    {
+      id: 'fitness',
+      label: 'Fitness',
+      icon: BoltIcon,
+      activeIcon: BoltIcon,
+      description: 'Training & workouts',
+      gradient: 'from-red-500 via-orange-500 to-yellow-500'
+    }
+  ];
+
+  const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
+
+  const handleMenuToggle = (menuId: string) => {
+    setExpandedMenu(expandedMenu === menuId ? null : menuId);
   };
 
-  const toggleWin = (winId: string) => {
-    const handleSupplementShortcut = (products: string[], category: string) => {
-      onQuickAction?.('supplements');
-      
-      toast({
-        title: `🛒 ${products.join(' or ')} Available`,
-        description: `Premium ${category} supplements ready to order`,
-        action: {
-          label: "Shop Now",
-          onClick: () => onQuickAction?.('supplements')
-        }
-      });
-    };
-
-    setDailyWins(prev => prev.map(win => {
-      if (win.id === winId) {
-        const newCompleted = !win.completed;
-        
-        if (newCompleted) {
-          // Celebration for completing a win
-          toast({
-            title: `🎉 ${win.title} Complete!`,
-            description: `+${win.points} points earned. Great job!`,
-          });
-          setTotalPoints(prev => prev + win.points);
-        } else {
-          setTotalPoints(prev => prev - win.points);
-        }
-        
-        return { ...win, completed: newCompleted };
-      }
-      return win;
-    }));
+  const handleNavigation = (itemId: string, subItemId?: string) => {
+    const targetView = subItemId ? `${itemId}-${subItemId}` : itemId;
+    setActiveView(targetView);
+    setIsMobileMenuOpen(false);
+    setExpandedMenu(null);
   };
 
-  const getTimeBasedGreeting = () => {
-    const hour = currentTime.getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    if (hour < 21) return 'Good evening';
-    return 'Good night';
+  const handleQuickAction = (action: string) => {
+    setActiveView(action);
   };
 
-  const getNextWin = () => {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinutes = now.getMinutes();
-    const currentTimeInMinutes = currentHour * 60 + currentMinutes;
-    
-    return dailyWins.find(win => {
-      const [winHour, winMinute] = win.time.split(':').map(Number);
-      const winTimeInMinutes = winHour * 60 + winMinute;
-      return !win.completed && winTimeInMinutes > currentTimeInMinutes;
-    });
-  };
+  const ThemeToggle = () => (
+    <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-xl rounded-2xl p-1 border border-white/20">
+      <button
+        onClick={() => {
+          setAutoSyncTime(false);
+          setTheme('light');
+        }}
+        className={`p-3 rounded-xl transition-all duration-300 ${
+          theme === 'light' && !autoSyncTime
+            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg scale-110'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
+        }`}
+        title="Light theme"
+        aria-label="Switch to light theme"
+      >
+        <SunIcon className="w-5 h-5" />
+      </button>
+      <button
+        onClick={() => {
+          setAutoSyncTime(true);
+          setTheme('auto');
+        }}
+        className={`p-3 rounded-xl transition-all duration-300 ${
+          autoSyncTime
+            ? 'bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg scale-110'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
+        }`}
+        title="Auto theme"
+        aria-label="Switch to automatic theme"
+      >
+        <ComputerDesktopIcon className="w-5 h-5" />
+      </button>
+      <button
+        onClick={() => {
+          setAutoSyncTime(false);
+          setTheme('dark');
+        }}
+        className={`p-3 rounded-xl transition-all duration-300 ${
+          theme === 'dark' && !autoSyncTime
+            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg scale-110'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
+        }`}
+        title="Dark theme"
+        aria-label="Switch to dark theme"
+      >
+        <MoonIcon className="w-5 h-5" />
+      </button>
+    </div>
+  );
 
-  const nextWin = getNextWin();
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'circadian': return SunIcon;
-      case 'movement': return BoltIcon;
-      case 'hydration': return BeakerIcon;
-      case 'work': return BriefcaseIcon;
-      case 'nutrition': return BeakerIcon;
-      case 'supplements': return CubeIcon;
-      case 'exercise': return FireIcon;
-      default: return CheckCircleIcon;
+  const renderContent = () => {
+    switch (activeView) {
+      case 'coach':
+        return <AICoachEnhanced />;
+      case 'health':
+      case 'health-metrics':
+      case 'health-analytics':
+      case 'health-devices':
+        return <HealthDashboard />;
+      case 'nutrition':
+      case 'nutrition-logger':
+      case 'nutrition-recipes':
+        return <NutritionDashboard onQuickAction={handleQuickAction} />;
+      case 'supplements':
+        return <SupplementShopEnhanced onQuickAction={handleQuickAction} />;
+      case 'fitness':
+        return <FitnessDashboard onQuickAction={handleQuickAction} />;
+      case 'profile':
+        return <ProfileSettingsEnhanced />;
+      default:
+        return (
+          <div className="space-y-8">
+            <WelcomeHeader onQuickAction={handleQuickAction} />
+            
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+              {/* Left Column */}
+              <div className="xl:col-span-2 space-y-8">
+                <HealthMetrics />
+                <AIInsights onQuickAction={handleQuickAction} />
+              </div>
+              
+              {/* Right Column */}
+              <div className="space-y-8">
+                <ReadinessScore score={87} />
+                <TodaysPlan />
+                <ActivityFeed />
+              </div>
+            </div>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="space-y-8 relative" role="region" aria-labelledby="welcome-section-title">
-      <h2 id="welcome-section-title" className="sr-only">Welcome Dashboard</h2>
-      
-      {/* Premium background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-3xl -z-10 animate-aurora" />
-      
-      {/* Hero Section with Time & Greeting */}
-      <section 
-        role="banner" 
-        aria-labelledby="hero-title"
-        className="relative overflow-hidden rounded-3xl glass-premium shadow-premium"
-      >
-        {/* Premium floating orbs */}
-        <div className="absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-float" aria-hidden="true" />
-        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-emerald-400/20 to-cyan-600/20 rounded-full blur-2xl animate-pulse" aria-hidden="true" />
-        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-pink-400/15 to-violet-600/15 rounded-full blur-xl animate-aurora" aria-hidden="true" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 relative overflow-hidden">
+      {/* Ultra-Premium Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Primary Aurora */}
+        <motion.div 
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-600/30 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
         
-        <div className="relative z-10 p-8 lg:p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-            {/* Left - Greeting & Time */}
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-8"
-            >
-              <div className="space-y-6">
-                <motion.h1 
-                  id="hero-title"
-                  className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent leading-tight"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                >
-                  {getTimeBasedGreeting()}, {firstName}
-                </motion.h1>
-                
-                <motion.div
-                  className="space-y-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <time 
-                    className="text-xl font-semibold text-slate-600 dark:text-slate-300"
-                    dateTime={currentTime.toISOString()}
-                  >
-                    {currentTime.toLocaleDateString('en-US', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </time>
-                  <time 
-                    className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-mono"
-                    dateTime={currentTime.toISOString()}
-                  >
-                    {currentTime.toLocaleTimeString('en-US', { 
-                      hour12: false,
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </time>
-                </motion.div>
-              </div>
-            </motion.div>
+        {/* Secondary Aurora */}
+        <motion.div 
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-400/25 to-cyan-600/25 rounded-full blur-3xl"
+          animate={{
+            scale: [1.1, 0.9, 1.1],
+            rotate: [360, 180, 0],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Floating Orbs */}
+        <motion.div 
+          className="absolute top-1/4 right-1/3 w-32 h-32 bg-gradient-to-r from-pink-400/20 to-violet-600/20 rounded-full blur-2xl"
+          animate={{
+            y: [-20, 20, -20],
+            x: [-10, 10, -10],
+            scale: [0.8, 1.2, 0.8]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Mesh Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" />
+      </div>
 
-            {/* Center - Progress Ring */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex justify-center"
-              role="img"
-              aria-labelledby="progress-label"
-            >
-              <div id="progress-label" className="sr-only">
-                Daily progress: {completedWins} out of {dailyWins.length} goals completed, {Math.round(progressPercentage)}% complete
-              </div>
-              <div className="relative w-64 h-64">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="3" fill="none" />
-                  <motion.circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    stroke="url(#premiumGradient)"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: "0 283" }}
-                    animate={{ strokeDasharray: `${(progressPercentage / 100) * 283} 283` }}
-                    transition={{ duration: 2.5, ease: "easeOut" }}
-                    className="drop-shadow-lg"
-                  />
-                  <defs>
-                    <linearGradient id="premiumGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="33%" stopColor="#8b5cf6" />
-                      <stop offset="66%" stopColor="#ec4899" />
-                      <stop offset="100%" stopColor="#f59e0b" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
-                    >
-                      {completedWins}/{dailyWins.length}
-                    </motion.div>
-                    <div className="text-lg font-semibold text-slate-600 dark:text-slate-300 mt-2">
-                      Daily Wins
-                    </div>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent mt-3">
-                      {totalPoints} pts
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right - Bedtime Countdown & Next Win */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-8"
-              role="complementary"
-              aria-label="Time and upcoming goals"
-            >
-              {/* Bedtime Countdown */}
-              <div 
-                className="glass-premium rounded-3xl p-8 text-center shadow-glow-blue"
-                role="timer"
-                aria-labelledby="bedtime-countdown-label"
-              >
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <MoonIcon className="w-8 h-8 text-white" />
-                </div>
-                <div id="bedtime-countdown-label" className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-3">Bedtime in</div>
-                <time className="text-4xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent font-mono">
-                  {bedtimeCountdown}
-                </time>
-              </div>
-
-              {/* Next Win */}
-              {nextWin && (
-                <div 
-                  className="glass-premium rounded-3xl p-8 shadow-glow-purple"
-                  role="region"
-                  aria-labelledby="next-win-title"
-                >
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className={`w-12 h-12 bg-gradient-to-br ${nextWin.color} rounded-2xl flex items-center justify-center shadow-xl`}>
-                      <nextWin.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div id="next-win-title" className="text-lg font-bold text-slate-700 dark:text-slate-300">Next Win</div>
-                  </div>
-                  <div className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">{nextWin.title}</div>
-                  <div className="text-base text-slate-600 dark:text-slate-400 mb-4">{nextWin.description}</div>
-                  <div className="flex items-center justify-between">
-                    <time className="text-lg font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">{nextWin.time}</time>
-                    <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-lg">+{nextWin.points} pts</span>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Daily Wins Grid */}
-      <section role="region" aria-labelledby="daily-wins-title" className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <TrophyIcon className="w-6 h-6 text-white" />
-            </div>
-            <h2 id="daily-wins-title" className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">Today's Wins</h2>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">{totalPoints} points</div>
-            <div className="text-lg text-slate-600 dark:text-slate-400 font-semibold">{Math.round(progressPercentage)}% complete</div>
-          </div>
-        </div>
-
-        <ul 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
-          role="list"
-          aria-label="Daily wellness goals"
-        >
-          {dailyWins.map((win, index) => (
-            <li key={win.id} role="listitem">
-              <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => toggleWin(win.id)}
-              role="button"
-              aria-pressed={win.completed}
-              aria-labelledby={`win-${win.id}-title`}
-              aria-describedby={`win-${win.id}-description`}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  toggleWin(win.id);
-                }
-              }}
-              className={`glass-premium rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:shadow-premium hover:-translate-y-2 hover:scale-102 ${
-                win.completed 
-                  ? 'bg-gradient-to-br from-emerald-500/20 to-teal-600/20 border-emerald-400/30 shadow-glow-blue' 
-                  : 'hover:border-blue-400/30 hover:shadow-glow-blue'
-              }`}
-            >
-              <div className="space-y-5 relative">
-                <div className="flex items-center justify-between">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${win.color} rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-white/20 rounded-2xl" />
-                    <win.icon className="w-7 h-7 text-white relative z-10" />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {win.completed ? (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500 }}
-                        role="img"
-                        aria-label="Goal completed"
-                      >
-                        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-xl">
-                          <CheckCircleSolidIcon className="w-5 h-5 text-white" />
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <div 
-                        className="w-8 h-8 border-3 border-white/30 rounded-full hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:scale-110"
-                        role="img"
-                        aria-label="Goal not completed"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 
-                    id={`win-${win.id}-title`}
-                    className={`text-xl font-bold text-slate-800 dark:text-slate-200 ${win.completed ? 'line-through opacity-75' : ''}`}
-                  >
-                    {win.title}
-                  </h3>
-                  <p 
-                    id={`win-${win.id}-description`}
-                    className={`text-base ${win.completed ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
-                  >
-                    {win.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <ClockIcon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                    <time className="text-base font-bold text-slate-700 dark:text-slate-300">{win.time}</time>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-lg text-sm">+{win.points}</span>
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full shadow-lg ${
-                      win.priority === 'high' ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white' :
-                      win.priority === 'medium' ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white' :
-                      'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    }`}>
-                      {win.priority}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              </motion.div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Quick Action Shortcuts */}
-      <section role="region" aria-labelledby="quick-actions-title">
-        <h2 id="quick-actions-title" className="sr-only">Quick Actions</h2>
-        <ul 
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-          role="list"
-          aria-label="Quick action shortcuts"
-        >
-        {[
-          { 
-            id: 'coach', 
-            title: 'Smart Coach', 
-            icon: SparklesIcon, 
-            color: 'from-purple-500 to-indigo-600',
-            description: 'Get personalized advice'
-          },
-          { 
-            id: 'food', 
-            title: 'Log Food', 
-            icon: CameraIcon, 
-            color: 'from-green-500 to-emerald-600',
-            description: 'Track your nutrition'
-          },
-          { 
-            id: 'health', 
-            title: 'View Analytics', 
-            icon: HeartIcon, 
-            color: 'from-red-500 to-pink-600',
-            description: 'Check your metrics'
-          },
-          { 
-            id: 'supplements', 
-            title: 'Supplements', 
-            icon: CubeIcon, 
-            color: 'from-orange-500 to-red-600',
-            description: 'Optimize your stack'
-          }
-        ].map((action, index) => (
-          <li key={action.id} role="listitem">
+      {/* Desktop Navigation - Ultra Premium */}
+      <nav 
+        className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
+          {/* Logo Section */}
+          <header role="banner" className="flex h-24 shrink-0 items-center gap-4 pt-8">
             <motion.button
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400 }}
+              aria-label="Biowell home page"
+            >
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-14 w-auto"
+              />
+            </motion.button>
+          </header>
+
+          {/* Premium User Profile Card */}
+          <motion.div 
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 via-purple-600 to-pink-600 p-6 shadow-2xl"
+            whileHover={{ scale: 1.02, y: -2 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            role="region"
+            aria-label="User profile information"
+          >
+            {/* Animated background overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent animate-gradient-shift" />
+            
+            {/* Floating particles */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white/40 rounded-full"
+                  style={{
+                    left: `${20 + i * 30}%`,
+                    top: `${30 + i * 20}%`,
+                  }}
+                  animate={{
+                    y: [-5, 5, -5],
+                    opacity: [0.3, 0.8, 0.3],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+            
+            <div className="relative flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
+                <span className="text-white font-bold text-xl">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xl font-bold text-white truncate">
+                  Welcome back, {firstName}
+                </p>
+                <p className="text-white/80 truncate text-sm">
+                  {user?.email}
+                </p>
+              </div>
+              <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse shadow-lg" />
+            </div>
+          </motion.div>
+
+          {/* Premium Theme Toggle */}
+          <div className="px-6 py-4 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Appearance</span>
+            </div>
+            <ThemeToggle />
+          </div>
+
+          {/* Main Navigation with Premium Effects */}
+          <div className="flex flex-1 flex-col">
+            <nav role="navigation" aria-label="Primary navigation" className="flex flex-1 flex-col gap-y-3">
+              {navigationItems.map((item) => {
+                const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
+                const Icon = isActive ? item.activeIcon : item.icon;
+                
+                return (
+                  <div key={item.id}>
+                    <motion.button
+                      onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
+                      className={`group relative w-full flex items-center gap-x-4 rounded-2xl p-4 text-left font-semibold transition-all duration-300 ${
+                        isActive
+                          ? `bg-gradient-to-r ${item.gradient} text-white shadow-2xl scale-105`
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 hover:scale-102'
+                      }`}
+                      whileHover={{ x: isActive ? 0 : 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      aria-current={isActive ? 'page' : undefined}
+                      aria-expanded={item.children ? expandedMenu === item.id : undefined}
+                    >
+                      {/* Premium glow effect for active item */}
+                      {isActive && (
+                        <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-2xl blur-xl opacity-30 -z-10`} />
+                      )}
+                      
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        isActive 
+                          ? 'bg-white/20 backdrop-blur-xl shadow-lg' 
+                          : 'bg-slate-100/80 dark:bg-slate-800/80 group-hover:bg-white/30 dark:group-hover:bg-slate-700/30'
+                      }`}>
+                        <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-lg">{item.label}</span>
+                          {item.badge && (
+                            <span className="px-3 py-1 bg-emerald-400 text-slate-900 text-xs font-bold rounded-full animate-pulse">
+                              {item.badge}
+                            </span>
+                          )}
+                          {item.children && (
+                            <ChevronDownIcon 
+                              className={`w-5 h-5 transition-transform duration-300 ${
+                                expandedMenu === item.id ? 'rotate-180' : ''
+                              }`} 
+                            />
+                          )}
+                        </div>
+                        <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
+                          {item.description}
+                        </div>
+                      </div>
+                    </motion.button>
+
+                    {/* Premium Sub-menu */}
+                    <AnimatePresence>
+                      {item.children && expandedMenu === item.id && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="ml-8 mt-2 space-y-2"
+                        >
+                          {item.children.map((subItem) => (
+                            <motion.button
+                              key={subItem.id}
+                              onClick={() => handleNavigation(item.id, subItem.id)}
+                              className="w-full flex items-center space-x-3 p-3 rounded-xl text-left hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
+                              whileHover={{ x: 4 }}
+                            >
+                              <ChevronRightIcon className="w-4 h-4 text-slate-400" />
+                              <div>
+                                <div className="font-medium text-slate-700 dark:text-slate-300">{subItem.label}</div>
+                                <div className="text-sm text-slate-500 dark:text-slate-400">{subItem.description}</div>
+                              </div>
+                            </motion.button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Premium Secondary Actions */}
+          <nav role="navigation" aria-label="Secondary navigation" className="space-y-2 pt-6 border-t border-white/20 dark:border-slate-700/20">
+            <motion.button 
+              onClick={() => setShowNotifications(true)}
+              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
+              whileHover={{ x: 4 }}
+              aria-label="Open notifications"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <BellIcon className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-medium">Notifications</span>
+              <span className="ml-auto w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+            </motion.button>
+            
+            <motion.button 
+              onClick={() => handleNavigation('profile')}
+              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
+              whileHover={{ x: 4 }}
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-slate-500 to-slate-700 rounded-xl flex items-center justify-center">
+                <Cog6ToothIcon className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-medium">Settings</span>
+            </motion.button>
+            
+            <motion.button 
+              onClick={signOut}
+              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200"
+              whileHover={{ x: 4 }}
+              aria-label="Sign out of your account"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
+                <ArrowRightOnRectangleIcon className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-medium">Sign Out</span>
+            </motion.button>
+          </nav>
+        </div>
+      </nav>
+
+      {/* Mobile Header - Ultra Premium */}
+      <header 
+        className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-b border-white/20 dark:border-slate-700/20 shadow-xl"
+        role="banner"
+        aria-label="Mobile application header"
+      >
+        <SafeArea top>
+          <div className="flex items-center justify-between p-6">
+            <motion.button
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              aria-label="Biowell home page"
+            >
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-10 w-auto"
+              />
+            </motion.button>
+            
+            <div className="flex items-center space-x-3">
+              <motion.button
+                onClick={() => setShowSearch(true)}
+                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Open search"
+              >
+                <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+              </motion.button>
+              
+              <motion.button
+                onClick={() => setShowNotifications(true)}
+                className="relative p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Open notifications"
+              >
+                <BellIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+              </motion.button>
+              
+              <motion.button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMobileMenuOpen}
+              >
+                {isMobileMenuOpen ? (
+                  <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                ) : (
+                  <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </SafeArea>
+      </header>
+
+      {/* Premium Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div 
+              className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            
+            <motion.aside 
+              className="lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl z-50 shadow-2xl border-l border-white/20 dark:border-slate-700/20"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
+            >
+              <SafeArea top bottom right>
+                <div className="flex flex-col h-full p-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Menu</h2>
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors"
+                      aria-label="Close menu"
+                    >
+                      <XMarkIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                    </button>
+                  </div>
+
+                  {/* Navigation Items */}
+                  <nav role="navigation" aria-label="Mobile navigation" className="flex-1 space-y-3">
+                    {navigationItems.map((item, index) => {
+                      const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
+                      const Icon = isActive ? item.activeIcon : item.icon;
+                      
+                      return (
+                        <motion.button
+                          key={item.id}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
+                          className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-300 ${
+                            isActive
+                              ? `bg-gradient-to-r ${item.gradient} text-white shadow-xl`
+                              : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20'
+                          }`}
+                          aria-current={isActive ? 'page' : undefined}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                              isActive ? 'bg-white/20' : 'bg-slate-100/80 dark:bg-slate-800/80'
+                            }`}>
+                              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-lg">{item.label}</div>
+                              <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
+                                {item.description}
+                              </div>
+                            </div>
+                          </div>
+                          {item.children && (
+                            <ChevronDownIcon 
+                              className={`w-5 h-5 transition-transform ${
+                                expandedMenu === item.id ? 'rotate-180' : ''
+                              }`} 
+                            />
+                          )}
+                        </motion.button>
+                      );
+                    })}
+                  </nav>
+                </div>
+              </SafeArea>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Premium Mobile Bottom Navigation */}
+      <nav 
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-t border-white/20 dark:border-slate-700/20 shadow-2xl"
+        role="navigation"
+        aria-label="Primary navigation"
+      >
+        <SafeArea bottom>
+          <div className="flex items-center justify-around p-4">
+            {[
+              { id: 'dashboard', icon: HomeIcon, activeIcon: HomeSolidIcon, label: 'Home' },
+              { id: 'health', icon: HeartIcon, activeIcon: HeartIcon, label: 'Health' },
+              { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'Coach' },
+              { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Shop' }
+            ].map((item) => {
+              const Icon = activeView === item.id ? item.activeIcon : item.icon;
+              const isActive = activeView === item.id;
+              
+              return (
+                <motion.button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.id)}
+                  className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 relative ${
+                    isActive ? 'bg-gradient-to-t from-blue-500 to-purple-600 text-white shadow-xl scale-110' : 'text-slate-600 dark:text-slate-400'
+                  }`}
+                  whileHover={{ scale: isActive ? 1.1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={`Navigate to ${item.label}`}
+                >
+                  <Icon className="w-6 h-6" />
+                  <span className="text-xs font-semibold">{item.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="mobileActiveIndicator"
+                      className="absolute -top-1 w-1 h-1 bg-emerald-400 rounded-full"
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </SafeArea>
+      </nav>
+
+      {/* Main Content with Premium Spacing */}
+      <main 
+        className="lg:pl-80 pt-24 lg:pt-8 pb-24 lg:pb-8"
+        role="main"
+        id="main-content"
+      >
+        <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+          <motion.div
+            key={activeView}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 + index * 0.1 }}
-            onClick={() => onQuickAction?.(action.id)}
-            aria-labelledby={`action-${action.id}-title`}
-            aria-describedby={`action-${action.id}-description`}
-            className="card hover:shadow-xl hover:-translate-y-2 transition-all duration-300 text-center"
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <div className="space-y-3">
-              <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-xl flex items-center justify-center mx-auto shadow-lg`}>
-                <action.icon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 id={`action-${action.id}-title`} className="font-bold text-foreground">{action.title}</h3>
-                <p id={`action-${action.id}-description`} className="text-sm text-muted-foreground">{action.description}</p>
-              </div>
-            </div>
-            </motion.button>
-          </li>
-        ))}
-        </ul>
-      </section>
+            {renderContent()}
+          </motion.div>
+        </div>
+      </main>
 
-      {/* Achievement Celebration */}
-      {completedWins === dailyWins.length && (
-        <section 
-          role="alert"
-          aria-labelledby="achievement-title"
-          aria-describedby="achievement-description"
-        >
+      {/* Premium Floating Elements */}
+      <QuickActionMenu onQuickAction={handleQuickAction} />
+      <OfflineIndicator />
+      
+      {/* Premium Search Modal */}
+      <AnimatePresence>
+        {showSearch && (
           <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="card-premium bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800 text-center relative overflow-hidden"
-        >
-          {/* Celebration particles */}
-          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-yellow-400 rounded-full"
-                style={{
-                  left: `${15 + i * 12}%`,
-                  top: `${25 + (i % 2) * 50}%`,
-                }}
-                animate={{
-                  y: [-10, 10, -10],
-                  opacity: [0.3, 1, 0.3],
-                  scale: [0.8, 1.2, 0.8],
-                }}
-                transition={{
-                  duration: 2 + i * 0.3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </div>
-          
-          <div className="relative z-10 space-y-4">
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20"
+            onClick={() => setShowSearch(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Search dialog"
+          >
             <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 0.6, repeat: 3 }}
-              role="img"
-              aria-label="Trophy celebration"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-2xl mx-4"
+              onClick={(e) => e.stopPropagation()}
             >
-              <TrophyIcon className="w-16 h-16 text-yellow-500 mx-auto" />
+              <SmartSearch 
+                onNavigate={(path) => {
+                  handleNavigation(path);
+                  setShowSearch(false);
+                }}
+                className="w-full"
+              />
             </motion.div>
-            <div>
-              <h3 id="achievement-title" className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
-                🎉 Perfect Day Achieved!
-              </h3>
-              <p id="achievement-description" className="text-green-600 dark:text-green-500 mb-4">
-                All daily wins completed! You've earned {totalPoints} points and built incredible momentum.
-              </p>
-              <div className="flex items-center justify-center space-x-4">
-                <div className="px-4 py-2 bg-yellow-100 dark:bg-yellow-950/20 rounded-full">
-                  <span className="text-sm font-bold text-yellow-700">🏆 Daily Champion</span>
-                </div>
-                <div className="px-4 py-2 bg-blue-100 dark:bg-blue-950/20 rounded-full">
-                  <span className="text-sm font-bold text-blue-700">⚡ {totalPoints} XP Earned</span>
-                </div>
-              </div>
-            </div>
-          </div>
           </motion.div>
-        </section>
-      )}
+        )}
+      </AnimatePresence>
 
-      {/* Smart Notifications */}
-      {nextWin && (
-        <section 
-          role="region" 
-          aria-labelledby="upcoming-goal-title"
-          aria-describedby="upcoming-goal-description"
-        >
-          <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="card bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800"
-        >
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
-              <LightBulbIcon className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h3 id="upcoming-goal-title" className="font-bold text-blue-700 dark:text-blue-300">
-                ⏰ Upcoming: {nextWin.title}
-              </h3>
-              <p id="upcoming-goal-description" className="text-sm text-blue-600 dark:text-blue-400">
-                {nextWin.description} • {nextWin.time} • +{nextWin.points} points
-              </p>
-            </div>
-            <button
-              onClick={() => toggleWin(nextWin.id)}
-              aria-label={`Complete ${nextWin.title} now`}
-              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Complete Now
-            </button>
-          </div>
-          </motion.div>
-        </section>
-      )}
+      {/* Premium Notification Center */}
+      <NotificationCenter 
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
     </div>
   );
 };
 
-export default WelcomeHeader;
+export default UnifiedHealthDashboard;
