@@ -49,15 +49,17 @@ export const MobileButton: React.FC<{
   variant?: 'primary' | 'secondary';
   className?: string;
   disabled?: boolean;
+  'aria-label'?: string;
 }> = ({ 
   children, 
   onClick, 
   variant = 'primary', 
   className = '',
-  disabled = false 
+  disabled = false,
+  'aria-label': ariaLabel
 }) => {
   return (
-    <button
+    <motion.button
       onClick={onClick}
       disabled={disabled}
       className={`
@@ -66,9 +68,12 @@ export const MobileButton: React.FC<{
         flex items-center justify-center text-center box-border
         ${className}
       `}
+      whileHover={{ scale: disabled ? 1 : 1.02 }}
+      whileTap={{ scale: disabled ? 1 : 0.98 }}
+      aria-label={ariaLabel}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 
@@ -79,13 +84,17 @@ export const MobileInput: React.FC<{
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   required?: boolean;
+  'aria-label'?: string;
+  id?: string;
 }> = ({ 
   type = 'text', 
   placeholder, 
   value, 
   onChange, 
   className = '',
-  required = false 
+  required = false,
+  'aria-label': ariaLabel,
+  id
 }) => {
   return (
     <input
@@ -95,6 +104,8 @@ export const MobileInput: React.FC<{
       onChange={onChange}
       required={required}
       className={`input-mobile w-full box-border ${className}`}
+      aria-label={ariaLabel}
+      id={id}
     />
   );
 };

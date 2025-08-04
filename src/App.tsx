@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from './components/ui/Toaster';
 import { TooltipProvider } from './components/ui/Tooltip';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import AccessibilityProvider from './components/ui/AccessibilityProvider';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useProfile } from './hooks/useProfile';
@@ -56,14 +57,16 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <TooltipProvider>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <AppContent />
-              <Toaster />
-            </AuthProvider>
-          </QueryClientProvider>
-        </TooltipProvider>
+        <AccessibilityProvider>
+          <TooltipProvider>
+            <QueryClientProvider client={queryClient}>
+              <AuthProvider>
+                <AppContent />
+                <Toaster />
+              </AuthProvider>
+            </QueryClientProvider>
+          </TooltipProvider>
+        </AccessibilityProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

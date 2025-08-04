@@ -8,6 +8,7 @@ interface TouchFeedbackProps {
   onClick?: () => void;
   disabled?: boolean;
   hapticType?: 'selection' | 'impact' | 'notification';
+  'aria-label'?: string;
 }
 
 const TouchFeedback: React.FC<TouchFeedbackProps> = ({
@@ -17,11 +18,12 @@ const TouchFeedback: React.FC<TouchFeedbackProps> = ({
   onClick,
   disabled = false,
   hapticType = 'impact',
+  'aria-label': ariaLabel,
 }) => {
   const handleClick = () => {
     if (disabled || !onClick) return;
     
-    // Trigger haptic feedback on iOS
+    // Trigger haptic feedback on supported devices
     if ('vibrate' in navigator) {
       switch (intensity) {
         case 'light':
@@ -56,6 +58,15 @@ const TouchFeedback: React.FC<TouchFeedbackProps> = ({
       whileTap={{ scale: intensity === 'light' ? 0.98 : intensity === 'heavy' ? 0.92 : 0.95 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
       style={{ WebkitTapHighlightColor: 'transparent' }}
+      role="button"
+      aria-label={ariaLabel}
+      tabIndex={disabled ? -1 : 0}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
     >
       {children}
     </motion.div>

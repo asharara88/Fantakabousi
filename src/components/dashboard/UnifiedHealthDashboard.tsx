@@ -22,6 +22,7 @@ import NotificationCenter from '../notifications/NotificationCenter';
 import QuickActionMenu from '../ui/QuickActionMenu';
 import SmartSearch from '../ui/SmartSearch';
 import OfflineIndicator from '../ui/OfflineIndicator';
+import SafeArea from '../ui/SafeArea';
 import { 
   HomeIcon,
   ChatBubbleLeftRightIcon,
@@ -69,7 +70,7 @@ const UnifiedHealthDashboard: React.FC = () => {
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
 
-  // Premium navigation structure
+  // Premium navigation structure following UX best practices
   const navigationItems = [
     {
       id: 'dashboard',
@@ -161,6 +162,7 @@ const UnifiedHealthDashboard: React.FC = () => {
             : 'text-white/60 hover:text-white hover:bg-white/10'
         }`}
         title="Light theme"
+        aria-label="Switch to light theme"
       >
         <SunIcon className="w-5 h-5" />
       </button>
@@ -175,6 +177,7 @@ const UnifiedHealthDashboard: React.FC = () => {
             : 'text-white/60 hover:text-white hover:bg-white/10'
         }`}
         title="Auto theme"
+        aria-label="Switch to automatic theme"
       >
         <ComputerDesktopIcon className="w-5 h-5" />
       </button>
@@ -189,6 +192,7 @@ const UnifiedHealthDashboard: React.FC = () => {
             : 'text-white/60 hover:text-white hover:bg-white/10'
         }`}
         title="Dark theme"
+        aria-label="Switch to dark theme"
       >
         <MoonIcon className="w-5 h-5" />
       </button>
@@ -239,35 +243,116 @@ const UnifiedHealthDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950">
-      {/* Animated Background */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 relative overflow-hidden">
+      {/* Ultra-Premium Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-emerald-400/20 to-cyan-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-pink-400/10 to-violet-600/10 rounded-full blur-2xl animate-float" />
+        {/* Primary Aurora */}
+        <motion.div 
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-600/30 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Secondary Aurora */}
+        <motion.div 
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-400/25 to-cyan-600/25 rounded-full blur-3xl"
+          animate={{
+            scale: [1.1, 0.9, 1.1],
+            rotate: [360, 180, 0],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Floating Orbs */}
+        <motion.div 
+          className="absolute top-1/4 right-1/3 w-32 h-32 bg-gradient-to-r from-pink-400/20 to-violet-600/20 rounded-full blur-2xl"
+          animate={{
+            y: [-20, 20, -20],
+            x: [-10, 10, -10],
+            scale: [0.8, 1.2, 0.8]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Mesh Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" />
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col">
-        <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
-          {/* Logo */}
-          <div className="flex h-24 shrink-0 items-center gap-4 pt-8">
-            <motion.img 
-              src={logoUrl} 
-              alt="Biowell" 
-              className="h-14 w-auto"
+      {/* Desktop Navigation - Ultra Premium */}
+      <nav 
+        className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
+          {/* Logo Section */}
+          <header role="banner" className="flex h-24 shrink-0 items-center gap-4 pt-8">
+            <motion.button
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
-            />
-          </div>
+              aria-label="Biowell home page"
+            >
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-14 w-auto"
+              />
+            </motion.button>
+          </header>
 
-          {/* User Profile */}
+          {/* Premium User Profile Card */}
           <motion.div 
             className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 via-purple-600 to-pink-600 p-6 shadow-2xl"
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, y: -2 }}
             transition={{ type: "spring", stiffness: 300 }}
+            role="region"
+            aria-label="User profile information"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+            {/* Animated background overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent animate-gradient-shift" />
+            
+            {/* Floating particles */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white/40 rounded-full"
+                  style={{
+                    left: `${20 + i * 30}%`,
+                    top: `${30 + i * 20}%`,
+                  }}
+                  animate={{
+                    y: [-5, 5, -5],
+                    opacity: [0.3, 0.8, 0.3],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+            
             <div className="relative flex items-center gap-4">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
                 <span className="text-white font-bold text-xl">
@@ -286,17 +371,17 @@ const UnifiedHealthDashboard: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Theme Toggle */}
-          <div className="px-6 py-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20">
+          {/* Premium Theme Toggle */}
+          <div className="px-6 py-4 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Appearance</span>
             </div>
             <ThemeToggle />
           </div>
 
-          {/* Main Navigation */}
+          {/* Main Navigation with Premium Effects */}
           <div className="flex flex-1 flex-col">
-            <div className="flex flex-1 flex-col gap-y-3">
+            <nav role="navigation" aria-label="Primary navigation" className="flex flex-1 flex-col gap-y-3">
               {navigationItems.map((item) => {
                 const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
                 const Icon = isActive ? item.activeIcon : item.icon;
@@ -308,12 +393,14 @@ const UnifiedHealthDashboard: React.FC = () => {
                       className={`group relative w-full flex items-center gap-x-4 rounded-2xl p-4 text-left font-semibold transition-all duration-300 ${
                         isActive
                           ? `bg-gradient-to-r ${item.gradient} text-white shadow-2xl scale-105`
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 hover:scale-102'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 hover:scale-102'
                       }`}
                       whileHover={{ x: isActive ? 0 : 4 }}
                       whileTap={{ scale: 0.98 }}
+                      aria-current={isActive ? 'page' : undefined}
+                      aria-expanded={item.children ? expandedMenu === item.id : undefined}
                     >
-                      {/* Glow effect for active item */}
+                      {/* Premium glow effect for active item */}
                       {isActive && (
                         <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-2xl blur-xl opacity-30 -z-10`} />
                       )}
@@ -321,7 +408,7 @@ const UnifiedHealthDashboard: React.FC = () => {
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
                         isActive 
                           ? 'bg-white/20 backdrop-blur-xl shadow-lg' 
-                          : 'bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700'
+                          : 'bg-slate-100/80 dark:bg-slate-800/80 group-hover:bg-white/30 dark:group-hover:bg-slate-700/30'
                       }`}>
                         <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
                       </div>
@@ -348,7 +435,7 @@ const UnifiedHealthDashboard: React.FC = () => {
                       </div>
                     </motion.button>
 
-                    {/* Sub-menu */}
+                    {/* Premium Sub-menu */}
                     <AnimatePresence>
                       {item.children && expandedMenu === item.id && (
                         <motion.div
@@ -361,7 +448,7 @@ const UnifiedHealthDashboard: React.FC = () => {
                             <motion.button
                               key={subItem.id}
                               onClick={() => handleNavigation(item.id, subItem.id)}
-                              className="w-full flex items-center space-x-3 p-3 rounded-xl text-left hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-200"
+                              className="w-full flex items-center space-x-3 p-3 rounded-xl text-left hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
                               whileHover={{ x: 4 }}
                             >
                               <ChevronRightIcon className="w-4 h-4 text-slate-400" />
@@ -377,15 +464,16 @@ const UnifiedHealthDashboard: React.FC = () => {
                   </div>
                 );
               })}
-            </div>
+            </nav>
           </div>
 
-          {/* Secondary Actions */}
-          <div className="space-y-2 pt-6 border-t border-white/20 dark:border-slate-700/20">
+          {/* Premium Secondary Actions */}
+          <nav role="navigation" aria-label="Secondary navigation" className="space-y-2 pt-6 border-t border-white/20 dark:border-slate-700/20">
             <motion.button 
               onClick={() => setShowNotifications(true)}
-              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-200"
+              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
               whileHover={{ x: 4 }}
+              aria-label="Open notifications"
             >
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
                 <BellIcon className="w-5 h-5 text-white" />
@@ -396,7 +484,7 @@ const UnifiedHealthDashboard: React.FC = () => {
             
             <motion.button 
               onClick={() => handleNavigation('profile')}
-              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-200"
+              className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
               whileHover={{ x: 4 }}
             >
               <div className="w-10 h-10 bg-gradient-to-br from-slate-500 to-slate-700 rounded-xl flex items-center justify-center">
@@ -409,63 +497,80 @@ const UnifiedHealthDashboard: React.FC = () => {
               onClick={signOut}
               className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all duration-200"
               whileHover={{ x: 4 }}
+              aria-label="Sign out of your account"
             >
               <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
                 <ArrowRightOnRectangleIcon className="w-5 h-5 text-white" />
               </div>
               <span className="font-medium">Sign Out</span>
             </motion.button>
-          </div>
+          </nav>
         </div>
       </nav>
 
-      {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border-b border-white/20 dark:border-slate-700/20 shadow-xl">
-        <div className="flex items-center justify-between p-6">
-          <motion.img 
-            src={logoUrl} 
-            alt="Biowell" 
-            className="h-10 w-auto"
-            whileHover={{ scale: 1.05 }}
-          />
-          
-          <div className="flex items-center space-x-3">
+      {/* Mobile Header - Ultra Premium */}
+      <header 
+        className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-b border-white/20 dark:border-slate-700/20 shadow-xl"
+        role="banner"
+        aria-label="Mobile application header"
+      >
+        <SafeArea top>
+          <div className="flex items-center justify-between p-6">
             <motion.button
-              onClick={() => setShowSearch(true)}
-              className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+              onClick={() => window.location.href = '/'}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              aria-label="Biowell home page"
             >
-              <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+              <img 
+                src={logoUrl} 
+                alt="Biowell" 
+                className="h-10 w-auto"
+              />
             </motion.button>
             
-            <motion.button
-              onClick={() => setShowNotifications(true)}
-              className="relative p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BellIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
-            </motion.button>
-            
-            <motion.button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isMobileMenuOpen ? (
-                <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-              ) : (
-                <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-              )}
-            </motion.button>
+            <div className="flex items-center space-x-3">
+              <motion.button
+                onClick={() => setShowSearch(true)}
+                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Open search"
+              >
+                <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+              </motion.button>
+              
+              <motion.button
+                onClick={() => setShowNotifications(true)}
+                className="relative p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Open notifications"
+              >
+                <BellIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+              </motion.button>
+              
+              <motion.button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-3 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl border border-white/30 dark:border-slate-700/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMobileMenuOpen}
+              >
+                {isMobileMenuOpen ? (
+                  <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                ) : (
+                  <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                )}
+              </motion.button>
+            </div>
           </div>
-        </div>
+        </SafeArea>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Premium Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -478,111 +583,130 @@ const UnifiedHealthDashboard: React.FC = () => {
             />
             
             <motion.aside 
-              className="lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl z-50 shadow-2xl border-l border-white/20 dark:border-slate-700/20"
+              className="lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl z-50 shadow-2xl border-l border-white/20 dark:border-slate-700/20"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
             >
-              <div className="flex flex-col h-full p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Menu</h2>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
-                  >
-                    <XMarkIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                  </button>
-                </div>
+              <SafeArea top bottom right>
+                <div className="flex flex-col h-full p-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Menu</h2>
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors"
+                      aria-label="Close menu"
+                    >
+                      <XMarkIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                    </button>
+                  </div>
 
-                {/* Navigation Items */}
-                <div className="flex-1 space-y-3">
-                  {navigationItems.map((item, index) => {
-                    const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
-                    const Icon = isActive ? item.activeIcon : item.icon;
-                    
-                    return (
-                      <motion.button
-                        key={item.id}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
-                        className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-300 ${
-                          isActive
-                            ? `bg-gradient-to-r ${item.gradient} text-white shadow-xl`
-                            : 'text-slate-700 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            isActive ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-800'
-                          }`}>
-                            <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
-                          </div>
-                          <div>
-                            <div className="font-semibold text-lg">{item.label}</div>
-                            <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
-                              {item.description}
+                  {/* Navigation Items */}
+                  <nav role="navigation" aria-label="Mobile navigation" className="flex-1 space-y-3">
+                    {navigationItems.map((item, index) => {
+                      const isActive = activeView === item.id || activeView.startsWith(`${item.id}-`);
+                      const Icon = isActive ? item.activeIcon : item.icon;
+                      
+                      return (
+                        <motion.button
+                          key={item.id}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
+                          className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-300 ${
+                            isActive
+                              ? `bg-gradient-to-r ${item.gradient} text-white shadow-xl`
+                              : 'text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20'
+                          }`}
+                          aria-current={isActive ? 'page' : undefined}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                              isActive ? 'bg-white/20' : 'bg-slate-100/80 dark:bg-slate-800/80'
+                            }`}>
+                              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-lg">{item.label}</div>
+                              <div className={`text-sm ${isActive ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
+                                {item.description}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {item.children && (
-                          <ChevronDownIcon 
-                            className={`w-5 h-5 transition-transform ${
-                              expandedMenu === item.id ? 'rotate-180' : ''
-                            }`} 
-                          />
-                        )}
-                      </motion.button>
-                    );
-                  })}
+                          {item.children && (
+                            <ChevronDownIcon 
+                              className={`w-5 h-5 transition-transform ${
+                                expandedMenu === item.id ? 'rotate-180' : ''
+                              }`} 
+                            />
+                          )}
+                        </motion.button>
+                      );
+                    })}
+                  </nav>
                 </div>
-              </div>
+              </SafeArea>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border-t border-white/20 dark:border-slate-700/20 shadow-2xl">
-        <div className="flex items-center justify-around p-4">
-          {[
-            { id: 'dashboard', icon: HomeIcon, activeIcon: HomeSolidIcon, label: 'Home' },
-            { id: 'health', icon: HeartIcon, activeIcon: HeartIcon, label: 'Health' },
-            { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'Coach' },
-            { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Shop' }
-          ].map((item) => {
-            const Icon = activeView === item.id ? item.activeIcon : item.icon;
-            const isActive = activeView === item.id;
-            
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => handleNavigation(item.id)}
-                className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 ${
-                  isActive ? 'bg-gradient-to-t from-blue-500 to-purple-600 text-white shadow-xl scale-110' : 'text-slate-600 dark:text-slate-400'
-                }`}
-                whileHover={{ scale: isActive ? 1.1 : 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Icon className="w-6 h-6" />
-                <span className="text-xs font-semibold">{item.label}</span>
-                {isActive && (
-                  <motion.div
-                    layoutId="mobileActiveIndicator"
-                    className="absolute -top-1 w-1 h-1 bg-emerald-400 rounded-full"
-                  />
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
+      {/* Premium Mobile Bottom Navigation */}
+      <nav 
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl border-t border-white/20 dark:border-slate-700/20 shadow-2xl"
+        role="navigation"
+        aria-label="Primary navigation"
+      >
+        <SafeArea bottom>
+          <div className="flex items-center justify-around p-4">
+            {[
+              { id: 'dashboard', icon: HomeIcon, activeIcon: HomeSolidIcon, label: 'Home' },
+              { id: 'health', icon: HeartIcon, activeIcon: HeartIcon, label: 'Health' },
+              { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'Coach' },
+              { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Shop' }
+            ].map((item) => {
+              const Icon = activeView === item.id ? item.activeIcon : item.icon;
+              const isActive = activeView === item.id;
+              
+              return (
+                <motion.button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.id)}
+                  className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 relative ${
+                    isActive ? 'bg-gradient-to-t from-blue-500 to-purple-600 text-white shadow-xl scale-110' : 'text-slate-600 dark:text-slate-400'
+                  }`}
+                  whileHover={{ scale: isActive ? 1.1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={`Navigate to ${item.label}`}
+                >
+                  <Icon className="w-6 h-6" />
+                  <span className="text-xs font-semibold">{item.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="mobileActiveIndicator"
+                      className="absolute -top-1 w-1 h-1 bg-emerald-400 rounded-full"
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </SafeArea>
       </nav>
 
-      {/* Main Content */}
-      <main className="lg:pl-80 pt-24 lg:pt-8 pb-24 lg:pb-8">
+      {/* Main Content with Premium Spacing */}
+      <main 
+        className="lg:pl-80 pt-24 lg:pt-8 pb-24 lg:pb-8"
+        role="main"
+        id="main-content"
+      >
         <div className="px-6 lg:px-12 max-w-7xl mx-auto">
           <motion.div
             key={activeView}
@@ -596,11 +720,11 @@ const UnifiedHealthDashboard: React.FC = () => {
         </div>
       </main>
 
-      {/* Floating Elements */}
+      {/* Premium Floating Elements */}
       <QuickActionMenu onQuickAction={handleQuickAction} />
       <OfflineIndicator />
       
-      {/* Search Modal */}
+      {/* Premium Search Modal */}
       <AnimatePresence>
         {showSearch && (
           <motion.div
@@ -609,6 +733,9 @@ const UnifiedHealthDashboard: React.FC = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20"
             onClick={() => setShowSearch(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Search dialog"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -629,7 +756,7 @@ const UnifiedHealthDashboard: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Notification Center */}
+      {/* Premium Notification Center */}
       <NotificationCenter 
         isOpen={showNotifications}
         onClose={() => setShowNotifications(false)}
