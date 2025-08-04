@@ -303,67 +303,29 @@ export function MobileNavigation({
                       />
                     </button>
                     <span className="text-heading-md text-foreground">Menu</span>
-                      {fullNavItems.map((item, index) => {
+                  </div>
                   <button
-                  aria-label="Close menu"
-                  onClick={onMenuToggle}
-                  className="touch-target cursor-pointer rounded-xl hover:bg-muted transition-colors"
-                          <div key={item.id}>
-                            <motion.button
-                              initial={{ opacity: 0, x: 20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                              onClick={() => item.children ? handleMenuItemToggle(item.id) : handleNavigation(item.id)}
-                              className={`w-full flex items-center justify-between p-4 rounded-xl text-left transition-all duration-200 ${
-                                isActive 
-                                  ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg' 
-                                  : 'text-foreground hover:bg-muted'
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3">
-                                <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
-                                <div>
-                                  <div className="font-semibold">{item.label}</div>
-                                  <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
-                                    {item.description}
-                                  </div>
-                                </div>
-                              </div>
-                              {item.children && (
-                                <ChevronDownIcon 
-                                  className={`w-5 h-5 transition-transform ${
-                                    expandedMenu === item.id ? 'rotate-180' : ''
-                                  } ${isActive ? 'text-white' : 'text-muted-foreground'}`} 
-                                />
-                              )}
-                            </motion.button>
+                    aria-label="Close menu"
+                    onClick={onMenuToggle}
+                    className="touch-target cursor-pointer rounded-xl hover:bg-muted transition-colors"
+                  >
+                    <XMarkIcon className="w-6 h-6 text-muted-foreground" />
+                  </button>
+                </header>
 
-                            {/* Sub-menu */}
-                            {item.children && expandedMenu === item.id && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="ml-6 mt-2 space-y-1"
-                              >
-                                {item.children.map((subItem) => (
-                                  <button
-                                    key={subItem.id}
-                                    onClick={() => handleNavigation(item.id, subItem.id)}
-                                    className="w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted transition-colors"
-                                  >
-                                    <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
-                                    <div>
-                                      <div className="font-medium text-foreground">{subItem.label}</div>
-                                      <div className="text-sm text-muted-foreground">{subItem.description}</div>
-                                    </div>
-                                  </button>
-                                ))}
-                              </motion.div>
-                            )}
-                          </div>
-                        <p className="text-sm text-muted-foreground truncate font-inter">{user?.email}</p>
+                {/* User Profile Section */}
+                <section className="p-6 border-b border-border">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">
+                        {firstName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-lg font-semibold text-foreground truncate">
+                        Hello, {firstName}!
                       </div>
+                      <p className="text-sm text-muted-foreground truncate font-inter">{user?.email}</p>
                     </div>
                   </div>
                 </section>
@@ -371,34 +333,66 @@ export function MobileNavigation({
                 {/* Navigation */}
                 <nav role="navigation" aria-label="Main navigation" className="flex-1 p-6">
                   <ul role="menubar" className="space-y-2" aria-label="Navigation menu">
-                  {navigationItems.map((item, index) => {
+                  {fullNavItems.map((item, index) => {
                     const Icon = currentView === item.id ? item.activeIcon : item.icon;
                     const isActive = currentView === item.id;
                     
                     return (
                       <li key={item.id} role="none">
-                        <motion.button
-                        role="menuitem"
-                        aria-current={isActive ? 'page' : undefined}
-                        aria-label={`Navigate to ${item.label}`}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        onClick={() => {
-                          onViewChange(item.id);
-                          onMenuToggle();
-                        }}
-                        className={`w-full flex items-center space-x-4 p-4 rounded-xl text-left transition-all duration-200 cursor-pointer touch-target ${
-                          isActive 
-                            ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg' 
-                            : 'text-foreground hover:bg-muted'
-                        }`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
-                        <span className="text-base font-semibold font-inter">{item.label}</span>
-                        </motion.button>
+                        <div>
+                          <motion.button
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            onClick={() => item.children ? handleMenuItemToggle(item.id) : handleNavigation(item.id)}
+                            className={`w-full flex items-center justify-between p-4 rounded-xl text-left transition-all duration-200 ${
+                              isActive 
+                                ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg' 
+                                : 'text-foreground hover:bg-muted'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
+                              <div>
+                                <div className="font-semibold">{item.label}</div>
+                                <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
+                                  {item.description}
+                                </div>
+                              </div>
+                            </div>
+                            {item.children && (
+                              <ChevronDownIcon 
+                                className={`w-5 h-5 transition-transform ${
+                                  expandedMenu === item.id ? 'rotate-180' : ''
+                                } ${isActive ? 'text-white' : 'text-muted-foreground'}`} 
+                              />
+                            )}
+                          </motion.button>
+
+                          {/* Sub-menu */}
+                          {item.children && expandedMenu === item.id && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="ml-6 mt-2 space-y-1"
+                            >
+                              {item.children.map((subItem) => (
+                                <button
+                                  key={subItem.id}
+                                  onClick={() => handleNavigation(item.id, subItem.id)}
+                                  className="w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted transition-colors"
+                                >
+                                  <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
+                                  <div>
+                                    <div className="font-medium text-foreground">{subItem.label}</div>
+                                    <div className="text-sm text-muted-foreground">{subItem.description}</div>
+                                  </div>
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </div>
                       </li>
                     );
                   })}
