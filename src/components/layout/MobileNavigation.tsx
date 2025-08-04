@@ -208,7 +208,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <AdvancedCharts />;
+        return <HealthDashboard />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':

@@ -208,7 +208,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <AdvancedCharts />;
+        return <HealthDashboard />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':
@@ -646,10 +646,12 @@ const UnifiedHealthDashboard: React.FC = () => {
                                 expandedMenu === item.id ? 'rotate-180' : ''
                               }`} 
                             />
-                          )}
-                        </motion.button>
-                      );
-                    })}
+                    onClick={() => {
+                      toast({
+                        title: "AI Coach Available",
+                        description: "Ask your AI coach about this supplement.",
+                      });
+                    }}
                   </nav>
                 </div>
               </SafeArea>

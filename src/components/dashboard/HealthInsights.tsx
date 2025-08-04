@@ -145,6 +145,20 @@ const UnifiedHealthDashboard: React.FC = () => {
     setIsMobileMenuOpen(false);
     setExpandedMenu(null);
   };
+  
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements in our shop`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
+  
 
   const handleQuickAction = (action: string) => {
     setActiveView(action);
@@ -208,7 +222,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <AdvancedCharts />;
+        return <HealthDashboard />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':
@@ -337,15 +351,6 @@ const UnifiedHealthDashboard: React.FC = () => {
                 <motion.div
                   key={i}
                   className="absolute w-1 h-1 bg-white/40 rounded-full"
-                  style={{
-                    left: `${20 + i * 30}%`,
-                    top: `${30 + i * 20}%`,
-                  }}
-                  animate={{
-                    y: [-5, 5, -5],
-                    opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
                     duration: 3 + i * 0.5,
                     repeat: Infinity,
                     ease: "easeInOut",
@@ -357,7 +362,6 @@ const UnifiedHealthDashboard: React.FC = () => {
             <div className="relative flex items-center gap-4">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
                 <span className="text-white font-bold text-xl">
-                  {firstName.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
