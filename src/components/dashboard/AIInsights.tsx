@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useAsyncPerformance } from '../../hooks/usePerformance';
 import { 
   SparklesIcon,
   LightBulbIcon,
@@ -11,13 +12,16 @@ import {
   ArrowRightIcon,
   CubeIcon
 } from '@heroicons/react/24/outline';
-import { toast } from '../../hooks/useToast';
+import { useToast } from '../../hooks/useToast';
 
 interface AIInsightsProps {
   onQuickAction?: (action: string) => void;
 }
 
 const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
+  const { toast } = useToast();
+  const { measureAsync } = useAsyncPerformance();
+  
   const insights = [
     {
       type: 'success',
@@ -74,8 +78,10 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
     return variants[priority as keyof typeof variants] || variants.medium;
   };
 
-  const handleSupplementShortcut = (products: string[], category: string) => {
-    onQuickAction?.('supplements');
+  const handleSupplementShortcut = async (products: string[], category: string) => {
+    await measureAsync('supplement_navigation', async () => {
+      onQuickAction?.('supplements');
+    });
     
     toast({
       title: `🛒 ${products.join(' or ')} Available`,
@@ -88,7 +94,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="region" aria-labelledby="ai-insights-title">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -96,7 +102,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
             <SparklesIcon className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-foreground font-inter">AI Health Insights</h2>
+            <h2 id="ai-insights-title" className="text-2xl font-bold text-foreground font-inter">AI Health Insights</h2>
             <p className="text-muted-foreground font-inter">Personalized recommendations from your data</p>
           </div>
         </div>
@@ -107,7 +113,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
       </div>
       
       {/* Insights Grid */}
-      <div className="mobile-grid-1 lg:grid-cols-2">
+      <div className="mobile-grid-1 lg:grid-cols-2" role="list" aria-label="AI insights">
         {insights.map((insight, index) => (
           <motion.div
             key={index}
@@ -115,6 +121,8 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
             className="card-premium hover:shadow-xl hover:border-[#48C6FF]/30 hover:-translate-y-1 transition-all duration-300"
+            role="listitem"
+            aria-labelledby={`insight-${index}-title`}
           >
             <div className="space-y-6">
               {/* Header */}
@@ -124,7 +132,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
                     <insight.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-foreground font-inter">
+                    <h3 id={`insight-${index}-title`} className="text-lg font-bold text-foreground font-inter">
                       {insight.title}
                     </h3>
                     <div className="flex items-center space-x-3">
@@ -151,6 +159,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
                   <button 
                     onClick={() => handleSupplementShortcut(insight.supplementShortcut.products, insight.supplementShortcut.category)}
                     className={`px-6 py-3 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-200 shadow-md hover:shadow-lg font-inter flex items-center space-x-2`}
+                    aria-label={`Buy ${insight.supplementShortcut.products[0]}`}
                   >
                     <CubeIcon className="w-4 h-4" />
                     <span>Buy {insight.supplementShortcut.products[0]}</span>
@@ -172,6 +181,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
                 )}
                 <button className="btn-ghost flex items-center space-x-2">
                   <span onClick={() => onQuickAction?.('coach')}>
+                  aria-label="Ask Smart Coach about this insight"
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
                   <span>Smart Coach</span>
                   </span>
@@ -194,6 +204,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
           <button className="btn-primary flex items-center space-x-2">
             <SparklesIcon className="w-4 h-4" />
             <span>Get More Insights</span>
+            aria-label="Get more insights from Smart Coach"
           </button>
         </div>
       </div>

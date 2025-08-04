@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { usePerformance } from '../../hooks/usePerformance';
 import { 
   HeartIcon, 
   BoltIcon, 
@@ -11,6 +12,8 @@ import {
 } from '@heroicons/react/24/outline';
 
 const HealthMetrics: React.FC = () => {
+  const { renderTime } = usePerformance('HealthMetrics');
+  
   const metrics = [
     {
       name: 'Heart Rate',
@@ -72,7 +75,7 @@ const HealthMetrics: React.FC = () => {
     const range = max - min || 1;
     
     return (
-      <div className="flex items-end space-x-1 h-16 w-32">
+      <div className="flex items-end space-x-1 h-16 w-32" role="img" aria-label="Trend chart">
         {data.map((value, index) => {
           const height = ((value - min) / range) * 100;
           const isLast = index === data.length - 1;
@@ -87,6 +90,7 @@ const HealthMetrics: React.FC = () => {
               animate={{ height: `${Math.max(height, 15)}%` }}
               transition={{ delay: 0.5 + index * 0.1, duration: 0.8, ease: "easeOut" }}
               whileHover={{ scale: 1.1, opacity: 1 }}
+              aria-label={`Data point ${index + 1}: ${value}`}
             />
           );
         })}
@@ -95,7 +99,7 @@ const HealthMetrics: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-8 relative" role="region" aria-labelledby="health-metrics-title">
       {/* Premium background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl -z-10" />
       
@@ -106,10 +110,13 @@ const HealthMetrics: React.FC = () => {
               <HeartIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+              <h2 id="health-metrics-title" className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                 Health Metrics
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-lg">Real-time biometric intelligence</p>
+              {process.env.NODE_ENV === 'development' && renderTime > 0 && (
+                <p className="text-xs text-gray-500">Render time: {renderTime.toFixed(2)}ms</p>
+              )}
             </div>
           </div>
         </div>
@@ -123,7 +130,7 @@ const HealthMetrics: React.FC = () => {
         </motion.button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="list" aria-label="Health metrics">
         {metrics.map((metric, index) => (
           <motion.div
             key={metric.name}
@@ -133,6 +140,8 @@ const HealthMetrics: React.FC = () => {
             className="metric-card-premium rounded-3xl p-6 group cursor-pointer"
             whileHover={{ y: -8, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            role="listitem"
+            aria-labelledby={`metric-${index}-title`}
           >
             <div className="space-y-6 relative">
               {/* Gradient overlay */}
@@ -167,7 +176,7 @@ const HealthMetrics: React.FC = () => {
                     {metric.unit}
                   </span>
                 </div>
-                <div className="space-y-1">
+                    <div id={`metric-${index}-title`} className="text-xl font-bold text-slate-800 dark:text-slate-200">
                   <div className="text-xl font-bold text-slate-800 dark:text-slate-200">
                     {metric.name}
                   </div>
@@ -181,7 +190,9 @@ const HealthMetrics: React.FC = () => {
                 <MiniChart data={metric.data} gradient={metric.color} />
                 <div className={`w-3 h-3 rounded-full ${
                   metric.optimal ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' : 'bg-amber-400 shadow-lg shadow-amber-400/50'
-                } animate-pulse`} />
+                } animate-pulse`} 
+                aria-label={metric.optimal ? 'Optimal range' : 'Needs attention'}
+                />
               </div>
               
               {/* Progress Bar */}
@@ -192,7 +203,7 @@ const HealthMetrics: React.FC = () => {
                     {Math.round((metric.value / metric.target) * 100)}%
                   </span>
                 </div>
-                <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+                <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm" role="progressbar" aria-valuenow={metric.value} aria-valuemin={0} aria-valuemax={metric.target}>
                   <motion.div
                     className={`h-full bg-gradient-to-r ${metric.color} rounded-full shadow-lg`}
                     initial={{ width: 0 }}

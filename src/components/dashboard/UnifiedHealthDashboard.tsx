@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { performanceMonitor } from '../../lib/performanceMonitor';
+import { memoryManager } from '../../lib/memoryManager';
 import { errorHandler } from '../../lib/errorHandler';
 import { cacheManager } from '../../lib/cacheManager';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
+import { usePerformance } from '../../hooks/usePerformance';
 import WelcomeHeader from './WelcomeHeader';
 import HealthMetrics from './HealthMetrics';
 import DailyInsights from './DailyInsights';
 import TodaysPlan from './TodaysPlan';
+import TodaysGoals from './TodaysGoals';
 import TodaysGoals from './TodaysGoals';
 import QuickActions from './QuickActions';
 import ActivityFeed from './ActivityFeed';
@@ -26,6 +30,7 @@ import QuickActionMenu from '../ui/QuickActionMenu';
 import SmartSearch from '../ui/SmartSearch';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
+import PerformanceDebugger from '../debug/PerformanceDebugger';
 import { 
   HomeIcon,
   ChatBubbleLeftRightIcon,
@@ -64,11 +69,13 @@ const UnifiedHealthDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
   const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
+  const { renderTime } = usePerformance('UnifiedHealthDashboard');
   const [activeView, setActiveView] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const [showSearch, setShowSearch] = useState(false);
+  const [showPerformanceDebugger, setShowPerformanceDebugger] = useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -151,7 +158,11 @@ const UnifiedHealthDashboard: React.FC = () => {
 
   const handleQuickAction = (action: string) => {
     try {
-    setActiveView(action);
+    try {
+      setActiveView(action);
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
     } catch (error) {
       errorHandler.handleError(
         error instanceof Error ? error : new Error('Navigation error'),
@@ -211,6 +222,7 @@ const UnifiedHealthDashboard: React.FC = () => {
   );
 
   const renderContent = () => {
+    return performanceMonitor.measureComponentRender('DashboardContent', () => {
     try {
     switch (activeView) {
       case 'coach':
@@ -252,6 +264,7 @@ const UnifiedHealthDashboard: React.FC = () => {
           </div>
         );
     }
+    });
     } catch (error) {
       errorHandler.handleError(
         error instanceof Error ? error : new Error('Render error'),
@@ -537,6 +550,20 @@ const UnifiedHealthDashboard: React.FC = () => {
               </div>
               <span className="font-medium">Sign Out</span>
             </motion.button>
+            
+            {/* Performance Debugger (Development Only) */}
+            {process.env.NODE_ENV === 'development' && (
+              <motion.button 
+                onClick={() => setShowPerformanceDebugger(true)}
+                className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
+                whileHover={{ x: 4 }}
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+                  <ChartBarIcon className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-medium">Performance</span>
+              </motion.button>
+            )}
           </nav>
         </div>
       </nav>
@@ -794,6 +821,14 @@ const UnifiedHealthDashboard: React.FC = () => {
         isOpen={showNotifications}
         onClose={() => setShowNotifications(false)}
       />
+      
+      {/* Performance Debugger */}
+      {process.env.NODE_ENV === 'development' && (
+        <PerformanceDebugger
+          isOpen={showPerformanceDebugger}
+          onClose={() => setShowPerformanceDebugger(false)}
+        />
+      )}
     </div>
   );
 };
