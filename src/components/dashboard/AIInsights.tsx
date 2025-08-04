@@ -8,9 +8,14 @@ import {
   ClockIcon,
   BeakerIcon,
   ChatBubbleLeftRightIcon,
-  ArrowRightIcon
-  onQuickAction?: (action: string) => void;
+  ArrowRightIcon,
+  CubeIcon
 } from '@heroicons/react/24/outline';
+import { toast } from '../ui/Toast';
+
+interface AIInsightsProps {
+  onQuickAction?: (action: string) => void;
+}
 
 const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
   const insights = [
