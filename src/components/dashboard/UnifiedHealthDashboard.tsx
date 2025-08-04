@@ -228,7 +228,7 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Left Column */}
               <div className="xl:col-span-2 space-y-8">
                 <HealthMetrics />
-                <DailyInsights onQuickAction={handleQuickAction} />
+                <AIInsights onQuickAction={handleQuickAction} />
               </div>
               
               {/* Right Column */}
