@@ -234,7 +234,7 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Right Column */}
               <div className="space-y-8">
                 <ReadinessScore score={87} />
-                <TodaysGoals onQuickAction={handleQuickAction} />
+                <TodaysPlan onQuickAction={handleQuickAction} />
                 <ActivityFeed />
               </div>
             </div>
