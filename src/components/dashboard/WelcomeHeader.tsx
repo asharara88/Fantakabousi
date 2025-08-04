@@ -314,32 +314,36 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   };
 
   return (
-    <div className="space-y-6" role="region" aria-labelledby="welcome-section-title">
+    <div className="space-y-8 relative" role="region" aria-labelledby="welcome-section-title">
       <h2 id="welcome-section-title" className="sr-only">Welcome Dashboard</h2>
+      
+      {/* Premium background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-3xl -z-10 animate-aurora" />
       
       {/* Hero Section with Time & Greeting */}
       <section 
         role="banner" 
         aria-labelledby="hero-title"
-        className="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border border-gray-200/20 dark:border-gray-700/20 shadow-lg"
+        className="relative overflow-hidden rounded-3xl glass-premium shadow-premium"
       >
-        {/* Floating orbs */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-full blur-3xl" aria-hidden="true"></div>
-        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-br from-[#2A7FFF]/10 to-[#0026CC]/10 rounded-full blur-2xl" aria-hidden="true"></div>
+        {/* Premium floating orbs */}
+        <div className="absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-float" aria-hidden="true" />
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-emerald-400/20 to-cyan-600/20 rounded-full blur-2xl animate-pulse" aria-hidden="true" />
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-pink-400/15 to-violet-600/15 rounded-full blur-xl animate-aurora" aria-hidden="true" />
         
-        <div className="relative z-10 p-6 lg:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+        <div className="relative z-10 p-8 lg:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
             {/* Left - Greeting & Time */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-6"
+              className="space-y-8"
             >
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <motion.h1 
                   id="hero-title"
-                  className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white font-inter"
+                  className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent leading-tight"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
@@ -348,13 +352,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 </motion.h1>
                 
                 <motion.div
-                  className="space-y-2"
+                  className="space-y-3"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
                   <time 
-                    className="text-base font-medium text-gray-600 dark:text-gray-300 font-inter"
+                    className="text-xl font-semibold text-slate-600 dark:text-slate-300"
                     dateTime={currentTime.toISOString()}
                   >
                     {currentTime.toLocaleDateString('en-US', { 
@@ -365,7 +369,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                     })}
                   </time>
                   <time 
-                    className="text-2xl font-bold text-gray-900 dark:text-white font-mono"
+                    className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-mono"
                     dateTime={currentTime.toISOString()}
                   >
                     {currentTime.toLocaleTimeString('en-US', { 
@@ -390,26 +394,28 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               <div id="progress-label" className="sr-only">
                 Daily progress: {completedWins} out of {dailyWins.length} goals completed, {Math.round(progressPercentage)}% complete
               </div>
-              <div className="relative w-48 h-48">
+              <div className="relative w-64 h-64">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" stroke="rgb(229 231 235)" strokeWidth="2" fill="none" />
+                  <circle cx="50" cy="50" r="45" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="3" fill="none" />
                   <motion.circle
                     cx="50"
                     cy="50"
                     r="45"
-                    stroke="url(#gradient)"
-                    strokeWidth="2"
+                    stroke="url(#premiumGradient)"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: "0 283" }}
                     animate={{ strokeDasharray: `${(progressPercentage / 100) * 283} 283` }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                    transition={{ duration: 2.5, ease: "easeOut" }}
+                    className="drop-shadow-lg"
                   />
                   <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#48C6FF" />
-                      <stop offset="50%" stopColor="#2A7FFF" />
-                      <stop offset="100%" stopColor="#0026CC" />
+                    <linearGradient id="premiumGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="33%" stopColor="#8b5cf6" />
+                      <stop offset="66%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#f59e0b" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -420,14 +426,14 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-3xl font-bold text-gray-900 dark:text-white"
+                      className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
                     >
                       {completedWins}/{dailyWins.length}
                     </motion.div>
-                    <div className="text-sm font-medium text-gray-600 dark:text-gray-300 mt-1">
+                    <div className="text-lg font-semibold text-slate-600 dark:text-slate-300 mt-2">
                       Daily Wins
                     </div>
-                    <div className="text-base font-bold text-[#48C6FF] mt-2">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent mt-3">
                       {totalPoints} pts
                     </div>
                   </div>
@@ -440,19 +446,21 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-6"
+              className="space-y-8"
               role="complementary"
               aria-label="Time and upcoming goals"
             >
               {/* Bedtime Countdown */}
               <div 
-                className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6 text-center"
+                className="glass-premium rounded-3xl p-8 text-center shadow-glow-blue"
                 role="timer"
                 aria-labelledby="bedtime-countdown-label"
               >
-                <MoonIcon className="w-8 h-8 text-[#48C6FF] mx-auto mb-3" />
-                <div id="bedtime-countdown-label" className="text-sm font-medium text-foreground/60 mb-2">Bedtime in</div>
-                <time className="text-2xl font-bold text-[#48C6FF] font-mono">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <MoonIcon className="w-8 h-8 text-white" />
+                </div>
+                <div id="bedtime-countdown-label" className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-3">Bedtime in</div>
+                <time className="text-4xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent font-mono">
                   {bedtimeCountdown}
                 </time>
               </div>
@@ -460,21 +468,21 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
               {/* Next Win */}
               {nextWin && (
                 <div 
-                  className="bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-gray-700/30 p-6"
+                  className="glass-premium rounded-3xl p-8 shadow-glow-purple"
                   role="region"
                   aria-labelledby="next-win-title"
                 >
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className={`w-8 h-8 bg-gradient-to-br ${nextWin.color} rounded-lg flex items-center justify-center`}>
-                      <nextWin.icon className="w-4 h-4 text-white" />
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className={`w-12 h-12 bg-gradient-to-br ${nextWin.color} rounded-2xl flex items-center justify-center shadow-xl`}>
+                      <nextWin.icon className="w-6 h-6 text-white" />
                     </div>
-                    <div id="next-win-title" className="text-sm font-medium text-foreground/60">Next Win</div>
+                    <div id="next-win-title" className="text-lg font-bold text-slate-700 dark:text-slate-300">Next Win</div>
                   </div>
-                  <div className="text-base font-semibold text-foreground mb-1">{nextWin.title}</div>
-                  <div className="text-sm text-foreground/70 mb-3">{nextWin.description}</div>
+                  <div className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">{nextWin.title}</div>
+                  <div className="text-base text-slate-600 dark:text-slate-400 mb-4">{nextWin.description}</div>
                   <div className="flex items-center justify-between">
-                    <time className="text-sm font-bold text-[#48C6FF]">{nextWin.time}</time>
-                    <span className="text-sm font-bold text-[#3BE6C5]">+{nextWin.points} pts</span>
+                    <time className="text-lg font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">{nextWin.time}</time>
+                    <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-lg">+{nextWin.points} pts</span>
                   </div>
                 </div>
               )}
@@ -487,17 +495,19 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
       <section role="region" aria-labelledby="daily-wins-title" className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <TrophyIcon className="w-6 h-6 text-[#48C6FF]" />
-            <h2 id="daily-wins-title" className="text-2xl font-bold text-foreground">Today's Wins</h2>
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl">
+              <TrophyIcon className="w-6 h-6 text-white" />
+            </div>
+            <h2 id="daily-wins-title" className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">Today's Wins</h2>
           </div>
           <div className="text-right">
-            <div className="text-lg font-bold text-[#3BE6C5]">{totalPoints} points</div>
-            <div className="text-sm text-muted-foreground">{Math.round(progressPercentage)}% complete</div>
+            <div className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">{totalPoints} points</div>
+            <div className="text-lg text-slate-600 dark:text-slate-400 font-semibold">{Math.round(progressPercentage)}% complete</div>
           </div>
         </div>
 
         <ul 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
           role="list"
           aria-label="Daily wellness goals"
         >
@@ -519,16 +529,17 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                   toggleWin(win.id);
                 }
               }}
-              className={`card cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+              className={`glass-premium rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:shadow-premium hover:-translate-y-2 hover:scale-102 ${
                 win.completed 
-                  ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
-                  : 'hover:border-[#48C6FF]/30'
+                  ? 'bg-gradient-to-br from-emerald-500/20 to-teal-600/20 border-emerald-400/30 shadow-glow-blue' 
+                  : 'hover:border-blue-400/30 hover:shadow-glow-blue'
               }`}
             >
-              <div className="space-y-4">
+              <div className="space-y-5 relative">
                 <div className="flex items-center justify-between">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${win.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                    <win.icon className="w-6 h-6 text-white" />
+                  <div className={`w-14 h-14 bg-gradient-to-br ${win.color} rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/20 rounded-2xl" />
+                    <win.icon className="w-7 h-7 text-white relative z-10" />
                   </div>
                   <div className="flex items-center space-x-2">
                     {win.completed ? (
@@ -539,11 +550,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                         role="img"
                         aria-label="Goal completed"
                       >
-                        <CheckCircleSolidIcon className="w-6 h-6 text-green-500" />
+                        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-xl">
+                          <CheckCircleSolidIcon className="w-5 h-5 text-white" />
+                        </div>
                       </motion.div>
                     ) : (
                       <div 
-                        className="w-6 h-6 border-2 border-border rounded-full hover:border-[#48C6FF] transition-colors"
+                        className="w-8 h-8 border-3 border-white/30 rounded-full hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:scale-110"
                         role="img"
                         aria-label="Goal not completed"
                       />
@@ -554,13 +567,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
                 <div className="space-y-2">
                   <h3 
                     id={`win-${win.id}-title`}
-                    className={`font-bold text-foreground ${win.completed ? 'line-through opacity-75' : ''}`}
+                    className={`text-xl font-bold text-slate-800 dark:text-slate-200 ${win.completed ? 'line-through opacity-75' : ''}`}
                   >
                     {win.title}
                   </h3>
                   <p 
                     id={`win-${win.id}-description`}
-                    className={`text-sm ${win.completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
+                    className={`text-base ${win.completed ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
                   >
                     {win.description}
                   </p>
@@ -568,15 +581,15 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <ClockIcon className="w-4 h-4 text-muted-foreground" />
-                    <time className="text-sm font-medium text-foreground">{win.time}</time>
+                    <ClockIcon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                    <time className="text-base font-bold text-slate-700 dark:text-slate-300">{win.time}</time>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold text-[#3BE6C5]">+{win.points}</span>
-                    <span className={`px-2 py-1 text-xs font-bold rounded-full ${
-                      win.priority === 'high' ? 'bg-red-100 text-red-700 border border-red-200' :
-                      win.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                      'bg-green-100 text-green-700 border border-green-200'
+                    <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-lg text-sm">+{win.points}</span>
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full shadow-lg ${
+                      win.priority === 'high' ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white' :
+                      win.priority === 'medium' ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white' :
+                      'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     }`}>
                       {win.priority}
                     </span>

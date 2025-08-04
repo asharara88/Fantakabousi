@@ -72,18 +72,21 @@ const HealthMetrics: React.FC = () => {
     const range = max - min || 1;
     
     return (
-      <div className="flex items-end space-x-1 h-12 w-24">
+      <div className="flex items-end space-x-1 h-16 w-32">
         {data.map((value, index) => {
           const height = ((value - min) / range) * 100;
           const isLast = index === data.length - 1;
           return (
             <motion.div
               key={index}
-              className={`bg-gradient-to-t ${gradient} rounded-sm ${isLast ? 'opacity-100' : 'opacity-60'}`}
-              style={{ width: '3px' }}
+              className={`bg-gradient-to-t ${gradient} rounded-lg shadow-lg ${
+                isLast ? 'opacity-100 shadow-xl' : 'opacity-70'
+              }`}
+              style={{ width: '4px' }}
               initial={{ height: 0 }}
               animate={{ height: `${Math.max(height, 15)}%` }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
+              transition={{ delay: 0.5 + index * 0.1, duration: 0.8, ease: "easeOut" }}
+              whileHover={{ scale: 1.1, opacity: 1 }}
             />
           );
         })}
@@ -92,84 +95,109 @@ const HealthMetrics: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+      {/* Premium background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl -z-10" />
+      
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <h2 className="text-heading-xl text-foreground">Health Metrics</h2>
-          <p className="text-caption">Real-time biometric tracking</p>
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl">
+              <HeartIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                Health Metrics
+              </h2>
+              <p className="text-slate-600 dark:text-slate-400 text-lg">Real-time biometric intelligence</p>
+            </div>
+          </div>
         </div>
-        <button className="btn-ghost flex items-center space-x-2">
+        <motion.button 
+          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+        >
           <ChartBarIcon className="w-4 h-4" />
-          <span>View Trends</span>
-        </button>
+          <span>Advanced Analytics</span>
+        </motion.button>
       </div>
       
-      <div className="grid-premium grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => (
           <motion.div
             key={metric.name}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
-            className="metric-card group"
+            className="metric-card-premium rounded-3xl p-6 group cursor-pointer"
+            whileHover={{ y: -8, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <div className="space-y-6">
+            <div className="space-y-6 relative">
+              {/* Gradient overlay */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-5 rounded-3xl`} />
+              
               <div className="flex items-center justify-between">
-                <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                  <metric.icon className="w-6 h-6 text-white" />
+                <div className={`w-14 h-14 bg-gradient-to-br ${metric.color} rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-white/20 rounded-2xl" />
+                  <metric.icon className="w-7 h-7 text-white relative z-10" />
                 </div>
                 <div className="flex items-center space-x-2">
                   {metric.trend === 'up' ? (
-                    <ArrowTrendingUpIcon className="w-4 h-4 text-emerald-500" />
+                    <div className="flex items-center space-x-1 px-3 py-1 bg-emerald-500/20 rounded-full">
+                      <ArrowTrendingUpIcon className="w-4 h-4 text-emerald-500" />
+                      <span className="text-sm font-bold text-emerald-600">+{metric.change}%</span>
+                    </div>
                   ) : (
-                    <ArrowTrendingDownIcon className="w-4 h-4 text-blue-500" />
+                    <div className="flex items-center space-x-1 px-3 py-1 bg-blue-500/20 rounded-full">
+                      <ArrowTrendingDownIcon className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm font-bold text-blue-600">{metric.change}%</span>
+                    </div>
                   )}
-                  <span className={`text-caption font-semibold ${
-                    metric.trend === 'up' ? 'text-emerald-500' : 'text-blue-500'
-                  }`}>
-                    {metric.change > 0 ? '+' : ''}{metric.change}%
-                  </span>
                 </div>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-heading-lg font-bold text-foreground">
+                  <span className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                     {metric.value.toLocaleString()}
                   </span>
-                  <span className="text-caption">
+                  <span className="text-lg text-slate-500 dark:text-slate-400 font-medium">
                     {metric.unit}
                   </span>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-body font-semibold text-foreground">
+                  <div className="text-xl font-bold text-slate-800 dark:text-slate-200">
                     {metric.name}
                   </div>
-                  <div className="text-caption">
+                  <div className="text-sm text-slate-600 dark:text-slate-400">
                     {metric.description}
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center justify-between pt-4 border-t border-border">
+              <div className="flex items-center justify-between pt-4 border-t border-white/10">
                 <MiniChart data={metric.data} gradient={metric.color} />
-                <div className={`status-dot ${metric.optimal ? 'success' : 'warning'}`} />
+                <div className={`w-3 h-3 rounded-full ${
+                  metric.optimal ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' : 'bg-amber-400 shadow-lg shadow-amber-400/50'
+                } animate-pulse`} />
               </div>
               
               {/* Progress Bar */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-caption">
+                <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
                   <span>Target: {metric.target}{metric.unit}</span>
-                  <span className={metric.value >= metric.target ? 'text-emerald-500' : 'text-amber-500'}>
+                  <span className={`font-bold ${metric.value >= metric.target ? 'text-emerald-500' : 'text-amber-500'}`}>
                     {Math.round((metric.value / metric.target) * 100)}%
                   </span>
                 </div>
-                <div className="progress-bar">
+                <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
                   <motion.div
-                    className="progress-fill"
+                    className={`h-full bg-gradient-to-r ${metric.color} rounded-full shadow-lg`}
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min((metric.value / metric.target) * 100, 100)}%` }}
-                    transition={{ delay: 1 + index * 0.1, duration: 1.5 }}
+                    transition={{ delay: 1 + index * 0.1, duration: 1.5, ease: "easeOut" }}
                   />
                 </div>
               </div>

@@ -107,7 +107,7 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
   };
 
   return (
-    <div className={`fixed bottom-24 lg:bottom-8 right-6 z-40 ${className}`}>
+    <div className={`fixed bottom-32 lg:bottom-12 right-8 z-40 ${className}`}>
       <div className="relative">
         {/* Quick Action Items */}
         <AnimatePresence>
@@ -118,7 +118,7 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm -z-10"
+                className="fixed inset-0 bg-black/30 backdrop-blur-xl -z-10"
                 onClick={() => setIsExpanded(false)}
               />
               
@@ -127,7 +127,7 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute bottom-16 right-0 space-y-3"
+                className="absolute bottom-20 right-0 space-y-4"
               >
                 {quickActions.map((action, index) => (
                   <motion.button
@@ -138,19 +138,21 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
                     transition={{ delay: index * 0.05 }}
                     onClick={() => handleActionClick(action)}
                     className={`
-                      flex items-center space-x-3 px-4 py-3 
+                      flex items-center space-x-4 px-6 py-4 
                       bg-gradient-to-r ${action.color} text-white 
-                      rounded-xl shadow-lg hover:shadow-xl 
-                      transition-all duration-200 whitespace-nowrap
-                      group
+                      rounded-2xl shadow-2xl hover:shadow-premium 
+                      transition-all duration-300 whitespace-nowrap
+                      group backdrop-blur-xl border border-white/20
                     `}
-                    whileHover={{ scale: 1.05, x: -5 }}
+                    whileHover={{ scale: 1.08, x: -8, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <action.icon className="w-5 h-5" />
-                    <span className="font-medium">{action.label}</span>
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <action.icon className="w-5 h-5" />
+                    </div>
+                    <span className="font-bold text-lg">{action.label}</span>
                     {action.shortcut && (
-                      <span className="text-xs bg-white/20 px-2 py-1 rounded-md font-mono">
+                      <span className="text-sm bg-white/30 px-3 py-1 rounded-lg font-mono font-bold">
                         {action.shortcut}
                       </span>
                     )}
@@ -165,27 +167,29 @@ const QuickActionMenu: React.FC<QuickActionMenuProps> = ({
         <motion.button
           onClick={() => setIsExpanded(!isExpanded)}
           className={`
-            w-14 h-14 bg-gradient-to-r from-blue-light to-blue-medium 
-            text-white rounded-full shadow-lg hover:shadow-xl 
-            transition-all duration-200 flex items-center justify-center
-            ${isExpanded ? 'rotate-45' : ''}
+            w-16 h-16 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 
+            text-white rounded-2xl shadow-2xl hover:shadow-premium 
+            transition-all duration-300 flex items-center justify-center
+            backdrop-blur-xl border border-white/20 relative overflow-hidden
+            ${isExpanded ? 'rotate-45' : ''} animate-pulse-glow
           `}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.15, y: -4 }}
           whileTap={{ scale: 0.9 }}
           aria-label={isExpanded ? "Close quick actions" : "Open quick actions"}
           aria-expanded={isExpanded}
         >
+          {/* Shimmer effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer" />
+          
           {isExpanded ? (
-            <XMarkIcon className="w-6 h-6" />
+            <XMarkIcon className="w-7 h-7 relative z-10" />
           ) : (
-            <PlusIcon className="w-6 h-6" />
+            <PlusIcon className="w-7 h-7 relative z-10" />
           )}
         </motion.button>
 
-        {/* Pulse animation when closed */}
-        {!isExpanded && (
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-light to-blue-medium animate-ping opacity-20" />
-        )}
+        {/* Premium glow ring */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 blur-xl opacity-30 animate-pulse -z-10" />
       </div>
     </div>
   );
