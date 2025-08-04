@@ -8,7 +8,8 @@ import {
   PlusIcon,
   SparklesIcon,
   FireIcon,
-  TrophyIcon
+  TrophyIcon,
+  CubeIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolidIcon } from '@heroicons/react/24/solid';
 
@@ -19,6 +20,10 @@ interface Goal {
   completed: boolean;
   priority: 'high' | 'medium' | 'low';
   category: string;
+  supplementShortcut?: {
+    products: string[];
+    category: string;
+  };
 }
 
 const TodaysGoals: React.FC = () => {
@@ -79,6 +84,17 @@ const TodaysGoals: React.FC = () => {
   ]);
   const [streakCount, setStreakCount] = useState(3);
   const [showCelebration, setShowCelebration] = useState(false);
+
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements ready to order`,
+      action: {
+        label: "Shop Now",
+        onClick: () => window.location.hash = '#supplements'
+      }
+    });
+  };
 
   const addNewGoal = () => {
     const newGoal: Goal = {

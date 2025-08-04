@@ -17,7 +17,9 @@ import {
   MoonIcon,
   ComputerDesktopIcon,
   BeakerIcon,
-  BoltIcon
+  BoltIcon,
+  ChevronDownIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -39,69 +41,97 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const { profile } = useProfile();
   const { theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [expandedMenu, setExpandedMenu] = React.useState<string | null>(null);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
 
+  // Improved navigation structure following UX best practices
   const navItems = [
     { 
       id: 'dashboard', 
       label: 'Home', 
       icon: HomeIcon, 
       activeIcon: HomeSolidIcon,
-      description: 'Daily overview & goals'
+      description: 'Dashboard overview & daily goals'
     },
     { 
       id: 'coach', 
-      label: 'Smart Coach', 
+      label: 'Coach', 
       icon: ChatBubbleLeftRightIcon, 
       activeIcon: ChatSolidIcon,
-      description: 'Get smart advice'
+      description: 'AI wellness guidance',
+      badge: 'AI'
     },
     { 
       id: 'health', 
-      label: 'Analytics', 
+      label: 'Health', 
       icon: HeartIcon, 
       activeIcon: HeartSolidIcon,
-      description: 'Track your progress'
+      description: 'Metrics, analytics & tracking',
+      children: [
+        { id: 'metrics', label: 'Live Metrics', description: 'Real-time health data' },
+        { id: 'analytics', label: 'Trends & Analytics', description: 'Deep dive into your data' },
+        { id: 'devices', label: 'Connected Devices', description: 'Manage wearables and monitors' }
+      ]
     },
     { 
       id: 'nutrition', 
       label: 'Nutrition', 
       icon: BeakerIcon, 
       activeIcon: BeakerIcon,
-      description: 'Food & recipes'
+      description: 'Food logging & recipes',
+      children: [
+        { id: 'logger', label: 'Food Logger', description: 'Track your meals' },
+        { id: 'recipes', label: 'Find Recipes', description: 'Healthy meal ideas' },
+        { id: 'history', label: 'Food History', description: 'Past meals and nutrition' }
+      ]
     },
     { 
       id: 'supplements', 
-      label: 'Supplements', 
+      label: 'Shop', 
       icon: ShoppingBagIcon, 
       activeIcon: ShoppingSolidIcon,
-      description: 'Browse supplements'
+      description: 'Supplements & wellness products',
+      children: [
+        { id: 'browse', label: 'Browse Products', description: 'Explore supplement catalog' },
+        { id: 'stack', label: 'My Stack', description: 'Your personalized supplements' },
+        { id: 'orders', label: 'Order History', description: 'Past purchases and tracking' }
+      ]
     },
     { 
       id: 'fitness', 
       label: 'Fitness', 
       icon: BoltIcon, 
       activeIcon: BoltIcon,
-      description: 'Workouts & training'
+      description: 'Workouts & training programs'
     },
     { 
       id: 'sleep', 
       label: 'Sleep', 
       icon: MoonIcon, 
       activeIcon: MoonIcon,
-      description: 'Sleep optimization'
+      description: 'Sleep optimization tools'
     },
     { 
       id: 'profile', 
-      label: 'Profile', 
+      label: 'Account', 
       icon: UserCircleIcon, 
       activeIcon: UserSolidIcon,
-      description: 'Account settings'
+      description: 'Profile, settings & preferences'
     },
   ];
+
+  const handleMenuToggle = (menuId: string) => {
+    setExpandedMenu(expandedMenu === menuId ? null : menuId);
+  };
+
+  const handleNavigation = (itemId: string, subItemId?: string) => {
+    const targetTab = subItemId ? `${itemId}-${subItemId}` : itemId;
+    onTabChange(targetTab);
+    setExpandedMenu(null);
+  };
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
   
@@ -227,37 +257,77 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
               
               return (
                 <li key={item.id} role="none">
-                  <motion.button
-                  role="menuitem"
-                  aria-current={isActive ? 'page' : undefined}
-                  aria-describedby={`nav-${item.id}-description`}
-                  onClick={() => onTabChange(item.id)}
-                  className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
-                    isActive
-                      ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg'
-                      : 'text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-[#48C6FF]'}`} />
-                  <div className="flex-1 text-left">
-                    <div className="font-inter">{item.label}</div>
-                    <div 
-                      id={`nav-${item.id}-description`}
-                      className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}
+                  <div>
+                    <motion.button
+                      role="menuitem"
+                      aria-current={isActive ? 'page' : undefined}
+                      aria-describedby={`nav-${item.id}-description`}
+                      onClick={() => item.children ? handleMenuToggle(item.id) : handleNavigation(item.id)}
+                      className={`group flex gap-x-4 rounded-2xl p-4 text-base leading-6 font-semibold w-full transition-all duration-200 ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg'
+                          : 'text-foreground hover:text-[#48C6FF] hover:bg-[#48C6FF]/10'
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      {item.description}
-                    </div>
+                      <Icon className={`h-7 w-7 shrink-0 ${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-[#48C6FF]'}`} />
+                      <div className="flex-1 text-left">
+                        <div className="flex items-center justify-between">
+                          <span className="font-inter">{item.label}</span>
+                          {item.badge && (
+                            <span className="px-2 py-1 bg-accent-neon text-black text-xs font-bold rounded-full">
+                              {item.badge}
+                            </span>
+                          )}
+                          {item.children && (
+                            <ChevronDownIcon 
+                              className={`w-5 h-5 transition-transform ${
+                                expandedMenu === item.id ? 'rotate-180' : ''
+                              } ${isActive ? 'text-white' : 'text-muted-foreground'}`} 
+                            />
+                          )}
+                        </div>
+                        <div 
+                          id={`nav-${item.id}-description`}
+                          className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}
+                        >
+                          {item.description}
+                        </div>
+                      </div>
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeIndicator"
+                          className="w-1 h-6 bg-white rounded-full shadow-sm"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </motion.button>
+
+                    {/* Sub-menu */}
+                    {item.children && expandedMenu === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="ml-6 mt-2 space-y-1"
+                      >
+                        {item.children.map((subItem) => (
+                          <button
+                            key={subItem.id}
+                            onClick={() => handleNavigation(item.id, subItem.id)}
+                            className="w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted transition-colors"
+                          >
+                            <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
+                            <div>
+                              <div className="font-medium text-foreground">{subItem.label}</div>
+                              <div className="text-sm text-muted-foreground">{subItem.description}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
                   </div>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="w-1 h-6 bg-white rounded-full shadow-sm"
-                      aria-hidden="true"
-                    />
-                  )}
-                </motion.button>
                 </li>
               );
             })}

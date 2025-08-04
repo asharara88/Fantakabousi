@@ -229,6 +229,19 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ onQuickAction }) => {
   const completedWins = dailyWins.filter(w => w.completed).length;
   const progressPercentage = (completedWins / dailyWins.length) * 100;
 
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements ready to order`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
+
   const toggleWin = (winId: string) => {
     const handleSupplementShortcut = (products: string[], category: string) => {
       onQuickAction?.('supplements');

@@ -7,7 +7,8 @@ import {
   BeakerIcon,
   ChatBubbleLeftRightIcon,
   ArrowRightIcon,
-  ClockIcon
+  ClockIcon,
+  CubeIcon
 } from '@heroicons/react/24/outline';
 
 import { useToast } from '../../hooks/useToast';
@@ -54,6 +55,19 @@ const HealthInsights: React.FC<HealthInsightsProps> = ({ onQuickAction }) => {
       }
     }
   ];
+
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements in our shop`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
 
   const getPriorityVariant = (priority: string) => {
     const variants = {

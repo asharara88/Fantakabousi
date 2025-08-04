@@ -43,7 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       title: 'Heart Rate Trends',
       description: 'View your heart rate analytics',
       category: 'Health',
-      action: () => onNavigate?.('health-metrics'),
+      action: () => onNavigate?.('health'),
       icon: SparklesIcon
     },
     {

@@ -65,7 +65,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   };
 
   return (
-    <div className={`fixed bottom-24 lg:bottom-8 right-6 z-40 ${className}`}>
+    <div className={`fixed bottom-28 lg:bottom-8 right-6 z-40 ${className}`}>
       <div className="relative">
         {/* Quick Action Items */}
         <AnimatePresence>
@@ -84,7 +84,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                   exit={{ opacity: 0, x: 20, y: 10 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleActionClick(action)}
-                  className={`flex items-center space-x-3 px-4 py-3 bg-gradient-to-r ${action.color} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 whitespace-nowrap`}
+                  className={`flex items-center space-x-3 px-4 py-3 bg-gradient-to-r ${action.color} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 whitespace-nowrap backdrop-blur-sm`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -99,7 +99,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         {/* Main FAB */}
         <motion.button
           onClick={() => setIsExpanded(!isExpanded)}
-          className={`w-14 h-14 bg-gradient-to-r from-blue-light to-blue-medium text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center ${
+          className={`w-14 h-14 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center backdrop-blur-sm ${
             isExpanded ? 'rotate-45' : ''
           }`}
           whileHover={{ scale: 1.1 }}
@@ -121,7 +121,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm -z-10"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm -z-20"
               onClick={() => setIsExpanded(false)}
             />
           )}

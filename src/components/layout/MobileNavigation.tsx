@@ -20,7 +20,9 @@ import {
   MoonIcon,
   ComputerDesktopIcon,
   BeakerIcon,
-  BoltIcon
+  BoltIcon,
+  ChevronDownIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import { 
   HomeIcon as HomeSolidIcon, 
@@ -47,20 +49,93 @@ export function MobileNavigation({
   const { profile } = useProfile();
   const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [expandedMenu, setExpandedMenu] = React.useState<string | null>(null);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1Mzc2ODY2MCwiZXhwIjoxNzg1MzA0NjYwfQ.UW3n1NOb3F1is3zg_jGRYSDe7eoStJFpSmmFP_X9QiY";
 
-  const navigationItems = [
+  // Simplified mobile navigation (4 items max for thumb reach)
+  const bottomNavItems = [
     { id: 'dashboard', label: 'Home', icon: HomeIcon, activeIcon: HomeSolidIcon },
     { id: 'health', label: 'Health', icon: HeartIcon, activeIcon: HeartSolidIcon },
-    { id: 'nutrition', label: 'Nutrition', icon: BeakerIcon, activeIcon: BeakerIcon },
     { id: 'coach', label: 'Coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon },
-    { id: 'supplements', label: 'Supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon },
-    { id: 'fitness', label: 'Fitness', icon: BoltIcon, activeIcon: BoltIcon },
-    { id: 'sleep', label: 'Sleep', icon: MoonIcon, activeIcon: MoonIcon }
+    { id: 'more', label: 'More', icon: UserCircleIcon, activeIcon: UserSolidIcon }
   ];
+
+  // Full navigation for hamburger menu
+  const fullNavItems = [
+    { 
+      id: 'dashboard', 
+      label: 'Home', 
+      icon: HomeIcon, 
+      activeIcon: HomeSolidIcon,
+      description: 'Dashboard overview'
+    },
+    { 
+      id: 'coach', 
+      label: 'AI Coach', 
+      icon: ChatBubbleLeftRightIcon, 
+      activeIcon: ChatSolidIcon,
+      description: 'Get personalized guidance',
+      badge: 'AI'
+    },
+    { 
+      id: 'health', 
+      label: 'Health Analytics', 
+      icon: HeartIcon, 
+      activeIcon: HeartSolidIcon,
+      description: 'Track your metrics',
+      children: [
+        { id: 'metrics', label: 'Live Metrics', description: 'Real-time data' },
+        { id: 'analytics', label: 'Trends', description: 'Data analysis' },
+        { id: 'devices', label: 'Devices', description: 'Connected wearables' }
+      ]
+    },
+    { 
+      id: 'nutrition', 
+      label: 'Nutrition', 
+      icon: BeakerIcon, 
+      activeIcon: BeakerIcon,
+      description: 'Food & recipes',
+      children: [
+        { id: 'logger', label: 'Food Logger', description: 'Track meals' },
+        { id: 'recipes', label: 'Recipes', description: 'Find healthy meals' }
+      ]
+    },
+    { 
+      id: 'supplements', 
+      label: 'Supplements', 
+      icon: ShoppingBagIcon, 
+      activeIcon: ShoppingSolidIcon,
+      description: 'Shop wellness products'
+    },
+    { 
+      id: 'fitness', 
+      label: 'Fitness', 
+      icon: BoltIcon, 
+      activeIcon: BoltIcon,
+      description: 'Workouts & training'
+    },
+    { 
+      id: 'sleep', 
+      label: 'Sleep', 
+      icon: MoonIcon, 
+      activeIcon: MoonIcon,
+      description: 'Sleep optimization'
+    }
+  ];
+
+  const handleMenuItemToggle = (menuId: string) => {
+    setExpandedMenu(expandedMenu === menuId ? null : menuId);
+  };
+
+  const handleNavigation = (itemId: string, subItemId?: string) => {
+    const targetTab = subItemId ? `${itemId}-${subItemId}` : itemId;
+    onViewChange(targetTab);
+    onMenuToggle();
+    setExpandedMenu(null);
+  };
 
   const firstName = profile?.first_name || user?.email?.split('@')[0] || 'User';
 
@@ -228,31 +303,65 @@ export function MobileNavigation({
                       />
                     </button>
                     <span className="text-heading-md text-foreground">Menu</span>
-                  </div>
+                      {fullNavItems.map((item, index) => {
                   <button
                   aria-label="Close menu"
                   onClick={onMenuToggle}
                   className="touch-target cursor-pointer rounded-xl hover:bg-muted transition-colors"
-                >
-                  <XMarkIcon className="w-6 h-6 text-muted-foreground" />
-                  </button>
-                </header>
+                          <div key={item.id}>
+                            <motion.button
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              onClick={() => item.children ? handleMenuItemToggle(item.id) : handleNavigation(item.id)}
+                              className={`w-full flex items-center justify-between p-4 rounded-xl text-left transition-all duration-200 ${
+                                isActive 
+                                  ? 'bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white shadow-lg' 
+                                  : 'text-foreground hover:bg-muted'
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-muted-foreground'}`} />
+                                <div>
+                                  <div className="font-semibold">{item.label}</div>
+                                  <div className={`text-sm ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
+                                    {item.description}
+                                  </div>
+                                </div>
+                              </div>
+                              {item.children && (
+                                <ChevronDownIcon 
+                                  className={`w-5 h-5 transition-transform ${
+                                    expandedMenu === item.id ? 'rotate-180' : ''
+                                  } ${isActive ? 'text-white' : 'text-muted-foreground'}`} 
+                                />
+                              )}
+                            </motion.button>
 
-                {/* User Profile */}
-                <section role="region" aria-label="User profile information">
-                  <div className="p-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-20 border-b border-gray-200/20 dark:border-gray-700/20">
-                    <div className="flex items-center space-x-4">
-                      <div 
-                        className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg"
-                        role="img"
-                        aria-label={`${firstName} profile avatar`}
-                      >
-                        <span className="text-white font-bold text-lg font-inter">
-                          {firstName.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-base font-semibold text-foreground font-inter">{firstName}</p>
+                            {/* Sub-menu */}
+                            {item.children && expandedMenu === item.id && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="ml-6 mt-2 space-y-1"
+                              >
+                                {item.children.map((subItem) => (
+                                  <button
+                                    key={subItem.id}
+                                    onClick={() => handleNavigation(item.id, subItem.id)}
+                                    className="w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted transition-colors"
+                                  >
+                                    <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
+                                    <div>
+                                      <div className="font-medium text-foreground">{subItem.label}</div>
+                                      <div className="text-sm text-muted-foreground">{subItem.description}</div>
+                                    </div>
+                                  </button>
+                                ))}
+                              </motion.div>
+                            )}
+                          </div>
                         <p className="text-sm text-muted-foreground truncate font-inter">{user?.email}</p>
                       </div>
                     </div>
@@ -350,9 +459,11 @@ export function MobileNavigation({
       >
         <SafeArea bottom>
           <ul role="menubar" className="flex items-center justify-around" aria-label="Main navigation">
-          {navigationItems.map((item) => {
+          {bottomNavItems.map((item) => {
             const Icon = currentView === item.id ? item.activeIcon : item.icon;
-            const isActive = currentView === item.id;
+            const isActive = item.id === 'more' ? 
+              ['supplements', 'fitness', 'sleep', 'profile'].includes(currentView) :
+              currentView === item.id;
             
             return (
               <li key={item.id} role="none">
@@ -360,7 +471,7 @@ export function MobileNavigation({
                 role="menuitem"
                 aria-current={isActive ? 'page' : undefined}
                 aria-label={`Navigate to ${item.label}`}
-                onClick={() => onViewChange(item.id)}
+                onClick={() => item.id === 'more' ? onMenuToggle() : onViewChange(item.id)}
                 className={`mobile-nav-item cursor-pointer ${isActive ? 'active' : ''}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

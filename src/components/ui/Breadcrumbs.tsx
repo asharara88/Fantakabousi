@@ -19,7 +19,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '', onNavi
   return (
     <nav 
       aria-label="Breadcrumb" 
-      className={`flex items-center space-x-2 text-sm ${className}`}
+      className={`flex items-center space-x-2 text-sm py-2 ${className}`}
     >
       <ol className="flex items-center space-x-2" role="list">
         {items.map((item, index) => (
@@ -37,7 +37,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '', onNavi
             
             {item.current ? (
               <span 
-                className="flex items-center space-x-1 text-foreground font-medium"
+                className="flex items-center space-x-1 text-foreground font-semibold"
                 aria-current="page"
               >
                 {item.icon && <item.icon className="w-4 h-4" />}
@@ -45,10 +45,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '', onNavi
               </span>
             ) : (
               <button
-                onClick={() => item.href && onNavigate?.(item.href)}
+                  rounded-md px-2 py-1 hover:bg-[#48C6FF]/5
                 className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-blue-light/20 rounded-md px-1"
-                aria-label={`Navigate to ${item.label}`}
-              >
+                  flex items-center space-x-1 text-muted-foreground
+                  hover:text-[#48C6FF] transition-colors 
                 {item.icon && <item.icon className="w-4 h-4" />}
                 <span>{item.label}</span>
               </button>
