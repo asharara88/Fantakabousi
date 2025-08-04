@@ -145,6 +145,20 @@ const UnifiedHealthDashboard: React.FC = () => {
     setIsMobileMenuOpen(false);
     setExpandedMenu(null);
   };
+  
+  const handleSupplementShortcut = (products: string[], category: string) => {
+    onQuickAction?.('supplements');
+    
+    toast({
+      title: `🛒 ${products.join(' or ')} Available`,
+      description: `Premium ${category} supplements in our shop`,
+      action: {
+        label: "Shop Now",
+        onClick: () => onQuickAction?.('supplements')
+      }
+    });
+  };
+  
 
   const handleQuickAction = (action: string) => {
     setActiveView(action);
@@ -208,7 +222,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <AdvancedCharts />;
+        return <HealthDashboard />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':
@@ -228,13 +242,14 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Left Column */}
               <div className="xl:col-span-2 space-y-8">
                 <HealthMetrics />
-                <DailyInsights onQuickAction={handleQuickAction} />
+                <AIInsights onQuickAction={handleQuickAction} />
               </div>
               
               {/* Right Column */}
               <div className="space-y-8">
                 <ReadinessScore score={87} />
-                <TodaysGoals onQuickAction={handleQuickAction} />
+                <TodaysPlan />
+                  </span>
                 <ActivityFeed />
               </div>
             </div>
@@ -563,23 +578,12 @@ const UnifiedHealthDashboard: React.FC = () => {
                 {isMobileMenuOpen ? (
                   <XMarkIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
                 ) : (
-                  <Bars3Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-                )}
-              </motion.button>
-            </div>
-          </div>
-        </SafeArea>
-      </header>
-
-      {/* Premium Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            <motion.div 
               className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" 
               onClick={() => setIsMobileMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+                  <span onClick={() => onQuickAction?.('coach')}>
               exit={{ opacity: 0 }}
             />
             

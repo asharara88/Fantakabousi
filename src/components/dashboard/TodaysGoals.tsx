@@ -142,19 +142,9 @@ const UnifiedHealthDashboard: React.FC = () => {
   const handleNavigation = (itemId: string, subItemId?: string) => {
     const targetView = subItemId ? `${itemId}-${subItemId}` : itemId;
     setActiveView(targetView);
-    setIsMobileMenuOpen(false);
-    setExpandedMenu(null);
-  };
-
-  const handleQuickAction = (action: string) => {
-    setActiveView(action);
-  };
-
-  const ThemeToggle = () => (
     <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-xl rounded-2xl p-1 border border-white/20">
       <button
         onClick={() => {
-          setAutoSyncTime(false);
           setTheme('light');
         }}
         className={`p-3 rounded-xl transition-all duration-300 ${
@@ -208,7 +198,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <AdvancedCharts />;
+        return <HealthDashboard />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':
@@ -228,13 +218,13 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Left Column */}
               <div className="xl:col-span-2 space-y-8">
                 <HealthMetrics />
-                <DailyInsights onQuickAction={handleQuickAction} />
+                <AIInsights onQuickAction={handleQuickAction} />
               </div>
               
               {/* Right Column */}
               <div className="space-y-8">
                 <ReadinessScore score={87} />
-                <TodaysGoals onQuickAction={handleQuickAction} />
+                <TodaysPlan />
                 <ActivityFeed />
               </div>
             </div>
