@@ -11,7 +11,7 @@ import {
   ArrowRightIcon,
   CubeIcon
 } from '@heroicons/react/24/outline';
-import { toast } from '../ui/Toast';
+import { toast } from '../../hooks/useToast';
 
 interface AIInsightsProps {
   onQuickAction?: (action: string) => void;
