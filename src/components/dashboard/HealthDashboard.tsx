@@ -602,7 +602,6 @@ const UnifiedHealthDashboard: React.FC = () => {
                       className="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors"
                       aria-label="Close menu"
                     >
-                      <XMarkIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
                     </button>
                   </div>
 
