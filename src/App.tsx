@@ -1,4 +1,7 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { errorHandler } from './lib/errorHandler';
+import { cacheManager } from './lib/cacheManager';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { NavigationProvider } from './components/layout/NavigationProvider';
@@ -16,6 +19,39 @@ import LoadingSpinner from './components/ui/LoadingSpinner';
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
+  
+  useEffect(() => {
+    // Initialize error handling and cache management
+    try {
+      // Set up periodic cache cleanup
+      const cleanupInterval = setInterval(() => {
+        const stats = cacheManager.getStats();
+        if (stats.memoryUsage > 30 * 1024 * 1024) { // 30MB threshold
+          console.log('Performing cache cleanup due to memory usage');
+          // Clear old cache entries
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('biowell-cache-')) {
+              const item = localStorage.getItem(key);
+              if (item) {
+                try {
+                  const parsed = JSON.parse(item);
+                  if (Date.now() - parsed.timestamp > 10 * 60 * 1000) { // 10 minutes old
+                    localStorage.removeItem(key);
+                  }
+                } catch {
+                  localStorage.removeItem(key);
+                }
+              }
+            }
+          });
+        }
+      }, 2 * 60 * 1000); // Every 2 minutes
+      
+      return () => clearInterval(cleanupInterval);
+    } catch (error) {
+      console.error('Failed to initialize app cleanup:', error);
+    }
+  }, []);
 
   if (loading || profileLoading) {
     return (

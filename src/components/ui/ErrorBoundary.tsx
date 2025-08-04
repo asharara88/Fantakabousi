@@ -100,9 +100,33 @@ class ErrorBoundary extends Component<Props, State> {
                       names.forEach(name => caches.delete(name));
                     });
                   }
+                  
+                  // Clear localStorage cache items
+                  Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('biowell-cache-') || key.startsWith('biowell-goals-')) {
+                      localStorage.removeItem(key);
+                    }
+                  });
                 }}
               >
                 Refresh Page
+              </button>
+              
+              <button
+                onClick={() => {
+                  // Clear all app data and reload
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  if ('caches' in window) {
+                    caches.keys().then(names => {
+                      names.forEach(name => caches.delete(name));
+                    });
+                  }
+                  window.location.reload();
+                }}
+                className="w-full px-6 py-3 border border-red-300 text-red-700 font-medium rounded-xl hover:bg-red-50 transition-colors"
+              >
+                Reset App Data
               </button>
             </div>
 
