@@ -249,7 +249,6 @@ const UnifiedHealthDashboard: React.FC = () => {
               <div className="space-y-8">
                 <ReadinessScore score={87} />
                 <TodaysPlan />
-                  </span>
                 <ActivityFeed />
               </div>
             </div>
