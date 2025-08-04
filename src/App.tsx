@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { useProfile } from '../../hooks/useProfile';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from './contexts/AuthContext';
+import { useProfile } from './hooks/useProfile';
+import { useTheme } from './contexts/ThemeContext';
 import WelcomeHeader from './WelcomeHeader';
 import HealthMetrics from './HealthMetrics';
 import AIInsights from './AIInsights';
