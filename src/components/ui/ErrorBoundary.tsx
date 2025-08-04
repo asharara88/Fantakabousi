@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { errorHandler, AppError } from '../../lib/errorHandler';
 import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 interface Props {
@@ -23,11 +24,36 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Report to centralized error handler
+    errorHandler.handleError(
+      error instanceof AppError ? error : new AppError(
+        error.message,
+        'COMPONENT_ERROR',
+        'high',
+        {
+          component: 'ErrorBoundary',
+          action: 'component_crash',
+          metadata: {
+            componentStack: errorInfo.componentStack,
+            errorBoundary: true
+          }
+        }
+      )
+    );
+    
     this.setState({ error, errorInfo });
   }
 
   private handleRetry = () => {
+    // Clear any cached data that might be causing issues
+    if (typeof window !== 'undefined') {
+      // Clear component-specific cache
+      const cacheKeys = Object.keys(localStorage).filter(key => 
+        key.startsWith('biowell-cache-')
+      );
+      cacheKeys.forEach(key => localStorage.removeItem(key));
+    }
+    
     this.setState({ hasError: false, error: undefined, errorInfo: undefined });
   };
 
@@ -67,6 +93,14 @@ class ErrorBoundary extends Component<Props, State> {
               <button
                 onClick={() => window.location.reload()}
                 className="w-full px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
+                onMouseDown={() => {
+                  // Clear all caches before reload
+                  if ('caches' in window) {
+                    caches.keys().then(names => {
+                      names.forEach(name => caches.delete(name));
+                    });
+                  }
+                }}
               >
                 Refresh Page
               </button>

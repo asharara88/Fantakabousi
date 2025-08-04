@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { errorHandler } from '../../lib/errorHandler';
+import { cacheManager } from '../../lib/cacheManager';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -7,6 +9,7 @@ import WelcomeHeader from './WelcomeHeader';
 import HealthMetrics from './HealthMetrics';
 import DailyInsights from './DailyInsights';
 import TodaysPlan from './TodaysPlan';
+import TodaysGoals from './TodaysGoals';
 import QuickActions from './QuickActions';
 import ActivityFeed from './ActivityFeed';
 import ReadinessScore from './ReadinessScore';
@@ -147,7 +150,14 @@ const UnifiedHealthDashboard: React.FC = () => {
   };
 
   const handleQuickAction = (action: string) => {
+    try {
     setActiveView(action);
+    } catch (error) {
+      errorHandler.handleError(
+        error instanceof Error ? error : new Error('Navigation error'),
+        { component: 'UnifiedHealthDashboard', action: 'quickAction' }
+      );
+    }
   };
 
   const ThemeToggle = () => (
@@ -201,6 +211,7 @@ const UnifiedHealthDashboard: React.FC = () => {
   );
 
   const renderContent = () => {
+    try {
     switch (activeView) {
       case 'coach':
         return <AICoachEnhanced />;
@@ -234,12 +245,33 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Right Column */}
               <div className="space-y-8">
                 <ReadinessScore score={87} />
-                <TodaysPlan onQuickAction={handleQuickAction} />
+                <TodaysGoals onQuickAction={handleQuickAction} />
                 <ActivityFeed />
               </div>
             </div>
           </div>
         );
+    }
+    } catch (error) {
+      errorHandler.handleError(
+        error instanceof Error ? error : new Error('Render error'),
+        { component: 'UnifiedHealthDashboard', action: 'renderContent', activeView }
+      );
+      
+      // Return fallback UI
+      return (
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center space-y-4">
+            <div className="text-xl font-semibold text-foreground">Something went wrong</div>
+            <button 
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
     }
   };
 

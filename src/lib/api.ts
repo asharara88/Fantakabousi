@@ -1,4 +1,6 @@
 import { supabase } from './supabase';
+import { handleApiError, AppError } from './errorHandler';
+import { apiCache } from './cacheManager';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -6,6 +8,14 @@ const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 
 // Chat API with proper error handling
 export const sendChatMessage = async (message: string, userId: string, sessionId?: string) => {
+  const cacheKey = `chat-${userId}-${sessionId}-${message.slice(0, 50)}`;
+  
+  // Check cache first for identical recent messages
+  const cached = apiCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < 30000) { // 30 second cache
+    return cached;
+  }
+  
   try {
     // Call OpenAI edge function
     const apiUrl = `${SUPABASE_URL}/functions/v1/openai-chat`;
@@ -32,6 +42,11 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
     const data = await response.json();
     const aiResponse = data.response;
 
+    const result = {
+      response: aiResponse,
+      timestamp: data.timestamp || new Date().toISOString()
+    };
+
     // Save to chat history
     if (sessionId && userId) {
       await supabase.from('chat_history').insert([
@@ -54,18 +69,31 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
       ]);
     }
 
-    return {
-      response: aiResponse,
-      timestamp: data.timestamp || new Date().toISOString()
-    };
+    // Cache the result
+    apiCache.set(cacheKey, result, 60000); // 1 minute cache
+    
+    return result;
   } catch (error) {
-    console.error('Error sending chat message:', error);
-    throw new Error('Failed to send message. Please try again.');
+    handleApiError(error, {
+      component: 'ChatAPI',
+      action: 'sendMessage',
+      userId,
+      metadata: { sessionId, messageLength: message.length }
+    });
+    throw error;
   }
 };
 
 // Text-to-Speech API
 export const generateSpeech = async (text: string, voiceId?: string) => {
+  const cacheKey = `tts-${text.slice(0, 100)}-${voiceId}`;
+  
+  // Check cache for identical text
+  const cached = apiCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+  
   try {
     const apiUrl = `${SUPABASE_URL}/functions/v1/elevenlabs-tts`;
     
@@ -88,15 +116,31 @@ export const generateSpeech = async (text: string, voiceId?: string) => {
     }
 
     const data = await response.json();
+    
+    // Cache the audio data
+    apiCache.set(cacheKey, data, 5 * 60 * 1000); // 5 minute cache
+    
     return data;
   } catch (error) {
-    console.error('Error generating speech:', error);
-    throw new Error('Failed to generate speech. Please try again.');
+    handleApiError(error, {
+      component: 'TTSAPI',
+      action: 'generateSpeech',
+      metadata: { textLength: text.length, voiceId }
+    });
+    throw error;
   }
 };
 
 // Health Metrics API
 export const getHealthMetrics = async (userId: string, metricType?: string) => {
+  const cacheKey = `health-metrics-${userId}-${metricType || 'all'}`;
+  
+  // Check cache first
+  const cached = apiCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+  
   try {
     // Check if Supabase is properly configured
     if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
@@ -116,10 +160,30 @@ export const getHealthMetrics = async (userId: string, metricType?: string) => {
 
     const { data, error } = await query.limit(50);
     
-    if (error) throw error;
-    return data || [];
+    if (error) {
+      throw new AppError(
+        error.message,
+        'DATABASE_ERROR',
+        'medium',
+        { component: 'HealthMetrics', action: 'fetch', userId }
+      );
+    }
+    
+    const result = data || [];
+    
+    // Cache the result
+    apiCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minute cache
+    
+    return result;
   } catch (error) {
-    console.warn('Error fetching health metrics, using mock data:', error);
+    handleApiError(error, {
+      component: 'HealthMetrics',
+      action: 'fetch',
+      userId,
+      metadata: { metricType }
+    });
+    
+    // Return mock data as fallback
     return generateMockHealthMetrics(userId, metricType);
   }
 };
