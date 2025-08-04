@@ -208,7 +208,7 @@ const UnifiedHealthDashboard: React.FC = () => {
       case 'health-metrics':
       case 'health-analytics':
       case 'health-devices':
-        return <HealthDashboard />;
+        return <AdvancedCharts />;
       case 'nutrition':
       case 'nutrition-logger':
       case 'nutrition-recipes':
@@ -228,13 +228,13 @@ const UnifiedHealthDashboard: React.FC = () => {
               {/* Left Column */}
               <div className="xl:col-span-2 space-y-8">
                 <HealthMetrics />
-                <AIInsights onQuickAction={handleQuickAction} />
+                <DailyInsights onQuickAction={handleQuickAction} />
               </div>
               
               {/* Right Column */}
               <div className="space-y-8">
                 <ReadinessScore score={87} />
-                <TodaysPlan />
+                <TodaysGoals onQuickAction={handleQuickAction} />
                 <ActivityFeed />
               </div>
             </div>
