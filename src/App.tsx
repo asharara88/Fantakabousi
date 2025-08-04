@@ -131,12 +131,17 @@ const App: React.FC = () => {
         }
       );
     };
-  return (
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener('error', handleError);
+
     return () => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       window.removeEventListener('error', handleError);
     };
   }, []);
+
+  return (
     <ErrorBoundary>
       <ThemeProvider>
         <AccessibilityProvider>
@@ -152,6 +157,4 @@ const App: React.FC = () => {
   );
 };
 
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
-    window.addEventListener('error', handleError);
 export default App;
