@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import AccessibilityProvider from '../ui/AccessibilityProvider';
-import Navigation from '../layout/Navigation';
-import { MobileNavigation } from '../layout/MobileNavigation';
 import ImprovedNavigation from '../layout/ImprovedNavigation';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import FloatingActionButton from '../ui/FloatingActionButton';
@@ -14,32 +12,25 @@ import HealthDashboard from './HealthDashboard';
 import AICoachEnhanced from './AICoachEnhanced';
 import NutritionDashboard from '../nutrition/NutritionDashboard';
 import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
-import SupplementShop from './SupplementShop';
 import FitnessDashboard from '../fitness/FitnessDashboard';
 import SleepOptimization from '../sleep/SleepOptimization';
 import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
 import PlanYourDay from './PlanYourDay';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import SafeArea from '../ui/SafeArea';
+import { HomeIcon } from '@heroicons/react/24/outline';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showPlanYourDay, setShowPlanYourDay] = useState(false);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleQuickAction = (action: string) => {
-    // Enhanced navigation with breadcrumb support
     switch (action) {
       case 'plan':
         setShowPlanYourDay(true);
@@ -72,7 +63,6 @@ const Dashboard: React.FC = () => {
         setActiveTab('profile');
         break;
       case 'search':
-        // Handle search functionality
         break;
       default:
         setActiveTab('dashboard');
@@ -113,6 +103,9 @@ const Dashboard: React.FC = () => {
       case 'sleep': return 'Sleep Optimization';
       case 'profile': return 'Profile Settings';
       default: return 'Biowell Dashboard';
+    }
+  };
+
   const getBreadcrumbs = () => {
     const breadcrumbs = [
       { label: 'Home', href: 'dashboard', icon: HomeIcon }
@@ -142,11 +135,9 @@ const Dashboard: React.FC = () => {
         break;
       default:
         breadcrumbs[0].current = true;
-    }
-    }
     return breadcrumbs;
   };
-  };
+
   return (
     <AccessibilityProvider>
       <div className="min-h-screen bg-background" role="application" aria-label="Biowell Health Dashboard">
