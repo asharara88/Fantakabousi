@@ -437,10 +437,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-6 mb-16"
           >
             <h2 id="testimonials-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              Trusted by Thousands
+              What Our Beta Users Say
             </h2>
             <p className="text-xl text-muted-foreground">
-              See what our users are saying about their wellness transformation
+              Early feedback from our beta testing community
             </p>
           </motion.div>
 
@@ -449,7 +449,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             role="list"
             aria-label="User testimonials"
           >
-            {testimonials.map((testimonial, index) => (
+            {[
+              {
+                name: 'Musallam Al Mansouri',
+                role: 'Beta Tester',
+                content: 'The AI coach provides incredibly personalized advice. It feels like having a health expert available 24/7.',
+                rating: 5
+              },
+              {
+                name: 'Khalfan Al Qimzi',
+                role: 'Early Adopter',
+                content: 'The supplement recommendations are spot-on. I can see real improvements in my energy and recovery.',
+                rating: 5
+              },
+              {
+                name: 'Ahmed Farah',
+                role: 'Beta User',
+                content: 'Finally, a platform that makes sense of all my health data. The insights help me make better decisions.',
+                rating: 5
+              }
+            ].map((testimonial, index) => (
               <li key={index} role="listitem">
                 <motion.div
                 initial={{ opacity: 0, y: 40 }}
