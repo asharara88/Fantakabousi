@@ -16,7 +16,9 @@ import {
   StarIcon,
   UserGroupIcon,
   ClockIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  MoonIcon,
+  BoltIcon
 } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
