@@ -310,3 +310,5 @@ export let userDataCache = CacheManager.getInstance({
   maxSize: 100,
   defaultTTL: 5 * 60 * 1000, // 5 minutes for user data
   cleanupInterval: 60 * 1000 // 1 minute
+}
+)
