@@ -18,9 +18,13 @@ import {
   ChevronDownIcon,
   MoonIcon,
   BoltIcon,
-  ActivityIcon,
   TrendingUpIcon,
-  CheckIcon
+  CheckIcon,
+  CpuChipIcon,
+  RocketLaunchIcon,
+  LightBulbIcon,
+  EyeIcon,
+  CommandLineIcon
 } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
@@ -30,77 +34,11 @@ interface LandingPageProps {
 const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   const { actualTheme } = useTheme();
   const [showAuthForms, setShowAuthForms] = useState(false);
+  const [activeFeature, setActiveFeature] = useState(0);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzU0MzgwMDY1LCJleHAiOjE3ODU5MTYwNjV9.W4lMMJpIbCmQrbsJFDKK-eRoSnvQ3UUdz4DhUF-jwOc"
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1NDM4MDA4NywiZXhwIjoxNzg1OTE2MDg3fQ.GTBPM8tMs-jtvycD39wO6Bt32JHyEWB4a-tWle0jl8I";
-
-  const features = [
-    {
-      icon: SparklesIcon,
-      title: 'AI Health Coach',
-      description: 'Get personalized advice based on your health data and goals.',
-      color: 'from-purple-500 to-indigo-600'
-    },
-    {
-      icon: HeartIcon,
-      title: 'Health Tracking',
-      description: 'Connect your devices and monitor your health metrics automatically.',
-      color: 'from-red-500 to-pink-600'
-    },
-    {
-      icon: BeakerIcon,
-      title: 'Nutrition Tracking',
-      description: 'Log your meals and see how food affects your health.',
-      color: 'from-green-500 to-emerald-600'
-    },
-    {
-      icon: CubeIcon,
-      title: 'Smart Supplements',
-      description: 'Get supplement recommendations based on your health data.',
-      color: 'from-orange-500 to-red-600'
-    },
-    {
-      icon: ChartBarIcon,
-      title: 'Health Analytics',
-      description: 'See trends and patterns in your health data over time.',
-      color: 'from-blue-500 to-cyan-600'
-    },
-    {
-      icon: ShieldCheckIcon,
-      title: 'Secure & Private',
-      description: 'Your health data is encrypted and completely private.',
-      color: 'from-indigo-500 to-purple-600'
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: 'Sarah M.',
-      role: 'Fitness Enthusiast',
-      content: 'Biowell helped me optimize my training and nutrition. My energy levels have never been better!',
-      rating: 5
-    },
-    {
-      name: 'Ahmed K.',
-      role: 'Busy Professional',
-      content: 'The AI coach understands my schedule and gives me practical advice that actually works.',
-      rating: 5
-    },
-    {
-      name: 'Lisa R.',
-      role: 'Health Conscious',
-      content: 'Finally, a platform that makes sense of all my health data. The insights are incredible.',
-      rating: 5
-    }
-  ];
-
-  const stats = [
-    { number: '50+', label: 'Health Metrics' },
-    { number: '1000+', label: 'Supplement Database' },
-    { number: '24/7', label: 'AI Monitoring' },
-    { number: '5★', label: 'Evidence-Based' }
-  ];
 
   // Show auth forms if requested
   if (showAuthForms) {
@@ -108,695 +46,434 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   }
 
   return (
-    <div className="min-h-screen bg-background" role="document">
+    <div className="min-h-screen bg-background neural-bg dashboard-neural">
+      {/* Floating Neural Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute neural-node floating-element"
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${10 + i * 12}%`,
+              width: `${8 + i * 2}px`,
+              height: `${8 + i * 2}px`,
+              animationDelay: `${i * 0.8}s`
+            }}
+          />
+        ))}
+        
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={`connection-${i}`}
+            className="neural-connection"
+            style={{
+              left: `${25 + i * 20}%`,
+              top: `${15 + i * 20}%`,
+              width: `${100 + i * 50}px`,
+              transform: `rotate(${i * 45}deg)`,
+              animationDelay: `${i * 0.5}s`
+            }}
+          />
+        ))}
+      </div>
+
       {/* Navigation */}
-      <header role="banner">
-        <nav 
-          role="navigation" 
-          aria-label="Main navigation"
-          className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
-        >
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 nav-premium">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center space-x-3"
+            >
               <img 
                 src={logoUrl} 
                 alt="Biowell" 
-                className="h-12 w-auto"
+                className="h-10 w-auto"
               />
-              <div className="flex items-center space-x-4">
-                <button 
-                aria-label="Sign in to your account"
+              <div className="hidden md:block w-px h-6 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+              <span className="hidden md:block text-sm font-medium text-muted-foreground">
+                Neural Health Intelligence
+              </span>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center space-x-4"
+            >
+              <button 
                 onClick={() => setShowAuthForms(true)}
-                className="text-muted-foreground hover:text-foreground font-medium transition-colors"
+                className="text-muted-foreground hover:text-foreground font-medium transition-all duration-300 hover:scale-105"
               >
                 Sign In
-                </button>
-                <button 
-                aria-label="Get started with Biowell"
+              </button>
+              <button 
                 onClick={() => setShowAuthForms(true)}
-                className="btn-primary"
+                className="btn-premium px-6 py-2.5 rounded-xl text-white font-semibold"
               >
                 Get Started
-                </button>
-              </div>
-            </div>
+              </button>
+            </motion.div>
           </div>
-        </nav>
-      </header>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <main role="main">
-        <section 
-          role="region" 
-          aria-labelledby="hero-title"
-          className="pt-32 pb-20 relative overflow-hidden"
-        >
-        {/* Background Elements */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-[#48C6FF]/20 to-[#3BE6C5]/20 rounded-full blur-3xl" aria-hidden="true"></div>
-        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-gradient-to-br from-[#2A7FFF]/20 to-[#0026CC]/20 rounded-full blur-3xl" aria-hidden="true"></div>
-        
+      <section className="pt-32 pb-20 relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Side - Content */}
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
               className="space-y-8"
             >
-              <div className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#48C6FF]/10 to-[#3BE6C5]/10 rounded-full border border-[#48C6FF]/20"
-                >
-                  <SparklesIcon className="w-5 h-5 text-[#48C6FF]" />
-                  <span className="text-sm font-semibold text-[#48C6FF]">AI-Powered Wellness Platform</span>
-                </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="inline-flex items-center space-x-3 px-4 py-2 glass-morphism rounded-full"
+              >
+                <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-gradient-neural">
+                  Next-Gen AI Health Platform
+                </span>
+              </motion.div>
 
-                <h1 id="hero-title" className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                  Your AI
-                  <span className="block text-gradient-brand">
-                    Health Coach
-                  </span>
+              <div className="space-y-6">
+                <h1 className="text-5xl lg:text-7xl font-black text-premium leading-[0.9]">
+                  <span className="block text-foreground">Your</span>
+                  <span className="block text-gradient-neural">Neural</span>
+                  <span className="block text-foreground">Health Coach</span>
                 </h1>
 
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
-                  Get personalized health advice, track your metrics, and optimize your wellness with AI.
+                <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed max-w-xl font-light">
+                  Advanced AI that learns your biology, predicts your needs, and optimizes your wellness in real-time.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setShowAuthForms(true)}
-                  aria-label="Get started with Biowell"
-                  className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                  className="btn-premium px-8 py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center space-x-3 shadow-2xl"
                 >
-                  <span>Get Started</span>
-                  <ArrowRightIcon className="w-5 h-5" />
+                  <RocketLaunchIcon className="w-6 h-6" />
+                  <span>Start Neural Analysis</span>
                 </motion.button>
                 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowAuthForms(true)}
-                  aria-label="Sign in to your account"
-                  className="px-8 py-4 border-2 border-[#48C6FF] text-[#48C6FF] font-semibold rounded-xl hover:bg-[#48C6FF] hover:text-white transition-all duration-200 flex items-center justify-center space-x-2"
+                  className="px-8 py-4 glass-morphism rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 text-foreground hover:bg-white/10 transition-all duration-300"
                 >
-                  <UserGroupIcon className="w-5 h-5" />
-                  <span>Sign In</span>
+                  <PlayIcon className="w-6 h-6" />
+                  <span>Watch Demo</span>
                 </motion.button>
               </div>
 
-              {/* Stats */}
-              <div 
+              {/* Live Stats */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
                 className="grid grid-cols-4 gap-6 pt-8"
-                role="region"
-                aria-label="Platform statistics"
               >
-                {stats.map((stat, index) => (
+                {[
+                  { number: '99.7%', label: 'Accuracy', icon: EyeIcon },
+                  { number: '<2s', label: 'Response', icon: BoltIcon },
+                  { number: '24/7', label: 'Monitoring', icon: ClockIcon },
+                  { number: 'AI', label: 'Powered', icon: CpuChipIcon }
+                ].map((stat, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="text-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
+                    className="text-center group"
                   >
-                    <div className="text-2xl font-bold text-[#48C6FF]">{stat.number}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="w-12 h-12 mx-auto mb-2 glass-morphism rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <stat.icon className="w-6 h-6 text-primary-400" />
+                    </div>
+                    <div className="text-2xl font-bold text-gradient-neural">{stat.number}</div>
+                    <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </motion.div>
 
-            {/* Right Side - Visual */}
+            {/* Right Side - Neural Dashboard Preview */}
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="relative"
-              role="img"
-              aria-label="Dashboard preview showing health metrics"
             >
-              <div className="relative bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl rounded-3xl p-8 border border-border shadow-2xl">
-                {/* Sophisticated Dashboard Preview */}
-                <div className="space-y-8">
-                  {/* Header with Live Status */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-xl relative">
-                        <HeartIcon className="w-7 h-7 text-white" />
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse border-2 border-white"></div>
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">Biowell Score</div>
-                        <div className="text-sm text-muted-foreground flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                          <span>Live analysis • Updated 2m ago</span>
+              <div className="relative">
+                {/* Main Dashboard Card */}
+                <div className="card-ultra rounded-3xl p-8 relative overflow-hidden">
+                  {/* Holographic overlay */}
+                  <div className="absolute inset-0 holographic opacity-30" />
+                  
+                  <div className="relative z-10 space-y-8">
+                    {/* Neural Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-16 h-16 morphing-blob rounded-2xl flex items-center justify-center shadow-2xl">
+                          <CpuChipIcon className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-gradient-neural">Neural Score</div>
+                          <div className="text-sm text-muted-foreground flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                            <span>Live AI Analysis</span>
+                          </div>
                         </div>
                       </div>
+                      <div className="text-right">
+                        <div className="text-4xl font-black text-gradient-neural">94</div>
+                        <div className="text-xs text-muted-foreground">Optimal</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">87</div>
-                      <div className="text-xs text-muted-foreground">Optimal</div>
-                    </div>
-                  </div>
-                  
-                  {/* Advanced Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { 
-                        label: 'Heart Rate', 
-                        value: '68', 
-                        unit: 'bpm',
-                        trend: '+2.3%',
-                        status: 'optimal',
-                        color: 'from-red-500 to-pink-600',
-                        icon: HeartIcon,
-                        data: [65, 67, 66, 68, 69, 68, 68]
-                      },
-                      { 
-                        label: 'Sleep Score', 
-                        value: '94', 
-                        unit: '/100',
-                        trend: '+8.1%',
-                        status: 'excellent',
-                        color: 'from-indigo-500 to-purple-600',
-                        icon: MoonIcon,
-                        data: [85, 88, 90, 92, 91, 93, 94]
-                      },
-                      { 
-                        label: 'HRV', 
-                        value: '42', 
-                        unit: 'ms',
-                        trend: '+15.2%',
-                        status: 'improving',
-                        color: 'from-blue-500 to-cyan-600',
-                        icon: BoltIcon,
-                        data: [35, 38, 40, 39, 41, 42, 42]
-                      },
-                      { 
-                        label: 'Glucose', 
-                        value: '94', 
-                        unit: 'mg/dL',
-                        trend: '-3.7%',
-                        status: 'stable',
-                        color: 'from-emerald-500 to-teal-600',
-                        icon: BeakerIcon,
-                        data: [98, 96, 95, 94, 93, 94, 94]
-                      }
-                    ].map((metric, index) => (
-                      <motion.div 
-                        key={index} 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 + index * 0.1 }}
-                        className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-2xl p-5 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 group"
-                      >
-                        <div className="space-y-4">
-                          {/* Header */}
-                          <div className="flex items-center justify-between">
-                            <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                              <metric.icon className="w-5 h-5 text-white" />
-                            </div>
-                            <div className={`px-2 py-1 text-xs font-bold rounded-full ${
-                              metric.status === 'optimal' || metric.status === 'excellent' ? 'bg-emerald-100 text-emerald-700' :
-                              metric.status === 'improving' ? 'bg-blue-100 text-blue-700' :
-                              'bg-yellow-100 text-yellow-700'
-                            }`}>
-                              {metric.status}
-                            </div>
-                          </div>
-                          
-                          {/* Value */}
-                          <div className="space-y-1">
-                            <div className="flex items-baseline space-x-1">
-                              <span className="text-2xl font-bold text-foreground">{metric.value}</span>
-                              <span className="text-sm text-muted-foreground">{metric.unit}</span>
-                            </div>
-                            <div className="text-sm font-medium text-muted-foreground">{metric.label}</div>
-                          </div>
-                          
-                          {/* Trend */}
-                          <div className="flex items-center justify-between">
-                            <div className={`flex items-center space-x-1 text-xs font-semibold ${
-                              metric.trend.startsWith('+') ? 'text-emerald-600' : 'text-blue-600'
-                            }`}>
-                              <ArrowRightIcon className="w-3 h-3" />
-                              <span>{metric.trend} this week</span>
+                    
+                    {/* Neural Metrics */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {[
+                        { 
+                          label: 'Biometric Sync', 
+                          value: '100%', 
+                          trend: '+2.3%',
+                          color: 'from-emerald-400 to-teal-500',
+                          icon: HeartIcon,
+                          neural: true
+                        },
+                        { 
+                          label: 'Sleep Neural', 
+                          value: '97', 
+                          trend: '+8.1%',
+                          color: 'from-indigo-400 to-purple-500',
+                          icon: MoonIcon,
+                          neural: true
+                        },
+                        { 
+                          label: 'Recovery AI', 
+                          value: '89', 
+                          trend: '+15.2%',
+                          color: 'from-blue-400 to-cyan-500',
+                          icon: BoltIcon,
+                          neural: true
+                        },
+                        { 
+                          label: 'Nutrition IQ', 
+                          value: '92', 
+                          trend: '-3.7%',
+                          color: 'from-orange-400 to-red-500',
+                          icon: BeakerIcon,
+                          neural: true
+                        }
+                      ].map((metric, index) => (
+                        <motion.div 
+                          key={index} 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 + index * 0.1, duration: 0.6 }}
+                          className="metric-card-neural rounded-2xl p-4 group cursor-pointer"
+                          whileHover={{ scale: 1.05, y: -4 }}
+                        >
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                                <metric.icon className="w-5 h-5 text-white" />
+                              </div>
+                              <div className={`px-2 py-1 text-xs font-bold rounded-full ${
+                                metric.trend.startsWith('+') ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
+                              }`}>
+                                {metric.trend}
+                              </div>
                             </div>
                             
-                            {/* Mini Chart */}
-                            <div className="flex items-end space-x-1 h-6">
-                              {metric.data.map((value, i) => {
-                                const max = Math.max(...metric.data);
-                                const min = Math.min(...metric.data);
-                                const height = ((value - min) / (max - min || 1)) * 100;
-                                return (
+                            <div>
+                              <div className="text-2xl font-black text-gradient-neural">{metric.value}</div>
+                              <div className="text-sm font-semibold text-muted-foreground">{metric.label}</div>
+                            </div>
+                            
+                            {/* Neural activity indicator */}
+                            <div className="flex items-center space-x-2">
+                              <div className="flex space-x-1">
+                                {[...Array(8)].map((_, i) => (
                                   <div
                                     key={i}
-                                    className={`w-1 bg-gradient-to-t ${metric.color} rounded-full opacity-70 group-hover:opacity-100 transition-opacity`}
-                                    style={{ height: `${Math.max(height, 20)}%` }}
+                                    className={`w-1 bg-gradient-to-t ${metric.color} rounded-full opacity-60`}
+                                    style={{ 
+                                      height: `${Math.random() * 16 + 4}px`,
+                                      animationDelay: `${i * 0.1}s`
+                                    }}
                                   />
-                                );
-                              })}
+                                ))}
+                              </div>
+                              <div className="text-xs text-muted-foreground">Neural Pattern</div>
                             </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  {/* AI Insights Preview */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 }}
-                    className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl p-6 border border-purple-200/50 dark:border-purple-800/50"
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <SparklesIcon className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        <h4 className="font-bold text-foreground">AI Coach Insight</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          "Your HRV is 15% above baseline. Perfect conditions for high-intensity training today."
-                        </p>
-                        <div className="flex items-center space-x-3">
-                          <div className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
-                            96% CONFIDENCE
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Based on 7-day analysis
-                          </div>
-                        </div>
-                      </div>
+                        </motion.div>
+                      ))}
                     </div>
-                  </motion.div>
+                    
+                    {/* AI Insight Preview */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.9, duration: 0.6 }}
+                      className="glass-morphism rounded-2xl p-6"
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                          <SparklesIcon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <h4 className="font-bold text-foreground">Neural Insight</h4>
+                            <div className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">
+                              98% CONFIDENCE
+                            </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            "Your circadian rhythm optimization is 23% above baseline. Perfect window for cognitive enhancement protocols."
+                          </p>
+                          <div className="flex items-center space-x-3 text-xs text-muted-foreground">
+                            <span>• Multi-modal analysis</span>
+                            <span>• Real-time adaptation</span>
+                            <span>• Predictive modeling</span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
                 </div>
+
+                {/* Floating Elements */}
+                <div className="absolute -top-8 -right-8 w-32 h-32 morphing-blob opacity-20" />
+                <div className="absolute -bottom-8 -left-8 w-24 h-24 morphing-blob opacity-15" style={{ animationDelay: '4s' }} />
               </div>
             </motion.div>
           </div>
         </div>
-        </section>
+      </section>
 
-      {/* Features Section */}
-        <section 
-          role="region" 
-          aria-labelledby="features-title"
-          className="py-20 bg-muted/30"
-        >
+      {/* Neural Features Section */}
+      <section className="py-24 relative">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
+            className="text-center space-y-6 mb-20"
           >
-            <h2 id="features-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              <span className="block text-gradient-brand">Complete Health Platform</span>
+            <div className="inline-flex items-center space-x-2 px-4 py-2 glass-morphism rounded-full">
+              <LightBulbIcon className="w-5 h-5 text-primary-400" />
+              <span className="text-sm font-semibold text-gradient-neural">Advanced Capabilities</span>
+            </div>
+            <h2 className="text-4xl lg:text-6xl font-black text-premium">
+              <span className="block text-foreground">Beyond Traditional</span>
+              <span className="block text-gradient-neural">Health Tracking</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Track your health, get AI advice, and optimize your wellness in one place.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
+              Our neural engine processes millions of health patterns to deliver insights that adapt to your unique biology.
             </p>
           </motion.div>
 
-          <ul 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            role="list"
-            aria-label="Platform features"
-          >
-            {features.map((feature, index) => (
-              <li key={index} role="listitem">
-                <motion.div
+          {/* Interactive Feature Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: CpuChipIcon,
+                title: 'Neural Health Engine',
+                description: 'AI that learns your unique biological patterns and adapts recommendations in real-time.',
+                color: 'from-purple-500 via-indigo-500 to-blue-500',
+                features: ['Pattern Recognition', 'Predictive Analytics', 'Adaptive Learning']
+              },
+              {
+                icon: HeartIcon,
+                title: 'Biometric Intelligence',
+                description: 'Advanced sensor fusion from multiple devices with ML-powered anomaly detection.',
+                color: 'from-red-500 via-pink-500 to-rose-500',
+                features: ['Multi-Device Sync', 'Anomaly Detection', 'Trend Prediction']
+              },
+              {
+                icon: BeakerIcon,
+                title: 'Molecular Nutrition',
+                description: 'Precision nutrition analysis with glucose response modeling and metabolic optimization.',
+                color: 'from-green-500 via-emerald-500 to-teal-500',
+                features: ['Glucose Modeling', 'Metabolic Analysis', 'Nutrient Timing']
+              },
+              {
+                icon: BoltIcon,
+                title: 'Recovery Optimization',
+                description: 'HRV-based recovery protocols with personalized training load management.',
+                color: 'from-yellow-500 via-orange-500 to-red-500',
+                features: ['HRV Analysis', 'Load Management', 'Recovery Protocols']
+              },
+              {
+                icon: CubeIcon,
+                title: 'Smart Supplementation',
+                description: 'Evidence-based supplement recommendations with bioavailability optimization.',
+                color: 'from-indigo-500 via-purple-500 to-pink-500',
+                features: ['Evidence-Based', 'Bioavailability', 'Interaction Checking']
+              },
+              {
+                icon: ShieldCheckIcon,
+                title: 'Privacy-First AI',
+                description: 'Zero-knowledge architecture with on-device processing and encrypted data.',
+                color: 'from-slate-500 via-gray-500 to-zinc-500',
+                features: ['Zero-Knowledge', 'On-Device AI', 'Encrypted Storage']
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card hover:shadow-xl hover:border-[#48C6FF]/30 hover:-translate-y-2 transition-all duration-300"
+                onHoverStart={() => setActiveFeature(index)}
+                className="card-ultra rounded-3xl p-8 cursor-pointer group"
+                whileHover={{ y: -8, scale: 1.02 }}
               >
-                <div className="space-y-4">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+                <div className="space-y-6">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-gradient-neural transition-all duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {feature.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center space-x-2">
+                        <CheckIcon className="w-4 h-4 text-primary-400" />
+                        <span className="text-sm text-muted-foreground">{feat}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                </motion.div>
-              </li>
+              </motion.div>
             ))}
-          </ul>
-        </div>
-        </section>
-
-      {/* How It Works */}
-        <section 
-          role="region" 
-          aria-labelledby="how-it-works-title"
-          className="py-20"
-        >
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <h2 id="how-it-works-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              How Biowell Works
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Simple setup, powerful results
-            </p>
-          </motion.div>
-
-          <div 
-            className="max-w-4xl mx-auto space-y-4"
-            role="list"
-            aria-label="How Biowell works steps"
-          >
-            {[
-              {
-                title: 'Connect Your Devices',
-                description: 'Connect your Apple Watch or glucose monitor in one tap.',
-                icon: ClockIcon
-              },
-              {
-                title: 'AI Analyzes Your Data',
-                description: 'Our AI learns your patterns and health trends.',
-                icon: SparklesIcon
-              },
-              {
-                title: 'Get Personalized Insights',
-                description: 'Get custom advice for better health and wellness.',
-                icon: CheckCircleIcon
-              }
-            ].map((step, index) => {
-              const [isExpanded, setIsExpanded] = useState(false);
-              
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="card hover:shadow-lg transition-all duration-300"
-                  role="listitem"
-                >
-                  <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="w-full flex items-center justify-between p-6 text-left"
-                    aria-expanded={isExpanded}
-                    aria-controls={`step-content-${index}`}
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
-                        <step.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold text-foreground">{step.title}</h3>
-                    </div>
-                    <motion.div
-                      animate={{ rotate: isExpanded ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ChevronDownIcon className="w-6 h-6 text-muted-foreground" />
-                    </motion.div>
-                  </button>
-                  
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        id={`step-content-${index}`}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="px-6 pb-6"
-                      >
-                        <p className="text-muted-foreground leading-relaxed pl-16">
-                          {step.description}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
           </div>
         </div>
-        </section>
+      </section>
 
-      {/* Testimonials */}
-        <section 
-          role="region" 
-          aria-labelledby="testimonials-title"
-          className="py-20 bg-muted/30"
-        >
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <h2 id="testimonials-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              Beta User Feedback
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              What early users are saying
-            </p>
-          </motion.div>
-
-          <ul 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            role="list"
-            aria-label="User testimonials"
-          >
-            {[
-              {
-                name: 'Musallam Al Mansouri',
-                role: 'Beta Tester',
-                content: 'The AI coach gives great personalized advice. Like having a health expert 24/7.',
-                rating: 5
-              },
-              {
-                name: 'Khalfan Al Qimzi',
-                role: 'Early Adopter',
-                content: 'Perfect supplement recommendations. My energy and recovery improved significantly.',
-                rating: 5
-              },
-              {
-                name: 'Ahmed Farah',
-                role: 'Beta User',
-                content: 'Makes sense of all my health data. Helps me make better health decisions.',
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <li key={index} role="listitem">
-                <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="card text-center space-y-4"
-                role="article"
-              >
-                <div className="flex justify-center space-x-1" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground italic leading-relaxed">
-                  "{testimonial.content}"
-                </p>
-                <div>
-                  <div className="font-semibold text-foreground">{testimonial.name}</div>
-                  <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                </div>
-                </motion.div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        </section>
-
-      {/* CTA Section */}
-        <section 
-          role="region" 
-          aria-labelledby="cta-title"
-          className="py-20 relative overflow-hidden"
-        >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#48C6FF]/10 via-[#2A7FFF]/10 to-[#0026CC]/10" aria-hidden="true"></div>
-        
-        {/* Pricing Section */}
-        <div className="container mx-auto px-6 relative z-10 mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <h2 id="pricing-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              Choose Your Plan
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Start free and upgrade as you grow. All plans include core health tracking.
-            </p>
-          </motion.div>
-
-          <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            role="region"
-            aria-labelledby="pricing-title"
-          >
-            {/* Free Plan */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="card text-center"
-              role="article"
-              aria-labelledby="free-plan-title"
-            >
-              <div className="space-y-6">
-                <div>
-                  <h3 id="free-plan-title" className="text-2xl font-bold text-foreground mb-2">Free</h3>
-                  <div className="text-4xl font-bold text-foreground mb-2">AED 0</div>
-                  <div className="text-muted-foreground">Forever free</div>
-                </div>
-                
-                <ul className="space-y-3 text-left" role="list" aria-label="Free plan features">
-                  {[
-                    'Basic health tracking',
-                    'AI coach (5 messages/day)',
-                    'Manual data entry',
-                    'Basic insights',
-                    'Community support'
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-center space-x-3" role="listitem">
-                      <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <button
-                  onClick={() => setShowAuthForms(true)}
-                  aria-label="Get started with free plan"
-                  className="w-full btn-secondary"
-                >
-                  Get Started Free
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Premium Plan */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="card text-center border-2 border-[#48C6FF] relative"
-              role="article"
-              aria-labelledby="premium-plan-title"
-            >
-              <div 
-                className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white text-sm font-bold rounded-full"
-                role="img"
-                aria-label="Most popular plan"
-              >
-                Most Popular
-              </div>
-              
-              <div className="space-y-6">
-                <div>
-                  <h3 id="premium-plan-title" className="text-2xl font-bold text-foreground mb-2">Premium</h3>
-                  <div className="text-4xl font-bold text-foreground mb-2">AED 99</div>
-                  <div className="text-muted-foreground">per month</div>
-                </div>
-                
-                <ul className="space-y-3 text-left" role="list" aria-label="Premium plan features">
-                  {[
-                    'Everything in Free',
-                    'Unlimited AI coach',
-                    'Device integrations',
-                    'Advanced analytics',
-                    'Supplement recommendations',
-                    'Priority support'
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-center space-x-3" role="listitem">
-                      <CheckCircleIcon className="w-5 h-5 text-[#48C6FF]" />
-                      <span className="text-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <button
-                  onClick={() => setShowAuthForms(true)}
-                  aria-label="Start 14-day free trial of premium plan"
-                  className="w-full btn-primary"
-                >
-                  Start 14-Day Free Trial
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Pro Plan */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="card text-center"
-              role="article"
-              aria-labelledby="pro-plan-title"
-            >
-              <div className="space-y-6">
-                <div>
-                  <h3 id="pro-plan-title" className="text-2xl font-bold text-foreground mb-2">Pro</h3>
-                  <div className="text-4xl font-bold text-foreground mb-2">AED 199</div>
-                  <div className="text-muted-foreground">per month</div>
-                </div>
-                
-                <ul className="space-y-3 text-left" role="list" aria-label="Pro plan features">
-                  {[
-                    'Everything in Premium',
-                    'Lab result analysis',
-                    'Genetic insights',
-                    'Custom protocols',
-                    'Telehealth consultations',
-                    'White-glove support'
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-center space-x-3" role="listitem">
-                      <CheckCircleIcon className="w-5 h-5 text-purple-500" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <button
-                  onClick={() => setShowAuthForms(true)}
-                  aria-label="Start pro plan trial"
-                  className="w-full btn-secondary"
-                >
-                  Start Pro Trial
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
+      {/* Neural Process Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-purple-500/5 to-pink-500/5" />
         
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
@@ -804,62 +481,271 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-8"
+            className="text-center space-y-6 mb-20"
+          >
+            <h2 className="text-4xl lg:text-6xl font-black text-premium">
+              <span className="block text-foreground">How Neural</span>
+              <span className="block text-gradient-neural">Intelligence Works</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
+              Advanced AI processes your health data through multiple neural networks for unprecedented insights.
+            </p>
+          </motion.div>
+
+          <div className="max-w-6xl mx-auto">
+            {[
+              {
+                step: '01',
+                title: 'Neural Data Ingestion',
+                description: 'Multi-modal sensor fusion processes data from wearables, CGMs, and manual inputs through our proprietary neural architecture.',
+                icon: CommandLineIcon,
+                color: 'from-blue-500 to-cyan-500'
+              },
+              {
+                step: '02',
+                title: 'Pattern Recognition Engine',
+                description: 'Advanced ML algorithms identify unique biological patterns, circadian rhythms, and metabolic signatures specific to your physiology.',
+                icon: EyeIcon,
+                color: 'from-purple-500 to-pink-500'
+              },
+              {
+                step: '03',
+                title: 'Predictive Optimization',
+                description: 'Neural networks generate personalized protocols, predict optimal timing, and continuously adapt to your changing biology.',
+                icon: RocketLaunchIcon,
+                color: 'from-emerald-500 to-teal-500'
+              }
+            ].map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+                viewport={{ once: true }}
+                className={`flex items-center gap-12 ${index % 2 === 1 ? 'flex-row-reverse' : ''} mb-20`}
+              >
+                <div className="flex-1 space-y-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="text-6xl font-black text-gradient-neural opacity-30">
+                      {step.step}
+                    </div>
+                    <div className={`w-12 h-12 bg-gradient-to-br ${step.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                      <step.icon className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-3xl font-bold text-foreground">
+                    {step.title}
+                  </h3>
+                  
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+                
+                <div className="flex-1">
+                  <div className="card-ultra rounded-3xl p-8 h-64 flex items-center justify-center">
+                    <div className={`w-32 h-32 bg-gradient-to-br ${step.color} rounded-full opacity-20 morphing-blob`} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Pricing */}
+      <section className="py-24 relative">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center space-y-6 mb-20"
+          >
+            <h2 className="text-4xl lg:text-6xl font-black text-premium">
+              <span className="block text-foreground">Neural Health</span>
+              <span className="block text-gradient-neural">Membership</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
+              Choose your level of AI-powered health optimization.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: 'Neural Starter',
+                price: 'Free',
+                period: 'Forever',
+                description: 'Essential AI health insights',
+                features: [
+                  'Basic neural analysis',
+                  'Core health tracking',
+                  '5 AI consultations/day',
+                  'Standard insights',
+                  'Community support'
+                ],
+                cta: 'Start Free',
+                popular: false,
+                color: 'from-slate-500 to-gray-600'
+              },
+              {
+                name: 'Neural Pro',
+                price: 'AED 149',
+                period: '/month',
+                description: 'Advanced AI optimization',
+                features: [
+                  'Full neural engine access',
+                  'Unlimited AI consultations',
+                  'Predictive health modeling',
+                  'Advanced biometric fusion',
+                  'Priority neural processing',
+                  'Custom protocol generation'
+                ],
+                cta: 'Start 14-Day Trial',
+                popular: true,
+                color: 'from-blue-500 via-purple-500 to-pink-500'
+              },
+              {
+                name: 'Neural Elite',
+                price: 'AED 299',
+                period: '/month',
+                description: 'Maximum AI capabilities',
+                features: [
+                  'Everything in Neural Pro',
+                  'Genetic data integration',
+                  'Lab result AI analysis',
+                  'Custom neural models',
+                  'White-glove optimization',
+                  'Direct researcher access'
+                ],
+                cta: 'Contact Sales',
+                popular: false,
+                color: 'from-purple-500 to-indigo-600'
+              }
+            ].map((plan, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className={`card-ultra rounded-3xl p-8 relative ${
+                  plan.popular ? 'border-2 border-primary-400 scale-105' : ''
+                }`}
+                whileHover={{ y: -8, scale: plan.popular ? 1.05 : 1.02 }}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-primary-500 to-purple-500 text-white text-sm font-bold rounded-full shadow-lg">
+                    Most Advanced
+                  </div>
+                )}
+                
+                <div className="space-y-8">
+                  <div className="text-center space-y-4">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${plan.color} rounded-2xl flex items-center justify-center mx-auto shadow-2xl`}>
+                      <CpuChipIcon className="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
+                      <p className="text-muted-foreground">{plan.description}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-4xl font-black text-gradient-neural">{plan.price}</div>
+                      <div className="text-sm text-muted-foreground">{plan.period}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {plan.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center space-x-3">
+                        <CheckCircleIcon className={`w-5 h-5 ${plan.popular ? 'text-primary-400' : 'text-emerald-500'}`} />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <button
+                    onClick={() => setShowAuthForms(true)}
+                    className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
+                      plan.popular 
+                        ? 'btn-premium text-white shadow-2xl' 
+                        : 'glass-morphism text-foreground hover:bg-white/10'
+                    }`}
+                  >
+                    {plan.cta}
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Neural CTA */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-purple-500/10 to-pink-500/10" />
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center space-y-8 max-w-4xl mx-auto"
           >
             <div className="space-y-6">
-              <h2 id="cta-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-                <span className="block text-gradient-brand">Start Your Health Journey</span>
+              <h2 className="text-4xl lg:text-6xl font-black text-premium">
+                <span className="block text-foreground">Ready to Unlock Your</span>
+                <span className="block text-gradient-neural">Neural Potential?</span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join our beta users and start optimizing your health with AI. Free trial included.
+              <p className="text-xl text-muted-foreground font-light leading-relaxed">
+                Join the next evolution of health optimization. Your neural health coach is waiting.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05, y: -4 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setShowAuthForms(true)}
-                aria-label="Get started with Biowell"
-                className="px-8 py-4 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                className="btn-premium px-12 py-5 rounded-2xl text-white font-bold text-xl flex items-center justify-center space-x-3 shadow-2xl"
               >
-                <span>Get Started</span>
-                <ArrowRightIcon className="w-5 h-5" />
+                <RocketLaunchIcon className="w-6 h-6" />
+                <span>Begin Neural Analysis</span>
               </motion.button>
               
-              <button 
-                aria-label="Schedule a product demo"
-                className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors"
+              <motion.button 
+                whileHover={{ scale: 1.05, y: -4 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-12 py-5 glass-morphism rounded-2xl font-bold text-xl text-foreground hover:bg-white/10 transition-all duration-300"
               >
-                Schedule Demo
-              </button>
+                Schedule Neural Demo
+              </motion.button>
             </div>
 
-            <ul 
-              className="flex items-center justify-center space-x-8 text-sm text-muted-foreground"
-              role="list"
-              aria-label="Trial benefits"
-            >
-              <li className="flex items-center space-x-2" role="listitem">
-                <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                <span>Free 14-day trial</span>
-              </li>
-              <li className="flex items-center space-x-2" role="listitem">
-                <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                <span>No credit card required</span>
-              </li>
-              <li className="flex items-center space-x-2" role="listitem">
-                <CheckCircleIcon className="w-5 h-5 text-green-500" />
+            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground pt-8">
+              <div className="flex items-center space-x-2">
+                <CheckCircleIcon className="w-5 h-5 text-emerald-500" />
+                <span>14-day neural trial</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircleIcon className="w-5 h-5 text-emerald-500" />
+                <span>No commitment required</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircleIcon className="w-5 h-5 text-emerald-500" />
                 <span>Cancel anytime</span>
-              </li>
-            </ul>
+              </div>
+            </div>
           </motion.div>
         </div>
-        </section>
-      </main>
+      </section>
 
       {/* Footer */}
-      <footer role="contentinfo" className="py-12 border-t border-border">
+      <footer className="py-12 border-t border-white/10">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-4">
@@ -868,29 +754,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 alt="Biowell" 
                 className="h-8 w-auto"
               />
-              <span className="text-muted-foreground">© 2025 Biowell. All rights reserved.</span>
+              <span className="text-muted-foreground">© 2025 Biowell Neural Systems. All rights reserved.</span>
             </div>
             
-            <nav role="navigation" aria-label="Footer links" className="flex items-center space-x-6">
-              <button 
-                aria-label="View privacy policy"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Privacy Policy
+            <div className="flex items-center space-x-6">
+              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                Neural Privacy
               </button>
-              <button 
-                aria-label="View terms of service"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Terms of Service
+              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                AI Ethics
               </button>
-              <button 
-                aria-label="Contact support"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Contact
+              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                Research
               </button>
-            </nav>
+            </div>
           </div>
         </div>
       </footer>

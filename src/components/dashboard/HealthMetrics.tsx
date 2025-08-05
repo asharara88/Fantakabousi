@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HeartIcon, 
   BoltIcon, 
@@ -7,208 +7,414 @@ import {
   FireIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  CpuChipIcon,
+  EyeIcon,
+  BeakerIcon
 } from '@heroicons/react/24/outline';
 
 const HealthMetrics: React.FC = () => {
+  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [realTimeData, setRealTimeData] = useState(true);
+
   const metrics = [
     {
-      name: 'Heart Rate',
+      id: 'heart_rate',
+      name: 'Cardiac Neural',
       value: 68,
       unit: 'bpm',
       change: -3,
-      trend: 'down',
+      trend: 'optimal',
       icon: HeartIcon,
-      color: 'from-red-500 to-rose-600',
+      color: 'from-red-400 via-pink-500 to-rose-600',
       data: [72, 70, 69, 68, 67, 68, 68],
-      optimal: true,
-      description: 'Resting heart rate',
+      neural: {
+        pattern: 'Circadian-optimized',
+        confidence: 97,
+        prediction: 'Stable for next 4h',
+        anomalies: 0
+      },
+      description: 'AI-analyzed cardiovascular patterns',
       target: 65,
+      status: 'optimal'
     },
     {
-      name: 'HRV',
+      id: 'hrv',
+      name: 'Recovery Neural',
       value: 42,
       unit: 'ms',
       change: 8,
-      trend: 'up',
+      trend: 'improving',
       icon: BoltIcon,
-      color: 'from-blue-500 to-cyan-600',
+      color: 'from-blue-400 via-cyan-500 to-teal-600',
       data: [35, 38, 40, 39, 41, 42, 42],
-      optimal: true,
-      description: 'Heart rate variability',
+      neural: {
+        pattern: 'Stress-adaptive',
+        confidence: 94,
+        prediction: 'Peak recovery window',
+        anomalies: 0
+      },
+      description: 'Neural stress resilience analysis',
       target: 40,
+      status: 'excellent'
     },
     {
-      name: 'Sleep Score',
+      id: 'sleep',
+      name: 'Sleep Neural',
       value: 94,
       unit: '/100',
       change: 5,
-      trend: 'up',
+      trend: 'excellent',
       icon: MoonIcon,
-      color: 'from-indigo-500 to-purple-600',
+      color: 'from-indigo-400 via-purple-500 to-violet-600',
       data: [85, 88, 90, 92, 91, 93, 94],
-      optimal: true,
-      description: '8h 23m quality sleep',
+      neural: {
+        pattern: 'Deep-sleep optimized',
+        confidence: 96,
+        prediction: 'Maintain current protocol',
+        anomalies: 0
+      },
+      description: 'AI sleep architecture analysis',
       target: 85,
+      status: 'optimal'
     },
     {
-      name: 'Active Calories',
+      id: 'energy',
+      name: 'Energy Neural',
       value: 2341,
       unit: 'kcal',
       change: 12,
-      trend: 'up',
+      trend: 'increasing',
       icon: FireIcon,
-      color: 'from-orange-500 to-red-600',
+      color: 'from-orange-400 via-amber-500 to-yellow-600',
       data: [2100, 2200, 2150, 2300, 2250, 2400, 2341],
-      optimal: true,
-      description: 'Daily energy burn',
+      neural: {
+        pattern: 'Metabolic-enhanced',
+        confidence: 91,
+        prediction: 'Energy peak at 3 PM',
+        anomalies: 0
+      },
+      description: 'Neural metabolic optimization',
       target: 2200,
+      status: 'optimal'
     },
+    {
+      id: 'glucose',
+      name: 'Glucose Neural',
+      value: 94,
+      unit: 'mg/dL',
+      change: -2,
+      trend: 'stable',
+      icon: BeakerIcon,
+      color: 'from-emerald-400 via-green-500 to-teal-600',
+      data: [98, 96, 95, 94, 93, 94, 94],
+      neural: {
+        pattern: 'Insulin-optimized',
+        confidence: 99,
+        prediction: 'Stable response predicted',
+        anomalies: 0
+      },
+      description: 'AI glucose response modeling',
+      target: 90,
+      status: 'excellent'
+    },
+    {
+      id: 'stress',
+      name: 'Stress Neural',
+      value: 23,
+      unit: '/100',
+      change: -15,
+      trend: 'decreasing',
+      icon: EyeIcon,
+      color: 'from-purple-400 via-indigo-500 to-blue-600',
+      data: [45, 38, 32, 28, 25, 24, 23],
+      neural: {
+        pattern: 'Resilience-building',
+        confidence: 93,
+        prediction: 'Continued improvement',
+        anomalies: 0
+      },
+      description: 'Neural stress pattern analysis',
+      target: 30,
+      status: 'excellent'
+    }
   ];
 
-  const MiniChart: React.FC<{ data: number[]; gradient: string }> = ({ data, gradient }) => {
+  const NeuralChart: React.FC<{ data: number[]; gradient: string; active: boolean }> = ({ data, gradient, active }) => {
     const max = Math.max(...data);
     const min = Math.min(...data);
     const range = max - min || 1;
     
     return (
-      <div className="flex items-end space-x-1 h-16 w-32" role="img" aria-label="Trend chart">
+      <div className="flex items-end space-x-1 h-20 w-40">
         {data.map((value, index) => {
           const height = ((value - min) / range) * 100;
           const isLast = index === data.length - 1;
           return (
             <motion.div
               key={index}
-              className={`bg-gradient-to-t ${gradient} rounded-lg shadow-lg ${
-                isLast ? 'opacity-100 shadow-xl' : 'opacity-70'
+              className={`bg-gradient-to-t ${gradient} rounded-lg shadow-lg relative overflow-hidden ${
+                isLast ? 'opacity-100 shadow-2xl' : 'opacity-60'
               }`}
-              style={{ width: '4px' }}
+              style={{ width: '5px' }}
               initial={{ height: 0 }}
-              animate={{ height: `${Math.max(height, 15)}%` }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.8, ease: "easeOut" }}
-              whileHover={{ scale: 1.1, opacity: 1 }}
-              aria-label={`Data point ${index + 1}: ${value}`}
-            />
+              animate={{ height: `${Math.max(height, 20)}%` }}
+              transition={{ 
+                delay: 0.5 + index * 0.1, 
+                duration: 0.8, 
+                ease: [0.4, 0, 0.2, 1] 
+              }}
+              whileHover={{ scale: 1.2, opacity: 1 }}
+            >
+              {active && isLast && (
+                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              )}
+            </motion.div>
           );
         })}
       </div>
     );
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'optimal': return 'text-emerald-400';
+      case 'excellent': return 'text-blue-400';
+      case 'good': return 'text-yellow-400';
+      default: return 'text-gray-400';
+    }
+  };
+
   return (
-    <div className="space-y-8 relative" role="region" aria-labelledby="health-metrics-title">
-      {/* Premium background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl -z-10" />
-      
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <HeartIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 id="health-metrics-title" className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                Health Metrics
-              </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">Real-time biometric intelligence</p>
-            </div>
-          </div>
-        </div>
-        <motion.button 
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <ChartBarIcon className="w-4 h-4" />
-          <span>Advanced Analytics</span>
-        </motion.button>
+    <div className="space-y-12 relative">
+      {/* Neural Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 left-10 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-48 h-48 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="list" aria-label="Health metrics">
-        {metrics.map((metric, index) => (
-          <motion.div
-            key={metric.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            className="metric-card-premium rounded-3xl p-6 group cursor-pointer"
-            whileHover={{ y: -8, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            role="listitem"
-            aria-labelledby={`metric-${index}-title`}
-          >
-            <div className="space-y-6 relative">
-              {/* Gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-5 rounded-3xl`} />
-              
-              <div className="flex items-center justify-between">
-                <div className={`w-14 h-14 bg-gradient-to-br ${metric.color} rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-white/20 rounded-2xl" />
-                  <metric.icon className="w-7 h-7 text-white relative z-10" />
-                </div>
-                <div className="flex items-center space-x-2">
-                  {metric.trend === 'up' ? (
-                    <div className="flex items-center space-x-1 px-3 py-1 bg-emerald-500/20 rounded-full">
-                      <ArrowTrendingUpIcon className="w-4 h-4 text-emerald-500" />
-                      <span className="text-sm font-bold text-emerald-600">+{metric.change}%</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-1 px-3 py-1 bg-blue-500/20 rounded-full">
-                      <ArrowTrendingDownIcon className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm font-bold text-blue-600">{metric.change}%</span>
-                    </div>
-                  )}
-                </div>
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-12">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl morphing-blob">
+                <CpuChipIcon className="w-8 h-8 text-white" />
               </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-baseline space-x-2">
-                  <span className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                    {metric.value.toLocaleString()}
-                  </span>
-                  <span className="text-lg text-slate-500 dark:text-slate-400 font-medium">
-                    {metric.unit}
-                  </span>
-                </div>
-                    <div id={`metric-${index}-title`} className="text-xl font-bold text-slate-800 dark:text-slate-200">
-                  <div className="text-xl font-bold text-slate-800 dark:text-slate-200">
-                    {metric.name}
-                  </div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">
-                    {metric.description}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                <MiniChart data={metric.data} gradient={metric.color} />
-                <div className={`w-3 h-3 rounded-full ${
-                  metric.optimal ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' : 'bg-amber-400 shadow-lg shadow-amber-400/50'
-                } animate-pulse`} 
-                aria-label={metric.optimal ? 'Optimal range' : 'Needs attention'}
-                />
-              </div>
-              
-              {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
-                  <span>Target: {metric.target}{metric.unit}</span>
-                  <span className={`font-bold ${metric.value >= metric.target ? 'text-emerald-500' : 'text-amber-500'}`}>
-                    {Math.round((metric.value / metric.target) * 100)}%
-                  </span>
-                </div>
-                <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm" role="progressbar" aria-valuenow={metric.value} aria-valuemin={0} aria-valuemax={metric.target}>
-                  <motion.div
-                    className={`h-full bg-gradient-to-r ${metric.color} rounded-full shadow-lg`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min((metric.value / metric.target) * 100, 100)}%` }}
-                    transition={{ delay: 1 + index * 0.1, duration: 1.5, ease: "easeOut" }}
-                  />
-                </div>
+              <div>
+                <h2 className="text-4xl font-black text-gradient-neural">
+                  Neural Health Matrix
+                </h2>
+                <p className="text-lg text-muted-foreground font-light">
+                  Real-time biometric intelligence with predictive modeling
+                </p>
               </div>
             </div>
-          </motion.div>
-        ))}
+            
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-muted-foreground">Live Neural Processing</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <span className="text-sm font-semibold text-muted-foreground">Predictive Analysis Active</span>
+              </div>
+            </div>
+          </div>
+          
+          <motion.button 
+            className="btn-premium px-8 py-4 rounded-2xl text-white font-bold flex items-center space-x-3 shadow-2xl"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ChartBarIcon className="w-5 h-5" />
+            <span>Neural Analytics</span>
+          </motion.button>
+        </div>
+        
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {metrics.map((metric, index) => (
+            <motion.div
+              key={metric.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+              className="metric-card-neural rounded-3xl p-8 cursor-pointer group"
+              whileHover={{ y: -8, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelectedMetric(selectedMetric === metric.id ? null : metric.id)}
+            >
+              <div className="space-y-6 relative">
+                {/* Neural Activity Indicator */}
+                <div className="absolute top-0 right-0 w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-pulse shadow-lg" />
+                
+                <div className="flex items-center justify-between">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${metric.color} rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="absolute inset-0 bg-white/20 rounded-2xl" />
+                    <metric.icon className="w-8 h-8 text-white relative z-10" />
+                  </div>
+                  <div className="text-right">
+                    <div className={`px-3 py-1 text-xs font-bold rounded-full ${getStatusColor(metric.status)} bg-current/10`}>
+                      {metric.status.toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-baseline space-x-3">
+                    <span className="text-4xl font-black text-gradient-neural">
+                      {metric.value.toLocaleString()}
+                    </span>
+                    <span className="text-lg text-muted-foreground font-semibold">
+                      {metric.unit}
+                    </span>
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-bold ${
+                      metric.change > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {metric.change > 0 ? (
+                        <ArrowTrendingUpIcon className="w-3 h-3" />
+                      ) : (
+                        <ArrowTrendingDownIcon className="w-3 h-3" />
+                      )}
+                      <span>{Math.abs(metric.change)}%</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="text-xl font-bold text-foreground">{metric.name}</div>
+                    <div className="text-sm text-muted-foreground">{metric.description}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <NeuralChart 
+                    data={metric.data} 
+                    gradient={metric.color} 
+                    active={selectedMetric === metric.id}
+                  />
+                  <div className="text-right space-y-1">
+                    <div className="text-xs text-muted-foreground">Neural Confidence</div>
+                    <div className="text-sm font-bold text-gradient-neural">
+                      {metric.neural.confidence}%
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Neural Insights */}
+                <AnimatePresence>
+                  {selectedMetric === metric.id && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-4 pt-4 border-t border-white/10"
+                    >
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Pattern</div>
+                          <div className="text-sm font-semibold text-foreground">{metric.neural.pattern}</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Prediction</div>
+                          <div className="text-sm font-semibold text-foreground">{metric.neural.prediction}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                          <span className="text-xs text-muted-foreground">Neural processing active</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {metric.neural.anomalies} anomalies detected
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Neural Insights Panel */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="card-ultra rounded-3xl p-8 mt-12"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                <CpuChipIcon className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Neural Health Intelligence</h3>
+                <p className="text-sm text-muted-foreground">AI-powered insights from your biometric patterns</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <span className="text-sm font-semibold text-muted-foreground">Processing</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'Optimal Training Window',
+                insight: 'Neural analysis indicates peak performance capacity in 2.3 hours based on HRV patterns.',
+                confidence: 96,
+                action: 'Schedule Workout',
+                color: 'from-orange-500 to-red-500'
+              },
+              {
+                title: 'Metabolic Enhancement',
+                insight: 'Glucose sensitivity is 18% above baseline. Ideal for carbohydrate timing optimization.',
+                confidence: 94,
+                action: 'Optimize Nutrition',
+                color: 'from-green-500 to-emerald-500'
+              },
+              {
+                title: 'Recovery Protocol',
+                insight: 'Sleep architecture suggests implementing magnesium supplementation for deeper recovery.',
+                confidence: 91,
+                action: 'View Supplements',
+                color: 'from-blue-500 to-purple-500'
+              }
+            ].map((insight, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 + index * 0.1, duration: 0.4 }}
+                className="glass-morphism rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                whileHover={{ scale: 1.02, y: -2 }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-foreground">{insight.title}</h4>
+                    <div className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
+                      {insight.confidence}%
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {insight.insight}
+                  </p>
+                  
+                  <button className={`w-full py-2 bg-gradient-to-r ${insight.color} text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300`}>
+                    {insight.action}
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
