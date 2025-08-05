@@ -20,7 +20,7 @@ const HealthMetrics: React.FC = () => {
   const metrics = [
     {
       id: 'heart_rate',
-      name: 'Cardiac Neural',
+      name: 'Heart Rate',
       value: 68,
       unit: 'bpm',
       change: -3,
@@ -29,18 +29,18 @@ const HealthMetrics: React.FC = () => {
       color: 'from-red-400 via-pink-500 to-rose-600',
       data: [72, 70, 69, 68, 67, 68, 68],
       neural: {
-        pattern: 'Circadian-optimized',
+        pattern: 'Healthy rhythm',
         confidence: 97,
-        prediction: 'Stable for next 4h',
+        prediction: 'Stable trend',
         anomalies: 0
       },
-      description: 'AI-analyzed cardiovascular patterns',
+      description: 'Cardiovascular health tracking',
       target: 65,
       status: 'optimal'
     },
     {
       id: 'hrv',
-      name: 'Recovery Neural',
+      name: 'Recovery Score',
       value: 42,
       unit: 'ms',
       change: 8,
@@ -49,18 +49,18 @@ const HealthMetrics: React.FC = () => {
       color: 'from-blue-400 via-cyan-500 to-teal-600',
       data: [35, 38, 40, 39, 41, 42, 42],
       neural: {
-        pattern: 'Stress-adaptive',
+        pattern: 'Good recovery',
         confidence: 94,
-        prediction: 'Peak recovery window',
+        prediction: 'Ready for training',
         anomalies: 0
       },
-      description: 'Neural stress resilience analysis',
+      description: 'Recovery and stress resilience',
       target: 40,
       status: 'excellent'
     },
     {
       id: 'sleep',
-      name: 'Sleep Neural',
+      name: 'Sleep Quality',
       value: 94,
       unit: '/100',
       change: 5,
@@ -69,18 +69,18 @@ const HealthMetrics: React.FC = () => {
       color: 'from-indigo-400 via-purple-500 to-violet-600',
       data: [85, 88, 90, 92, 91, 93, 94],
       neural: {
-        pattern: 'Deep-sleep optimized',
+        pattern: 'Excellent quality',
         confidence: 96,
-        prediction: 'Maintain current protocol',
+        prediction: 'Keep current routine',
         anomalies: 0
       },
-      description: 'AI sleep architecture analysis',
+      description: 'Sleep quality and patterns',
       target: 85,
       status: 'optimal'
     },
     {
       id: 'energy',
-      name: 'Energy Neural',
+      name: 'Active Calories',
       value: 2341,
       unit: 'kcal',
       change: 12,
@@ -89,18 +89,18 @@ const HealthMetrics: React.FC = () => {
       color: 'from-orange-400 via-amber-500 to-yellow-600',
       data: [2100, 2200, 2150, 2300, 2250, 2400, 2341],
       neural: {
-        pattern: 'Metabolic-enhanced',
+        pattern: 'High activity',
         confidence: 91,
-        prediction: 'Energy peak at 3 PM',
+        prediction: 'Peak energy at 3 PM',
         anomalies: 0
       },
-      description: 'Neural metabolic optimization',
+      description: 'Daily energy expenditure',
       target: 2200,
       status: 'optimal'
     },
     {
       id: 'glucose',
-      name: 'Glucose Neural',
+      name: 'Blood Glucose',
       value: 94,
       unit: 'mg/dL',
       change: -2,
@@ -109,18 +109,18 @@ const HealthMetrics: React.FC = () => {
       color: 'from-emerald-400 via-green-500 to-teal-600',
       data: [98, 96, 95, 94, 93, 94, 94],
       neural: {
-        pattern: 'Insulin-optimized',
+        pattern: 'Stable levels',
         confidence: 99,
-        prediction: 'Stable response predicted',
+        prediction: 'Healthy response',
         anomalies: 0
       },
-      description: 'AI glucose response modeling',
+      description: 'Blood sugar monitoring',
       target: 90,
       status: 'excellent'
     },
     {
       id: 'stress',
-      name: 'Stress Neural',
+      name: 'Stress Level',
       value: 23,
       unit: '/100',
       change: -15,
@@ -129,12 +129,12 @@ const HealthMetrics: React.FC = () => {
       color: 'from-purple-400 via-indigo-500 to-blue-600',
       data: [45, 38, 32, 28, 25, 24, 23],
       neural: {
-        pattern: 'Resilience-building',
+        pattern: 'Low stress',
         confidence: 93,
         prediction: 'Continued improvement',
         anomalies: 0
       },
-      description: 'Neural stress pattern analysis',
+      description: 'Stress and mental wellness',
       target: 30,
       status: 'excellent'
     }
@@ -203,10 +203,10 @@ const HealthMetrics: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-4xl font-black text-gradient-neural">
-                  Neural Health Matrix
+                  Health Dashboard
                 </h2>
                 <p className="text-lg text-muted-foreground font-light">
-                  Real-time biometric intelligence with predictive modeling
+                  Real-time health tracking with intelligent insights
                 </p>
               </div>
             </div>
@@ -214,11 +214,11 @@ const HealthMetrics: React.FC = () => {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-muted-foreground">Live Neural Processing</span>
+                <span className="text-sm font-semibold text-muted-foreground">Live Health Monitoring</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-                <span className="text-sm font-semibold text-muted-foreground">Predictive Analysis Active</span>
+                <span className="text-sm font-semibold text-muted-foreground">Smart Analysis Active</span>
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ const HealthMetrics: React.FC = () => {
             whileTap={{ scale: 0.98 }}
           >
             <ChartBarIcon className="w-5 h-5" />
-            <span>Neural Analytics</span>
+            <span>Health Analytics</span>
           </motion.button>
         </div>
         
@@ -352,8 +352,8 @@ const HealthMetrics: React.FC = () => {
                 <CpuChipIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground">Neural Health Intelligence</h3>
-                <p className="text-sm text-muted-foreground">AI-powered insights from your biometric patterns</p>
+                <h3 className="text-xl font-bold text-foreground">Smart Health Insights</h3>
+                <p className="text-sm text-muted-foreground">AI-powered insights from your health data</p>
               </div>
             </div>
             
@@ -366,22 +366,22 @@ const HealthMetrics: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                title: 'Optimal Training Window',
-                insight: 'Neural analysis indicates peak performance capacity in 2.3 hours based on HRV patterns.',
+                title: 'Perfect Workout Time',
+                insight: 'Your recovery data shows you\'ll have peak energy in 2 hours - ideal for your strength training.',
                 confidence: 96,
                 action: 'Schedule Workout',
                 color: 'from-orange-500 to-red-500'
               },
               {
-                title: 'Metabolic Enhancement',
-                insight: 'Glucose sensitivity is 18% above baseline. Ideal for carbohydrate timing optimization.',
+                title: 'Nutrition Timing',
+                insight: 'Your glucose response is excellent today. Perfect time for that post-workout meal you planned.',
                 confidence: 94,
                 action: 'Optimize Nutrition',
                 color: 'from-green-500 to-emerald-500'
               },
               {
-                title: 'Recovery Protocol',
-                insight: 'Sleep architecture suggests implementing magnesium supplementation for deeper recovery.',
+                title: 'Sleep Optimization',
+                insight: 'Your sleep quality improved 15% this week. Consider adding magnesium for even better recovery.',
                 confidence: 91,
                 action: 'View Supplements',
                 color: 'from-blue-500 to-purple-500'

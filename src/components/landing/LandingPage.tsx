@@ -94,7 +94,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               />
               <div className="hidden md:block w-px h-6 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
               <span className="hidden md:block text-sm font-medium text-muted-foreground">
-                Neural Health Intelligence
+                Intelligent Health Platform
               </span>
             </motion.div>
             
@@ -139,19 +139,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               >
                 <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-pulse" />
                 <span className="text-sm font-semibold text-gradient-neural">
-                  Next-Gen AI Health Platform
+                  Personalized Health Intelligence
                 </span>
               </motion.div>
 
               <div className="space-y-6">
                 <h1 className="text-5xl lg:text-7xl font-black text-premium leading-[0.9]">
                   <span className="block text-foreground">Your</span>
-                  <span className="block text-gradient-neural">Neural</span>
-                  <span className="block text-foreground">Health Coach</span>
+                  <span className="block text-gradient-neural">Smart</span>
+                  <span className="block text-foreground">Wellness Coach</span>
                 </h1>
 
                 <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed max-w-xl font-light">
-                  Advanced AI that learns your biology, predicts your needs, and optimizes your wellness in real-time.
+                  Intelligent health guidance that learns your patterns, predicts your needs, and optimizes your wellness journey.
                 </p>
               </div>
 
@@ -163,7 +163,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   className="btn-premium px-8 py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center space-x-3 shadow-2xl"
                 >
                   <RocketLaunchIcon className="w-6 h-6" />
-                  <span>Start Neural Analysis</span>
+                  <span>Start Health Analysis</span>
                 </motion.button>
                 
                 <motion.button
@@ -227,7 +227,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                           <CpuChipIcon className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                          <div className="text-2xl font-bold text-gradient-neural">Neural Score</div>
+                          <div className="text-2xl font-bold text-gradient-neural">Wellness Score</div>
                           <div className="text-sm text-muted-foreground flex items-center space-x-2">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                             <span>Live AI Analysis</span>
@@ -252,7 +252,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                           neural: true
                         },
                         { 
-                          label: 'Sleep Neural', 
+                          label: 'Sleep Quality', 
                           value: '97', 
                           trend: '+8.1%',
                           color: 'from-indigo-400 to-purple-500',
@@ -260,7 +260,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                           neural: true
                         },
                         { 
-                          label: 'Recovery AI', 
+                          label: 'Recovery Score', 
                           value: '89', 
                           trend: '+15.2%',
                           color: 'from-blue-400 to-cyan-500',
@@ -268,7 +268,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                           neural: true
                         },
                         { 
-                          label: 'Nutrition IQ', 
+                          label: 'Nutrition Score', 
                           value: '92', 
                           trend: '-3.7%',
                           color: 'from-orange-400 to-red-500',
@@ -315,7 +315,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                                   />
                                 ))}
                               </div>
-                              <div className="text-xs text-muted-foreground">Neural Pattern</div>
+                              <div className="text-xs text-muted-foreground">Health Pattern</div>
                             </div>
                           </div>
                         </motion.div>
@@ -335,18 +335,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                         </div>
                         <div className="flex-1 space-y-2">
                           <div className="flex items-center space-x-2">
-                            <h4 className="font-bold text-foreground">Neural Insight</h4>
+                            <h4 className="font-bold text-foreground">Smart Insight</h4>
                             <div className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">
                               98% CONFIDENCE
                             </div>
                           </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">
-                            "Your circadian rhythm optimization is 23% above baseline. Perfect window for cognitive enhancement protocols."
+                            "Your sleep quality has improved 23% this week. This is an optimal time for challenging workouts."
                           </p>
                           <div className="flex items-center space-x-3 text-xs text-muted-foreground">
-                            <span>• Multi-modal analysis</span>
-                            <span>• Real-time adaptation</span>
-                            <span>• Predictive modeling</span>
+                            <span>• Comprehensive analysis</span>
+                            <span>• Real-time insights</span>
+                            <span>• Personalized guidance</span>
                           </div>
                         </div>
                       </div>
@@ -375,14 +375,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
           >
             <div className="inline-flex items-center space-x-2 px-4 py-2 glass-morphism rounded-full">
               <LightBulbIcon className="w-5 h-5 text-primary-400" />
-              <span className="text-sm font-semibold text-gradient-neural">Advanced Capabilities</span>
+              <span className="text-sm font-semibold text-gradient-neural">Smart Features</span>
             </div>
             <h2 className="text-4xl lg:text-6xl font-black text-premium">
               <span className="block text-foreground">Beyond Traditional</span>
-              <span className="block text-gradient-neural">Health Tracking</span>
+              <span className="block text-gradient-neural">Wellness Coaching</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
-              Our neural engine processes millions of health patterns to deliver insights that adapt to your unique biology.
+              Our intelligent platform analyzes your health data to deliver personalized insights that adapt to your unique lifestyle.
             </p>
           </motion.div>
 
@@ -390,46 +390,46 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: CpuChipIcon,
-                title: 'Neural Health Engine',
-                description: 'AI that learns your unique biological patterns and adapts recommendations in real-time.',
+                icon: SparklesIcon,
+                title: 'Smart Health Engine',
+                description: 'AI that learns your unique health patterns and adapts recommendations in real-time.',
                 color: 'from-purple-500 via-indigo-500 to-blue-500',
-                features: ['Pattern Recognition', 'Predictive Analytics', 'Adaptive Learning']
+                features: ['Pattern Learning', 'Predictive Insights', 'Adaptive Coaching']
               },
               {
                 icon: HeartIcon,
                 title: 'Biometric Intelligence',
-                description: 'Advanced sensor fusion from multiple devices with ML-powered anomaly detection.',
+                description: 'Smart integration from multiple devices with intelligent health monitoring.',
                 color: 'from-red-500 via-pink-500 to-rose-500',
-                features: ['Multi-Device Sync', 'Anomaly Detection', 'Trend Prediction']
+                features: ['Multi-Device Sync', 'Health Monitoring', 'Trend Analysis']
               },
               {
                 icon: BeakerIcon,
-                title: 'Molecular Nutrition',
-                description: 'Precision nutrition analysis with glucose response modeling and metabolic optimization.',
+                title: 'Smart Nutrition',
+                description: 'Intelligent nutrition analysis with glucose tracking and metabolic insights.',
                 color: 'from-green-500 via-emerald-500 to-teal-500',
-                features: ['Glucose Modeling', 'Metabolic Analysis', 'Nutrient Timing']
+                features: ['Glucose Tracking', 'Metabolic Insights', 'Meal Timing']
               },
               {
                 icon: BoltIcon,
                 title: 'Recovery Optimization',
-                description: 'HRV-based recovery protocols with personalized training load management.',
+                description: 'Heart rate variability analysis with personalized recovery recommendations.',
                 color: 'from-yellow-500 via-orange-500 to-red-500',
-                features: ['HRV Analysis', 'Load Management', 'Recovery Protocols']
+                features: ['HRV Analysis', 'Recovery Tracking', 'Rest Recommendations']
               },
               {
                 icon: CubeIcon,
                 title: 'Smart Supplementation',
-                description: 'Evidence-based supplement recommendations with bioavailability optimization.',
+                description: 'Evidence-based supplement recommendations with personalized dosing.',
                 color: 'from-indigo-500 via-purple-500 to-pink-500',
-                features: ['Evidence-Based', 'Bioavailability', 'Interaction Checking']
+                features: ['Evidence-Based', 'Personalized Dosing', 'Safety Checking']
               },
               {
                 icon: ShieldCheckIcon,
-                title: 'Privacy-First AI',
-                description: 'Zero-knowledge architecture with on-device processing and encrypted data.',
+                title: 'Privacy & Security',
+                description: 'Bank-level security with encrypted data and privacy-first design.',
                 color: 'from-slate-500 via-gray-500 to-zinc-500',
-                features: ['Zero-Knowledge', 'On-Device AI', 'Encrypted Storage']
+                features: ['Bank-Level Security', 'Private Processing', 'Encrypted Storage']
               }
             ].map((feature, index) => (
               <motion.div
@@ -484,11 +484,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-6 mb-20"
           >
             <h2 className="text-4xl lg:text-6xl font-black text-premium">
-              <span className="block text-foreground">How Neural</span>
-              <span className="block text-gradient-neural">Intelligence Works</span>
+              <span className="block text-foreground">How Smart</span>
+              <span className="block text-gradient-neural">Coaching Works</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
-              Advanced AI processes your health data through multiple neural networks for unprecedented insights.
+              Our intelligent platform analyzes your health data to provide personalized coaching and insights.
             </p>
           </motion.div>
 
@@ -496,23 +496,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             {[
               {
                 step: '01',
-                title: 'Neural Data Ingestion',
-                description: 'Multi-modal sensor fusion processes data from wearables, CGMs, and manual inputs through our proprietary neural architecture.',
-                icon: CommandLineIcon,
+                title: 'Smart Data Collection',
+                description: 'Seamlessly connects with your wearables, health devices, and manual inputs to build your complete health picture.',
+                icon: HeartIcon,
                 color: 'from-blue-500 to-cyan-500'
               },
               {
                 step: '02',
-                title: 'Pattern Recognition Engine',
-                description: 'Advanced ML algorithms identify unique biological patterns, circadian rhythms, and metabolic signatures specific to your physiology.',
-                icon: EyeIcon,
+                title: 'Intelligent Analysis',
+                description: 'AI identifies your unique health patterns, sleep rhythms, and metabolic responses to create your personal health profile.',
+                icon: SparklesIcon,
                 color: 'from-purple-500 to-pink-500'
               },
               {
                 step: '03',
-                title: 'Predictive Optimization',
-                description: 'Neural networks generate personalized protocols, predict optimal timing, and continuously adapt to your changing biology.',
-                icon: RocketLaunchIcon,
+                title: 'Personalized Coaching',
+                description: 'Delivers tailored recommendations, predicts optimal timing for activities, and adapts to your changing health needs.',
+                icon: CheckCircleIcon,
                 color: 'from-emerald-500 to-teal-500'
               }
             ].map((step, index) => (
@@ -565,7 +565,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-6 mb-20"
           >
             <h2 className="text-4xl lg:text-6xl font-black text-premium">
-              <span className="block text-foreground">Neural Health</span>
+              <span className="block text-foreground">Smart Wellness</span>
               <span className="block text-gradient-neural">Membership</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
@@ -576,12 +576,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                name: 'Neural Starter',
+                name: 'Wellness Starter',
                 price: 'Free',
                 period: 'Forever',
                 description: 'Essential AI health insights',
                 features: [
-                  'Basic neural analysis',
+                  'Basic health insights',
                   'Core health tracking',
                   '5 AI consultations/day',
                   'Standard insights',
@@ -592,32 +592,32 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 color: 'from-slate-500 to-gray-600'
               },
               {
-                name: 'Neural Pro',
+                name: 'Wellness Pro',
                 price: 'AED 149',
                 period: '/month',
                 description: 'Advanced AI optimization',
                 features: [
-                  'Full neural engine access',
+                  'Advanced AI coaching',
                   'Unlimited AI consultations',
-                  'Predictive health modeling',
-                  'Advanced biometric fusion',
-                  'Priority neural processing',
-                  'Custom protocol generation'
+                  'Predictive health insights',
+                  'Advanced device integration',
+                  'Priority support',
+                  'Custom health protocols'
                 ],
                 cta: 'Start 14-Day Trial',
                 popular: true,
                 color: 'from-blue-500 via-purple-500 to-pink-500'
               },
               {
-                name: 'Neural Elite',
+                name: 'Wellness Elite',
                 price: 'AED 299',
                 period: '/month',
                 description: 'Maximum AI capabilities',
                 features: [
-                  'Everything in Neural Pro',
-                  'Genetic data integration',
+                  'Everything in Wellness Pro',
+                  'Lab result integration',
                   'Lab result AI analysis',
-                  'Custom neural models',
+                  'Custom health models',
                   'White-glove optimization',
                   'Direct researcher access'
                 ],
@@ -698,11 +698,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
           >
             <div className="space-y-6">
               <h2 className="text-4xl lg:text-6xl font-black text-premium">
-                <span className="block text-foreground">Ready to Unlock Your</span>
-                <span className="block text-gradient-neural">Neural Potential?</span>
+                <span className="block text-foreground">Ready to Transform Your</span>
+                <span className="block text-gradient-neural">Health Journey?</span>
               </h2>
               <p className="text-xl text-muted-foreground font-light leading-relaxed">
-                Join the next evolution of health optimization. Your neural health coach is waiting.
+                Join thousands who've transformed their health with intelligent coaching. Your personal wellness coach is ready.
               </p>
             </div>
 
@@ -714,7 +714,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 className="btn-premium px-12 py-5 rounded-2xl text-white font-bold text-xl flex items-center justify-center space-x-3 shadow-2xl"
               >
                 <RocketLaunchIcon className="w-6 h-6" />
-                <span>Begin Neural Analysis</span>
+                <span>Start Your Journey</span>
               </motion.button>
               
               <motion.button 
@@ -722,14 +722,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 whileTap={{ scale: 0.95 }}
                 className="px-12 py-5 glass-morphism rounded-2xl font-bold text-xl text-foreground hover:bg-white/10 transition-all duration-300"
               >
-                Schedule Neural Demo
+                Book Free Consultation
               </motion.button>
             </div>
 
             <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground pt-8">
               <div className="flex items-center space-x-2">
                 <CheckCircleIcon className="w-5 h-5 text-emerald-500" />
-                <span>14-day neural trial</span>
+                <span>14-day free trial</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircleIcon className="w-5 h-5 text-emerald-500" />
@@ -754,15 +754,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 alt="Biowell" 
                 className="h-8 w-auto"
               />
-              <span className="text-muted-foreground">© 2025 Biowell Neural Systems. All rights reserved.</span>
+              <span className="text-muted-foreground">© 2025 Biowell Health Systems. All rights reserved.</span>
             </div>
             
             <div className="flex items-center space-x-6">
               <button className="text-muted-foreground hover:text-foreground transition-colors">
-                Neural Privacy
+                Privacy Policy
               </button>
               <button className="text-muted-foreground hover:text-foreground transition-colors">
-                AI Ethics
+                Terms of Service
               </button>
               <button className="text-muted-foreground hover:text-foreground transition-colors">
                 Research

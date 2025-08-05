@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSupplements } from '../../hooks/useSupplements';
+import { formatSupplementPrice } from '../../lib/supplementsData';
 import { useToast } from '../../hooks/useToast';
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
@@ -424,7 +425,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
               <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
                 <div>
                   <span className="text-2xl font-bold text-slate-900 dark:text-white">
-                    ${supplement.price}
+                    {formatSupplementPrice(supplement.price)}
                   </span>
                   {supplement.dosage && (
                     <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -523,7 +524,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                           {item.supplement.name}
                         </h4>
                         <p className="text-sm text-slate-600 dark:text-slate-400">
-                          ${item.supplement.price} each
+                          {formatSupplementPrice(item.supplement.price)} each
                         </p>
                       </div>
                       
@@ -547,7 +548,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                       
                       <div className="text-right">
                         <p className="font-bold text-slate-900 dark:text-white">
-                          ${(item.supplement.price * item.quantity).toFixed(2)}
+                          {formatSupplementPrice(parseFloat(item.supplement.price) * item.quantity)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -562,7 +563,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                   <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
                     <div className="flex items-center justify-between text-xl font-bold text-slate-900 dark:text-white">
                       <span>Total:</span>
-                      <span>${cartTotal.toFixed(2)}</span>
+                      <span>{formatSupplementPrice(cartTotal)}</span>
                     </div>
                     
                     <button

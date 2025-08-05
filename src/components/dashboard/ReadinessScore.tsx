@@ -47,28 +47,28 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
 
   const neuralFactors = [
     { 
-      name: 'Cardiac Neural', 
+      name: 'Heart Health', 
       value: 94, 
       impact: 'High',
       icon: HeartIcon,
       color: 'from-red-400 to-pink-500'
     },
     { 
-      name: 'Recovery Neural', 
+      name: 'Recovery', 
       value: 89, 
       impact: 'High',
       icon: BoltIcon,
       color: 'from-blue-400 to-cyan-500'
     },
     { 
-      name: 'Sleep Neural', 
+      name: 'Sleep Quality', 
       value: 92, 
       impact: 'Medium',
       icon: EyeIcon,
       color: 'from-indigo-400 to-purple-500'
     },
     { 
-      name: 'Metabolic Neural', 
+      name: 'Energy Level', 
       value: 87, 
       impact: 'Medium',
       icon: BeakerIcon,
@@ -95,8 +95,9 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
               <SparklesIcon className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-black text-gradient-neural">Neural Readiness</h2>
+              <h2 className="text-2xl font-black text-gradient-neural">Wellness Score</h2>
               <p className="text-sm text-muted-foreground">AI-computed optimization score</p>
+              <p className="text-sm text-muted-foreground">Your daily wellness optimization score</p>
             </div>
           </div>
           
@@ -174,7 +175,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                   {animatedScore}
                 </motion.div>
                 <div className="text-sm text-muted-foreground font-bold tracking-wider">
-                  NEURAL SCORE
+                  WELLNESS SCORE
                 </div>
               </div>
             </div>
@@ -252,14 +253,14 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
               <div className="space-y-4">
                 <h4 className="font-bold text-foreground flex items-center space-x-2">
                   <CpuChipIcon className="w-5 h-5 text-primary-400" />
-                  <span>Neural Processing Details</span>
+                  <span>Health Analysis Details</span>
                 </h4>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <div className="text-sm text-muted-foreground">Processing Layers</div>
+                    <div className="text-sm text-muted-foreground">Analysis Components</div>
                     <div className="space-y-2">
-                      {['Biometric Fusion', 'Pattern Recognition', 'Predictive Modeling', 'Optimization Engine'].map((layer, idx) => (
+                      {['Health Data Integration', 'Pattern Analysis', 'Predictive Insights', 'Personalized Coaching'].map((layer, idx) => (
                         <div key={idx} className="flex items-center justify-between">
                           <span className="text-sm text-foreground">{layer}</span>
                           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
@@ -269,7 +270,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
                   </div>
                   
                   <div className="space-y-3">
-                    <div className="text-sm text-muted-foreground">Neural Confidence</div>
+                    <div className="text-sm text-muted-foreground">Analysis Confidence</div>
                     <div className="space-y-2">
                       {neuralFactors.map((factor, idx) => (
                         <div key={idx} className="flex items-center justify-between">
