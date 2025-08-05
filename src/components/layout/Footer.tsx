@@ -10,7 +10,8 @@ import {
   Instagram,
   Shield,
   Heart,
-  Zap
+  Zap,
+  ArrowRight
 } from 'lucide-react';
 
 const Footer: React.FC = () => {

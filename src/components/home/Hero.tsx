@@ -2,14 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   Sparkles, 
-  ArrowRight, 
   Play, 
   Brain,
   Heart,
   Activity,
   Zap,
   TrendingUp,
-  Shield
+  Shield,
+  CheckCircle,
+  Users,
+  ArrowRight
 } from 'lucide-react';
 
 interface HeroProps {
