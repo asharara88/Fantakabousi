@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import AuthForms from '../auth/AuthForms';
 import { 
@@ -14,7 +15,8 @@ import {
   PlayIcon,
   StarIcon,
   UserGroupIcon,
-  ClockIcon
+  ClockIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
@@ -343,58 +345,80 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             </p>
           </motion.div>
 
-          <ol 
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          <div 
+            className="max-w-4xl mx-auto space-y-4"
             role="list"
             aria-label="How Biowell works steps"
           >
             {[
               {
-                step: '01',
                 title: 'Connect Your Devices',
                 description: 'Link your wearables and health monitors for comprehensive data collection.',
                 icon: ClockIcon
               },
               {
-                step: '02',
                 title: 'Smart Coach Analyzes Your Data',
                 description: 'Our advanced AI processes your biometrics to understand your unique patterns.',
                 icon: SparklesIcon
               },
               {
-                step: '03',
                 title: 'Get Personalized Insights',
                 description: 'Receive tailored recommendations for nutrition, supplements, and lifestyle.',
                 icon: CheckCircleIcon
               }
-            ].map((step, index) => (
-              <li key={index} role="listitem">
+            ].map((step, index) => {
+              const [isExpanded, setIsExpanded] = useState(false);
+              
+              return (
                 <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="text-center space-y-6"
-              >
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center mx-auto shadow-xl">
-                    <step.icon className="w-10 h-10 text-white" />
-                  </div>
-                  <div 
-                    className="absolute -top-2 -right-2 w-8 h-8 bg-[#3BE6C5] rounded-full flex items-center justify-center text-black font-bold text-sm"
-                    aria-label={`Step ${step.step}`}
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="card hover:shadow-lg transition-all duration-300"
+                  role="listitem"
+                >
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="w-full flex items-center justify-between p-6 text-left"
+                    aria-expanded={isExpanded}
+                    aria-controls={`step-content-${index}`}
                   >
-                    {step.step}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
-                </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center shadow-lg">
+                        <step.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground">{step.title}</h3>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: isExpanded ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDownIcon className="w-6 h-6 text-muted-foreground" />
+                    </motion.div>
+                  </button>
+                  
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        id={`step-content-${index}`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="px-6 pb-6"
+                      >
+                        <p className="text-muted-foreground leading-relaxed pl-16">
+                          {step.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
-              </li>
+              );
             ))}
-          </ol>
+          </div>
         </div>
         </section>
 
