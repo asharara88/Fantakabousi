@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import AuthForms from '../auth/AuthForms';
 import { 
@@ -417,7 +416,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   </AnimatePresence>
                 </motion.div>
               );
-            ))}
+            })}
           </div>
         </div>
         </section>
