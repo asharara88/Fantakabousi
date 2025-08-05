@@ -147,6 +147,34 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </motion.button>
               </div>
 
+              {/* Trust Indicators */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                className="grid grid-cols-4 gap-6 pt-8"
+              >
+                {[
+                  { number: '99.7%', label: 'Accuracy', icon: EyeIcon },
+                  { number: '<2s', label: 'Response', icon: BoltIcon },
+                  { number: '24/7', label: 'Monitoring', icon: ClockIcon },
+                  { number: 'HIPAA', label: 'Compliant', icon: ShieldCheckIcon }
+                ].map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
+                    className="text-center"
+                  >
+                    <div className="w-10 h-10 mx-auto mb-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                      <stat.icon className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                    </div>
+                    <div className="text-lg font-bold text-slate-900 dark:text-slate-100">{stat.number}</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
 
             {/* Dashboard Preview */}
@@ -623,18 +651,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <RocketLaunchIcon className="w-5 h-5" />
-                <span>Start Your Journey</span>
+                <span>GET STARTED</span>
               </motion.button>
               
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowAuthForms(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300"
+                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 flex items-center justify-center space-x-3"
               >
-                <UserCircleIcon className="w-5 h-5" />
-                <span>Sign In</span>
-              </motion.button>
                 <UserCircleIcon className="w-5 h-5" />
                 <span>Sign In</span>
               </motion.button>
