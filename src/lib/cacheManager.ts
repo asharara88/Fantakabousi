@@ -283,27 +283,30 @@ export class CacheManager {
       this.cleanupTimer = null;
     }
     this.clear();
+    // Reset instance to allow fresh creation
+    if (CacheManager.instance === this) {
+      CacheManager.instance = null as any;
+    }
   }
 }
 
 // Singleton instance
-export const cacheManager = CacheManager.getInstance();
+export let cacheManager = CacheManager.getInstance();
 
 // Specialized cache instances
-export const apiCache = CacheManager.getInstance({
+export let apiCache = CacheManager.getInstance({
   maxSize: 500,
   defaultTTL: 2 * 60 * 1000, // 2 minutes for API responses
   cleanupInterval: 30 * 1000 // 30 seconds
 });
 
-export const imageCache = CacheManager.getInstance({
+export let imageCache = CacheManager.getInstance({
   maxSize: 200,
   defaultTTL: 10 * 60 * 1000, // 10 minutes for images
   cleanupInterval: 2 * 60 * 1000 // 2 minutes
 });
 
-export const userDataCache = CacheManager.getInstance({
+export let userDataCache = CacheManager.getInstance({
   maxSize: 100,
   defaultTTL: 5 * 60 * 1000, // 5 minutes for user data
   cleanupInterval: 60 * 1000 // 1 minute
-});

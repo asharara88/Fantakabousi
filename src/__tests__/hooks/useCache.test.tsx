@@ -1,14 +1,26 @@
 import React from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useCache } from '../../hooks/useCache';
+import { cacheManager, apiCache, userDataCache } from '../../lib/cacheManager';
 
 const mockFetcher = vi.fn();
 
 describe('useCache Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Clear all cache instances
+    cacheManager.clear();
+    apiCache.clear();
+    userDataCache.clear();
     mockFetcher.mockResolvedValue('test-data');
+  });
+
+  afterEach(() => {
+    // Destroy cache instances to stop timers
+    cacheManager.destroy();
+    apiCache.destroy();
+    userDataCache.destroy();
   });
 
   it('fetches data on first call', async () => {

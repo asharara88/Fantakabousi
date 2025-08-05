@@ -15,6 +15,16 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+// Mock BroadcastChannel
+global.BroadcastChannel = vi.fn().mockImplementation(() => ({
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  postMessage: vi.fn(),
+  close: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+}));
+
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
