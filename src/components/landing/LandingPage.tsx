@@ -36,38 +36,38 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   const features = [
     {
       icon: SparklesIcon,
-      title: 'AI Wellness Coach',
-      description: 'Get personalized health guidance powered by advanced AI that learns from your unique biology.',
+      title: 'AI Health Coach',
+      description: 'Get personalized advice based on your health data and goals.',
       color: 'from-purple-500 to-indigo-600'
     },
     {
       icon: HeartIcon,
-      title: 'Real-time Health Tracking',
-      description: 'Monitor your biometrics 24/7 with seamless wearable integration and instant insights.',
+      title: 'Health Tracking',
+      description: 'Connect your devices and monitor your health metrics automatically.',
       color: 'from-red-500 to-pink-600'
     },
     {
       icon: BeakerIcon,
-      title: 'Smart Nutrition Analysis',
-      description: 'Track food impact on glucose, optimize meals for your goals, and discover perfect recipes.',
+      title: 'Nutrition Tracking',
+      description: 'Log your meals and see how food affects your health.',
       color: 'from-green-500 to-emerald-600'
     },
     {
       icon: CubeIcon,
-      title: 'Personalized Supplements',
-      description: 'AI-curated supplement stacks based on your health data, goals, and genetic profile.',
+      title: 'Smart Supplements',
+      description: 'Get supplement recommendations based on your health data.',
       color: 'from-orange-500 to-red-600'
     },
     {
       icon: ChartBarIcon,
-      title: 'Advanced Analytics',
-      description: 'Discover patterns in your health data with predictive insights and trend analysis.',
+      title: 'Health Analytics',
+      description: 'See trends and patterns in your health data over time.',
       color: 'from-blue-500 to-cyan-600'
     },
     {
       icon: ShieldCheckIcon,
-      title: 'Privacy & Security',
-      description: 'Bank-level encryption, HIPAA compliance, and complete control over your health data.',
+      title: 'Secure & Private',
+      description: 'Your health data is encrypted and completely private.',
       color: 'from-indigo-500 to-purple-600'
     }
   ];
@@ -174,15 +174,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </motion.div>
 
                 <h1 id="hero-title" className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                  Your Personal
+                  Your AI
                   <span className="block text-gradient-brand">
-                    Wellness Coach
+                    Health Coach
                   </span>
                 </h1>
 
                 <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
-                  Transform your health with AI-powered insights, personalized recommendations, 
-                  and real-time biometric tracking. Your journey to optimal wellness starts here.
+                  Get personalized health advice, track your metrics, and optimize your wellness with AI.
                 </p>
               </div>
 
@@ -418,12 +417,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-6 mb-16"
           >
             <h2 id="features-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              Everything You Need for
-              <span className="block text-gradient-brand">Optimal Wellness</span>
+              <span className="block text-gradient-brand">Complete Health Platform</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Biowell combines cutting-edge AI, real-time health monitoring, and personalized 
-              recommendations to help you achieve your wellness goals faster than ever.
+              Track your health, get AI advice, and optimize your wellness in one place.
             </p>
           </motion.div>
 
@@ -475,7 +472,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               How Biowell Works
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Get started in minutes and begin your transformation journey
+              Simple setup, powerful results
             </p>
           </motion.div>
 
@@ -487,17 +484,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             {[
               {
                 title: 'Connect Your Devices',
-                description: 'Link your wearables and health monitors for comprehensive data collection.',
+                description: 'Connect your Apple Watch or glucose monitor in one tap.',
                 icon: ClockIcon
               },
               {
-                title: 'Smart Coach Analyzes Your Data',
-                description: 'Our advanced AI processes your biometrics to understand your unique patterns.',
+                title: 'AI Analyzes Your Data',
+                description: 'Our AI learns your patterns and health trends.',
                 icon: SparklesIcon
               },
               {
                 title: 'Get Personalized Insights',
-                description: 'Receive tailored recommendations for nutrition, supplements, and lifestyle.',
+                description: 'Get custom advice for better health and wellness.',
                 icon: CheckCircleIcon
               }
             ].map((step, index) => {
@@ -571,10 +568,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
             className="text-center space-y-6 mb-16"
           >
             <h2 id="testimonials-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-              What Our Beta Users Say
+              Beta User Feedback
             </h2>
             <p className="text-xl text-muted-foreground">
-              Early feedback from our beta testing community
+              What early users are saying
             </p>
           </motion.div>
 
@@ -587,19 +584,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               {
                 name: 'Musallam Al Mansouri',
                 role: 'Beta Tester',
-                content: 'The AI coach provides incredibly personalized advice. It feels like having a health expert available 24/7.',
+                content: 'The AI coach gives great personalized advice. Like having a health expert 24/7.',
                 rating: 5
               },
               {
                 name: 'Khalfan Al Qimzi',
                 role: 'Early Adopter',
-                content: 'The supplement recommendations are spot-on. I can see real improvements in my energy and recovery.',
+                content: 'Perfect supplement recommendations. My energy and recovery improved significantly.',
                 rating: 5
               },
               {
                 name: 'Ahmed Farah',
                 role: 'Beta User',
-                content: 'Finally, a platform that makes sense of all my health data. The insights help me make better decisions.',
+                content: 'Makes sense of all my health data. Helps me make better health decisions.',
                 rating: 5
               }
             ].map((testimonial, index) => (
@@ -809,12 +806,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
           >
             <div className="space-y-6">
               <h2 id="cta-title" className="text-3xl lg:text-5xl font-bold text-foreground">
-                Ready to Transform
-                <span className="block text-gradient-brand">Your Health?</span>
+                <span className="block text-gradient-brand">Start Your Health Journey</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join thousands of users who have already optimized their wellness with Biowell's 
-                AI-powered platform. Start your free trial today.
+                Join our beta users and start optimizing your health with AI. Free trial included.
               </p>
             </div>
 
