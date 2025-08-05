@@ -18,9 +18,15 @@ Object.defineProperty(global, 'performance', {
 
 describe('PerformanceMonitor', () => {
   let monitor: PerformanceMonitor;
+  let mockTime = 0;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockTime = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => {
+      mockTime += 1;
+      return mockTime;
+    });
     monitor = PerformanceMonitor.getInstance();
     monitor.clearMetrics();
   });

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import AIInsights from '../../../components/dashboard/AIInsights';
-import { ThemeProvider } from '../../../contexts/ThemeProvider';
+import { ThemeProvider } from '../../../contexts/ThemeContext';
 
 // Mock toast hook
 vi.mock('../../../hooks/useToast', () => ({

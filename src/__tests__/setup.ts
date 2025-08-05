@@ -70,9 +70,10 @@ global.URL.createObjectURL = vi.fn(() => 'mocked-url');
 global.URL.revokeObjectURL = vi.fn();
 
 // Mock performance API
+let mockTime = 0;
 Object.defineProperty(global, 'performance', {
   value: {
-    now: vi.fn(() => Date.now()),
+    now: vi.fn(() => 0),
     memory: {
       usedJSHeapSize: 50 * 1024 * 1024,
       totalJSHeapSize: 100 * 1024 * 1024,
