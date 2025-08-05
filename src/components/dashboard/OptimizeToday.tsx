@@ -258,7 +258,6 @@ const OptimizeToday: React.FC = () => {
       case 'meal': return BeakerIcon;
       case 'workout': return FireIcon;
       case 'stress': return EyeIcon;
-      case 'cognitive': return BrainIcon;
       case 'cognitive': return LightBulbIcon;
       case 'fertility': return UserGroupIcon;
       default: return SparklesIcon;
