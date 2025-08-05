@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { createUserProfile } from '../../lib/database';
-import PushNotificationSetup from '../notifications/PushNotifications';
-import DeviceConnection from '../devices/DeviceConnection';
 import { useToast } from '../../hooks/useToast';
 import { 
   UserIcon,
@@ -41,8 +38,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const steps = [
     { id: 1, title: 'Personal Info', icon: UserIcon, description: 'Tell us about yourself' },
     { id: 2, title: 'Health Goals', icon: HeartIcon, description: 'What do you want to achieve?' },
-    { id: 3, title: 'Connect Devices', icon: DevicePhoneMobileIcon, description: 'Link your health devices' },
-    { id: 4, title: 'Notifications', icon: BellIcon, description: 'Stay updated on your progress' },
+    { id: 3, title: 'Complete Setup', icon: CheckCircleIcon, description: 'Finish your profile' },
   ];
 
   const healthGoals = [
@@ -61,58 +57,29 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     setLoading(true);
     
     try {
-      if (currentStep === 2) {
-        // Validate required fields
-        if (!profileData.first_name.trim()) {
-          toast({
-            title: "Missing Information",
-            description: "Please enter your first name",
-            variant: "destructive"
-          });
-          setLoading(false);
-          return;
-        }
-        
-        if (profileData.health_goals.length === 0) {
-          toast({
-            title: "Missing Information", 
-            description: "Please select at least one health goal",
-            variant: "destructive"
-          });
-          setLoading(false);
-          return;
-        }
-
-        // Save comprehensive profile data
+      if (currentStep === 3) {
+        // Complete onboarding
         const success = await completeOnboarding({
           first_name: profileData.first_name,
           last_name: profileData.last_name,
-          age: profileData.age ? parseInt(profileData.age) : null,
-          gender: profileData.gender || null,
-          height: profileData.height ? { value: parseInt(profileData.height), unit: 'cm' } : null,
-          weight: profileData.weight ? { value: parseInt(profileData.weight), unit: 'kg' } : null,
-          activity_level: profileData.activity_level || null,
-          primary_health_goals: profileData.health_goals,
-          health_concerns: profileData.health_concerns,
-          dietary_restrictions: profileData.dietary_restrictions,
-          current_supplements: profileData.current_supplements,
+          onboarding_completed: true
         });
         
-        if (!success) {
+        if (success) {
+          toast({
+            title: "Welcome to Biowell! 🎉",
+            description: "Your wellness journey starts now.",
+          });
+          onComplete();
+        } else {
           toast({
             title: "Error",
-            description: "Failed to save profile. Please try again.",
+            description: "Failed to complete setup. Please try again.",
             variant: "destructive"
           });
-          setLoading(false);
-          return;
         }
-      }
-
-      if (currentStep < 4) {
-        setCurrentStep(currentStep + 1);
       } else {
-        handleComplete();
+        setCurrentStep(currentStep + 1);
       }
     } catch (error) {
       console.error('Error in onboarding step:', error);
@@ -123,19 +90,6 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleComplete = async () => {
-    try {
-      toast({
-        title: "Welcome to Biowell! 🎉",
-        description: "Your wellness journey starts now.",
-      });
-      
-      onComplete();
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
     }
   };
 
@@ -197,39 +151,6 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Age</label>
-                  <input
-                    type="number"
-                    value={profileData.age}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, age: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 bg-background text-foreground"
-                    placeholder="28"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Height (cm)</label>
-                  <input
-                    type="number"
-                    value={profileData.height}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, height: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 bg-background text-foreground"
-                    placeholder="180"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Weight (kg)</label>
-                  <input
-                    type="number"
-                    value={profileData.weight}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, weight: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 bg-background text-foreground"
-                    placeholder="75"
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-foreground">Activity Level</label>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -285,18 +206,27 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
       case 3:
         return (
           <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold text-foreground">Connect Your Devices</h2>
-              <p className="text-muted-foreground">Link your health devices for automatic tracking</p>
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl">
+                <CheckCircleIcon className="w-10 h-10 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">You're all set!</h2>
+                <p className="text-muted-foreground">
+                  Your personalized wellness dashboard is ready
+                </p>
+              </div>
             </div>
             
-            <DeviceConnection isOpen={true} onClose={() => {}} />
+            <div className="bg-muted/30 rounded-xl p-6">
+              <h3 className="font-semibold text-foreground mb-4">Your Profile Summary:</h3>
+              <div className="space-y-2 text-sm">
+                <p><span className="font-medium">Name:</span> {profileData.first_name} {profileData.last_name}</p>
+                <p><span className="font-medium">Activity Level:</span> {profileData.activity_level}</p>
+                <p><span className="font-medium">Health Goals:</span> {profileData.health_goals.join(', ')}</p>
+              </div>
+            </div>
           </div>
-        );
-
-      case 4:
-        return (
-          <PushNotificationSetup onComplete={handleComplete} />
         );
 
       default:
@@ -312,14 +242,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
           <div className="p-6 bg-gradient-to-r from-blue-light to-blue-medium">
             <div className="flex items-center justify-between text-white mb-4">
               <h1 className="text-2xl font-bold">Welcome to Biowell</h1>
-              <span className="text-sm">Step {currentStep} of 4</span>
+              <span className="text-sm">Step {currentStep} of 3</span>
             </div>
             
             <div className="w-full bg-white/20 rounded-full h-2">
               <motion.div
                 className="h-2 bg-white rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: `${(currentStep / 4) * 100}%` }}
+                animate={{ width: `${(currentStep / 3) * 100}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
@@ -341,41 +271,39 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
           </div>
 
           {/* Navigation */}
-          {currentStep < 4 && (
-            <div className="p-6 border-t border-border">
-              <div className="flex justify-between">
-                <button
-                  onClick={() => currentStep > 1 && setCurrentStep(currentStep - 1)}
-                  disabled={currentStep === 1}
-                  className="btn-secondary disabled:opacity-50"
-                >
-                  Back
-                </button>
-                
-                <button
-                  onClick={handleNext}
-                  disabled={
-                    loading ||
-                    (currentStep === 1 && !profileData.first_name) ||
-                    (currentStep === 2 && profileData.health_goals.length === 0)
-                  }
-                  className="btn-primary flex items-center space-x-2 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Processing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{currentStep === 4 ? 'Complete' : 'Next'}</span>
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </div>
+          <div className="p-6 border-t border-border">
+            <div className="flex justify-between">
+              <button
+                onClick={() => currentStep > 1 && setCurrentStep(currentStep - 1)}
+                disabled={currentStep === 1}
+                className="btn-secondary disabled:opacity-50"
+              >
+                Back
+              </button>
+              
+              <button
+                onClick={handleNext}
+                disabled={
+                  loading ||
+                  (currentStep === 1 && !profileData.first_name) ||
+                  (currentStep === 2 && profileData.health_goals.length === 0)
+                }
+                className="btn-primary flex items-center space-x-2 disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{currentStep === 3 ? 'Complete' : 'Next'}</span>
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </>
+                )}
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

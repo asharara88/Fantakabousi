@@ -1,6 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { errorHandler, AppError } from '../../lib/errorHandler';
 import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 interface Props {
@@ -24,22 +23,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Report to centralized error handler
-    errorHandler.handleError(
-      error instanceof AppError ? error : new AppError(
-        error.message,
-        'COMPONENT_ERROR',
-        'high',
-        {
-          component: 'ErrorBoundary',
-          action: 'component_crash',
-          metadata: {
-            componentStack: errorInfo.componentStack,
-            errorBoundary: true
-          }
-        }
-      )
-    );
+    // Log error to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Component Error:', error);
+      console.error('Error Info:', errorInfo);
+    }
     
     this.setState({ error, errorInfo });
   }

@@ -1,35 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { performanceMonitor } from '../../lib/performanceMonitor';
-import { memoryManager } from '../../lib/memoryManager';
-import { errorHandler } from '../../lib/errorHandler';
-import { cacheManager } from '../../lib/cacheManager';
+import { Suspense, lazy } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
-import { usePerformance } from '../../hooks/usePerformance';
-import WelcomeHeader from './WelcomeHeader';
-import HealthMetrics from './HealthMetrics';
-import DailyInsights from './DailyInsights';
-import TodaysPlan from './TodaysPlan';
-import TodaysGoals from './TodaysGoals';
-import QuickActions from './QuickActions';
-import ActivityFeed from './ActivityFeed';
-import ReadinessScore from './ReadinessScore';
-import BiometricChart from './BiometricChart';
-import SupplementStack from './SupplementStack';
-import AICoachEnhanced from './AICoachEnhanced';
-import HealthDashboard from './HealthDashboard';
-import NutritionDashboard from '../nutrition/NutritionDashboard';
-import FitnessDashboard from '../fitness/FitnessDashboard';
-import ProfileSettingsEnhanced from './ProfileSettingsEnhanced';
-import SupplementShopEnhanced from '../supplements/SupplementShopEnhanced';
-import NotificationCenter from '../notifications/NotificationCenter';
-import QuickActionMenu from '../ui/QuickActionMenu';
-import SmartSearch from '../ui/SmartSearch';
-import OfflineIndicator from '../ui/OfflineIndicator';
+import LazyWrapper from '../ui/LazyWrapper';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import SafeArea from '../ui/SafeArea';
-import PerformanceDebugger from '../debug/PerformanceDebugger';
 import { 
   HomeIcon,
   ChatBubbleLeftRightIcon,
@@ -64,17 +41,33 @@ import {
   BellIcon as BellSolidIcon
 } from '@heroicons/react/24/solid';
 
+// Lazy load all dashboard components
+const WelcomeHeader = lazy(() => import('./WelcomeHeader'));
+const HealthMetrics = lazy(() => import('./HealthMetrics'));
+const DailyInsights = lazy(() => import('./DailyInsights'));
+const TodaysPlan = lazy(() => import('./TodaysPlan'));
+const TodaysGoals = lazy(() => import('./TodaysGoals'));
+const QuickActions = lazy(() => import('./QuickActions'));
+const ActivityFeed = lazy(() => import('./ActivityFeed'));
+const ReadinessScore = lazy(() => import('./ReadinessScore'));
+const AICoachEnhanced = lazy(() => import('./AICoachEnhanced'));
+const NutritionDashboard = lazy(() => import('../nutrition/NutritionDashboard'));
+const SupplementShopEnhanced = lazy(() => import('../supplements/SupplementShopEnhanced'));
+const ProfileSettingsEnhanced = lazy(() => import('./ProfileSettingsEnhanced'));
+const NotificationCenter = lazy(() => import('../notifications/NotificationCenter'));
+const QuickActionMenu = lazy(() => import('../ui/QuickActionMenu'));
+const SmartSearch = lazy(() => import('../ui/SmartSearch'));
+const OfflineIndicator = lazy(() => import('../ui/OfflineIndicator'));
+
 const UnifiedHealthDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
   const { actualTheme, theme, setTheme, autoSyncTime, setAutoSyncTime } = useTheme();
-  const { renderTime } = usePerformance('UnifiedHealthDashboard');
   const [activeView, setActiveView] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const [showSearch, setShowSearch] = useState(false);
-  const [showPerformanceDebugger, setShowPerformanceDebugger] = useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUzNzY4NjI5LCJleHAiOjE3ODUzMDQ2Mjl9.FeAiKuBqhcSos_4d6tToot-wDPXLuRKerv6n0PyLYXI"
@@ -156,18 +149,7 @@ const UnifiedHealthDashboard: React.FC = () => {
   };
 
   const handleQuickAction = (action: string) => {
-    try {
-    try {
       setActiveView(action);
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-    } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Navigation error'),
-        { component: 'UnifiedHealthDashboard', action: 'quickAction' }
-      );
-    }
   };
 
   const ThemeToggle = () => (
@@ -221,70 +203,78 @@ const UnifiedHealthDashboard: React.FC = () => {
   );
 
   const renderContent = () => {
-    return performanceMonitor.measureComponentRender('DashboardContent', () => {
-    try {
         switch (activeView) {
           case 'coach':
-            return <AICoachEnhanced />;
+            return (
+              <LazyWrapper name="AI Coach">
+                <AICoachEnhanced />
+              </LazyWrapper>
+            );
           case 'health':
           case 'health-metrics':
           case 'health-analytics':
           case 'health-devices':
-            return <HealthDashboard />;
+            return (
+              <LazyWrapper name="Health Dashboard">
+                <div className="space-y-8">
+                  <HealthMetrics />
+                  <DailyInsights onQuickAction={handleQuickAction} />
+                </div>
+              </LazyWrapper>
+            );
           case 'nutrition':
           case 'nutrition-logger':
           case 'nutrition-recipes':
-            return <NutritionDashboard onQuickAction={handleQuickAction} />;
+            return (
+              <LazyWrapper name="Nutrition Dashboard">
+                <NutritionDashboard onQuickAction={handleQuickAction} />
+              </LazyWrapper>
+            );
           case 'supplements':
-            return <SupplementShopEnhanced onQuickAction={handleQuickAction} />;
+            return (
+              <LazyWrapper name="Supplement Shop">
+                <SupplementShopEnhanced onQuickAction={handleQuickAction} />
+              </LazyWrapper>
+            );
           case 'fitness':
-            return <FitnessDashboard onQuickAction={handleQuickAction} />;
+            return (
+              <LazyWrapper name="Fitness Dashboard">
+                <div className="text-center py-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-4">Fitness Dashboard</h2>
+                  <p className="text-muted-foreground">Coming soon...</p>
+                </div>
+              </LazyWrapper>
+            );
           case 'profile':
-            return <ProfileSettingsEnhanced />;
+            return (
+              <LazyWrapper name="Profile Settings">
+                <ProfileSettingsEnhanced />
+              </LazyWrapper>
+            );
           default:
             return (
-              <div className="space-y-8">
-                <WelcomeHeader onQuickAction={handleQuickAction} />
-                
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                  {/* Left Column */}
-                  <div className="xl:col-span-2 space-y-8">
-                    <HealthMetrics />
-                    <DailyInsights onQuickAction={handleQuickAction} />
-                  </div>
+              <LazyWrapper name="Dashboard">
+                <div className="space-y-8">
+                  <WelcomeHeader onQuickAction={handleQuickAction} />
                   
-                  {/* Right Column */}
-                  <div className="space-y-8">
-                    <ReadinessScore score={87} />
-                    <TodaysGoals onQuickAction={handleQuickAction} />
-                    <ActivityFeed />
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                    {/* Left Column */}
+                    <div className="xl:col-span-2 space-y-8">
+                      <HealthMetrics />
+                      <DailyInsights onQuickAction={handleQuickAction} />
+                    </div>
+                    
+                    {/* Right Column */}
+                    <div className="space-y-8">
+                      <ReadinessScore score={87} />
+                      <TodaysGoals onQuickAction={handleQuickAction} />
+                      <ActivityFeed />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </LazyWrapper>
             );
         }
-      } catch (error) {
-        errorHandler.handleError(
-          error instanceof Error ? error : new Error('Render error'),
-          { component: 'UnifiedHealthDashboard', action: 'renderContent', activeView }
-        );
-        
-        // Return fallback UI
-        return (
-          <div className="flex items-center justify-center min-h-96">
-            <div className="text-center space-y-4">
-              <div className="text-xl font-semibold text-foreground">Something went wrong</div>
-              <button 
-                onClick={() => window.location.reload()}
-                className="btn-primary"
-              >
-                Refresh Page
-              </button>
-            </div>
-          </div>
-        );
-      }
-    });
   };
 
   return (
@@ -388,13 +378,15 @@ const UnifiedHealthDashboard: React.FC = () => {
                   animate={{
                     y: [-5, 5, -5],
                     opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
-                    duration: 3 + i * 0.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
+                <Suspense fallback={<LoadingSpinner size="md" />}>
+                  <SmartSearch 
+                    onNavigate={(path) => {
+                      handleNavigation(path);
+                      setShowSearch(false);
+                    }}
+                    className="w-full"
+                  />
+                </Suspense>
               ))}
             </div>
             
@@ -549,20 +541,6 @@ const UnifiedHealthDashboard: React.FC = () => {
               </div>
               <span className="font-medium">Sign Out</span>
             </motion.button>
-            
-            {/* Performance Debugger (Development Only) */}
-            {process.env.NODE_ENV === 'development' && (
-              <motion.button 
-                onClick={() => setShowPerformanceDebugger(true)}
-                className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
-                whileHover={{ x: 4 }}
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                  <ChartBarIcon className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-medium">Performance</span>
-              </motion.button>
-            )}
           </nav>
         </div>
       </nav>
@@ -780,8 +758,10 @@ const UnifiedHealthDashboard: React.FC = () => {
       </main>
 
       {/* Premium Floating Elements */}
-      <QuickActionMenu onQuickAction={handleQuickAction} />
-      <OfflineIndicator />
+      <Suspense fallback={null}>
+        <QuickActionMenu onQuickAction={handleQuickAction} />
+        <OfflineIndicator />
+      </Suspense>
       
       {/* Premium Search Modal */}
       <AnimatePresence>
@@ -816,18 +796,12 @@ const UnifiedHealthDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Premium Notification Center */}
-      <NotificationCenter 
-        isOpen={showNotifications}
-        onClose={() => setShowNotifications(false)}
-      />
-      
-      {/* Performance Debugger */}
-      {process.env.NODE_ENV === 'development' && (
-        <PerformanceDebugger
-          isOpen={showPerformanceDebugger}
-          onClose={() => setShowPerformanceDebugger(false)}
+      <Suspense fallback={null}>
+        <NotificationCenter 
+          isOpen={showNotifications}
+          onClose={() => setShowNotifications(false)}
         />
-      )}
+      </Suspense>
     </div>
   );
 };

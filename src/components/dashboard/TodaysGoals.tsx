@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { errorHandler, AppError } from '../../lib/errorHandler';
 import { 
   FlagIcon,
   PlusIcon,
@@ -41,10 +40,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
     try {
       loadGoals();
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Failed to load goals'),
-        { component: 'TodaysGoals', action: 'loadGoals' }
-      );
+      console.error('Failed to load goals:', error);
     }
   }, []);
 
@@ -100,10 +96,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
       const today = new Date().toDateString();
       localStorage.setItem(`biowell-goals-${today}`, JSON.stringify(goalsToSave));
     } catch (error) {
-      errorHandler.handleError(
-        new AppError('Failed to save goals', 'STORAGE_ERROR', 'low'),
-        { component: 'TodaysGoals', action: 'saveGoals' }
-      );
+      console.error('Failed to save goals:', error);
     }
   };
 
@@ -133,10 +126,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
       });
       setShowAddForm(false);
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Failed to add goal'),
-        { component: 'TodaysGoals', action: 'addGoal' }
-      );
+      console.error('Failed to add goal:', error);
     }
   };
 
@@ -154,10 +144,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
       setGoals(updatedGoals);
       saveGoals(updatedGoals);
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Failed to toggle goal'),
-        { component: 'TodaysGoals', action: 'toggleGoal', metadata: { goalId } }
-      );
+      console.error('Failed to toggle goal:', error);
     }
   };
 
@@ -167,10 +154,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
       setGoals(updatedGoals);
       saveGoals(updatedGoals);
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Failed to delete goal'),
-        { component: 'TodaysGoals', action: 'deleteGoal', metadata: { goalId } }
-      );
+      console.error('Failed to delete goal:', error);
     }
   };
 

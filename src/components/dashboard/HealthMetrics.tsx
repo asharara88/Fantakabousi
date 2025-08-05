@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { usePerformance } from '../../hooks/usePerformance';
 import { 
   HeartIcon, 
   BoltIcon, 
@@ -12,8 +11,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const HealthMetrics: React.FC = () => {
-  const { renderTime } = usePerformance('HealthMetrics');
-  
   const metrics = [
     {
       name: 'Heart Rate',

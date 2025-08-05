@@ -1,12 +1,19 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Toaster } from './components/ui/Toaster';
+import LazyWrapper from './components/ui/LazyWrapper';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 import { useAuth } from './contexts/AuthContext';
 import { useProfile } from './hooks/useProfile';
-import LandingPage from './components/landing/LandingPage';
-import AuthForms from './components/auth/AuthForms';
 import LoadingSpinner from './components/ui/LoadingSpinner';
+
+// Lazy load components for better performance
+const LandingPage = lazy(() => import('./components/landing/LandingPage'));
+const AuthForms = lazy(() => import('./components/auth/AuthForms'));
+const UnifiedHealthDashboard = lazy(() => import('./components/dashboard/UnifiedHealthDashboard'));
+const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'));
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
@@ -15,48 +22,54 @@ const AppContent: React.FC = () => {
   if (loading || profileLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <LoadingSpinner size="xl" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-4"
+        >
+          <LoadingSpinner size="xl" />
+          <p className="text-muted-foreground">Loading Biowell...</p>
+        </motion.div>
       </div>
     );
   }
 
-  // Show dashboard if user is authenticated
+  // Show onboarding if user exists but hasn't completed onboarding
+  if (user && profile && !profile.onboarding_completed) {
+    return (
+      <LazyWrapper name="Onboarding">
+        <OnboardingFlow onComplete={() => window.location.reload()} />
+      </LazyWrapper>
+    );
+  }
+
+  // Show main dashboard if user is authenticated and onboarded
   if (user) {
     return (
-      <div className="min-h-screen bg-background p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Welcome to Biowell!</h1>
-          <p className="text-muted-foreground mb-6">Your wellness dashboard is loading...</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="card p-6">
-              <h2 className="text-xl font-semibold mb-2">Health Metrics</h2>
-              <p className="text-muted-foreground">Track your vital signs and health data</p>
-            </div>
-            <div className="card p-6">
-              <h2 className="text-xl font-semibold mb-2">AI Coach</h2>
-              <p className="text-muted-foreground">Get personalized health guidance</p>
-            </div>
-            <div className="card p-6">
-              <h2 className="text-xl font-semibold mb-2">Nutrition</h2>
-              <p className="text-muted-foreground">Log your meals and track nutrition</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <LazyWrapper name="Dashboard">
+        <UnifiedHealthDashboard />
+      </LazyWrapper>
     );
   }
 
   // Show landing page for unauthenticated users
-  return <LandingPage onShowAuth={() => {}} />;
+  return (
+    <LazyWrapper name="Landing Page">
+      <LandingPage onShowAuth={() => {}} />
+    </LazyWrapper>
+  );
 };
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppContent />
+          <Toaster />
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

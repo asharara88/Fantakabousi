@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useOptimizedComponent } from '../../hooks/useOptimizedComponent';
 import { 
   SparklesIcon,
   LightBulbIcon,
@@ -20,10 +19,6 @@ interface DailyInsightsProps {
 
 const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
   const { toast } = useToast();
-  const { captureError, registerCleanup } = useOptimizedComponent({
-    componentName: 'DailyInsights',
-    enablePerformanceTracking: true
-  });
   
   const insights = [
     {
@@ -94,7 +89,7 @@ const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
         }
       });
     } catch (error) {
-      captureError(error instanceof Error ? error : new Error('Supplement shortcut failed'));
+      console.error('Supplement shortcut failed:', error);
     }
   };
 

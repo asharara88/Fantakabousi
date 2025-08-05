@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { useChatSessions } from '../../hooks/useChatSessions';
-import { generateSpeech } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useToast } from '../../hooks/useToast';
 import { 
@@ -28,19 +26,11 @@ import {
 const AICoachEnhanced: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const {
-    sessions,
-    currentSession,
-    messages,
-    loading,
-    sendingMessage,
-    createNewSession,
-    selectSession,
-    sendMessage
-  } = useChatSessions();
   
   const [inputMessage, setInputMessage] = useState('');
-  const [showOnboarding, setShowOnboarding] = useState(!currentSession || messages.length === 0);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -56,27 +46,36 @@ const AICoachEnhanced: React.FC = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || sendingMessage) return;
     
+    setSendingMessage(true);
     setShowOnboarding(false);
-    await sendMessage(inputMessage);
+    
+    // Add user message
+    const userMessage = {
+      id: Date.now().toString(),
+      message: inputMessage,
+      role: 'user',
+      timestamp: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Simulate AI response
+    setTimeout(() => {
+      const aiMessage = {
+        id: (Date.now() + 1).toString(),
+        message: `I understand you're asking about "${inputMessage}". Based on your health data, I recommend focusing on consistent habits and monitoring your progress. Would you like specific guidance on any particular aspect?`,
+        role: 'assistant',
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, aiMessage]);
+      setSendingMessage(false);
+    }, 2000);
+    
     setInputMessage('');
   };
 
   const handleQuickPrompt = async (prompt: string) => {
-    const promptData = quickPrompts.find(p => p.text === prompt);
-    if (promptData?.action) {
-      // Navigate to relevant section after sending message
-      setTimeout(() => {
-        if (promptData.action === 'sleep') window.location.hash = '#sleep';
-        if (promptData.action === 'fitness') window.location.hash = '#fitness';
-        if (promptData.action === 'supplements') window.location.hash = '#supplements';
-        if (promptData.action === 'nutrition') window.location.hash = '#nutrition';
-      }, 2000);
-    }
-    
     setInputMessage(prompt);
-    setShowOnboarding(false);
-    await sendMessage(prompt);
-    setInputMessage('');
+    await handleSendMessage();
   };
 
   const handlePlayAudio = async (text: string) => {
@@ -88,35 +87,10 @@ const AICoachEnhanced: React.FC = () => {
         return;
       }
 
-      setIsPlayingAudio(true);
-      
-      const audioData = await generateSpeech(text);
-      const audioBlob = new Blob([
-        Uint8Array.from(atob(audioData.audioData), c => c.charCodeAt(0))
-      ], { type: 'audio/mpeg' });
-      
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      
-      audio.onended = () => {
-        setIsPlayingAudio(false);
-        setCurrentAudio(null);
-        URL.revokeObjectURL(audioUrl);
-      };
-      
-      audio.onerror = () => {
-        setIsPlayingAudio(false);
-        setCurrentAudio(null);
-        URL.revokeObjectURL(audioUrl);
-        toast({
-          title: "Audio Error",
-          description: "Failed to play audio response.",
-          variant: "destructive",
-        });
-      };
-      
-      setCurrentAudio(audio);
-      await audio.play();
+      toast({
+        title: "Audio Feature",
+        description: "Text-to-speech feature coming soon!",
+      });
       
     } catch (error) {
       console.error('Error playing audio:', error);
@@ -136,13 +110,6 @@ const AICoachEnhanced: React.FC = () => {
     { text: "Eat healthier", icon: HeartIcon, color: "bg-green-500" },
   ];
 
-  if (loading && !currentSession) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <LoadingSpinner size="xl" />
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col max-w-4xl mx-auto" role="region" aria-labelledby="ai-coach-title">
@@ -166,16 +133,17 @@ const AICoachEnhanced: React.FC = () => {
             </div>
           </div>
           
-          {sessions.length > 0 && (
             <button
-              aria-label="Start a new chat session"
-              onClick={() => createNewSession()}
+              aria-label="Clear chat history"
+              onClick={() => {
+                setMessages([]);
+                setShowOnboarding(true);
+              }}
               className="px-4 py-2 bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-200 flex items-center space-x-2"
             >
               <PlusIcon className="w-4 h-4" />
               <span className="hidden sm:inline">New Chat</span>
             </button>
-          )}
         </div>
       </header>
 
