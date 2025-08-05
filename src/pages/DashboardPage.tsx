@@ -6,7 +6,7 @@ import Overview from '../components/dashboard/Overview';
 import HealthMetrics from '../components/dashboard/HealthMetrics';
 import AICoachEnhanced from '../components/dashboard/AICoachEnhanced';
 import NutritionDashboard from '../components/nutrition/NutritionDashboard';
-import Supplements from '../components/dashboard/Supplements';
+import SupplementShopEnhanced from '../components/supplements/SupplementShopEnhanced';
 import Profile from '../components/dashboard/Profile';
 
 const DashboardPage: React.FC = () => {
@@ -17,7 +17,7 @@ const DashboardPage: React.FC = () => {
         <Route path="/health" element={<HealthMetrics />} />
         <Route path="/coach" element={<AICoachEnhanced />} />
         <Route path="/nutrition" element={<NutritionDashboard />} />
-        <Route path="/supplements" element={<Supplements />} />
+        <Route path="/supplements" element={<SupplementShopEnhanced />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </DashboardLayout>
