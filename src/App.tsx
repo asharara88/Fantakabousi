@@ -20,8 +20,10 @@ const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   
+  let content;
+
   if (loading || profileLoading) {
-    return (
+    content = (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -33,32 +35,30 @@ const AppContent: React.FC = () => {
         </motion.div>
       </div>
     );
-  }
-
-  // Show onboarding if user exists but hasn't completed onboarding
-  if (user && profile && !profile.onboarding_completed) {
-    return (
+  } else if (user && profile && !profile.onboarding_completed) {
+    // Show onboarding if user exists but hasn't completed onboarding
+    content = (
       <LazyWrapper name="Onboarding">
         <OnboardingFlow onComplete={() => window.location.reload()} />
       </LazyWrapper>
     );
-  }
-
-  // Show main dashboard if user is authenticated and onboarded
-  if (user) {
-    return (
+  } else if (user) {
+    // Show main dashboard if user is authenticated and onboarded
+    content = (
       <LazyWrapper name="Dashboard">
         <UnifiedHealthDashboard />
       </LazyWrapper>
     );
+  } else {
+    // Show landing page for unauthenticated users
+    content = (
+      <LazyWrapper name="Landing Page">
+        <LandingPage onShowAuth={() => {}} />
+      </LazyWrapper>
+    );
   }
 
-  // Show landing page for unauthenticated users
-  return (
-    <LazyWrapper name="Landing Page">
-      <LandingPage onShowAuth={() => {}} />
-    </LazyWrapper>
-  );
+  return content;
 };
 
 const App: React.FC = () => {
