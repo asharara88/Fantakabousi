@@ -90,10 +90,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
   ];
 
   const stats = [
-    { number: '10,000+', label: 'Active Users' },
-    { number: '95%', label: 'Health Improvement' },
+    { number: '50+', label: 'Health Metrics' },
+    { number: '1000+', label: 'Supplement Database' },
     { number: '24/7', label: 'AI Monitoring' },
-    { number: '4.9★', label: 'User Rating' }
+    { number: '5★', label: 'Evidence-Based' }
   ];
 
   // Show auth forms if requested
