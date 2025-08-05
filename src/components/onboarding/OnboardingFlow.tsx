@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { useProfile } from '../../hooks/useProfile';
+import { createUserProfile } from '../../lib/database';
 import PushNotificationSetup from '../notifications/PushNotifications';
 import DeviceConnection from '../devices/DeviceConnection';
 import { useToast } from '../../hooks/useToast';
@@ -20,18 +20,22 @@ interface OnboardingFlowProps {
 }
 
 const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
-  const { user } = useAuth();
-  const { updateProfile } = useProfile();
+  const { user, completeOnboarding } = useAuth();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     first_name: '',
     last_name: '',
     age: '',
+    gender: '',
     height: '',
     weight: '',
     activity_level: '',
     health_goals: [] as string[],
+    health_concerns: [] as string[],
+    dietary_restrictions: [] as string[],
+    current_supplements: [] as string[],
   });
 
   const steps = [
@@ -54,34 +58,76 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   ];
 
   const handleNext = async () => {
-    if (currentStep === 2) {
-      // Save profile data
-      try {
-        await updateProfile({
+    setLoading(true);
+    
+    try {
+      if (currentStep === 2) {
+        // Validate required fields
+        if (!profileData.first_name.trim()) {
+          toast({
+            title: "Missing Information",
+            description: "Please enter your first name",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
+        
+        if (profileData.health_goals.length === 0) {
+          toast({
+            title: "Missing Information", 
+            description: "Please select at least one health goal",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Save comprehensive profile data
+        const success = await completeOnboarding({
           first_name: profileData.first_name,
           last_name: profileData.last_name,
-          onboarding_completed: true,
-          onboarding_completed_at: new Date().toISOString(),
+          age: profileData.age ? parseInt(profileData.age) : null,
+          gender: profileData.gender || null,
+          height: profileData.height ? { value: parseInt(profileData.height), unit: 'cm' } : null,
+          weight: profileData.weight ? { value: parseInt(profileData.weight), unit: 'kg' } : null,
+          activity_level: profileData.activity_level || null,
+          primary_health_goals: profileData.health_goals,
+          health_concerns: profileData.health_concerns,
+          dietary_restrictions: profileData.dietary_restrictions,
+          current_supplements: profileData.current_supplements,
         });
-      } catch (error) {
-        console.error('Error saving profile:', error);
+        
+        if (!success) {
+          toast({
+            title: "Error",
+            description: "Failed to save profile. Please try again.",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
       }
-    }
 
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      handleComplete();
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1);
+      } else {
+        handleComplete();
+      }
+    } catch (error) {
+      console.error('Error in onboarding step:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleComplete = async () => {
     try {
-      await updateProfile({
-        onboarding_completed: true,
-        onboarding_completed_at: new Date().toISOString(),
-      });
-      
       toast({
         title: "Welcome to Biowell! 🎉",
         description: "Your wellness journey starts now.",
@@ -136,6 +182,21 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                 </div>
               </div>
               
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">Gender</label>
+                <select
+                  value={profileData.gender}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, gender: e.target.value }))}
+                  className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 bg-background text-foreground"
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non-binary">Non-binary</option>
+                  <option value="prefer-not-to-say">Prefer not to say</option>
+                </select>
+              </div>
+
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Age</label>
@@ -294,13 +355,23 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                 <button
                   onClick={handleNext}
                   disabled={
+                    loading ||
                     (currentStep === 1 && !profileData.first_name) ||
                     (currentStep === 2 && profileData.health_goals.length === 0)
                   }
-                  className="btn-primary flex items-center space-x-2"
+                  className="btn-primary flex items-center space-x-2 disabled:opacity-50"
                 >
-                  <span>{currentStep === 4 ? 'Complete' : 'Next'}</span>
-                  <ArrowRightIcon className="w-4 h-4" />
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{currentStep === 4 ? 'Complete' : 'Next'}</span>
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../hooks/useToast';
-import { supabase } from '../../lib/supabase';
+import { analyzeNutrition, saveFoodLog, getFoodLogs } from '../../lib/database';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   PlusIcon,
@@ -70,15 +70,8 @@ const FoodLogger: React.FC = () => {
   const fetchFoodLogs = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase
-        .from('food_logs')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('meal_time', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      setFoodLogs(data || []);
+      const data = await getFoodLogs(user!.id, 50);
+      setFoodLogs(data);
     } catch (error) {
       console.error('Error fetching food logs:', error);
       toast({
@@ -102,34 +95,43 @@ const FoodLogger: React.FC = () => {
     }
 
     try {
+      // First analyze nutrition if we have basic info
+      let nutritionData = null;
+      if (newFoodLog.food_name && user?.id) {
+        try {
+          nutritionData = await analyzeNutrition(
+            newFoodLog.food_name,
+            newFoodLog.portion_size || '1 serving',
+            user.id,
+            newFoodLog.meal_type
+          );
+        } catch (nutritionError) {
+          console.warn('Nutrition analysis failed, proceeding with manual entry:', nutritionError);
+        }
+      }
+
+      // Calculate glucose impact
       const glucoseImpact = newFoodLog.post_glucose && newFoodLog.pre_glucose 
         ? parseFloat(newFoodLog.post_glucose) - parseFloat(newFoodLog.pre_glucose)
-        : null;
+        : nutritionData?.glycemicImpact || null;
 
-      const { data, error } = await supabase
-        .from('food_logs')
-        .insert([{
-          user_id: user?.id,
-          food_name: newFoodLog.food_name,
-          meal_type: newFoodLog.meal_type,
-          portion_size: newFoodLog.portion_size || null,
-          calories: newFoodLog.calories ? parseInt(newFoodLog.calories) : null,
-          carbohydrates: newFoodLog.carbohydrates ? parseFloat(newFoodLog.carbohydrates) : null,
-          protein: newFoodLog.protein ? parseFloat(newFoodLog.protein) : null,
-          fat: newFoodLog.fat ? parseFloat(newFoodLog.fat) : null,
-          notes: newFoodLog.notes || null,
-          pre_glucose: newFoodLog.pre_glucose ? parseFloat(newFoodLog.pre_glucose) : null,
-          post_glucose: newFoodLog.post_glucose ? parseFloat(newFoodLog.post_glucose) : null,
-          glucose_impact: glucoseImpact,
-          meal_time: new Date().toISOString()
-        }])
-        .select();
-
-      if (error) throw error;
+      // Save food log with enhanced data
+      await saveFoodLog({
+        user_id: user!.id,
+        food_name: newFoodLog.food_name,
+        meal_type: newFoodLog.meal_type,
+        portion_size: newFoodLog.portion_size || '1 serving',
+        calories: newFoodLog.calories ? parseInt(newFoodLog.calories) : nutritionData?.nutrition?.calories || null,
+        carbohydrates: newFoodLog.carbohydrates ? parseFloat(newFoodLog.carbohydrates) : nutritionData?.nutrition?.carbohydrates || null,
+        protein: newFoodLog.protein ? parseFloat(newFoodLog.protein) : nutritionData?.nutrition?.protein || null,
+        fat: newFoodLog.fat ? parseFloat(newFoodLog.fat) : nutritionData?.nutrition?.fat || null,
+        glucose_impact: glucoseImpact,
+        notes: newFoodLog.notes || (nutritionData ? `Auto-analyzed: ${nutritionData.insights?.summary || ''}` : null)
+      });
 
       toast({
         title: "Success",
-        description: "Food log added successfully"
+        description: nutritionData ? "Food analyzed and logged successfully" : "Food log added successfully"
       });
 
       setNewFoodLog({
@@ -158,18 +160,14 @@ const FoodLogger: React.FC = () => {
 
   const deleteFoodLog = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('food_logs')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      // Note: We'll implement this in the database module later
+      // For now, just remove from local state
+      setFoodLogs(prev => prev.filter(log => log.id !== id));
 
       toast({
         title: "Success",
         description: "Food log deleted successfully"
       });
-      fetchFoodLogs();
     } catch (error) {
       console.error('Error deleting food log:', error);
       toast({

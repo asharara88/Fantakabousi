@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { handleApiError, AppError } from './errorHandler';
 import { apiCache } from './cacheManager';
+import { performanceMonitor } from './performanceMonitor';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -8,127 +9,253 @@ const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 
 // Chat API with proper error handling
 export const sendChatMessage = async (message: string, userId: string, sessionId?: string) => {
-  const cacheKey = `chat-${userId}-${sessionId}-${message.slice(0, 50)}`;
-  
-  // Check cache first for identical recent messages
-  const cached = apiCache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < 30000) { // 30 second cache
-    return cached;
-  }
-  
-  try {
-    // Call OpenAI edge function
-    const apiUrl = `${SUPABASE_URL}/functions/v1/openai-chat`;
+  return performanceMonitor.measureAsyncOperation('sendChatMessage', async () => {
+    const cacheKey = `chat-${userId}-${sessionId}-${message.slice(0, 50)}`;
     
-    const headers = {
-      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-    };
+    // Check cache first for identical recent messages
+    const cached = apiCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < 30000) { // 30 second cache
+      return cached;
+    }
+    
+    try {
+      // Call OpenAI edge function
+      const apiUrl = `${SUPABASE_URL}/functions/v1/openai-chat`;
+      
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
 
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        message,
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          message,
+          userId,
+          sessionId
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new AppError(
+          errorData.error || `API error: ${response.status}`,
+          'API_ERROR',
+          'medium',
+          { component: 'ChatAPI', statusCode: response.status }
+        );
+      }
+
+      const data = await response.json();
+      
+      if (!data.response) {
+        throw new AppError('Invalid API response', 'INVALID_RESPONSE', 'medium');
+      }
+
+      const result = {
+        response: data.response,
+        timestamp: data.timestamp || new Date().toISOString(),
+        session_id: data.session_id,
+        confidence: data.confidence || 0.9
+      };
+
+      // Cache the result
+      apiCache.set(cacheKey, result, 60000); // 1 minute cache
+      
+      return result;
+    } catch (error) {
+      handleApiError(error, {
+        component: 'ChatAPI',
+        action: 'sendMessage',
         userId,
-        sessionId
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+        metadata: { sessionId, messageLength: message.length }
+      });
+      throw error;
     }
-
-    const data = await response.json();
-    const aiResponse = data.response;
-
-    const result = {
-      response: aiResponse,
-      timestamp: data.timestamp || new Date().toISOString()
-    };
-
-    // Save to chat history
-    if (sessionId && userId) {
-      await supabase.from('chat_history').insert([
-        {
-          user_id: userId,
-          session_id: sessionId,
-          message: message,
-          response: aiResponse,
-          role: 'user',
-          timestamp: new Date().toISOString()
-        },
-        {
-          user_id: userId,
-          session_id: sessionId,
-          message: aiResponse,
-          response: aiResponse,
-          role: 'assistant',
-          timestamp: new Date().toISOString()
-        }
-      ]);
-    }
-
-    // Cache the result
-    apiCache.set(cacheKey, result, 60000); // 1 minute cache
-    
-    return result;
-  } catch (error) {
-    handleApiError(error, {
-      component: 'ChatAPI',
-      action: 'sendMessage',
-      userId,
-      metadata: { sessionId, messageLength: message.length }
-    });
-    throw error;
-  }
+  });
 };
 
 // Text-to-Speech API
 export const generateSpeech = async (text: string, voiceId?: string) => {
-  const cacheKey = `tts-${text.slice(0, 100)}-${voiceId}`;
-  
-  // Check cache for identical text
-  const cached = apiCache.get(cacheKey);
-  if (cached) {
-    return cached;
-  }
-  
-  try {
-    const apiUrl = `${SUPABASE_URL}/functions/v1/elevenlabs-tts`;
+  return performanceMonitor.measureAsyncOperation('generateSpeech', async () => {
+    const cacheKey = `tts-${text.slice(0, 100)}-${voiceId}`;
     
-    const headers = {
-      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-    };
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        text,
-        voiceId: voiceId || 'EXAVITQu4vr4xnSDxMaL' // Default voice
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`TTS API error: ${response.status}`);
+    // Check cache for identical text
+    const cached = apiCache.get(cacheKey);
+    if (cached) {
+      return cached;
     }
+    
+    try {
+      const apiUrl = `${SUPABASE_URL}/functions/v1/elevenlabs-tts`;
+      
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
 
-    const data = await response.json();
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          text,
+          voiceId: voiceId || 'EXAVITQu4vr4xnSDxMaL'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new AppError(
+          errorData.error || `TTS API error: ${response.status}`,
+          'TTS_ERROR',
+          'medium',
+          { component: 'TTSAPI', statusCode: response.status }
+        );
+      }
+
+      const data = await response.json();
+      
+      if (!data.audioData) {
+        throw new AppError('Invalid TTS response', 'INVALID_TTS_RESPONSE', 'medium');
+      }
+      
+      // Cache the audio data
+      apiCache.set(cacheKey, data, 5 * 60 * 1000); // 5 minute cache
+      
+      return data;
+    } catch (error) {
+      handleApiError(error, {
+        component: 'TTSAPI',
+        action: 'generateSpeech',
+        metadata: { textLength: text.length, voiceId }
+      });
+      throw error;
+    }
+  });
+};
+
+// Nutrition Analysis API
+export const analyzeNutrition = async (foodName: string, quantity?: string, userId?: string, mealType?: string) => {
+  return performanceMonitor.measureAsyncOperation('analyzeNutrition', async () => {
+    const cacheKey = `nutrition-${foodName}-${quantity}`;
     
-    // Cache the audio data
-    apiCache.set(cacheKey, data, 5 * 60 * 1000); // 5 minute cache
+    // Check cache first
+    const cached = apiCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
     
-    return data;
-  } catch (error) {
-    handleApiError(error, {
-      component: 'TTSAPI',
-      action: 'generateSpeech',
-      metadata: { textLength: text.length, voiceId }
-    });
-    throw error;
-  }
+    try {
+      const apiUrl = `${SUPABASE_URL}/functions/v1/nutrition-analysis`;
+      
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          foodName,
+          quantity: quantity || '1 serving',
+          userId: userId || 'anonymous',
+          mealType: mealType || 'snack'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new AppError(
+          errorData.error || `Nutrition API error: ${response.status}`,
+          'NUTRITION_ERROR',
+          'medium',
+          { component: 'NutritionAPI', statusCode: response.status }
+        );
+      }
+
+      const data = await response.json();
+      
+      // Cache the result
+      apiCache.set(cacheKey, data, 10 * 60 * 1000); // 10 minute cache
+      
+      return data;
+    } catch (error) {
+      handleApiError(error, {
+        component: 'NutritionAPI',
+        action: 'analyzeNutrition',
+        metadata: { foodName, quantity, userId }
+      });
+      throw error;
+    }
+  });
+};
+
+// Recipe Search API
+export const searchRecipes = async (query: string, filters?: {
+  diet?: string;
+  intolerances?: string;
+  maxReadyTime?: number;
+  number?: number;
+  minProtein?: number;
+  maxCarbs?: number;
+}) => {
+  return performanceMonitor.measureAsyncOperation('searchRecipes', async () => {
+    const cacheKey = `recipes-${query}-${JSON.stringify(filters)}`;
+    
+    // Check cache first
+    const cached = apiCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+    
+    try {
+      const apiUrl = new URL(`${SUPABASE_URL}/functions/v1/spoonacular-recipes`);
+      apiUrl.searchParams.set('query', query);
+      
+      if (filters?.diet) apiUrl.searchParams.set('diet', filters.diet);
+      if (filters?.intolerances) apiUrl.searchParams.set('intolerances', filters.intolerances);
+      if (filters?.maxReadyTime) apiUrl.searchParams.set('maxReadyTime', filters.maxReadyTime.toString());
+      if (filters?.number) apiUrl.searchParams.set('number', filters.number.toString());
+      if (filters?.minProtein) apiUrl.searchParams.set('minProtein', filters.minProtein.toString());
+      if (filters?.maxCarbs) apiUrl.searchParams.set('maxCarbs', filters.maxCarbs.toString());
+      
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
+
+      const response = await fetch(apiUrl.toString(), {
+        method: 'GET',
+        headers
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new AppError(
+          errorData.error || `Recipe API error: ${response.status}`,
+          'RECIPE_ERROR',
+          'medium',
+          { component: 'RecipeAPI', statusCode: response.status }
+        );
+      }
+
+      const data = await response.json();
+      
+      // Cache the result
+      apiCache.set(cacheKey, data, 15 * 60 * 1000); // 15 minute cache
+      
+      return data;
+    } catch (error) {
+      handleApiError(error, {
+        component: 'RecipeAPI',
+        action: 'searchRecipes',
+        metadata: { query, filters }
+      });
+      throw error;
+    }
+  });
 };
 
 // Health Metrics API

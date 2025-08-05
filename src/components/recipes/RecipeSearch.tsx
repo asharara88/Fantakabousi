@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
+import { searchRecipes } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useToast } from '../../hooks/useToast';
 import { 
@@ -50,90 +51,50 @@ const RecipeSearch: React.FC = () => {
   const loadFeaturedRecipes = async () => {
     setLoading(true);
     try {
-      // Mock featured recipes optimized for health goals
-      const mockRecipes: Recipe[] = [
-        {
-          id: 1,
-          title: 'High-Protein Salmon Bowl with Quinoa',
-          image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg',
-          readyInMinutes: 25,
-          servings: 2,
-          summary: 'Nutrient-dense salmon bowl packed with omega-3s and complete proteins.',
-          healthScore: 95,
-          nutrition: { calories: 420, protein: 35, carbs: 28, fat: 18 },
-          tags: ['High Protein', 'Omega-3', 'Low Carb', 'Anti-Inflammatory'],
-          saved: false
-        },
-        {
-          id: 2,
-          title: 'Mediterranean Chicken with Vegetables',
-          image: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg',
-          readyInMinutes: 30,
-          servings: 4,
-          summary: 'Lean protein with antioxidant-rich vegetables and healthy fats.',
-          healthScore: 88,
-          nutrition: { calories: 380, protein: 32, carbs: 22, fat: 16 },
-          tags: ['Mediterranean', 'High Protein', 'Heart Healthy'],
-          saved: false
-        },
-        {
-          id: 3,
-          title: 'Avocado and Spinach Power Smoothie',
-          image: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg',
-          readyInMinutes: 5,
-          servings: 1,
-          summary: 'Fertility-boosting smoothie with folate, healthy fats, and antioxidants.',
-          healthScore: 92,
-          nutrition: { calories: 280, protein: 12, carbs: 18, fat: 20 },
-          tags: ['Fertility', 'Antioxidants', 'Quick', 'Nutrient Dense'],
-          saved: false
-        },
-        {
-          id: 4,
-          title: 'Grass-Fed Beef Stir Fry',
-          image: 'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg',
-          readyInMinutes: 20,
-          servings: 3,
-          summary: 'High-quality protein with zinc and B-vitamins for muscle building.',
-          healthScore: 85,
-          nutrition: { calories: 350, protein: 28, carbs: 15, fat: 22 },
-          tags: ['High Protein', 'Muscle Building', 'Iron Rich'],
-          saved: false
-        },
-        {
-          id: 5,
-          title: 'Keto Cauliflower Rice Bowl',
-          image: 'https://images.pexels.com/photos/1640771/pexels-photo-1640771.jpeg',
-          readyInMinutes: 15,
-          servings: 2,
-          summary: 'Low-carb, high-fat meal perfect for insulin sensitivity.',
-          healthScore: 90,
-          nutrition: { calories: 320, protein: 18, carbs: 8, fat: 26 },
-          tags: ['Keto', 'Low Carb', 'Insulin Friendly'],
-          saved: false
-        },
-        {
-          id: 6,
-          title: 'Walnut Crusted Cod with Asparagus',
-          image: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg',
-          readyInMinutes: 35,
-          servings: 2,
-          summary: 'Omega-3 rich fish with fertility-supporting nutrients.',
-          healthScore: 94,
-          nutrition: { calories: 290, protein: 30, carbs: 12, fat: 14 },
-          tags: ['Omega-3', 'Fertility', 'Low Calorie', 'Brain Health'],
-          saved: false
-        }
-      ];
+      // Load featured recipes from API
+      const data = await searchRecipes('healthy high protein', {
+        number: 12,
+        maxReadyTime: 45,
+        minProtein: 20
+      });
       
-      setRecipes(mockRecipes);
+      const processedRecipes = data.recipes.map((recipe: any) => ({
+        id: recipe.id,
+        title: recipe.title,
+        image: recipe.image,
+        readyInMinutes: recipe.readyInMinutes,
+        servings: recipe.servings,
+        summary: recipe.summary,
+        healthScore: Math.round((recipe.fertilityScore + recipe.muscleScore + recipe.insulinScore) / 3),
+        nutrition: recipe.nutrition,
+        tags: recipe.healthTags || [],
+        saved: false
+      }));
+      
+      setRecipes(processedRecipes);
     } catch (error) {
       console.error('Error loading recipes:', error);
       toast({
         title: "Error",
-        description: "Failed to load recipes. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to load recipes. Please try again.",
         variant: "destructive",
       });
+      
+      // Fallback to mock data if API fails
+      setRecipes([
+        {
+          id: 1,
+          title: 'High-Protein Salmon Bowl',
+          image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg',
+          readyInMinutes: 25,
+          servings: 2,
+          summary: 'Nutrient-dense salmon bowl packed with omega-3s.',
+          healthScore: 95,
+          nutrition: { calories: 420, protein: 35, carbs: 28, fat: 18 },
+          tags: ['High Protein', 'Omega-3'],
+          saved: false
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -144,14 +105,33 @@ const RecipeSearch: React.FC = () => {
 
     setLoading(true);
     try {
-      // Filter existing recipes based on search
-      const filtered = recipes.filter(recipe =>
-        recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        recipe.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      setRecipes(filtered);
+      const data = await searchRecipes(searchQuery, {
+        diet: selectedDiet || undefined,
+        number: 12,
+        maxReadyTime: 60
+      });
+      
+      const processedRecipes = data.recipes.map((recipe: any) => ({
+        id: recipe.id,
+        title: recipe.title,
+        image: recipe.image,
+        readyInMinutes: recipe.readyInMinutes,
+        servings: recipe.servings,
+        summary: recipe.summary,
+        healthScore: Math.round((recipe.fertilityScore + recipe.muscleScore + recipe.insulinScore) / 3),
+        nutrition: recipe.nutrition,
+        tags: recipe.healthTags || [],
+        saved: false
+      }));
+      
+      setRecipes(processedRecipes);
     } catch (error) {
       console.error('Error searching recipes:', error);
+      toast({
+        title: "Search Error",
+        description: error instanceof Error ? error.message : "Failed to search recipes.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { saveDeviceConnection, generateRealisticHealthData } from '../../lib/database';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useToast } from '../../hooks/useToast';
 import { 
@@ -52,7 +52,6 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
   const handleQuickConnect = async (deviceId: string) => {
     if (connectedDevices.includes(deviceId)) return;
 
-    // Check if user is properly authenticated
     if (!user?.id) {
       toast({
         title: "Authentication Required",
@@ -67,21 +66,18 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       // Simulate quick connection
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Save device connection
       const device = devices.find(d => d.id === deviceId)!;
-      const { error } = await supabase
-        .from('device_connections')
-        .insert({
-          user_id: user!.id,
-          device_type: deviceId === 'apple-watch' ? 'wearable' : 'cgm',
-          provider: device.brand.toLowerCase(),
-          device_id: `${deviceId}-${Date.now()}`,
-          device_name: device.name,
-          access_token: 'connected_' + Date.now(),
-          metadata: { features: device.metrics }
-        });
-
-      if (error) throw error;
+      
+      // Save device connection
+      await saveDeviceConnection({
+        user_id: user.id,
+        device_type: deviceId === 'apple-watch' ? 'wearable' : 'cgm',
+        provider: device.brand.toLowerCase(),
+        device_id: `${deviceId}-${Date.now()}`,
+        device_name: device.name,
+        access_token: 'connected_' + Date.now(),
+        metadata: { features: device.metrics, connected_at: new Date().toISOString() }
+      });
 
       // Generate dummy data for the connected device
       const insertedCount = await generateRealisticHealthData(user.id, deviceId as 'apple-watch' | 'freestyle-libre');
@@ -92,14 +88,14 @@ const DeviceConnection: React.FC<DeviceConnectionProps> = ({ isOpen, onClose }) 
       
       toast({
         title: "Device Connected!",
-        description: `${device.name} is now syncing your health data.`,
+        description: `${device.name} is now syncing your health data. Generated ${insertedCount} sample data points.`,
       });
 
     } catch (error) {
       console.error('Error connecting device:', error);
       toast({
         title: "Connection Failed",
-        description: "Please try again.",
+        description: error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
       });
     } finally {
