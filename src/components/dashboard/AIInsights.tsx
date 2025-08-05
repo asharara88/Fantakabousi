@@ -52,10 +52,10 @@ const AIInsights: React.FC<AIInsightsProps> = ({ onQuickAction }) => {
             <div className="text-base font-medium text-foreground font-inter">
               Last updated: 2 minutes ago
             </div>
-          <button className="btn-primary flex items-center space-x-2">
+          </div>
+          <button className="btn-primary flex items-center space-x-2" aria-label="Get more insights from Smart Coach">
             <SparklesIcon className="w-4 h-4" />
             <span>Get More Insights</span>
-            aria-label="Get more insights from Smart Coach"
           </button>
         </div>
       </div>
