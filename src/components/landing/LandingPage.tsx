@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { PlayIcon, UserGroupIcon, CheckIcon, StarIcon, ArrowRightIcon, HeartIcon, ActivityIcon, TrendingUpIcon, BoltIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../../contexts/ThemeContext';
 import AuthForms from '../auth/AuthForms';
 import { 
@@ -18,7 +17,10 @@ import {
   ClockIcon,
   ChevronDownIcon,
   MoonIcon,
-  BoltIcon
+  BoltIcon,
+  ActivityIcon,
+  TrendingUpIcon,
+  CheckIcon
 } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
