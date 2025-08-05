@@ -9,7 +9,7 @@ import {
   HeartIcon,
   BeakerIcon,
   BoltIcon,
-  BrainIcon,
+  LightBulbIcon,
   SparklesIcon,
   CheckCircleIcon,
   PlayIcon,
@@ -99,7 +99,7 @@ const OptimizeToday: React.FC = () => {
       description: 'Maintained low stress during morning meetings',
       timestamp: new Date(currentTime.getTime() - 1 * 60 * 60 * 1000), // 1 hour ago
       category: 'wellness',
-      icon: BrainIcon,
+      icon: LightBulbIcon,
       color: 'from-violet-500 to-purple-600'
     }
   ];
@@ -137,7 +137,7 @@ const OptimizeToday: React.FC = () => {
         completed: completedProtocols.has('cognitive-break'),
         priority: 'medium',
         description: 'Brief mental reset to maintain focus and productivity',
-        icon: BrainIcon,
+        icon: LightBulbIcon,
         color: 'from-indigo-500 to-purple-600',
         benefits: ['Improved focus', 'Reduced mental fatigue', 'Enhanced creativity']
       });
@@ -259,6 +259,7 @@ const OptimizeToday: React.FC = () => {
       case 'workout': return FireIcon;
       case 'stress': return EyeIcon;
       case 'cognitive': return BrainIcon;
+      case 'cognitive': return LightBulbIcon;
       case 'fertility': return UserGroupIcon;
       default: return SparklesIcon;
     }
