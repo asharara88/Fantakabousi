@@ -147,34 +147,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 </motion.button>
               </div>
 
-              {/* Trust Indicators */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
-                className="grid grid-cols-4 gap-6 pt-8"
-              >
-                {[
-                  { number: '99.7%', label: 'Accuracy', icon: EyeIcon },
-                  { number: '<2s', label: 'Response', icon: BoltIcon },
-                  { number: '24/7', label: 'Monitoring', icon: ClockIcon },
-                  { number: 'HIPAA', label: 'Compliant', icon: ShieldCheckIcon }
-                ].map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
-                    className="text-center"
-                  >
-                    <div className="w-10 h-10 mx-auto mb-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                      <stat.icon className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                    </div>
-                    <div className="text-lg font-bold text-slate-900 dark:text-slate-100">{stat.number}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </motion.div>
             </motion.div>
 
             {/* Dashboard Preview */}
