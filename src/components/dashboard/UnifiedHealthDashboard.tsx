@@ -407,11 +407,17 @@ const UnifiedHealthDashboard: React.FC = () => {
           </motion.div>
 
           {/* Premium Theme Toggle */}
-          <div className="px-6 py-4 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20">
+          <div className="px-6 py-4 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Appearance</span>
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Theme Settings</span>
+              <div className="text-xs px-2 py-1 bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full">
+                {autoSyncTime ? 'Auto Mode' : theme === 'light' ? 'Light' : 'Dark'}
+              </div>
             </div>
             <ThemeToggle />
+            <div className="mt-3 text-xs text-slate-600 dark:text-slate-400">
+              {autoSyncTime ? 'Automatically switches based on time of day' : 'Manual theme selection'}
+            </div>
           </div>
 
           {/* Main Navigation with Premium Effects */}
@@ -585,6 +591,55 @@ const UnifiedHealthDashboard: React.FC = () => {
                 <BellIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
               </motion.button>
+              
+              {/* Mobile Theme Toggle */}
+              <div className="flex items-center space-x-1 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl rounded-xl p-1 border border-white/30 dark:border-slate-700/30">
+                <button
+                  onClick={() => {
+                    setAutoSyncTime(false);
+                    setTheme('light');
+                  }}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    theme === 'light' && !autoSyncTime
+                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-slate-700/20'
+                  }`}
+                  title="Light theme"
+                  aria-label="Switch to light theme"
+                >
+                  <SunIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    setAutoSyncTime(true);
+                    setTheme('auto');
+                  }}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    autoSyncTime
+                      ? 'bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-slate-700/20'
+                  }`}
+                  title="Auto theme"
+                  aria-label="Switch to automatic theme"
+                >
+                  <ComputerDesktopIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    setAutoSyncTime(false);
+                    setTheme('dark');
+                  }}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    theme === 'dark' && !autoSyncTime
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-slate-700/20'
+                  }`}
+                  title="Dark theme"
+                  aria-label="Switch to dark theme"
+                >
+                  <MoonIcon className="w-4 h-4" />
+                </button>
+              </div>
               
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
