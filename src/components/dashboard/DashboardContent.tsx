@@ -6,7 +6,7 @@ import LazyWrapper from '../ui/LazyWrapper';
 // Lazy load components
 const WelcomeHeader = lazy(() => import('./WelcomeHeader'));
 const HealthMetrics = lazy(() => import('./HealthMetrics'));
-const DailyInsights = lazy(() => import('./DailyInsights'));
+const OptimizeToday = lazy(() => import('./OptimizeToday'));
 const TodaysGoals = lazy(() => import('./TodaysGoals'));
 const ActivityFeed = lazy(() => import('./ActivityFeed'));
 const ReadinessScore = lazy(() => import('./ReadinessScore'));
@@ -14,6 +14,7 @@ const AICoachEnhanced = lazy(() => import('./AICoachEnhanced'));
 const NutritionDashboard = lazy(() => import('../nutrition/NutritionDashboard'));
 const SupplementShopEnhanced = lazy(() => import('../supplements/SupplementShopEnhanced'));
 const ProfileSettingsEnhanced = lazy(() => import('./ProfileSettingsEnhanced'));
+const UbergeneIntegration = lazy(() => import('../fertility/UbergeneIntegration'));
 
 interface DashboardContentProps {
   activeView: string;
@@ -37,7 +38,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
           <LazyWrapper name="Health Dashboard">
             <div className="space-y-8">
               <HealthMetrics />
-              <DailyInsights onQuickAction={onQuickAction} />
+              <OptimizeToday />
             </div>
           </LazyWrapper>
         );
@@ -70,6 +71,13 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
             <ProfileSettingsEnhanced />
           </LazyWrapper>
         );
+      case 'fertility':
+      case 'ubergene':
+        return (
+          <LazyWrapper name="UBERGENE Fertility">
+            <UbergeneIntegration />
+          </LazyWrapper>
+        );
       default:
         return (
           <LazyWrapper name="Dashboard">
@@ -79,7 +87,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div className="xl:col-span-2 space-y-8">
                   <HealthMetrics />
-                  <DailyInsights onQuickAction={onQuickAction} />
+                  <OptimizeToday />
                 </div>
                 
                 <div className="space-y-8">

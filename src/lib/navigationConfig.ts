@@ -4,13 +4,15 @@ import {
   ChartBarIcon,
   ShoppingBagIcon,
   BeakerIcon,
-  BoltIcon
+  BoltIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeSolidIcon,
   ChatBubbleLeftRightIcon as ChatSolidIcon,
   ChartBarIcon as ChartSolidIcon,
-  ShoppingBagIcon as ShoppingSolidIcon
+  ShoppingBagIcon as ShoppingSolidIcon,
+  UserGroupIcon as UserGroupSolidIcon
 } from '@heroicons/react/24/solid';
 
 export const navigationItems = [
@@ -71,5 +73,14 @@ export const navigationItems = [
     activeIcon: BoltIcon,
     description: 'Training & workouts',
     gradient: 'from-red-500 via-orange-500 to-yellow-500'
+  },
+  {
+    id: 'fertility',
+    label: 'UBERGENE',
+    icon: UserGroupIcon,
+    activeIcon: UserGroupSolidIcon,
+    description: 'Couples fertility optimization',
+    badge: 'TTC',
+    gradient: 'from-pink-500 via-rose-500 to-red-500'
   }
 ];
