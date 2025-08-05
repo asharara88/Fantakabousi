@@ -129,33 +129,33 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
             <img 
               src={logoUrl} 
               alt="Biowell" 
-              className="h-21 mx-auto mb-4"
+              className="h-12 mx-auto mb-6"
             />
             {onBack && (
               <button
                 onClick={onBack}
-                className="mb-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="mb-6 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               >
                 ← Back to Home
               </button>
             )}
-            <h1 className="text-2xl font-bold text-foreground mb-2">
-              Welcome to Your Wellness Journey
+            <h1 className="text-display-sm font-display text-slate-900 dark:text-slate-100 mb-3 tracking-tight">
+              Welcome to Biowell
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-slate-600 dark:text-slate-400 font-light">
               {isSignIn ? 'Sign in to continue' : 'Create your account'}
             </p>
           </div>
 
           {/* Form Toggle */}
-          <div className="flex bg-muted/50 rounded-lg p-1 mb-6">
+          <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 mb-8">
             <button
               type="button"
               onClick={() => setIsSignIn(true)}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
                 isSignIn
-                  ? 'bg-gradient-blue-light text-white shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
               }`}
             >
               Sign In
@@ -163,10 +163,10 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
             <button
               type="button"
               onClick={() => setIsSignIn(false)}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
                 !isSignIn
-                  ? 'bg-gradient-blue-light text-white shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
               }`}
             >
               Sign Up
@@ -180,7 +180,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg mb-4"
+                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-6"
               >
                 {error}
               </motion.div>
@@ -197,59 +197,59 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
                 className="space-y-4"
               >
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
                     type="text"
                     name="first_name"
                     placeholder="First Name"
                     value={formData.first_name}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                    className="input-professional w-full pl-12 pr-4 py-4 rounded-xl text-slate-900 dark:text-slate-100"
                     required={!isSignIn}
                   />
                 </div>
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
                     type="text"
                     name="last_name"
                     placeholder="Last Name (Optional)"
                     value={formData.last_name}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                    className="input-professional w-full pl-12 pr-4 py-4 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                 </div>
               </motion.div>
             )}
 
             <div className="relative">
-              <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <EnvelopeIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                className="input-professional w-full pl-12 pr-4 py-4 rounded-xl text-slate-900 dark:text-slate-100"
                 required
               />
             </div>
 
             <div className="relative">
-              <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-12 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                className="input-professional w-full pl-12 pr-12 py-4 rounded-xl text-slate-900 dark:text-slate-100"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />
@@ -262,7 +262,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-brand text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="btn-professional w-full py-4 rounded-xl text-white font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <LoadingSpinner size="sm" />
@@ -277,10 +277,10 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
 
           {/* Forgot Password Link */}
           {isSignIn && (
-            <div className="text-center mt-4">
+            <div className="text-center mt-6">
               <button
                 onClick={() => setShowPasswordReset(true)}
-                className="text-sm text-blue-light hover:text-blue-medium transition-colors"
+                className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors font-medium"
               >
                 Forgot your password?
               </button>
@@ -288,22 +288,22 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
           )}
 
           {/* Features */}
-          <div className="mt-8 pt-6 border-t border-border">
+          <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <ShieldCheckIcon className="h-4 w-4 text-blue-light" />
+              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                <ShieldCheckIcon className="h-4 w-4 text-blue-600" />
                 <span>Secure & Private</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <SparklesIcon className="h-4 w-4 accent-neon" />
+              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                <SparklesIcon className="h-4 w-4 text-emerald-600" />
                 <span>AI-Powered</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <CheckCircleIcon className="h-4 w-4 text-blue-medium" />
+              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                <CheckCircleIcon className="h-4 w-4 text-blue-600" />
                 <span>Evidence-Based</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <UserIcon className="h-4 w-4 accent-neon" />
+              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                <UserIcon className="h-4 w-4 text-violet-600" />
                 <span>Personalized</span>
               </div>
             </div>
