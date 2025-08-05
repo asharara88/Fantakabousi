@@ -3,10 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+let supabase: any;
+
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase environment variables not configured. Some features may not work.');
   // Create a mock client to prevent crashes
-  export const supabase = {
+  supabase = {
     from: () => ({
       select: () => ({
         eq: () => ({
@@ -39,12 +41,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
       signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
       signOut: () => Promise.resolve({ error: null })
     }
-  } as any;
+  };
 } else {
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export { supabase };
 
 // Enhanced Database Types
 export type Profile = {
