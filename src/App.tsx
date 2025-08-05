@@ -1,5 +1,6 @@
 import React from 'react';
 import { Suspense, lazy } from 'react';
+import { motion } from 'framer-motion';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from './components/ui/Toaster';
