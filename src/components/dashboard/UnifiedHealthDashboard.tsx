@@ -378,15 +378,13 @@ const UnifiedHealthDashboard: React.FC = () => {
                   animate={{
                     y: [-5, 5, -5],
                     opacity: [0.3, 0.8, 0.3],
-                <Suspense fallback={<LoadingSpinner size="md" />}>
-                  <SmartSearch 
-                    onNavigate={(path) => {
-                      handleNavigation(path);
-                      setShowSearch(false);
-                    }}
-                    className="w-full"
-                  />
-                </Suspense>
+                  }}
+                  transition={{
+                    duration: 2 + i,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
               ))}
             </div>
             
@@ -783,13 +781,15 @@ const UnifiedHealthDashboard: React.FC = () => {
               className="w-full max-w-2xl mx-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <SmartSearch 
-                onNavigate={(path) => {
-                  handleNavigation(path);
-                  setShowSearch(false);
-                }}
-                className="w-full"
-              />
+              <Suspense fallback={<LoadingSpinner size="md" />}>
+                <SmartSearch 
+                  onNavigate={(path) => {
+                    handleNavigation(path);
+                    setShowSearch(false);
+                  }}
+                  className="w-full"
+                />
+              </Suspense>
             </motion.div>
           </motion.div>
         )}
