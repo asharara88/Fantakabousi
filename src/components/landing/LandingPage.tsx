@@ -239,32 +239,161 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
               aria-label="Dashboard preview showing health metrics"
             >
               <div className="relative bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl rounded-3xl p-8 border border-border shadow-2xl">
-                {/* Mock Dashboard Preview */}
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-xl flex items-center justify-center">
-                      <HeartIcon className="w-6 h-6 text-white" />
+                {/* Sophisticated Dashboard Preview */}
+                <div className="space-y-8">
+                  {/* Header with Live Status */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-14 h-14 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-2xl flex items-center justify-center shadow-xl relative">
+                        <HeartIcon className="w-7 h-7 text-white" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse border-2 border-white"></div>
+                      </div>
+                      <div>
+                        <div className="text-xl font-bold text-foreground">Biowell Score</div>
+                        <div className="text-sm text-muted-foreground flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                          <span>Live analysis • Updated 2m ago</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-lg font-bold text-foreground">Wellness Score</div>
-                      <div className="text-sm text-muted-foreground">Real-time analysis</div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">87</div>
+                      <div className="text-xs text-muted-foreground">Optimal</div>
                     </div>
                   </div>
                   
+                  {/* Advanced Metrics Grid */}
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { label: 'Heart Rate', value: '68 bpm', color: 'bg-red-500' },
-                      { label: 'Sleep Score', value: '94/100', color: 'bg-indigo-500' },
-                      { label: 'Steps', value: '8,234', color: 'bg-blue-500' },
-                      { label: 'Energy', value: '85%', color: 'bg-green-500' }
+                      { 
+                        label: 'Heart Rate', 
+                        value: '68', 
+                        unit: 'bpm',
+                        trend: '+2.3%',
+                        status: 'optimal',
+                        color: 'from-red-500 to-pink-600',
+                        icon: HeartIcon,
+                        data: [65, 67, 66, 68, 69, 68, 68]
+                      },
+                      { 
+                        label: 'Sleep Score', 
+                        value: '94', 
+                        unit: '/100',
+                        trend: '+8.1%',
+                        status: 'excellent',
+                        color: 'from-indigo-500 to-purple-600',
+                        icon: MoonIcon,
+                        data: [85, 88, 90, 92, 91, 93, 94]
+                      },
+                      { 
+                        label: 'HRV', 
+                        value: '42', 
+                        unit: 'ms',
+                        trend: '+15.2%',
+                        status: 'improving',
+                        color: 'from-blue-500 to-cyan-600',
+                        icon: BoltIcon,
+                        data: [35, 38, 40, 39, 41, 42, 42]
+                      },
+                      { 
+                        label: 'Glucose', 
+                        value: '94', 
+                        unit: 'mg/dL',
+                        trend: '-3.7%',
+                        status: 'stable',
+                        color: 'from-emerald-500 to-teal-600',
+                        icon: BeakerIcon,
+                        data: [98, 96, 95, 94, 93, 94, 94]
+                      }
                     ].map((metric, index) => (
-                      <div key={index} className="bg-muted/30 rounded-xl p-4">
-                        <div className={`w-8 h-8 ${metric.color} rounded-lg mb-2`}></div>
-                        <div className="text-sm font-medium text-foreground">{metric.value}</div>
-                        <div className="text-xs text-muted-foreground">{metric.label}</div>
-                      </div>
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
+                        className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-2xl p-5 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 group"
+                      >
+                        <div className="space-y-4">
+                          {/* Header */}
+                          <div className="flex items-center justify-between">
+                            <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                              <metric.icon className="w-5 h-5 text-white" />
+                            </div>
+                            <div className={`px-2 py-1 text-xs font-bold rounded-full ${
+                              metric.status === 'optimal' || metric.status === 'excellent' ? 'bg-emerald-100 text-emerald-700' :
+                              metric.status === 'improving' ? 'bg-blue-100 text-blue-700' :
+                              'bg-yellow-100 text-yellow-700'
+                            }`}>
+                              {metric.status}
+                            </div>
+                          </div>
+                          
+                          {/* Value */}
+                          <div className="space-y-1">
+                            <div className="flex items-baseline space-x-1">
+                              <span className="text-2xl font-bold text-foreground">{metric.value}</span>
+                              <span className="text-sm text-muted-foreground">{metric.unit}</span>
+                            </div>
+                            <div className="text-sm font-medium text-muted-foreground">{metric.label}</div>
+                          </div>
+                          
+                          {/* Trend */}
+                          <div className="flex items-center justify-between">
+                            <div className={`flex items-center space-x-1 text-xs font-semibold ${
+                              metric.trend.startsWith('+') ? 'text-emerald-600' : 'text-blue-600'
+                            }`}>
+                              <ArrowRightIcon className="w-3 h-3" />
+                              <span>{metric.trend} this week</span>
+                            </div>
+                            
+                            {/* Mini Chart */}
+                            <div className="flex items-end space-x-1 h-6">
+                              {metric.data.map((value, i) => {
+                                const max = Math.max(...metric.data);
+                                const min = Math.min(...metric.data);
+                                const height = ((value - min) / (max - min || 1)) * 100;
+                                return (
+                                  <div
+                                    key={i}
+                                    className={`w-1 bg-gradient-to-t ${metric.color} rounded-full opacity-70 group-hover:opacity-100 transition-opacity`}
+                                    style={{ height: `${Math.max(height, 20)}%` }}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     ))}
                   </div>
+                  
+                  {/* AI Insights Preview */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                    className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl p-6 border border-purple-200/50 dark:border-purple-800/50"
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <SparklesIcon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <h4 className="font-bold text-foreground">AI Coach Insight</h4>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          "Your HRV is 15% above baseline. Perfect conditions for high-intensity training today."
+                        </p>
+                        <div className="flex items-center space-x-3">
+                          <div className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
+                            96% CONFIDENCE
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Based on 7-day analysis
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
