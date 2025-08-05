@@ -26,11 +26,13 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: ''
+  });
   const { signIn, signUp } = useAuth();
   const { actualTheme } = useTheme();
-
-  const logoUrl = actualTheme === 'dark' ? "/logo-dark.png" : "/logo-light.png";
-  });
 
   // Use the exact Biowell logo URLs provided
   const logoUrl = actualTheme === 'dark' 
