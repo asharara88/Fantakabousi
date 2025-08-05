@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { createUserProfile, getUserProfile } from '../lib/database';
-import { errorHandler, AppError } from '../lib/errorHandler';
 
 interface AuthContextType {
   user: User | null;
@@ -65,18 +63,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        throw new AppError(
-          error.message,
-          'SIGNUP_ERROR',
-          'medium',
-          { component: 'Auth', action: 'signUp', email }
-        );
+        throw new Error(error.message);
       }
 
       // Create basic profile
       if (data.user) {
         try {
-          await createUserProfile(data.user.id, {
+          await supabase.from('user_profile_signin').insert({
+            id: data.user.id,
             email,
             first_name: userData.first_name || '',
             last_name: userData.last_name || '',
@@ -90,7 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return data;
     } catch (error) {
-      errorHandler.handleError(error instanceof Error ? error : new Error('Signup failed'));
+      console.error('Signup failed:', error);
       throw error;
     }
   };
@@ -103,17 +97,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        throw new AppError(
-          error.message,
-          'SIGNIN_ERROR',
-          'medium',
-          { component: 'Auth', action: 'signIn', email }
-        );
+        throw new Error(error.message);
       }
 
       return data;
     } catch (error) {
-      errorHandler.handleError(error instanceof Error ? error : new Error('Signin failed'));
+      console.error('Signin failed:', error);
       throw error;
     }
   };
@@ -122,15 +111,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        throw new AppError(
-          error.message,
-          'SIGNOUT_ERROR',
-          'low',
-          { component: 'Auth', action: 'signOut' }
-        );
+        throw new Error(error.message);
       }
     } catch (error) {
-      errorHandler.handleError(error instanceof Error ? error : new Error('Signout failed'));
+      console.error('Signout failed:', error);
       throw error;
     }
   };
@@ -138,11 +122,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const completeOnboarding = async (profileData: any) => {
     try {
       if (!user?.id) {
-        throw new AppError('User not authenticated', 'AUTH_ERROR', 'high');
+        throw new Error('User not authenticated');
       }
 
       // Update profile with onboarding data
-      await createUserProfile(user.id, {
+      await supabase.from('user_profile_signin').upsert({
+        id: user.id,
         ...profileData,
         onboarding_completed: true,
         onboarding_completed_at: new Date().toISOString()
@@ -150,7 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return true;
     } catch (error) {
-      errorHandler.handleError(error instanceof Error ? error : new Error('Onboarding completion failed'));
+      console.error('Onboarding completion failed:', error);
       return false;
     }
   };

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { getUserProfile, updateUserProfile } from '../lib/database';
-import { errorHandler } from '../lib/errorHandler';
 
 interface Profile {
   id: string;
@@ -47,13 +45,19 @@ export const useProfile = () => {
     try {
       setLoading(true);
       
-      const profileData = await getUserProfile(user.id);
+      const { data: profileData, error } = await supabase
+        .from('user_profile_signin')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+      
       setProfile(profileData);
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Profile fetch failed'),
-        { component: 'useProfile', action: 'fetchProfile', userId: user.id }
-      );
+      console.error('Profile fetch failed:', error);
       
       // Create basic profile if none exists
       try {
@@ -76,17 +80,27 @@ export const useProfile = () => {
   const updateProfile = async (updates: Partial<Profile>) => {
     try {
       if (!user?.id) {
-        throw new AppError('User not authenticated', 'AUTH_ERROR', 'high');
+        throw new Error('User not authenticated');
       }
       
-      const updatedProfile = await updateUserProfile(user.id, updates);
+      const { data: updatedProfile, error } = await supabase
+        .from('user_profile_signin')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .select()
+        .single();
+      
+      if (error) {
+        throw error;
+      }
+      
       setProfile(prev => prev ? { ...prev, ...updates } : null);
       return true;
     } catch (error) {
-      errorHandler.handleError(
-        error instanceof Error ? error : new Error('Profile update failed'),
-        { component: 'useProfile', action: 'updateProfile', userId: user?.id }
-      );
+      console.error('Profile update failed:', error);
       return false;
     }
   };
