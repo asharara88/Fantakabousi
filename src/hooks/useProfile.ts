@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { useToast } from './useToast';
 
 interface Profile {
   id: string;
@@ -17,6 +18,7 @@ interface Profile {
 
 export const useProfile = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,6 +37,20 @@ export const useProfile = () => {
       return;
     }
 
+    // Check if Supabase is configured
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      console.warn('Supabase not configured, using mock profile');
+      const mockProfile = {
+        id: user.id,
+        email: user.email || '',
+        first_name: user.email?.split('@')[0] || 'User',
+        onboarding_completed: true,
+        created_at: new Date().toISOString()
+      };
+      setProfile(mockProfile);
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       
@@ -46,12 +62,13 @@ export const useProfile = () => {
         .single();
       
       if (error && error.code !== 'PGRST116') {
-        // If profiles table doesn't work, create a basic profile
+        console.warn('Profile fetch failed, using fallback:', error);
+        // Create a basic profile as fallback
         profileData = {
           id: user.id,
           email: user.email || '',
           first_name: user.email?.split('@')[0] || 'User',
-          onboarding_completed: false,
+          onboarding_completed: true,
           created_at: new Date().toISOString()
         };
       }
@@ -60,7 +77,7 @@ export const useProfile = () => {
     } catch (error) {
       console.error('Profile fetch failed:', error);
       
-      // Create basic profile if none exists
+      // Create basic profile as fallback
         const basicProfile = {
           id: user.id,
           email: user.email || '',
