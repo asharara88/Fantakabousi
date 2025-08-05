@@ -37,20 +37,6 @@ export const useProfile = () => {
       return;
     }
 
-    // Check if Supabase is configured
-    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-      console.warn('Supabase not configured, using mock profile');
-      const mockProfile = {
-        id: user.id,
-        email: user.email || '',
-        first_name: user.email?.split('@')[0] || 'User',
-        onboarding_completed: true,
-        created_at: new Date().toISOString()
-      };
-      setProfile(mockProfile);
-      setLoading(false);
-      return;
-    }
     try {
       setLoading(true);
       
@@ -61,8 +47,13 @@ export const useProfile = () => {
         .eq('id', user.id)
         .single();
       
-      if (error && error.code !== 'PGRST116') {
-        console.warn('Profile fetch failed, using fallback:', error);
+      if (error) {
+        if (error.code === 'SUPABASE_NOT_CONFIGURED') {
+          console.warn('Supabase not configured, using mock profile');
+        } else if (error.code !== 'PGRST116') {
+          console.warn('Profile fetch failed, using fallback:', error);
+        }
+        
         // Create a basic profile as fallback
         profileData = {
           id: user.id,
@@ -78,14 +69,14 @@ export const useProfile = () => {
       console.error('Profile fetch failed:', error);
       
       // Create basic profile as fallback
-        const basicProfile = {
-          id: user.id,
-          email: user.email || '',
-          first_name: user.email?.split('@')[0] || 'User',
-          onboarding_completed: true, // Default to true to avoid onboarding loop
-          created_at: new Date().toISOString()
-        };
-        setProfile(basicProfile);
+      const basicProfile = {
+        id: user.id,
+        email: user.email || '',
+        first_name: user.email?.split('@')[0] || 'User',
+        onboarding_completed: true, // Default to true to avoid onboarding loop
+        created_at: new Date().toISOString()
+      };
+      setProfile(basicProfile);
     } finally {
       setLoading(false);
     }

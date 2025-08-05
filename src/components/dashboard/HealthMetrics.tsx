@@ -5,14 +5,13 @@ import {
   BoltIcon, 
   CloudIcon, 
   FireIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   ChartBarIcon,
   EyeIcon,
   BeakerIcon,
   ClockIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 
 const HealthMetrics: React.FC = () => {
@@ -256,9 +255,9 @@ const HealthMetrics: React.FC = () => {
                   </span>
                   <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${getChangeColor(metric.change)}`}>
                     {metric.change > 0 ? (
-                      <TrendingUpIcon className="w-3 h-3" />
+                      <ArrowTrendingUpIcon className="w-3 h-3" />
                     ) : (
-                      <TrendingDownIcon className="w-3 h-3" />
+                      <ArrowTrendingDownIcon className="w-3 h-3" />
                     )}
                     <span>{Math.abs(metric.change)}%</span>
                   </div>

@@ -425,7 +425,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
               <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
                 <div>
                   <span className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {formatSupplementPrice(supplement.price)}
+                    {formatSupplementPrice(supplement.price || '0')}
                   </span>
                   {supplement.dosage && (
                     <p className="text-xs text-slate-500 dark:text-slate-400">

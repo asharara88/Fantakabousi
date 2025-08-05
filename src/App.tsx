@@ -62,8 +62,17 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const handleGlobalError = (error: Error, errorInfo: any) => {
+    console.error('Global error caught:', error, errorInfo);
+    
+    // In production, report to error tracking service
+    if (process.env.NODE_ENV === 'production') {
+      // Report to Sentry, LogRocket, etc.
+    }
+  };
+
   return (
-    <ErrorBoundary>
+    <ErrorBoundary onError={handleGlobalError}>
       <ThemeProvider>
         <AuthProvider>
           <AppContent />
