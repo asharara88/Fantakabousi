@@ -623,7 +623,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <RocketLaunchIcon className="w-5 h-5" />
-                <span>GET STARTED</span>
+                <span>Start Your Journey</span>
               </motion.button>
               
               <motion.button 
@@ -631,6 +631,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowAuthForms(true)}
                 className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300"
+              >
+                <UserCircleIcon className="w-5 h-5" />
+                <span>Sign In</span>
+              </motion.button>
                 <UserCircleIcon className="w-5 h-5" />
                 <span>Sign In</span>
               </motion.button>
