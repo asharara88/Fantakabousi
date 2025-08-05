@@ -4,7 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../hooks/useToast';
-import { analyzeNutrition, saveFoodLog, getFoodLogs } from '../../lib/database';
+import { analyzeNutrition } from '../../lib/api';
+import { saveFoodLog, getFoodLogs } from '../../lib/database';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { 
   PlusIcon,
