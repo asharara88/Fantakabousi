@@ -114,9 +114,6 @@ const HealthMetrics: React.FC = () => {
                 Health Metrics
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-lg">Real-time biometric intelligence</p>
-              {process.env.NODE_ENV === 'development' && renderTime > 0 && (
-                <p className="text-xs text-gray-500">Render time: {renderTime.toFixed(2)}ms</p>
-              )}
             </div>
           </div>
         </div>

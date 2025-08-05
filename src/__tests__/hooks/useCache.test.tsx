@@ -69,7 +69,8 @@ describe('useCache Hook', () => {
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
-      expect(result.current.error).toEqual(error);
+      expect(result.current.error).toBeInstanceOf(Error);
+      expect(result.current.error?.message).toBe('Fetch failed');
       expect(result.current.data).toBeNull();
     });
   });
