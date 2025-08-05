@@ -57,31 +57,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, userData: any) => {
     try {
+      console.log('Starting signup process...', { email, userData });
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (error) {
+        console.error('Supabase signup error:', error);
         throw new Error(error.message);
       }
 
+      console.log('Signup successful, creating profile...', data.user?.id);
+      
       // Create basic profile
       if (data.user) {
         try {
-          await supabase.from('user_profile_signin').insert({
+          const profileData = {
             id: data.user.id,
             email,
             first_name: userData.first_name || '',
             last_name: userData.last_name || '',
-            onboarding_completed: false
-          });
+            onboarding_completed: false,
+            created_at: new Date().toISOString()
+          };
+          
+          console.log('Creating profile with data:', profileData);
+          
+          const { error: profileError } = await supabase
+            .from('user_profile_signin')
+            .insert(profileData);
+            
+          if (profileError) {
+            console.warn('Profile creation failed, but continuing:', profileError);
+          } else {
+            console.log('Profile created successfully');
+          }
         } catch (profileError) {
           console.error('Profile creation failed:', profileError);
           // Don't fail signup if profile creation fails
         }
       }
 
+      console.log('Signup process completed successfully');
       return data;
     } catch (error) {
       console.error('Signup failed:', error);
@@ -91,15 +110,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log('Starting signin process...', { email });
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Supabase signin error:', error);
         throw new Error(error.message);
       }
 
+      console.log('Signin successful:', data.user?.id);
       return data;
     } catch (error) {
       console.error('Signin failed:', error);

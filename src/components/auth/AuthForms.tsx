@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import PasswordReset from './PasswordReset';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { useToast } from '../../hooks/useToast';
 import { 
   EnvelopeIcon, 
   LockClosedIcon,
@@ -27,11 +28,13 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: ''
   });
   const { signIn, signUp } = useAuth();
+  const { toast } = useToast();
   const { actualTheme } = useTheme();
 
   const logoUrl = actualTheme === 'dark' 
@@ -71,10 +74,30 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
       if (isSignIn) {
         await signIn(formData.email, formData.password);
       } else {
-        await signUp(formData.email, formData.password);
+        const [firstName, lastName] = formData.first_name.includes(' ') 
+          ? formData.first_name.split(' ', 2)
+          : [formData.first_name, formData.last_name];
+          
+        await signUp(formData.email, formData.password, {
+          first_name: firstName,
+          last_name: lastName
+        });
+        
+        toast({
+          title: "Account Created!",
+          description: "Welcome to Biowell. Please check your email to verify your account.",
+        });
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      console.error('Auth error:', err);
+      const errorMessage = err.message || 'An error occurred during authentication';
+      setError(errorMessage);
+      
+      toast({
+        title: "Authentication Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -85,6 +108,11 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
       ...prev,
       [e.target.name]: e.target.value
     }));
+    
+    // Clear error when user starts typing
+    if (error) {
+      setError('');
+    }
   };
 
   return (
@@ -166,18 +194,31 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="relative"
+                className="space-y-4"
               >
-                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  name="fullName"
-                  placeholder="Full Name"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
-                  required={!isSignIn}
-                />
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    name="first_name"
+                    placeholder="First Name"
+                    value={formData.first_name}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                    required={!isSignIn}
+                  />
+                </div>
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    name="last_name"
+                    placeholder="Last Name (Optional)"
+                    value={formData.last_name}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-blue-light/20 focus:border-blue-light transition-colors text-foreground"
+                  />
+                </div>
               </motion.div>
             )}
 
