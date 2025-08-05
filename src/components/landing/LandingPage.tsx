@@ -26,7 +26,8 @@ import {
   CommandLineIcon,
   DevicePhoneMobileIcon,
   CloudIcon,
-  LockClosedIcon
+  LockClosedIcon,
+  UserCircleIcon
 } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
@@ -650,15 +651,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <RocketLaunchIcon className="w-5 h-5" />
-                <span>Start Your Journey</span>
+                <span>GET STARTED</span>
               </motion.button>
               
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setShowAuthForms(true)}
                 className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300"
-              >
-                Schedule Consultation
+                <UserCircleIcon className="w-5 h-5" />
+                <span>Sign In</span>
               </motion.button>
             </div>
 
