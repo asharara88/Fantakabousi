@@ -196,13 +196,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   <ArrowRightIcon className="w-5 h-5" />
                 </motion.button>
                 
-                <button 
-                  aria-label="Watch product demo video"
-                  className="px-8 py-4 border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition-colors flex items-center justify-center space-x-2"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowAuthForms(true)}
+                  aria-label="Sign in to your account"
+                  className="px-8 py-4 border-2 border-[#48C6FF] text-[#48C6FF] font-semibold rounded-xl hover:bg-[#48C6FF] hover:text-white transition-all duration-200 flex items-center justify-center space-x-2"
                 >
-                  <PlayIcon className="w-5 h-5" />
-                  <span>Watch Demo</span>
-                </button>
+                  <UserGroupIcon className="w-5 h-5" />
+                  <span>Sign In</span>
+                </motion.button>
               </div>
 
               {/* Stats */}
