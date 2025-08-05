@@ -344,7 +344,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                 {supplement.is_featured && (
                   <span className="px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full">
                     Featured
-                  </span>
+                  {formatSupplementPrice(supplement.price || '0')}
                 )}
                 {supplement.is_bestseller && (
                   <span className="px-2 py-1 bg-gradient-to-r from-emerald-400 to-teal-500 text-white text-xs font-bold rounded-full">

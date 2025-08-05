@@ -4,7 +4,44 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+  console.warn('Supabase environment variables not configured. Some features may not work.');
+  // Create a mock client to prevent crashes
+  export const supabase = {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+          order: () => ({
+            limit: () => Promise.resolve({ data: [], error: null })
+          })
+        })
+      }),
+      insert: () => ({
+        select: () => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+        })
+      }),
+      update: () => ({
+        eq: () => ({
+          select: () => ({
+            single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+          })
+        })
+      }),
+      delete: () => ({
+        eq: () => Promise.resolve({ error: { message: 'Supabase not configured' } })
+      })
+    }),
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      signUp: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      signOut: () => Promise.resolve({ error: null })
+    }
+  } as any;
+} else {
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

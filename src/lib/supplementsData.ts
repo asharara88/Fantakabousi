@@ -332,17 +332,26 @@ export const getBestsellerSupplements = async (): Promise<SupplementData[]> => {
 
 // Format price with AED currency
 export const formatSupplementPrice = (price: string | number): string => {
+  if (!price || price === '' || price === null || price === undefined) {
+    return 'AED 0';
+  }
+  
   let numericPrice: number;
   
   if (typeof price === 'string') {
     // Remove any currency symbols and parse
-    const cleanPrice = price.replace(/[^\d.]/g, '');
+    const cleanPrice = price.replace(/[^\d.-]/g, '').trim();
+    if (cleanPrice === '' || cleanPrice === '.') {
+      return 'AED 0';
+    }
     numericPrice = parseFloat(cleanPrice);
   } else {
     numericPrice = price;
   }
   
-  if (isNaN(numericPrice)) return 'AED 0';
+  if (isNaN(numericPrice) || numericPrice < 0) {
+    return 'AED 0';
+  }
   
   return new Intl.NumberFormat('en-AE', {
     style: 'currency',

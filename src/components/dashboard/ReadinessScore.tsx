@@ -7,7 +7,7 @@ import {
   BeakerIcon,
   HeartIcon,
   CloudIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
 
@@ -205,7 +205,7 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
             >
               <div className="space-y-4">
                 <h4 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
-                  <TrendingUpIcon className="w-5 h-5 text-blue-500" />
+                  <ArrowTrendingUpIcon className="w-5 h-5 text-blue-500" />
                   <span>Detailed Health Analysis</span>
                 </h4>
                 
