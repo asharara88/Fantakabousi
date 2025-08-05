@@ -630,12 +630,41 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowAuthForms(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 flex items-center justify-center space-x-3"
+                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 hover:bg-white/20 transition-all duration-300"
               >
                 <UserCircleIcon className="w-5 h-5" />
                 <span>Sign In</span>
               </motion.button>
             </div>
+
+            {/* Trust Indicators */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12"
+            >
+              {[
+                { icon: ShieldCheckIcon, value: '99.7%', label: 'Accuracy' },
+                { icon: BoltIcon, value: '<2s', label: 'Response' },
+                { icon: ClockIcon, value: '24/7', label: 'Monitoring' },
+                { icon: LockClosedIcon, value: 'HIPAA', label: 'Compliant' }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
+                  className="text-center space-y-2"
+                >
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mx-auto">
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-2xl font-bold text-white">{stat.value}</div>
+                  <div className="text-sm text-blue-100">{stat.label}</div>
+                </motion.div>
+              ))}
+            </motion.div>
 
             <div className="flex items-center justify-center space-x-8 text-sm text-blue-100 pt-6">
               <div className="flex items-center space-x-2">
