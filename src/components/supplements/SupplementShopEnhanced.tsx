@@ -27,7 +27,7 @@ interface Supplement {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: string;
   image_url?: string;
   benefits?: string[];
   dosage?: string;
@@ -219,9 +219,9 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
     .sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
-          return a.price - b.price;
+          return parseFloat(a.price) - parseFloat(b.price);
         case 'price-high':
-          return b.price - a.price;
+          return parseFloat(b.price) - parseFloat(a.price);
         case 'rating':
           return (b.evidence_rating || 0) - (a.evidence_rating || 0);
         case 'name':
@@ -231,7 +231,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
       }
     });
 
-  const cartTotal = cartItems.reduce((total, item) => total + (item.supplement.price * item.quantity), 0);
+  const cartTotal = cartItems.reduce((total, item) => total + (parseFloat(item.supplement.price || '0') * item.quantity), 0);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   if (supplementsLoading) {
@@ -524,7 +524,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                           {item.supplement.name}
                         </h4>
                         <p className="text-sm text-slate-600 dark:text-slate-400">
-                          {formatSupplementPrice(item.supplement.price)} each
+                          {formatSupplementPrice(item.supplement.price || '0')} each
                         </p>
                       </div>
                       
@@ -548,7 +548,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                       
                       <div className="text-right">
                         <p className="font-bold text-slate-900 dark:text-white">
-                          {formatSupplementPrice(parseFloat(item.supplement.price) * item.quantity)}
+                          {formatSupplementPrice((parseFloat(item.supplement.price || '0')) * item.quantity)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item.id)}

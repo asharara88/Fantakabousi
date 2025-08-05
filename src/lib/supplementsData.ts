@@ -332,7 +332,16 @@ export const getBestsellerSupplements = async (): Promise<SupplementData[]> => {
 
 // Format price with AED currency
 export const formatSupplementPrice = (price: string | number): string => {
-  const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+  let numericPrice: number;
+  
+  if (typeof price === 'string') {
+    // Remove any currency symbols and parse
+    const cleanPrice = price.replace(/[^\d.]/g, '');
+    numericPrice = parseFloat(cleanPrice);
+  } else {
+    numericPrice = price;
+  }
+  
   if (isNaN(numericPrice)) return 'AED 0';
   
   return new Intl.NumberFormat('en-AE', {

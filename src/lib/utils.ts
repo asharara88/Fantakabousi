@@ -6,6 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number, currency = 'AED') {
+  // Handle invalid amounts
+  if (isNaN(amount) || amount === null || amount === undefined) {
+    return 'AED 0';
+  }
+  
   return new Intl.NumberFormat('en-AE', {
     style: 'currency',
     currency,
