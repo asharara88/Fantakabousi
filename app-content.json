@@ -1,0 +1,653 @@
+{
+  "app_metadata": {
+    "name": "Biowell Digital Wellness Coach",
+    "version": "1.0.0",
+    "description": "AI-powered digital wellness coach for personalized health optimization",
+    "tech_stack": {
+      "frontend": "React 18 + TypeScript + Vite",
+      "styling": "Tailwind CSS + Framer Motion",
+      "database": "Supabase (PostgreSQL)",
+      "authentication": "Supabase Auth",
+      "apis": ["OpenAI", "ElevenLabs", "Spoonacular"],
+      "deployment": "Netlify"
+    }
+  },
+  "branding": {
+    "colors": {
+      "primary": "#2563eb",
+      "blue_light": "#48C6FF",
+      "blue_medium": "#2A7FFF",
+      "blue_deep": "#0026CC",
+      "neon_green": "#3BE6C5"
+    },
+    "fonts": {
+      "primary": "Inter",
+      "display": "SF Pro Display",
+      "mono": "SF Mono"
+    },
+    "logos": {
+      "light_theme": "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg",
+      "dark_theme": "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg"
+    }
+  },
+  "navigation": {
+    "main_sections": [
+      {
+        "id": "dashboard",
+        "label": "Home",
+        "description": "Your wellness overview",
+        "path": "/dashboard"
+      },
+      {
+        "id": "coach",
+        "label": "AI Coach",
+        "description": "Personalized guidance",
+        "path": "/dashboard/coach"
+      },
+      {
+        "id": "health",
+        "label": "Health",
+        "description": "Analytics & insights",
+        "path": "/dashboard/health",
+        "children": [
+          {"id": "metrics", "label": "Live Metrics", "description": "Real-time biometric data"},
+          {"id": "analytics", "label": "Advanced Analytics", "description": "Deep health insights"},
+          {"id": "devices", "label": "Connected Devices", "description": "Wearables & monitors"}
+        ]
+      },
+      {
+        "id": "nutrition",
+        "label": "Nutrition",
+        "description": "Food & recipes",
+        "path": "/dashboard/nutrition",
+        "children": [
+          {"id": "logger", "label": "Food Logger", "description": "Track your meals"},
+          {"id": "recipes", "label": "Recipe Search", "description": "Healthy meal ideas"}
+        ]
+      },
+      {
+        "id": "supplements",
+        "label": "Shop",
+        "description": "Premium supplements",
+        "path": "/dashboard/supplements"
+      },
+      {
+        "id": "fitness",
+        "label": "Fitness",
+        "description": "Training & workouts",
+        "path": "/dashboard/fitness"
+      },
+      {
+        "id": "fertility",
+        "label": "UBERGENE",
+        "description": "Couples fertility optimization",
+        "path": "/dashboard/fertility"
+      }
+    ]
+  },
+  "homepage_content": {
+    "hero": {
+      "badge_text": "AI-Powered Health Intelligence",
+      "headline": "Your Digital Wellness Coach",
+      "subheadline": "Advanced biometric analysis, personalized nutrition guidance, and intelligent supplement recommendations powered by cutting-edge AI.",
+      "cta_primary": "Start Your Analysis",
+      "cta_secondary": "Watch Demo",
+      "trust_indicators": [
+        {"label": "HIPAA Compliant", "icon": "Shield"},
+        {"label": "Real-time Analysis", "icon": "Zap"},
+        {"label": "Evidence-Based", "icon": "CheckCircle"},
+        {"label": "Professional Grade", "icon": "Users"}
+      ]
+    },
+    "features": {
+      "section_title": "Advanced Health Intelligence Platform",
+      "section_subtitle": "Sophisticated health monitoring and coaching that adapts to your unique biology and lifestyle patterns.",
+      "features_list": [
+        {
+          "title": "Intelligent Coaching",
+          "description": "Personalized health guidance powered by advanced machine learning algorithms that understand your unique health patterns.",
+          "features": ["24/7 Availability", "Personalized Insights", "Evidence-Based Advice"]
+        },
+        {
+          "title": "Real-Time Monitoring",
+          "description": "Continuous health tracking with instant analysis and alerts for optimal health management.",
+          "features": ["Live Data Sync", "Instant Alerts", "Trend Analysis"]
+        },
+        {
+          "title": "Biometric Analysis",
+          "description": "Advanced cardiovascular and metabolic monitoring with predictive health insights.",
+          "features": ["HRV Analysis", "Glucose Tracking", "Sleep Optimization"]
+        },
+        {
+          "title": "Smart Supplements",
+          "description": "Evidence-based supplement recommendations with personalized dosing and timing protocols.",
+          "features": ["Personalized Stacks", "Timing Optimization", "Safety Monitoring"]
+        },
+        {
+          "title": "Advanced Analytics",
+          "description": "Comprehensive health analytics with predictive modeling and trend forecasting.",
+          "features": ["Predictive Models", "Health Forecasting", "Risk Assessment"]
+        },
+        {
+          "title": "Enterprise Security",
+          "description": "Bank-level encryption with HIPAA compliance and privacy-first architecture.",
+          "features": ["HIPAA Compliant", "End-to-End Encryption", "Zero-Trust Security"]
+        }
+      ]
+    },
+    "how_it_works": {
+      "section_title": "How It Works",
+      "section_subtitle": "Three intelligent steps to transform your health with personalized AI coaching.",
+      "steps": [
+        {
+          "step": "01",
+          "title": "Connect Your Data",
+          "description": "Seamlessly integrate with your wearables, health devices, and manual inputs to build your comprehensive health profile.",
+          "details": [
+            "Apple Watch & Fitbit integration",
+            "CGM and glucose monitors",
+            "Manual health logging",
+            "Lab result uploads"
+          ]
+        },
+        {
+          "step": "02",
+          "title": "AI Analysis",
+          "description": "Our advanced algorithms analyze your unique patterns, circadian rhythms, and metabolic responses in real-time.",
+          "details": [
+            "Pattern recognition",
+            "Predictive modeling",
+            "Anomaly detection",
+            "Trend forecasting"
+          ]
+        },
+        {
+          "step": "03",
+          "title": "Personalized Coaching",
+          "description": "Receive tailored recommendations, optimal timing suggestions, and adaptive health protocols.",
+          "details": [
+            "Custom protocols",
+            "Timing optimization",
+            "Progress tracking",
+            "Goal achievement"
+          ]
+        }
+      ]
+    },
+    "professional_features": {
+      "section_title": "Built for Health Professionals",
+      "section_subtitle": "Designed with healthcare professionals and wellness enthusiasts in mind, providing the tools needed for comprehensive health optimization.",
+      "features": [
+        {
+          "title": "HIPAA Compliant",
+          "description": "Bank-level security with full healthcare compliance for professional use."
+        },
+        {
+          "title": "Evidence-Based",
+          "description": "All recommendations backed by peer-reviewed research and clinical studies."
+        },
+        {
+          "title": "Professional Grade",
+          "description": "Enterprise-level tools designed for healthcare providers and wellness coaches."
+        }
+      ]
+    },
+    "pricing": {
+      "section_title": "Choose Your Health Plan",
+      "section_subtitle": "Professional health optimization plans designed for different levels of engagement.",
+      "plans": [
+        {
+          "name": "Essential",
+          "price": "Free",
+          "period": "Forever",
+          "description": "Core health tracking and insights",
+          "features": [
+            "Basic health monitoring",
+            "Weekly health reports",
+            "5 AI consultations/day",
+            "Standard device integration",
+            "Community support"
+          ],
+          "cta": "Start Free"
+        },
+        {
+          "name": "Professional",
+          "price": "AED 149",
+          "period": "/month",
+          "description": "Advanced health optimization",
+          "features": [
+            "Unlimited AI coaching",
+            "Advanced health analytics",
+            "Predictive health insights",
+            "Premium device integration",
+            "Priority support",
+            "Custom health protocols"
+          ],
+          "cta": "Start Trial",
+          "popular": true
+        },
+        {
+          "name": "Enterprise",
+          "price": "AED 299",
+          "period": "/month",
+          "description": "Complete health ecosystem",
+          "features": [
+            "Everything in Professional",
+            "Lab result integration",
+            "Advanced biomarker analysis",
+            "Custom health models",
+            "Dedicated health advisor",
+            "Research collaboration"
+          ],
+          "cta": "Contact Sales"
+        }
+      ]
+    }
+  },
+  "dashboard_content": {
+    "health_metrics": [
+      {
+        "id": "heart_rate",
+        "name": "Resting Heart Rate",
+        "unit": "bpm",
+        "description": "Cardiovascular health indicator",
+        "optimal_range": [60, 70]
+      },
+      {
+        "id": "hrv",
+        "name": "Heart Rate Variability",
+        "unit": "ms",
+        "description": "Recovery and stress resilience",
+        "optimal_range": [35, 50]
+      },
+      {
+        "id": "sleep",
+        "name": "Sleep Quality",
+        "unit": "/100",
+        "description": "Sleep efficiency and recovery",
+        "optimal_range": [80, 95]
+      },
+      {
+        "id": "glucose",
+        "name": "Blood Glucose",
+        "unit": "mg/dL",
+        "description": "Metabolic health tracking",
+        "optimal_range": [80, 100]
+      },
+      {
+        "id": "stress",
+        "name": "Stress Index",
+        "unit": "/100",
+        "description": "Stress and mental wellness",
+        "optimal_range": [0, 30]
+      }
+    ],
+    "ai_insights": [
+      {
+        "type": "success",
+        "title": "Perfect Recovery Window",
+        "message": "Your HRV is 12% above baseline. Ideal conditions for high-intensity training today.",
+        "confidence": 96,
+        "priority": "high",
+        "action": "Start Workout"
+      },
+      {
+        "type": "optimization",
+        "title": "Supplement Timing",
+        "message": "Take creatine 30 minutes before your workout for optimal absorption and performance.",
+        "confidence": 89,
+        "priority": "medium",
+        "action": "Set Reminder"
+      },
+      {
+        "type": "warning",
+        "title": "Hydration Alert",
+        "message": "Morning weight suggests mild dehydration. Aim for 750ml water in the next hour.",
+        "confidence": 92,
+        "priority": "high",
+        "action": "Track Water"
+      },
+      {
+        "type": "insight",
+        "title": "Sleep Pattern Analysis",
+        "message": "Your deep sleep increased 15% this week. Consider maintaining current bedtime routine.",
+        "confidence": 94,
+        "priority": "low",
+        "action": "View Trends"
+      }
+    ]
+  },
+  "nutrition_content": {
+    "meal_types": [
+      {"value": "breakfast", "label": "Breakfast", "icon": "🌅"},
+      {"value": "lunch", "label": "Lunch", "icon": "☀️"},
+      {"value": "dinner", "label": "Dinner", "icon": "🌙"},
+      {"value": "snack", "label": "Snack", "icon": "🍎"}
+    ],
+    "health_goals": [
+      "Weight Management",
+      "Muscle Building",
+      "Better Sleep",
+      "Stress Reduction",
+      "Heart Health",
+      "Improved Energy",
+      "Mental Clarity",
+      "Longevity"
+    ],
+    "dietary_preferences": [
+      "omnivore",
+      "vegetarian",
+      "vegan",
+      "pescatarian",
+      "keto",
+      "paleo",
+      "mediterranean"
+    ]
+  },
+  "supplement_content": {
+    "categories": [
+      {"value": "vitamins", "label": "Vitamins"},
+      {"value": "minerals", "label": "Minerals"},
+      {"value": "herbs", "label": "Herbs & Botanicals"},
+      {"value": "protein", "label": "Protein & Fitness"},
+      {"value": "cognitive", "label": "Cognitive Health"},
+      {"value": "immune", "label": "Immune Support"}
+    ],
+    "tiers": [
+      {"value": "green", "label": "Green Tier", "description": "Strong evidence"},
+      {"value": "yellow", "label": "Yellow Tier", "description": "Moderate evidence"},
+      {"value": "orange", "label": "Orange Tier", "description": "Limited evidence"},
+      {"value": "red", "label": "Red Tier", "description": "Insufficient evidence"}
+    ]
+  },
+  "ai_coach_content": {
+    "welcome_message": "Hi! I'm your Smart Coach. I can help you with nutrition, exercise, sleep, and wellness questions.",
+    "quick_prompts": [
+      "Help me sleep better",
+      "Build muscle faster",
+      "Improve my energy",
+      "Eat healthier"
+    ],
+    "example_questions": [
+      "What should I eat for breakfast?",
+      "How can I sleep better?",
+      "What supplements do I need?",
+      "Plan my workout routine"
+    ],
+    "system_capabilities": [
+      "Personalized health guidance",
+      "Evidence-based recommendations",
+      "Real-time data analysis",
+      "Predictive health insights",
+      "Custom protocol generation"
+    ]
+  },
+  "onboarding_content": {
+    "steps": [
+      {
+        "id": 1,
+        "title": "Personal Info",
+        "description": "Tell us about yourself",
+        "fields": ["first_name", "last_name", "gender", "activity_level"]
+      },
+      {
+        "id": 2,
+        "title": "Health Goals",
+        "description": "What do you want to achieve?",
+        "options": [
+          "Weight Loss",
+          "Muscle Building",
+          "Better Sleep",
+          "Stress Reduction",
+          "Heart Health",
+          "Insulin Optimization",
+          "Fertility",
+          "Longevity"
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Complete Setup",
+        "description": "Finish your profile"
+      }
+    ],
+    "activity_levels": [
+      {"value": "sedentary", "label": "Sedentary", "description": "Little to no exercise"},
+      {"value": "lightly-active", "label": "Lightly Active", "description": "1-3 days per week"},
+      {"value": "moderately-active", "label": "Moderately Active", "description": "3-5 days per week"},
+      {"value": "very-active", "label": "Very Active", "description": "6-7 days per week"}
+    ]
+  },
+  "fertility_content": {
+    "ubergene": {
+      "title": "UBERGENE",
+      "subtitle": "Couples Fertility Optimization",
+      "description": "Sync reproductive health data with your partner for optimal conception timing",
+      "features": [
+        "Cycle tracking",
+        "Partner coordination",
+        "Conception optimization",
+        "Ovulation prediction",
+        "Fertility window alerts"
+      ],
+      "tracking_fields": [
+        {"field": "basal_temperature", "label": "Basal Body Temperature", "unit": "°C"},
+        {"field": "cervical_fluid", "label": "Cervical Fluid", "options": ["Dry", "Sticky", "Creamy", "Egg White"]},
+        {"field": "ovulation_test", "label": "Ovulation Test", "options": ["Negative", "Positive", "Peak"]},
+        {"field": "notes", "label": "Notes", "type": "textarea"}
+      ]
+    }
+  },
+  "device_integrations": {
+    "supported_devices": [
+      {
+        "id": "apple-watch",
+        "name": "Apple Watch",
+        "brand": "Apple",
+        "type": "wearable",
+        "metrics": ["Heart Rate", "Steps", "Sleep", "Workouts"],
+        "description": "Heart rate, activity, and sleep tracking"
+      },
+      {
+        "id": "freestyle-libre",
+        "name": "FreeStyle Libre",
+        "brand": "Abbott",
+        "type": "cgm",
+        "metrics": ["Blood Glucose", "Trends", "Alerts"],
+        "description": "Continuous glucose monitoring"
+      }
+    ]
+  },
+  "api_endpoints": {
+    "openai_chat": {
+      "path": "/openai-chat",
+      "method": "POST",
+      "description": "Send message to AI health coach",
+      "required_fields": ["message", "userId"],
+      "optional_fields": ["sessionId"]
+    },
+    "nutrition_analysis": {
+      "path": "/nutrition-analysis",
+      "method": "POST",
+      "description": "Analyze food nutrition and health impact",
+      "required_fields": ["foodName", "userId"],
+      "optional_fields": ["quantity", "mealType"]
+    },
+    "elevenlabs_tts": {
+      "path": "/elevenlabs-tts",
+      "method": "POST",
+      "description": "Convert text to speech",
+      "required_fields": ["text"],
+      "optional_fields": ["voiceId", "settings"]
+    },
+    "spoonacular_recipes": {
+      "path": "/spoonacular-recipes",
+      "method": "GET",
+      "description": "Search for health-optimized recipes",
+      "query_params": ["query", "diet", "intolerances", "maxReadyTime", "number"]
+    }
+  },
+  "database_schema": {
+    "main_tables": [
+      {
+        "name": "profiles",
+        "description": "User profile information",
+        "key_fields": ["id", "email", "first_name", "last_name", "onboarding_completed"]
+      },
+      {
+        "name": "health_metrics",
+        "description": "Health data from various sources",
+        "key_fields": ["user_id", "metric_type", "value", "unit", "timestamp", "source"]
+      },
+      {
+        "name": "chat_sessions",
+        "description": "AI coach conversation sessions",
+        "key_fields": ["user_id", "title", "message_count", "last_message"]
+      },
+      {
+        "name": "chat_history",
+        "description": "Individual chat messages",
+        "key_fields": ["user_id", "session_id", "message", "response", "role"]
+      },
+      {
+        "name": "food_logs",
+        "description": "Nutrition tracking data",
+        "key_fields": ["user_id", "food_name", "meal_type", "calories", "glucose_impact"]
+      },
+      {
+        "name": "supplements",
+        "description": "Available supplement products",
+        "key_fields": ["name", "description", "price", "category", "tier", "evidence_rating"]
+      },
+      {
+        "name": "fertility_tracking",
+        "description": "UBERGENE fertility data",
+        "key_fields": ["user_id", "cycle_day", "basal_temperature", "cycle_phase"]
+      }
+    ]
+  },
+  "ui_components": {
+    "cards": [
+      "card-professional",
+      "card-premium",
+      "card-interactive",
+      "card-floating",
+      "card-glowing"
+    ],
+    "animations": [
+      "subtle-float",
+      "professional-pulse",
+      "elegant-slide-in",
+      "sophisticated-glow",
+      "card-shimmer",
+      "metric-pulse"
+    ],
+    "themes": {
+      "light": {
+        "background": "from-slate-50 via-blue-50 to-indigo-50",
+        "card": "bg-white/80",
+        "text": "text-slate-900"
+      },
+      "dark": {
+        "background": "from-slate-950 via-slate-900 to-indigo-950",
+        "card": "bg-slate-900/80",
+        "text": "text-white"
+      }
+    }
+  },
+  "error_messages": {
+    "auth": {
+      "invalid_credentials": "Invalid email or password",
+      "email_required": "Email address is required",
+      "password_required": "Password is required",
+      "signup_failed": "Failed to create account"
+    },
+    "api": {
+      "network_error": "Network connection failed",
+      "server_error": "Server error occurred",
+      "rate_limit": "Too many requests",
+      "unauthorized": "Authentication required"
+    },
+    "validation": {
+      "invalid_email": "Please enter a valid email address",
+      "password_too_short": "Password must be at least 8 characters",
+      "required_field": "This field is required"
+    }
+  },
+  "success_messages": {
+    "auth": {
+      "signup_success": "Account created successfully!",
+      "signin_success": "Welcome back!",
+      "signout_success": "Signed out successfully"
+    },
+    "data": {
+      "profile_updated": "Profile updated successfully",
+      "food_logged": "Food logged successfully",
+      "device_connected": "Device connected successfully",
+      "supplement_added": "Added to supplement stack"
+    }
+  },
+  "accessibility": {
+    "aria_labels": {
+      "main_navigation": "Main navigation",
+      "user_menu": "User account menu",
+      "health_metrics": "Health metrics dashboard",
+      "chat_interface": "AI coach chat interface",
+      "food_logger": "Food logging interface"
+    },
+    "keyboard_shortcuts": [
+      {"key": "Cmd+K", "action": "Open search"},
+      {"key": "Cmd+N", "action": "New chat"},
+      {"key": "Cmd+D", "action": "Toggle theme"},
+      {"key": "Alt+1-6", "action": "Navigate to sections"}
+    ]
+  },
+  "constants": {
+    "health_metrics": {
+      "types": ["heart_rate", "steps", "glucose", "sleep", "energy", "stress", "hrv"],
+      "sources": ["wearable", "cgm", "manual", "calculated"],
+      "units": {
+        "heart_rate": "bpm",
+        "steps": "steps",
+        "glucose": "mg/dL",
+        "sleep": "/100",
+        "energy": "/100",
+        "stress": "/100",
+        "hrv": "ms"
+      }
+    },
+    "supplement_tiers": ["green", "yellow", "orange", "red"],
+    "meal_types": ["breakfast", "lunch", "dinner", "snack"],
+    "activity_levels": ["sedentary", "lightly-active", "moderately-active", "very-active", "extremely-active"]
+  },
+  "environment_variables": {
+    "required": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY",
+      "VITE_OPENAI_API_KEY",
+      "VITE_ELEVENLABS_API_KEY",
+      "VITE_SPOONACULAR_API_KEY"
+    ],
+    "optional": [
+      "VITE_STRIPE_PUBLISHABLE_KEY"
+    ]
+  },
+  "security_features": [
+    "HIPAA compliance",
+    "End-to-end encryption",
+    "Row Level Security (RLS)",
+    "JWT authentication",
+    "API rate limiting",
+    "Data anonymization",
+    "Audit logging"
+  ],
+  "performance_optimizations": [
+    "Code splitting",
+    "Lazy loading",
+    "Image optimization",
+    "Cache management",
+    "Bundle optimization",
+    "Memory management",
+    "Performance monitoring"
+  ]
+}
