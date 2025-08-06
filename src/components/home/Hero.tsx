@@ -56,6 +56,9 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
                   Digital Wellness
                 </span>
+                <span className="bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent">
+                  Digital Wellness
+                </span>
                 <br />
                 <span className="text-slate-900 dark:text-white">Coach</span>
               </h1>

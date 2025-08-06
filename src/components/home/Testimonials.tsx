@@ -15,7 +15,7 @@ const Testimonials: React.FC = () => {
         >
           <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 dark:text-white tracking-tight">
             Built for
-            <span className="block bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent">
               Health Professionals
             </span>
           </h2>
