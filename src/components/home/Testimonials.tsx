@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Quote, Users, TrendingUp, Shield, CheckCircle } from 'lucide-react';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 const Testimonials: React.FC = () => {
   return (
