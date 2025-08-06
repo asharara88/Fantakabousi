@@ -40,6 +40,11 @@ export default {
         'display-xs': ['1.5rem', { lineHeight: '1.4', letterSpacing: '-0.025em', fontWeight: '600' }],
       },
       colors: {
+        // Biowell brand colors
+        'blue-light': '#48C6FF',
+        'blue-medium': '#2A7FFF', 
+        'blue-deep': '#0026CC',
+        'neon-green': '#3BE6C5',
         border: 'rgb(var(--border))',
         input: 'rgb(var(--input))',
         ring: 'rgb(var(--ring))',

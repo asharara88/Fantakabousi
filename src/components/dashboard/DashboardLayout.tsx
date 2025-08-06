@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthProvider';
-import { useTheme } from '../../contexts/ThemeProvider';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { 
   LayoutDashboard, 
   Activity, 
@@ -29,8 +29,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, actualTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const logoUrl = actualTheme === 'dark' 
+    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzU0MzgwMDY1LCJleHAiOjE3ODU5MTYwNjV9.W4lMMJpIbCmQrbsJFDKK-eRoSnvQ3UUdz4DhUF-jwOc"
+    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1NDM4MDA4NywiZXhwIjoxNzg1OTE2MDg3fQ.GTBPM8tMs-jtvycD39wO6Bt32JHyEWB4a-tWle0jl8I";
 
   const navigationItems = [
     { 
@@ -96,10 +100,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">B</span>
-            </div>
-            <span className="text-xl font-bold text-slate-900 dark:text-white">Biowell</span>
+            <img 
+              src={logoUrl} 
+              alt="Biowell" 
+              className="h-8 w-auto"
+            />
           </div>
           
           <div className="flex items-center space-x-3">
@@ -124,10 +129,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-6 pb-6 border-r border-slate-200/50 dark:border-slate-700/50">
           {/* Logo */}
           <div className="flex h-20 shrink-0 items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">B</span>
-            </div>
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">Biowell</span>
+            <img 
+              src={logoUrl} 
+              alt="Biowell" 
+              className="h-10 w-auto"
+            />
           </div>
 
           {/* User Profile */}
@@ -241,10 +247,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               <div className="flex h-full flex-col p-6">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold">B</span>
-                    </div>
-                    <span className="text-xl font-bold text-slate-900 dark:text-white">Biowell</span>
+                    <img 
+                      src={logoUrl} 
+                      alt="Biowell" 
+                      className="h-8 w-auto"
+                    />
                   </div>
                   <button
                     onClick={() => setIsSidebarOpen(false)}

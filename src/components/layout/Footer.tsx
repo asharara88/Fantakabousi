@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../../contexts/ThemeProvider';
+import { useTheme } from '../../contexts/ThemeContext';
 import { 
   Mail, 
   Phone, 
@@ -15,7 +15,11 @@ import {
 } from 'lucide-react';
 
 const Footer: React.FC = () => {
-  const { theme } = useTheme();
+  const { actualTheme } = useTheme();
+
+  const logoUrl = actualTheme === 'dark' 
+    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzU0MzgwMDY1LCJleHAiOjE3ODU5MTYwNjV9.W4lMMJpIbCmQrbsJFDKK-eRoSnvQ3UUdz4DhUF-jwOc"
+    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1NDM4MDA4NywiZXhwIjoxNzg1OTE2MDg3fQ.GTBPM8tMs-jtvycD39wO6Bt32JHyEWB4a-tWle0jl8I";
 
   const footerSections = [
     {
@@ -68,10 +72,11 @@ const Footer: React.FC = () => {
                 viewport={{ once: true }}
                 className="flex items-center space-x-3"
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-xl">B</span>
-                </div>
-                <span className="text-2xl font-bold">Biowell</span>
+                <img 
+                  src={logoUrl} 
+                  alt="Biowell" 
+                  className="h-8 w-auto"
+                />
               </motion.div>
               
               <p className="text-slate-400 leading-relaxed">
