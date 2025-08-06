@@ -32,12 +32,12 @@ export default {
         ],
       },
       fontSize: {
-        'display-2xl': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.025em', fontWeight: '800' }],
-        'display-xl': ['3.75rem', { lineHeight: '1', letterSpacing: '-0.025em', fontWeight: '800' }],
-        'display-lg': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '700' }],
-        'display-md': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.025em', fontWeight: '700' }],
-        'display-sm': ['1.875rem', { lineHeight: '1.3', letterSpacing: '-0.025em', fontWeight: '600' }],
-        'display-xs': ['1.5rem', { lineHeight: '1.4', letterSpacing: '-0.025em', fontWeight: '600' }],
+        'display-2xl': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.025em', fontWeight: '300' }],
+        'display-xl': ['3.75rem', { lineHeight: '1', letterSpacing: '-0.025em', fontWeight: '300' }],
+        'display-lg': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '400' }],
+        'display-md': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.025em', fontWeight: '400' }],
+        'display-sm': ['1.875rem', { lineHeight: '1.3', letterSpacing: '-0.025em', fontWeight: '500' }],
+        'display-xs': ['1.5rem', { lineHeight: '1.4', letterSpacing: '-0.025em', fontWeight: '500' }],
       },
       colors: {
         // Biowell brand colors
