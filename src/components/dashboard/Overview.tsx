@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   Heart, 
   Brain, 
@@ -11,11 +12,14 @@ import {
   Clock,
   Target,
   Sparkles,
-  BarChart3
+  BarChart3,
+  Utensils,
+  Pill
 } from 'lucide-react';
 
 const Overview: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const healthMetrics = [
     {
@@ -104,7 +108,7 @@ const Overview: React.FC = () => {
             <Sparkles className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-3xl font-light text-slate-900 dark:text-white">
               Good morning! 👋
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
@@ -122,7 +126,7 @@ const Overview: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="card-premium hover:shadow-xl transition-all duration-500 cursor-pointer group"
+            className="card-premium hover:shadow-xl transition-all duration-500 cursor-pointer group card-interactive"
             whileHover={{ 
               scale: 1.03, 
               y: -8,
@@ -136,7 +140,7 @@ const Overview: React.FC = () => {
                 <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
                   <metric.icon className="w-6 h-6 text-white" />
                 </div>
-                <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
                   metric.change > 0 
                     ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' 
                     : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
@@ -151,7 +155,7 @@ const Overview: React.FC = () => {
               </div>
               
               <div>
-                <div className="text-3xl font-bold text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">
+                <div className="text-3xl font-light text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">
                   {metric.value}
                   <span className="text-lg text-slate-500 dark:text-slate-400 font-normal ml-1">
                     {metric.unit}
@@ -160,7 +164,7 @@ const Overview: React.FC = () => {
                 <div className="text-sm font-medium text-slate-600 dark:text-slate-400 mt-1">
                   {metric.name}
                 </div>
-                <div className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-2 group-hover:text-emerald-500 transition-colors duration-300">
+                <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-2 group-hover:text-emerald-500 transition-colors duration-300">
                   {metric.status}
                 </div>
               </div>
@@ -182,7 +186,7 @@ const Overview: React.FC = () => {
             <Brain className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors duration-300">AI Health Insights</h2>
+            <h2 className="text-xl font-medium text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors duration-300">AI Health Insights</h2>
             <p className="text-slate-600 dark:text-slate-400">Personalized recommendations from your data</p>
           </div>
         </div>
@@ -200,7 +204,7 @@ const Overview: React.FC = () => {
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                  <div className={`px-3 py-1 text-xs font-medium rounded-full ${
                     insight.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
                     insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
                     'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
@@ -213,7 +217,7 @@ const Overview: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{insight.title}</h3>
+                  <h3 className="font-medium text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{insight.title}</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                     {insight.description}
                   </p>
@@ -263,7 +267,7 @@ const Overview: React.FC = () => {
             <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
               <action.icon className="w-6 h-6 text-white" />
             </div>
-            <div className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{action.label}</div>
+            <div className="font-medium text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{action.label}</div>
           </motion.button>
         ))}
       </motion.div>

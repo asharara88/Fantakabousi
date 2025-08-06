@@ -50,7 +50,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
 
             {/* Headline */}
             <div className="space-y-6">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
+              <h1 className="text-5xl lg:text-7xl font-light leading-tight tracking-tight">
                 <span className="text-slate-900 dark:text-white">Your</span>
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
@@ -60,7 +60,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 <span className="text-slate-900 dark:text-white">Coach</span>
               </h1>
 
-              <p className="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+              <p className="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl font-light">
                 Advanced biometric analysis, personalized nutrition guidance, and intelligent supplement recommendations powered by cutting-edge AI.
               </p>
             </div>
@@ -71,7 +71,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onGetStarted}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-medium text-lg shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative flex items-center space-x-3">
@@ -84,7 +84,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group px-8 py-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-2xl font-semibold text-lg hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
+                className="group px-8 py-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-2xl font-medium text-lg hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
               >
                 <div className="flex items-center space-x-3">
                   <Play className="w-5 h-5" />
@@ -150,7 +150,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                         <Activity className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Health Dashboard</h3>
+                        <h3 className="text-lg font-medium text-slate-900 dark:text-white">Health Dashboard</h3>
                         <div className="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                           <span>Live monitoring</span>
@@ -158,7 +158,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">94</div>
+                      <div className="text-3xl font-light bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">94</div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">Wellness Score</div>
                     </div>
                   </div>
@@ -204,20 +204,20 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-                        className="bg-slate-50/80 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50"
+                        className="bg-slate-50/80 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50 card-interactive"
                       >
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <div className={`w-8 h-8 bg-gradient-to-br ${metric.color} rounded-lg flex items-center justify-center`}>
                               <metric.icon className="w-4 h-4 text-white" />
                             </div>
-                            <div className="px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-semibold rounded-full">
+                            <div className="px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-medium rounded-full">
                               {metric.trend}
                             </div>
                           </div>
                           
                           <div>
-                            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                            <div className="text-2xl font-light text-slate-900 dark:text-white">
                               {metric.value}
                               <span className="text-sm text-slate-500 dark:text-slate-400 font-normal ml-1">
                                 {metric.unit}
@@ -243,8 +243,8 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <h4 className="font-semibold text-slate-900 dark:text-white text-sm">AI Insight</h4>
-                          <div className="px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-semibold rounded-full">
+                          <h4 className="font-medium text-slate-900 dark:text-white text-sm">AI Insight</h4>
+                          <div className="px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-medium rounded-full">
                             98% confidence
                           </div>
                         </div>

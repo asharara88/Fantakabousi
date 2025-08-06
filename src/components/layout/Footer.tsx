@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
                 />
               </motion.div>
               
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-slate-400 leading-relaxed font-light">
                 Transforming health through intelligent technology. Your personal wellness journey starts here.
               </p>
               
@@ -110,7 +110,7 @@ const Footer: React.FC = () => {
                 viewport={{ once: true }}
                 className="space-y-6"
               >
-                <h3 className="text-lg font-semibold">{section.title}</h3>
+                <h3 className="text-lg font-medium">{section.title}</h3>
                 <ul className="space-y-3">
                   {section.links.map((link) => (
                     <li key={link.label}>

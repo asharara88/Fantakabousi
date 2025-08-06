@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AuthPage: React.FC = () => {
@@ -74,7 +74,7 @@ const AuthPage: React.FC = () => {
               />
               
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+                <h1 className="text-3xl font-light text-slate-900 dark:text-white">
                   {isSignUp ? 'Create Account' : 'Welcome Back'}
                 </h1>
                 <p className="text-slate-600 dark:text-slate-400 mt-2">
@@ -88,7 +88,7 @@ const AuthPage: React.FC = () => {
           <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 mb-8">
             <button
               onClick={() => setIsSignUp(false)}
-              className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                 !isSignUp
                   ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400'
@@ -98,7 +98,7 @@ const AuthPage: React.FC = () => {
             </button>
             <button
               onClick={() => setIsSignUp(true)}
-              className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isSignUp
                   ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400'
@@ -179,7 +179,7 @@ const AuthPage: React.FC = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -207,7 +207,7 @@ const AuthPage: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Shield className="w-5 h-5 text-emerald-600" />
                 <div className="text-sm">
-                  <div className="font-semibold text-slate-900 dark:text-white">Your data is secure</div>
+                  <div className="font-medium text-slate-900 dark:text-white">Your data is secure</div>
                   <div className="text-slate-600 dark:text-slate-400">Bank-level encryption • HIPAA compliant • Privacy-first</div>
                 </div>
               </div>
