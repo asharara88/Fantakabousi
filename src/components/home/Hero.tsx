@@ -60,6 +60,10 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 <span className="text-slate-900 dark:text-white">Coach</span>
               </h1>
 
+              <p className="text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 font-light tracking-wide">
+                Optimize your well-being everyday.
+              </p>
+
               <p className="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl font-light">
                 Advanced biometric analysis, personalized nutrition guidance, and intelligent supplement recommendations powered by cutting-edge AI.
               </p>
