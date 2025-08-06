@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, 
   Play, 
@@ -19,6 +20,8 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
+  const [showAIExplanation, setShowAIExplanation] = useState(false);
+
   return (
     <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
       {/* Background Elements */}
@@ -40,12 +43,68 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border border-blue-200/50 dark:border-blue-800/50 rounded-full"
+              className="space-y-4"
             >
-              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-                AI-Powered Health Intelligence
-              </span>
+              <button
+                onClick={() => setShowAIExplanation(!showAIExplanation)}
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border border-blue-200/50 dark:border-blue-800/50 rounded-full hover:shadow-lg transition-all duration-300 group"
+              >
+                <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:animate-pulse" />
+                <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                  AI-Powered Health Intelligence
+                </span>
+                <motion.div
+                  animate={{ rotate: showAIExplanation ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-4 h-4 text-blue-600 dark:text-blue-400"
+                >
+                  ↓
+                </motion.div>
+              </button>
+
+              <AnimatePresence>
+                {showAIExplanation && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0, y: -10 }}
+                    animate={{ opacity: 1, height: 'auto', y: 0 }}
+                    exit={{ opacity: 0, height: 0, y: -10 }}
+                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                    className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-blue-200/50 dark:border-blue-800/50 shadow-xl max-w-md"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-[#48C6FF] to-[#2A7FFF] rounded-lg flex items-center justify-center">
+                          <Brain className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-slate-900 dark:text-white">How Our AI Works</h3>
+                      </div>
+                      
+                      <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+                        <p>
+                          Our AI analyzes your health patterns to provide personalized wellness insights:
+                        </p>
+                        <ul className="space-y-2">
+                          <li className="flex items-center space-x-2">
+                            <div className="w-1.5 h-1.5 bg-[#48C6FF] rounded-full"></div>
+                            <span>Tracks your daily health metrics</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <div className="w-1.5 h-1.5 bg-[#2A7FFF] rounded-full"></div>
+                            <span>Identifies patterns in your data</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <div className="w-1.5 h-1.5 bg-[#0026CC] rounded-full"></div>
+                            <span>Suggests personalized wellness tips</span>
+                          </li>
+                        </ul>
+                        <p className="text-xs text-slate-500 dark:text-slate-500 italic">
+                          For informational purposes only. Not medical advice.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* Headline */}
