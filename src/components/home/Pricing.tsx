@@ -101,35 +101,45 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border transition-all duration-500 hover:shadow-2xl ${
+              className={`relative card-premium p-8 border transition-all duration-500 hover:shadow-2xl cursor-pointer group ${
                 plan.popular 
                   ? 'border-blue-300 dark:border-blue-700 ring-2 ring-blue-200 dark:ring-blue-800 scale-105' 
                   : 'border-slate-200/50 dark:border-slate-700/50 hover:border-blue-300/50 dark:hover:border-blue-700/50'
               }`}
+              whileHover={{ 
+                scale: plan.popular ? 1.08 : 1.05, 
+                y: -8,
+                rotateY: 2
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <motion.div 
+                  className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
                   <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-lg flex items-center space-x-1">
                     <Star className="w-3 h-3" />
                     <span>Most Popular</span>
                   </div>
-                </div>
+                </motion.div>
               )}
               
               <div className="space-y-6">
                 {/* Header */}
                 <div className="text-center space-y-4">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${plan.color} rounded-2xl flex items-center justify-center mx-auto shadow-lg`}>
+                  <div className={`w-16 h-16 bg-gradient-to-br ${plan.color} rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
                     <plan.icon className="w-8 h-8 text-white" />
                   </div>
                   
                   <div>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{plan.name}</h3>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{plan.name}</h3>
                     <p className="text-slate-600 dark:text-slate-400 mt-2">{plan.description}</p>
                   </div>
                   
                   <div className="space-y-1">
-                    <div className="text-4xl font-bold text-slate-900 dark:text-white">{plan.price}</div>
+                    <div className="text-4xl font-bold text-slate-900 dark:text-white group-hover:scale-105 transition-transform duration-300">{plan.price}</div>
                     <div className="text-slate-500 dark:text-slate-400">{plan.period}</div>
                   </div>
                 </div>
@@ -137,26 +147,32 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
                 {/* Features */}
                 <div className="space-y-3">
                   {plan.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                    <motion.div 
+                      key={idx} 
+                      className="flex items-center space-x-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 + idx * 0.1 }}
+                    >
+                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 group-hover:scale-110 group-hover:text-neon-green transition-all duration-300" />
                       <span className="text-slate-600 dark:text-slate-400">{feature}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
                 
                 {/* CTA */}
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={onGetStarted}
-                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
+                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-xl ${
                     plan.popular 
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl' 
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
                   <span>{plan.cta}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </motion.button>
               </div>
             </motion.div>

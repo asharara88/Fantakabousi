@@ -90,18 +90,25 @@ const Features: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-2xl hover:border-blue-300/50 dark:hover:border-blue-700/50 transition-all duration-500"
+              className="group relative card-premium p-8 hover:shadow-2xl hover:border-blue-300/50 dark:hover:border-blue-700/50 cursor-pointer"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -8,
+                rotateY: 3,
+                rotateX: 3
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               {/* Gradient Border Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-emerald-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-emerald-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-card-shimmer" />
               
               <div className="relative space-y-6">
-                <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
                   <feature.icon className="w-7 h-7 text-white" />
                 </div>
                 
                 <div className="space-y-3">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -111,10 +118,16 @@ const Features: React.FC = () => {
                 
                 <div className="space-y-2">
                   {feature.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                    <motion.div 
+                      key={idx} 
+                      className="flex items-center space-x-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 + idx * 0.1 }}
+                    >
+                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover:scale-150 group-hover:bg-neon-green transition-all duration-300" />
                       <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{feat}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
