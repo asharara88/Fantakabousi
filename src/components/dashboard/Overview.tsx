@@ -156,7 +156,9 @@ const Overview: React.FC = () => {
               
               <div>
                 <div className="text-3xl font-light text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">
-                  {metric.value}
+                  <span className="bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] bg-clip-text text-transparent">
+                    {metric.value}
+                  </span>
                   <span className="text-lg text-slate-500 dark:text-slate-400 font-normal ml-1">
                     {metric.unit}
                   </span>
