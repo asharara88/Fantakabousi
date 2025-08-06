@@ -101,10 +101,10 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               className="flex items-center space-x-8 pt-8"
             >
               {[
-                { icon: Shield, label: 'HIPAA Compliant' },
-                { icon: Zap, label: 'Real-time Analysis' },
-                { icon: CheckCircle, label: 'Evidence-Based' },
-                { icon: Users, label: 'Professional Grade' }
+                { icon: Shield, label: 'Secure & Private' },
+                { icon: Zap, label: 'Instant Insights' },
+                { icon: CheckCircle, label: 'Personalized' },
+                { icon: Users, label: 'User-Friendly' }
               ].map((item, index) => (
                 <motion.div
                   key={index}

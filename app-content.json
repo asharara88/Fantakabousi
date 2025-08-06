@@ -93,10 +93,10 @@
       "cta_primary": "Start Your Analysis",
       "cta_secondary": "Watch Demo",
       "trust_indicators": [
-        {"label": "HIPAA Compliant", "icon": "Shield"},
-        {"label": "Real-time Analysis", "icon": "Zap"},
-        {"label": "Evidence-Based", "icon": "CheckCircle"},
-        {"label": "Professional Grade", "icon": "Users"}
+        {"label": "Secure & Private", "icon": "Shield"},
+        {"label": "Instant Insights", "icon": "Zap"},
+        {"label": "Personalized", "icon": "CheckCircle"},
+        {"label": "User-Friendly", "icon": "Users"}
       ]
     },
     "features": {
