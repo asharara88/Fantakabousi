@@ -103,8 +103,8 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               {[
                 { icon: Shield, label: 'HIPAA Compliant' },
                 { icon: Zap, label: 'Real-time Analysis' },
-                { icon: CheckCircle, label: '99.7% Accuracy' },
-                { icon: Users, label: '10k+ Users' }
+                { icon: CheckCircle, label: 'Evidence-Based' },
+                { icon: Users, label: 'Professional Grade' }
               ].map((item, index) => (
                 <motion.div
                   key={index}

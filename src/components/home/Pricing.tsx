@@ -182,7 +182,7 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
         {/* Money Back Guarantee */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+              <span>Free trial available</span>
           transition={{ delay: 0.6, duration: 0.6 }}
           viewport={{ once: true }}
           className="text-center mt-16 space-y-4"
