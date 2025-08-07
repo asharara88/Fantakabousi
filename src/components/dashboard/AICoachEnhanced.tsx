@@ -268,7 +268,6 @@ const AICoachEnhanced: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
                 ))}
                 
                 {sendingMessage && (
