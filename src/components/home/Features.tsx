@@ -19,45 +19,45 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: Brain,
-      title: 'AI Health Coach',
-      description: 'Personalized guidance powered by advanced machine learning algorithms that understand your unique health patterns.',
+      title: 'Your Personal Coach',
+      description: 'Get simple, personalized health advice that\'s easy to understand and follow.',
       color: 'from-purple-500 to-indigo-600',
-      features: ['24/7 Availability', 'Personalized Insights', 'Evidence-Based Advice']
+      features: ['Always available', 'Easy to understand', 'Personalized for you']
     },
     {
       icon: Activity,
-      title: 'Real-Time Monitoring',
-      description: 'Continuous health tracking with instant analysis and alerts for optimal health management.',
+      title: 'Track Your Health',
+      description: 'See how you\'re doing with simple, clear health tracking that makes sense.',
       color: 'from-blue-500 to-cyan-600',
-      features: ['Live Data Sync', 'Instant Alerts', 'Trend Analysis']
+      features: ['Easy tracking', 'Clear insights', 'See your progress']
     },
     {
       icon: Heart,
-      title: 'Biometric Analysis',
-      description: 'Advanced cardiovascular and metabolic monitoring with predictive health insights.',
+      title: 'Heart & Sleep',
+      description: 'Monitor your heart health and sleep quality with easy-to-understand insights.',
       color: 'from-red-500 to-pink-600',
-      features: ['HRV Analysis', 'Glucose Tracking', 'Sleep Optimization']
+      features: ['Heart health', 'Sleep tracking', 'Energy levels']
     },
     {
       icon: Pill,
-      title: 'Smart Supplements',
-      description: 'Evidence-based supplement recommendations with personalized dosing and timing protocols.',
+      title: 'Find Supplements',
+      description: 'Discover supplements that might help you feel better, with clear explanations.',
       color: 'from-emerald-500 to-teal-600',
-      features: ['Personalized Stacks', 'Timing Optimization', 'Safety Monitoring']
+      features: ['Easy to find', 'Clear benefits', 'Safe choices']
     },
     {
       icon: BarChart3,
-      title: 'Advanced Analytics',
-      description: 'Comprehensive health analytics with predictive modeling and trend forecasting.',
+      title: 'See Your Progress',
+      description: 'Understand how you\'re improving with simple charts and friendly explanations.',
       color: 'from-amber-500 to-orange-600',
-      features: ['Predictive Models', 'Health Forecasting', 'Risk Assessment']
+      features: ['Easy charts', 'Clear trends', 'Simple insights']
     },
     {
       icon: Shield,
-      title: 'Enterprise Security',
-      description: 'Bank-level encryption with HIPAA compliance and privacy-first architecture.',
+      title: 'Your Data is Safe',
+      description: 'Your health information is protected with the highest security standards.',
       color: 'from-slate-500 to-slate-700',
-      features: ['HIPAA Compliant', 'End-to-End Encryption', 'Zero-Trust Security']
+      features: ['Completely private', 'Bank-level security', 'You control your data']
     }
   ];
 
@@ -72,13 +72,13 @@ const Features: React.FC = () => {
           className="text-center space-y-4 mb-16"
         >
           <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Advanced Health
+            Simple Health
             <span className="block bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent">
-              Intelligence Platform
+              Tracking Made Easy
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Sophisticated health monitoring and coaching that adapts to your unique biology and lifestyle patterns.
+            Track your health, understand your body, and get personalized advice that actually makes sense.
           </p>
         </motion.div>
 

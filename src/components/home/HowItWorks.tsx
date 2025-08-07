@@ -14,41 +14,41 @@ const HowItWorks: React.FC = () => {
   const steps = [
     {
       step: '01',
-      title: 'Connect Your Data',
-      description: 'Seamlessly integrate with your wearables, health devices, and manual inputs to build your comprehensive health profile.',
+      title: 'Tell Us About Yourself',
+      description: 'Answer a few simple questions about your health goals and lifestyle. Takes just 2 minutes.',
       icon: Smartphone,
       color: 'from-blue-500 to-cyan-600',
       details: [
-        'Apple Watch & Fitbit integration',
-        'CGM and glucose monitors',
-        'Manual health logging',
-        'Lab result uploads'
+        'Quick health questionnaire',
+        'Set your goals',
+        'No complicated setup',
+        'Start immediately'
       ]
     },
     {
       step: '02',
-      title: 'AI Analysis',
-      description: 'Our advanced algorithms analyze your unique patterns, circadian rhythms, and metabolic responses in real-time.',
+      title: 'Track Your Health',
+      description: 'Log your meals, track how you feel, and connect devices if you want. Everything is optional and easy.',
       icon: Brain,
       color: 'from-purple-500 to-indigo-600',
       details: [
-        'Pattern recognition',
-        'Predictive modeling',
-        'Anomaly detection',
-        'Trend forecasting'
+        'Log meals easily',
+        'Track how you feel',
+        'Connect devices (optional)',
+        'See your patterns'
       ]
     },
     {
       step: '03',
-      title: 'Personalized Coaching',
-      description: 'Receive tailored recommendations, optimal timing suggestions, and adaptive health protocols.',
+      title: 'Get Simple Advice',
+      description: 'Receive easy-to-follow suggestions that help you feel better and reach your health goals.',
       icon: Target,
       color: 'from-emerald-500 to-teal-600',
       details: [
-        'Custom protocols',
-        'Timing optimization',
-        'Progress tracking',
-        'Goal achievement'
+        'Clear recommendations',
+        'Easy to follow',
+        'See your progress',
+        'Achieve your goals'
       ]
     }
   ];
@@ -67,7 +67,7 @@ const HowItWorks: React.FC = () => {
             How It Works
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Three intelligent steps to transform your health with personalized AI coaching.
+            Three simple steps to start improving your health today.
           </p>
         </motion.div>
 

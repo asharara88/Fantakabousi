@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -12,162 +12,183 @@ import {
   Clock,
   Target,
   Sparkles,
-  BarChart3,
+  MessageCircle,
   Utensils,
-  Pill
+  ShoppingBag,
+  Plus,
+  ArrowRight,
+  Sun,
+  Moon,
+  Coffee,
+  Sunset
 } from 'lucide-react';
 
 const Overview: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [currentTime] = useState(new Date());
+  
+  const firstName = user?.email?.split('@')[0] || 'there';
+  const hour = currentTime.getHours();
+  
+  const getGreeting = () => {
+    if (hour < 12) return { text: 'Good morning', icon: Sun, color: 'from-yellow-400 to-orange-500' };
+    if (hour < 17) return { text: 'Good afternoon', icon: Coffee, color: 'from-blue-400 to-cyan-500' };
+    if (hour < 20) return { text: 'Good evening', icon: Sunset, color: 'from-orange-400 to-red-500' };
+    return { text: 'Good night', icon: Moon, color: 'from-indigo-400 to-purple-500' };
+  };
 
+  const greeting = getGreeting();
+  const GreetingIcon = greeting.icon;
+
+  // Simplified health metrics with friendly names
   const healthMetrics = [
     {
-      id: 'heart_rate',
-      name: 'Resting Heart Rate',
-      value: 68,
-      unit: 'bpm',
-      change: -3,
-      trend: 'improving',
+      id: 'heart',
+      name: 'Heart Health',
+      value: 'Great',
+      detail: '68 bpm',
+      change: 'improving',
       icon: Heart,
       color: 'from-red-500 to-pink-600',
-      status: 'Excellent'
-    },
-    {
-      id: 'hrv',
-      name: 'Heart Rate Variability',
-      value: 42,
-      unit: 'ms',
-      change: 8,
-      trend: 'improving',
-      icon: Activity,
-      color: 'from-emerald-500 to-teal-600',
-      status: 'Optimal'
-    },
-    {
-      id: 'sleep',
-      name: 'Sleep Quality',
-      value: 94,
-      unit: '/100',
-      change: 5,
-      trend: 'excellent',
-      icon: Brain,
-      color: 'from-indigo-500 to-purple-600',
-      status: 'Excellent'
+      description: 'Your heart is strong and healthy'
     },
     {
       id: 'energy',
       name: 'Energy Level',
-      value: 87,
-      unit: '/100',
-      change: 12,
-      trend: 'increasing',
+      value: 'High',
+      detail: '87/100',
+      change: 'up',
       icon: Zap,
       color: 'from-amber-500 to-orange-600',
-      status: 'High'
+      description: 'You have great energy today'
+    },
+    {
+      id: 'sleep',
+      name: 'Sleep Quality',
+      value: 'Excellent',
+      detail: '8h 23m',
+      change: 'improving',
+      icon: Brain,
+      color: 'from-indigo-500 to-purple-600',
+      description: 'You slept really well last night'
+    },
+    {
+      id: 'activity',
+      name: 'Daily Activity',
+      value: 'Active',
+      detail: '8,247 steps',
+      change: 'on track',
+      icon: Activity,
+      color: 'from-emerald-500 to-teal-600',
+      description: 'You\'re moving well today'
     }
   ];
 
-  const insights = [
+  // Simple, actionable insights
+  const todaysInsights = [
     {
-      title: 'Optimal Training Window',
-      description: 'Your recovery metrics indicate peak performance readiness. Ideal time for strength training.',
-      confidence: 96,
-      priority: 'high',
-      action: 'Schedule Workout',
-      color: 'from-emerald-500 to-teal-600'
+      title: 'Perfect time for a workout! 💪',
+      description: 'Your energy is high and your body is ready for exercise.',
+      action: 'Start Workout',
+      color: 'from-emerald-500 to-teal-600',
+      priority: 'high'
     },
     {
-      title: 'Nutrition Timing',
-      description: 'Your glucose response is excellent today. Perfect timing for your planned post-workout meal.',
-      confidence: 94,
-      priority: 'medium',
-      action: 'Plan Nutrition',
-      color: 'from-blue-500 to-cyan-600'
+      title: 'Great sleep last night! 😴',
+      description: 'You got quality rest. Keep up your bedtime routine.',
+      action: 'View Sleep Tips',
+      color: 'from-indigo-500 to-purple-600',
+      priority: 'low'
+    }
+  ];
+
+  // Quick actions - most common tasks
+  const quickActions = [
+    {
+      id: 'coach',
+      title: 'Ask Your Coach',
+      description: 'Get personalized health advice',
+      icon: MessageCircle,
+      color: 'from-purple-500 to-indigo-600',
+      path: '/dashboard/coach'
     },
     {
-      title: 'Sleep Optimization',
-      description: 'Sleep quality improved 15% this week. Consider maintaining your current evening routine.',
-      confidence: 91,
-      priority: 'low',
-      action: 'View Sleep Data',
-      color: 'from-indigo-500 to-purple-600'
+      id: 'food',
+      title: 'Log a Meal',
+      description: 'Track what you ate',
+      icon: Utensils,
+      color: 'from-green-500 to-emerald-600',
+      path: '/dashboard/nutrition'
+    },
+    {
+      id: 'health',
+      title: 'Check My Health',
+      description: 'See your progress',
+      icon: Activity,
+      color: 'from-blue-500 to-cyan-600',
+      path: '/dashboard/health'
+    },
+    {
+      id: 'shop',
+      title: 'Browse Supplements',
+      description: 'Find what you need',
+      icon: ShoppingBag,
+      color: 'from-orange-500 to-red-600',
+      path: '/dashboard/supplements'
     }
   ];
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
+    <div className="space-y-6 pb-24 lg:pb-6">
+      {/* Friendly Welcome */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-4"
+        className="text-center space-y-4"
       >
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <Sparkles className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-center space-x-3">
+          <div className={`w-12 h-12 bg-gradient-to-br ${greeting.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+            <GreetingIcon className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h1 className="text-3xl font-light text-slate-900 dark:text-white">
-              Good morning! 👋
+          <div className="text-left">
+            <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">
+              {greeting.text}, {firstName}!
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Here's your health overview for today
+              Let's check how you're doing today
             </p>
           </div>
         </div>
       </motion.div>
 
-      {/* Health Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Health Status - Simple Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {healthMetrics.map((metric, index) => (
           <motion.div
             key={metric.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="card-premium hover:shadow-xl transition-all duration-500 cursor-pointer group card-interactive"
-            whileHover={{ 
-              scale: 1.03, 
-              y: -8,
-              rotateY: 2,
-              rotateX: 2
-            }}
+            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 lg:p-6 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+            whileHover={{ scale: 1.02, y: -4 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => navigate('/dashboard/health')}
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                  <metric.icon className="w-6 h-6 text-white" />
-                </div>
-                <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
-                  metric.change > 0 
-                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' 
-                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                } group-hover:scale-105 transition-transform duration-300`}>
-                  {metric.change > 0 ? (
-                    <TrendingUp className="w-3 h-3" />
-                  ) : (
-                    <TrendingDown className="w-3 h-3" />
-                  )}
-                  <span>{Math.abs(metric.change)}%</span>
-                </div>
+            <div className="space-y-3">
+              <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
               </div>
               
               <div>
-                <div className="text-3xl font-light text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">
-                  <span className="bg-gradient-to-r from-[#48C6FF] to-[#2A7FFF] bg-clip-text text-transparent">
-                    {metric.value}
-                  </span>
-                  <span className="text-lg text-slate-500 dark:text-slate-400 font-normal ml-1">
-                    {metric.unit}
-                  </span>
+                <div className="text-xl lg:text-2xl font-bold text-slate-900 dark:text-white">
+                  {metric.value}
                 </div>
-                <div className="text-sm font-medium text-slate-600 dark:text-slate-400 mt-1">
+                <div className="text-sm font-medium text-slate-600 dark:text-slate-400">
                   {metric.name}
                 </div>
-                <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-2 group-hover:text-emerald-500 transition-colors duration-300">
-                  {metric.status}
+                <div className="text-xs text-slate-500 dark:text-slate-500">
+                  {metric.detail}
                 </div>
               </div>
             </div>
@@ -175,103 +196,109 @@ const Overview: React.FC = () => {
         ))}
       </div>
 
-      {/* AI Insights */}
+      {/* Today's Insights - Friendly Language */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="card-premium p-8 group hover:shadow-premium-xl"
-        whileHover={{ scale: 1.01, y: -4 }}
+        className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-slate-700/20 shadow-lg"
       >
         <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-            <Brain className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-medium text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors duration-300">AI Health Insights</h2>
-            <p className="text-slate-600 dark:text-slate-400">Personalized recommendations from your data</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">How You're Doing</h2>
+            <p className="text-slate-600 dark:text-slate-400">Based on your health data</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {insights.map((insight, index) => (
+        <div className="space-y-4">
+          {todaysInsights.map((insight, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 + index * 0.1 }}
-              className="card-interactive bg-slate-50/80 dark:bg-slate-800/50 rounded-xl p-6 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-lg group"
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.98 }}
+              className="bg-slate-50/80 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className={`px-3 py-1 text-xs font-medium rounded-full ${
-                    insight.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                    insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                  } group-hover:scale-105 transition-transform duration-300`}>
-                    {insight.priority.toUpperCase()}
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    {insight.confidence}% confidence
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="font-medium text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{insight.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {insight.description}
-                  </p>
-                </div>
-                
-                <motion.button 
-                  className={`w-full py-2 bg-gradient-to-r ${insight.color} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300 text-sm`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+              <div className="space-y-2">
+                <h3 className="font-semibold text-slate-900 dark:text-white text-lg">
+                  {insight.title}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400">
+                  {insight.description}
+                </p>
+                <button className={`px-4 py-2 bg-gradient-to-r ${insight.color} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300 text-sm`}>
                   {insight.action}
-                </motion.button>
+                </button>
               </div>
             </motion.div>
           ))}
         </div>
       </motion.div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Big, Clear Buttons */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">What would you like to do?</h2>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {quickActions.map((action, index) => (
+            <motion.button
+              key={action.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 + index * 0.1 }}
+              onClick={() => navigate(action.path)}
+              className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 text-left group"
+              whileHover={{ scale: 1.02, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="flex items-center space-x-4">
+                <div className={`w-14 h-14 bg-gradient-to-br ${action.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <action.icon className="w-7 h-7 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                    {action.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    {action.description}
+                  </p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+              </div>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
+      {/* Daily Goal - Simple and Motivating */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        transition={{ delay: 1 }}
+        className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-800/50"
       >
-        {[
-          { label: 'Log Food', icon: Utensils, color: 'from-green-500 to-emerald-600', path: '/dashboard/nutrition' },
-          { label: 'Ask Coach', icon: Brain, color: 'from-purple-500 to-indigo-600', path: '/dashboard/coach' },
-          { label: 'View Analytics', icon: BarChart3, color: 'from-blue-500 to-cyan-600', path: '/dashboard/health' },
-          { label: 'Browse Supplements', icon: Pill, color: 'from-orange-500 to-red-600', path: '/dashboard/supplements' }
-        ].map((action, index) => (
-          <motion.button
-            key={action.label}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8 + index * 0.1 }}
-            whileHover={{ 
-              scale: 1.08, 
-              y: -6,
-              rotateY: 5,
-              rotateX: 5
-            }}
-            whileTap={{ scale: 0.92 }}
-            onClick={() => navigate(action.path)}
-            className="card-interactive bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl text-center space-y-3 group"
-          >
-            <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
-              <action.icon className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <Target className="w-6 h-6 text-white" />
             </div>
-            <div className="font-medium text-slate-900 dark:text-white group-hover:text-blue-light transition-colors duration-300">{action.label}</div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Today's Goal</h3>
+              <p className="text-slate-600 dark:text-slate-400">Take your evening supplements</p>
+            </div>
+          </div>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Mark Done
           </motion.button>
-        ))}
+        </div>
       </motion.div>
     </div>
   );
