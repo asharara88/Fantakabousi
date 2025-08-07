@@ -148,6 +148,23 @@ const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ onQuickAction }
 
           {/* Food Input - Large and Friendly */}
           <div className="space-y-4">
+            {/* Camera Food Logging */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Take a Photo</h3>
+                <button className="w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-green-500 transition-colors flex flex-col items-center justify-center space-y-2 group">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <div className="font-semibold text-slate-900 dark:text-white">Snap Your Meal</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">AI will analyze calories & nutrients</div>
+                  </div>
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Or Type It</h3>
             <div className="relative">
               <input
                 type="text"
@@ -159,6 +176,8 @@ const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ onQuickAction }
               />
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <Utensils className="w-6 h-6 text-slate-400" />
+              </div>
+            </div>
               </div>
             </div>
             

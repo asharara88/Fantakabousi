@@ -38,11 +38,14 @@ const HealthMetrics: React.FC = () => {
         { name: 'HR Recovery', value: '28', unit: 'bpm/min', status: 'slow', description: 'Takes longer to recover after exercise' },
         { name: 'HR Variability', value: '28', unit: 'ms', status: 'low', description: 'Indicates stress or poor recovery' }
       ],
-      tips: [
-        'Add 20 minutes of cardio 3x per week',
-        'Try morning walks to lower resting HR',
-        'Monitor stress levels - they affect heart rate'
-      ]
+      protocol: {
+        title: 'Heart Rate Optimization Protocol',
+        actions: [
+          { type: 'exercise', text: 'Start 20-minute Zone 2 cardio protocol 3x/week', button: 'Begin Cardio Plan' },
+          { type: 'supplement', text: 'Take CoQ10 100mg + Magnesium 400mg daily', button: 'Add to Stack' },
+          { type: 'lifestyle', text: 'Practice 10-minute morning breathing exercises', button: 'Start Protocol' }
+        ]
+      }
     },
     {
       id: 'recovery',
@@ -62,11 +65,14 @@ const HealthMetrics: React.FC = () => {
         { name: 'Stress Index', value: '72', unit: '/100', status: 'high', description: 'Elevated stress levels detected' },
         { name: 'Training Load', value: 'Moderate', unit: '', status: 'balanced', description: 'Current training intensity' }
       ],
-      tips: [
-        'Focus on stress management techniques',
-        'Ensure you\'re getting quality sleep',
-        'Consider lighter workouts until HRV improves'
-      ]
+      protocol: {
+        title: 'HRV Recovery Protocol',
+        actions: [
+          { type: 'supplement', text: 'Take Ashwagandha 600mg + L-Theanine 200mg before bed', button: 'Add to Stack' },
+          { type: 'lifestyle', text: 'Complete 4-7-8 breathing protocol twice daily', button: 'Start Breathing' },
+          { type: 'recovery', text: 'Reduce training intensity by 20% for 1 week', button: 'Adjust Training' }
+        ]
+      }
     },
     {
       id: 'sleep',
@@ -86,11 +92,14 @@ const HealthMetrics: React.FC = () => {
         { name: 'REM Sleep', value: '72', unit: 'min', status: 'fair', description: 'Adequate but could improve' },
         { name: 'Sleep Efficiency', value: '78', unit: '%', status: 'fair', description: 'Time asleep vs time in bed' }
       ],
-      tips: [
-        'Try going to bed 30 minutes earlier',
-        'Create a consistent bedtime routine',
-        'Avoid screens 1 hour before bed'
-      ]
+      protocol: {
+        title: 'Sleep Extension Protocol',
+        actions: [
+          { type: 'schedule', text: 'Set bedtime to 10:30 PM (30 min earlier than current)', button: 'Set Sleep Schedule' },
+          { type: 'supplement', text: 'Take Magnesium Glycinate 400mg + Melatonin 1mg at 10 PM', button: 'Add to Stack' },
+          { type: 'environment', text: 'Enable blue light blocking on all devices after 9 PM', button: 'Setup Environment' }
+        ]
+      }
     },
     {
       id: 'glucose',
@@ -110,12 +119,14 @@ const HealthMetrics: React.FC = () => {
         { name: 'Post-Meal Peak', value: '168', unit: 'mg/dL', status: 'high', description: 'Spikes above 140mg/dL threshold' },
         { name: 'Dawn Effect', value: '15', unit: 'mg/dL', status: 'mild', description: 'Morning glucose rise' }
       ],
-      tips: [
-        'Reduce refined carbs and sugar intake',
-        'Take 10-minute walks after meals',
-        'Consider continuous glucose monitoring',
-        'Focus on protein and fiber with meals'
-      ]
+      protocol: {
+        title: 'Glucose Optimization Protocol',
+        actions: [
+          { type: 'nutrition', text: 'Limit meals to <30g net carbs, prioritize protein + fiber', button: 'Get Meal Plan' },
+          { type: 'supplement', text: 'Take Berberine 500mg + Chromium 200mcg before meals', button: 'Add to Stack' },
+          { type: 'activity', text: 'Walk 10 minutes after each meal (3x daily)', button: 'Set Reminders' }
+        ]
+      }
     }
   ];
 
@@ -284,11 +295,13 @@ const HealthMetrics: React.FC = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-slate-900 dark:text-white">What this means for you:</h4>
-                    {metric.tips.map((tip, idx) => (
-                      <div key={idx} className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-emerald-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-400">{tip}</span>
+                    <h4 className="font-semibold text-slate-900 dark:text-white">{metric.protocol.title}:</h4>
+                    {metric.protocol.actions.map((action, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-slate-100/60 dark:bg-slate-800/60 rounded-lg">
+                        <span className="text-sm text-slate-700 dark:text-slate-300">{action.text}</span>
+                        <button className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity">
+                          {action.button}
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -317,30 +330,27 @@ const HealthMetrics: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <button
-              onClick={() => navigate('/dashboard/coach')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
-              <MessageCircle className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Get Help from Coach</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Address these health concerns</div>
+              <BeakerIcon className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Start Glucose Protocol</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Reduce post-meal spikes</div>
             </button>
             
             <button
-              onClick={() => navigate('/dashboard/nutrition')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
-              <Utensils className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Track Glucose Impact</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">See how food affects you</div>
+              <Brain className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Sleep Extension Plan</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Get 7+ hours nightly</div>
             </button>
             
             <button
-              onClick={() => navigate('/dashboard/supplements')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
-              <ShoppingBag className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Find Solutions</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Supplements that could help</div>
+              <Heart className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Heart Rate Protocol</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Lower to optimal range</div>
             </button>
           </div>
         </div>
