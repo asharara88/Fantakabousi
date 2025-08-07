@@ -46,60 +46,60 @@ const Overview: React.FC = () => {
     {
       id: 'heart',
       name: 'Heart Health',
-      value: 'Great',
-      detail: '68 bpm',
-      change: 'improving',
+      value: 'Good',
+      detail: '74 bpm',
+      change: 'slightly elevated',
       icon: Heart,
       color: 'from-red-500 to-pink-600',
-      description: 'Your heart is strong and healthy'
+      description: 'Your resting heart rate could be lower with more cardio'
     },
     {
       id: 'energy',
       name: 'Energy Level',
-      value: 'High',
-      detail: '87/100',
-      change: 'up',
+      value: 'Fair',
+      detail: '64/100',
+      change: 'afternoon dips',
       icon: Zap,
       color: 'from-amber-500 to-orange-600',
-      description: 'You have great energy today'
+      description: 'You experience energy crashes around 3 PM'
     },
     {
       id: 'sleep',
       name: 'Sleep Quality',
-      value: 'Excellent',
-      detail: '8h 23m',
-      change: 'improving',
+      value: 'Needs Work',
+      detail: '6h 12m',
+      change: 'inconsistent',
       icon: Brain,
       color: 'from-indigo-500 to-purple-600',
-      description: 'You slept really well last night'
+      description: 'You\'re not getting enough deep sleep'
     },
     {
       id: 'activity',
       name: 'Daily Activity',
-      value: 'Active',
-      detail: '8,247 steps',
-      change: 'on track',
+      value: 'Could Be Better',
+      detail: '5,832 steps',
+      change: 'below goal',
       icon: Activity,
       color: 'from-emerald-500 to-teal-600',
-      description: 'You\'re moving well today'
+      description: 'You\'re sitting too much during work hours'
     }
   ];
 
   // Simple, actionable insights
   const todaysInsights = [
     {
-      title: 'Perfect time for a workout! 💪',
-      description: 'Your energy is high and your body is ready for exercise.',
-      action: 'Start Workout',
+      title: 'Your energy dips at 3 PM 😴',
+      description: 'Try a 10-minute walk or healthy snack to avoid the afternoon crash.',
+      action: 'Set Reminder',
       color: 'from-emerald-500 to-teal-600',
       priority: 'high'
     },
     {
-      title: 'Great sleep last night! 😴',
-      description: 'You got quality rest. Keep up your bedtime routine.',
-      action: 'View Sleep Tips',
+      title: 'Sleep could be better 😴',
+      description: 'You\'re averaging 6 hours. Aim for 7-8 hours for better recovery.',
+      action: 'Improve Sleep',
       color: 'from-indigo-500 to-purple-600',
-      priority: 'low'
+      priority: 'high'
     }
   ];
 

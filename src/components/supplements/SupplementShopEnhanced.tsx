@@ -361,7 +361,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
           </div>
           <div className="space-y-2">
             <Heart className="w-8 h-8 text-red-600 mx-auto" />
-            <div className="font-semibold text-slate-900 dark:text-white">30-Day Guarantee</div>
+            <div className="font-semibold text-slate-900 dark:text-white">Quality Guarantee</div>
             <div className="text-sm text-slate-600 dark:text-slate-400">Not satisfied? Full refund</div>
           </div>
         </div>

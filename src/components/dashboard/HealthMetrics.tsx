@@ -22,72 +22,72 @@ const HealthMetrics: React.FC = () => {
       id: 'heart',
       name: 'Heart Health',
       friendlyName: 'How your heart is doing',
-      value: 'Great',
-      detail: '68 beats per minute',
-      status: 'excellent',
-      change: 3,
-      trend: 'improving',
+      value: 'Good',
+      detail: '74 beats per minute',
+      status: 'good',
+      change: -2,
+      trend: 'slightly elevated',
       icon: Heart,
       color: 'from-red-500 to-rose-600',
-      explanation: 'Your heart rate shows you\'re in great cardiovascular shape. A resting heart rate of 68 bpm is excellent for your age.',
+      explanation: 'Your resting heart rate is a bit high. Regular cardio exercise could help bring it down to the optimal 60-70 range.',
       tips: [
-        'Keep up your current exercise routine',
-        'Your heart is getting stronger',
-        'Great cardiovascular fitness'
+        'Add 20 minutes of cardio 3x per week',
+        'Try morning walks to lower resting HR',
+        'Monitor stress levels - they affect heart rate'
       ]
     },
     {
       id: 'recovery',
       name: 'Recovery',
       friendlyName: 'How well you recover from stress',
-      value: 'Excellent',
-      detail: '42 milliseconds',
-      status: 'optimal',
-      change: 8,
-      trend: 'improving',
+      value: 'Fair',
+      detail: '28 milliseconds',
+      status: 'needs_work',
+      change: -5,
+      trend: 'declining',
       icon: Activity,
       color: 'from-emerald-500 to-teal-600',
-      explanation: 'Your body recovers really well from stress and exercise. This means you\'re ready for more activity.',
+      explanation: 'Your heart rate variability is lower than ideal, suggesting your body is under stress or not recovering well.',
       tips: [
-        'Perfect time for a challenging workout',
-        'Your stress management is working',
-        'Great recovery capacity'
+        'Focus on stress management techniques',
+        'Ensure you\'re getting quality sleep',
+        'Consider lighter workouts until HRV improves'
       ]
     },
     {
       id: 'sleep',
       name: 'Sleep Quality',
       friendlyName: 'How well you slept',
-      value: 'Amazing',
-      detail: '8 hours 23 minutes',
-      status: 'excellent',
-      change: 5,
-      trend: 'improving',
+      value: 'Needs Work',
+      detail: '6 hours 12 minutes',
+      status: 'poor',
+      change: -8,
+      trend: 'inconsistent',
       icon: Brain,
       color: 'from-indigo-500 to-purple-600',
-      explanation: 'You got excellent sleep last night! Your body had time to repair and recharge properly.',
+      explanation: 'You\'re not getting enough sleep. Most adults need 7-9 hours for proper recovery and health.',
       tips: [
-        'Your bedtime routine is working perfectly',
-        'Great deep sleep phases',
-        'Waking up refreshed'
+        'Try going to bed 30 minutes earlier',
+        'Create a consistent bedtime routine',
+        'Avoid screens 1 hour before bed'
       ]
     },
     {
       id: 'energy',
       name: 'Energy Level',
       friendlyName: 'How energetic you feel',
-      value: 'High',
-      detail: '87 out of 100',
-      status: 'great',
-      change: 12,
-      trend: 'increasing',
+      value: 'Variable',
+      detail: '58 out of 100',
+      status: 'fair',
+      change: -3,
+      trend: 'afternoon crashes',
       icon: Zap,
       color: 'from-amber-500 to-orange-600',
-      explanation: 'You have great energy today! This is a perfect time to tackle important tasks or exercise.',
+      explanation: 'Your energy levels fluctuate throughout the day, with notable crashes in the afternoon.',
       tips: [
-        'Great time for productive work',
-        'Consider a workout while energy is high',
-        'Your nutrition is supporting good energy'
+        'Eat protein-rich breakfast to stabilize energy',
+        'Take short walks during energy dips',
+        'Consider your caffeine timing'
       ]
     }
   ];

@@ -633,7 +633,7 @@
     ]
   },
   "security_features": [
-    "HIPAA compliance",
+    "GDPR compliance",
     "End-to-end encryption",
     "Row Level Security (RLS)",
     "JWT authentication",

@@ -15,7 +15,7 @@ interface ReadinessScoreProps {
   score: number;
 }
 
-const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
+const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score = 67 }) => {
   const [animatedScore, setAnimatedScore] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -31,10 +31,10 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   const strokeDasharray = `${(animatedScore / 100) * circumference} ${circumference}`;
 
   const getScoreStatus = (score: number) => {
-    if (score >= 90) return { status: 'Optimal', description: 'Peak performance state', color: 'from-emerald-500 to-teal-600' };
-    if (score >= 80) return { status: 'Excellent', description: 'Above baseline performance', color: 'from-blue-500 to-cyan-600' };
-    if (score >= 70) return { status: 'Good', description: 'Stable performance state', color: 'from-amber-500 to-orange-600' };
-    return { status: 'Recovery', description: 'Focus on restoration', color: 'from-red-500 to-pink-600' };
+    if (score >= 85) return { status: 'Optimal', description: 'Peak performance state', color: 'from-emerald-500 to-teal-600' };
+    if (score >= 75) return { status: 'Good', description: 'Above baseline performance', color: 'from-blue-500 to-cyan-600' };
+    if (score >= 60) return { status: 'Fair', description: 'Room for improvement', color: 'from-amber-500 to-orange-600' };
+    return { status: 'Needs Work', description: 'Focus on recovery and basics', color: 'from-red-500 to-pink-600' };
   };
 
   const scoreInfo = getScoreStatus(animatedScore);
@@ -42,35 +42,35 @@ const ReadinessScore: React.FC<ReadinessScoreProps> = ({ score }) => {
   const healthFactors = [
     { 
       name: 'Cardiovascular', 
-      value: 94, 
-      impact: 'High',
+      value: 72, 
+      impact: 'Medium',
       icon: HeartIcon,
       color: 'from-red-500 to-rose-600',
-      description: 'Heart rate and circulation'
+      description: 'Heart rate slightly elevated'
     },
     { 
       name: 'Recovery', 
-      value: 89, 
-      impact: 'High',
+      value: 58, 
+      impact: 'Low',
       icon: BoltIcon,
       color: 'from-emerald-500 to-teal-600',
-      description: 'HRV and stress resilience'
+      description: 'HRV shows stress impact'
     },
     { 
       name: 'Sleep Quality', 
-      value: 92, 
-      impact: 'Medium',
+      value: 61, 
+      impact: 'High',
       icon: CloudIcon,
       color: 'from-indigo-500 to-purple-600',
-      description: 'Sleep efficiency and recovery'
+      description: 'Not getting enough deep sleep'
     },
     { 
       name: 'Metabolic', 
-      value: 87, 
+      value: 78, 
       impact: 'Medium',
       icon: BeakerIcon,
       color: 'from-blue-500 to-cyan-600',
-      description: 'Glucose and energy levels'
+      description: 'Glucose spikes after meals'
     }
   ];
 

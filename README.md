@@ -76,7 +76,7 @@ src/
 ## 🔒 Security
 
 - Row Level Security (RLS) enabled on all tables
-- HIPAA-compliant data handling
+- GDPR-compliant data handling
 - Secure API key management
 - User data encryption
 
