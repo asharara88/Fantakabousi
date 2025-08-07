@@ -147,7 +147,7 @@ const Footer: React.FC = () => {
               <span>© 2025 Biowell Health Systems. All rights reserved.</span>
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm">HIPAA Compliant</span>
+                <span className="text-sm">GDPR Compliant</span>
               </div>
             </motion.div>
 

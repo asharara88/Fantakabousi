@@ -167,7 +167,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 { icon: Shield, label: 'Secure & Private' },
                 { icon: Zap, label: 'Instant Insights' },
                 { icon: CheckCircle, label: 'Personalized' },
-                { icon: Users, label: 'User-Friendly' }
+                { icon: Users, label: 'GDPR Compliant' }
               ].map((item, index) => (
                 <motion.div
                   key={index}

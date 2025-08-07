@@ -55,9 +55,9 @@ const Features: React.FC = () => {
     {
       icon: Shield,
       title: 'Your Data is Safe',
-      description: 'Your health information is protected with the highest security standards.',
+      description: 'Your health information is protected with strong security and GDPR compliance.',
       color: 'from-slate-500 to-slate-700',
-      features: ['Completely private', 'Bank-level security', 'You control your data']
+      features: ['Completely private', 'Strong encryption', 'You control your data']
     }
   ];
 
