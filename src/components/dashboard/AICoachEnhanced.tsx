@@ -192,7 +192,7 @@ const AICoachEnhanced: React.FC = () => {
                         </div>
                         <div className="text-2xl">💬</div>
                       </div>
-                   </motion.button>
+                    </motion.button>
                   ))}
                 </div>
               </motion.div>
@@ -268,6 +268,7 @@ const AICoachEnhanced: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                  </motion.div>
                 ))}
                 
                 {sendingMessage && (
