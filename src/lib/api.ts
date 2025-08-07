@@ -2,6 +2,8 @@ import { supabase } from './supabase';
 import { handleApiError, AppError } from './errorHandler';
 import { apiCache } from './cacheManager';
 import { performanceMonitor } from './performanceMonitor';
+import { chatRateLimiter, nutritionRateLimiter, withRateLimit } from './rateLimiter';
+import { reportHealthDataError } from './sentry';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -10,6 +12,8 @@ const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 // Chat API with proper error handling
 export const sendChatMessage = async (message: string, userId: string, sessionId?: string) => {
   return performanceMonitor.measureAsyncOperation('sendChatMessage', async () => {
+    // Apply rate limiting
+    return withRateLimit(chatRateLimiter, userId, async () => {
     const cacheKey = `chat-${userId}-${sessionId}-${message.slice(0, 50)}`;
     
     // Check cache first for identical recent messages
@@ -65,6 +69,12 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
       
       return result;
     } catch (error) {
+      // Report to Sentry with health data context
+      reportHealthDataError(error as Error, {
+        userId,
+        component: 'ChatAPI',
+        action: 'sendMessage',
+      });
       handleApiError(error, {
         component: 'ChatAPI',
         action: 'sendMessage',
@@ -73,6 +83,7 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
       });
       throw error;
     }
+    });
   });
 };
 
@@ -138,6 +149,7 @@ export const generateSpeech = async (text: string, voiceId?: string) => {
 // Nutrition Analysis API
 export const analyzeNutrition = async (foodName: string, quantity?: string, userId?: string, mealType?: string) => {
   return performanceMonitor.measureAsyncOperation('analyzeNutrition', async () => {
+    return withRateLimit(nutritionRateLimiter, userId || 'anonymous', async () => {
     const cacheKey = `nutrition-${foodName}-${quantity}`;
     
     // Check cache first
@@ -182,6 +194,11 @@ export const analyzeNutrition = async (foodName: string, quantity?: string, user
       
       return data;
     } catch (error) {
+      reportHealthDataError(error as Error, {
+        userId,
+        component: 'NutritionAPI',
+        action: 'analyzeNutrition',
+      });
       handleApiError(error, {
         component: 'NutritionAPI',
         action: 'analyzeNutrition',
@@ -189,6 +206,7 @@ export const analyzeNutrition = async (foodName: string, quantity?: string, user
       });
       throw error;
     }
+    });
   });
 };
 
