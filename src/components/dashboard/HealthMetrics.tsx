@@ -4,17 +4,19 @@ import {
   Heart, 
   Brain, 
   Activity, 
-  Zap, 
+  BeakerIcon, 
   TrendingUp, 
   TrendingDown,
   ArrowRight,
+  ChevronDownIcon,
+  ChevronRightIcon,
   Info,
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
 
 const HealthMetrics: React.FC = () => {
-  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
   // Simplified metrics with friendly explanations
   const metrics = [
@@ -30,6 +32,12 @@ const HealthMetrics: React.FC = () => {
       icon: Heart,
       color: 'from-red-500 to-rose-600',
       explanation: 'Your resting heart rate is a bit high. Regular cardio exercise could help bring it down to the optimal 60-70 range.',
+      subMetrics: [
+        { name: 'Resting HR', value: '74', unit: 'bpm', status: 'elevated', description: 'Above optimal range' },
+        { name: 'Max HR', value: '185', unit: 'bpm', status: 'normal', description: 'Age-appropriate maximum' },
+        { name: 'HR Recovery', value: '28', unit: 'bpm/min', status: 'slow', description: 'Takes longer to recover after exercise' },
+        { name: 'HR Variability', value: '28', unit: 'ms', status: 'low', description: 'Indicates stress or poor recovery' }
+      ],
       tips: [
         'Add 20 minutes of cardio 3x per week',
         'Try morning walks to lower resting HR',
@@ -48,6 +56,12 @@ const HealthMetrics: React.FC = () => {
       icon: Activity,
       color: 'from-emerald-500 to-teal-600',
       explanation: 'Your heart rate variability is lower than ideal, suggesting your body is under stress or not recovering well.',
+      subMetrics: [
+        { name: 'HRV (RMSSD)', value: '28', unit: 'ms', status: 'low', description: 'Below optimal range for your age' },
+        { name: 'Recovery Score', value: '58', unit: '/100', status: 'fair', description: 'Room for improvement' },
+        { name: 'Stress Index', value: '72', unit: '/100', status: 'high', description: 'Elevated stress levels detected' },
+        { name: 'Training Load', value: 'Moderate', unit: '', status: 'balanced', description: 'Current training intensity' }
+      ],
       tips: [
         'Focus on stress management techniques',
         'Ensure you\'re getting quality sleep',
@@ -66,6 +80,12 @@ const HealthMetrics: React.FC = () => {
       icon: Brain,
       color: 'from-indigo-500 to-purple-600',
       explanation: 'You\'re not getting enough sleep. Most adults need 7-9 hours for proper recovery and health.',
+      subMetrics: [
+        { name: 'Total Sleep', value: '6h 12m', unit: '', status: 'short', description: 'Below recommended 7-9 hours' },
+        { name: 'Deep Sleep', value: '58', unit: 'min', status: 'low', description: 'Need more restorative sleep' },
+        { name: 'REM Sleep', value: '72', unit: 'min', status: 'fair', description: 'Adequate but could improve' },
+        { name: 'Sleep Efficiency', value: '78', unit: '%', status: 'fair', description: 'Time asleep vs time in bed' }
+      ],
       tips: [
         'Try going to bed 30 minutes earlier',
         'Create a consistent bedtime routine',
@@ -73,21 +93,28 @@ const HealthMetrics: React.FC = () => {
       ]
     },
     {
-      id: 'energy',
-      name: 'Energy Level',
-      friendlyName: 'How energetic you feel',
-      value: 'Variable',
-      detail: '58 out of 100',
-      status: 'fair',
-      change: -3,
-      trend: 'afternoon crashes',
-      icon: Zap,
+      id: 'glucose',
+      name: 'Glucose Control',
+      friendlyName: 'How stable your blood sugar is',
+      value: 'Needs Work',
+      detail: 'Avg 118 mg/dL',
+      status: 'elevated',
+      change: 8,
+      trend: 'post-meal spikes',
+      icon: BeakerIcon,
       color: 'from-amber-500 to-orange-600',
-      explanation: 'Your energy levels fluctuate throughout the day, with notable crashes in the afternoon.',
+      explanation: 'Your glucose levels spike above 140mg/dL after meals, indicating insulin resistance. This affects energy and long-term health.',
+      subMetrics: [
+        { name: 'Avg Glucose', value: '118', unit: 'mg/dL', status: 'elevated', description: 'Above optimal 80-100 range' },
+        { name: 'Time in Range', value: '52', unit: '%', status: 'low', description: 'Should be 70%+ in 70-180 range' },
+        { name: 'Post-Meal Peak', value: '168', unit: 'mg/dL', status: 'high', description: 'Spikes above 140mg/dL threshold' },
+        { name: 'Dawn Effect', value: '15', unit: 'mg/dL', status: 'mild', description: 'Morning glucose rise' }
+      ],
       tips: [
-        'Eat protein-rich breakfast to stabilize energy',
-        'Take short walks during energy dips',
-        'Consider your caffeine timing'
+        'Reduce refined carbs and sugar intake',
+        'Take 10-minute walks after meals',
+        'Consider continuous glucose monitoring',
+        'Focus on protein and fiber with meals'
       ]
     }
   ];
@@ -110,6 +137,25 @@ const HealthMetrics: React.FC = () => {
     return 'text-slate-600 bg-slate-50 dark:bg-slate-800';
   };
 
+  const getSubMetricStatusColor = (status: string) => {
+    switch (status) {
+      case 'optimal':
+      case 'normal':
+      case 'balanced':
+        return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20';
+      case 'fair':
+      case 'mild':
+        return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+      case 'low':
+      case 'short':
+      case 'slow':
+      case 'elevated':
+      case 'high':
+        return 'text-amber-600 bg-amber-50 dark:bg-amber-900/20';
+      default:
+        return 'text-slate-600 bg-slate-50 dark:bg-slate-800';
+    }
+  };
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
       {/* Simple Header */}
@@ -126,21 +172,21 @@ const HealthMetrics: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 rounded-3xl p-8 border border-emerald-200/50 dark:border-emerald-800/50 text-center"
+        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-3xl p-8 border border-amber-200/50 dark:border-amber-800/50 text-center"
       >
         <div className="space-y-4">
-          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
-            <CheckCircle className="w-10 h-10 text-white" />
+          <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+            <AlertCircle className="w-10 h-10 text-white" />
           </div>
           <div>
-            <div className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-              94
+            <div className="text-5xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              67
             </div>
             <div className="text-xl font-semibold text-slate-900 dark:text-white">
-              Excellent Health!
+              Room for Improvement
             </div>
             <div className="text-slate-600 dark:text-slate-400">
-              You're doing amazing. Keep it up!
+              Several areas could use attention
             </div>
           </div>
         </div>
@@ -155,7 +201,6 @@ const HealthMetrics: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.6 }}
             className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
-            onClick={() => setSelectedMetric(selectedMetric === metric.id ? null : metric.id)}
           >
             <div className="space-y-4">
               {/* Header */}
@@ -184,6 +229,16 @@ const HealthMetrics: React.FC = () => {
                     )}
                     <span>{metric.trend}</span>
                   </div>
+                  <button
+                    onClick={() => setExpandedMetric(expandedMetric === metric.id ? null : metric.id)}
+                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    {expandedMetric === metric.id ? (
+                      <ChevronDownIcon className="w-4 h-4 text-slate-400" />
+                    ) : (
+                      <ChevronRightIcon className="w-4 h-4 text-slate-400" />
+                    )}
+                  </button>
                 </div>
               </div>
               
@@ -194,14 +249,40 @@ const HealthMetrics: React.FC = () => {
                 </p>
               </div>
               
-              {/* Expandable Details */}
-              {selectedMetric === metric.id && (
+              {/* Expandable Sub-Metrics */}
+              {expandedMetric === metric.id && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50"
                 >
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-slate-900 dark:text-white">Detailed Metrics:</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {metric.subMetrics.map((subMetric, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-slate-50/60 dark:bg-slate-800/60 rounded-lg">
+                          <div className="space-y-1">
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {subMetric.name}
+                            </div>
+                            <div className="text-xs text-slate-600 dark:text-slate-400">
+                              {subMetric.description}
+                            </div>
+                          </div>
+                          <div className="text-right space-y-1">
+                            <div className="font-bold text-slate-900 dark:text-white">
+                              {subMetric.value} {subMetric.unit}
+                            </div>
+                            <div className={`px-2 py-0.5 text-xs font-medium rounded-full ${getSubMetricStatusColor(subMetric.status)}`}>
+                              {subMetric.status}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
                   <div className="space-y-2">
                     <h4 className="font-semibold text-slate-900 dark:text-white">What this means for you:</h4>
                     {metric.tips.map((tip, idx) => (
@@ -227,11 +308,11 @@ const HealthMetrics: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-800/50"
+        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl p-6 border border-amber-200/50 dark:border-amber-800/50"
       >
         <div className="text-center space-y-4">
           <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-            What should you do next?
+            Priority Actions for Better Health
           </h3>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -240,8 +321,8 @@ const HealthMetrics: React.FC = () => {
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <MessageCircle className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Ask Your Coach</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Get personalized advice</div>
+              <div className="font-semibold text-slate-900 dark:text-white">Get Help from Coach</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Address these health concerns</div>
             </button>
             
             <button
@@ -249,8 +330,8 @@ const HealthMetrics: React.FC = () => {
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <Utensils className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Log Your Food</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Track what you eat</div>
+              <div className="font-semibold text-slate-900 dark:text-white">Track Glucose Impact</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">See how food affects you</div>
             </button>
             
             <button
@@ -258,8 +339,8 @@ const HealthMetrics: React.FC = () => {
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <ShoppingBag className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold text-slate-900 dark:text-white">Browse Shop</div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">Find supplements</div>
+              <div className="font-semibold text-slate-900 dark:text-white">Find Solutions</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Supplements that could help</div>
             </button>
           </div>
         </div>
