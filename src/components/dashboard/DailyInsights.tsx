@@ -65,9 +65,9 @@ const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
       <div className="card bg-muted/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-[#3BE6C5] rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
             <div className="text-base font-medium text-foreground font-inter">
-              Last updated: 2 minutes ago
+              Last updated: 2 minutes ago • 3 areas need attention
             </div>
           </div>
           <button 
@@ -76,7 +76,7 @@ const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
             aria-label="Get more insights from Smart Coach"
           >
             <SparklesIcon className="w-4 h-4" />
-            <span>Get More Insights</span>
+            <span>Ask Coach for Help</span>
           </button>
         </div>
       </div>

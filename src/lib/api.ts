@@ -876,87 +876,87 @@ export const generateMockHealthData = (userId: string) => {
     const isWeekend = [0, 6].includes(date.getDay());
     
     // Heart rate with circadian patterns
-    const baseHR = 65;
+    const baseHR = 72; // Slightly elevated baseline
     const dailyVariation = Math.sin((i / 7) * Math.PI) * 5; // Weekly cycle
     const randomVariation = (Math.random() - 0.5) * 8;
     
     data.push({
       user_id: userId,
       metric_type: 'heart_rate',
-      value: Math.round(baseHR + dailyVariation + randomVariation),
+      value: Math.round(Math.max(68, Math.min(82, baseHR + dailyVariation + randomVariation))),
       unit: 'bpm',
       timestamp: date.toISOString(),
       source: 'wearable',
-      metadata: { trend: 'improving' }
+      metadata: { trend: 'needs_improvement' }
     });
     
     // Steps with lifestyle patterns
-    const baseSteps = isWeekend ? 6800 : 9200;
+    const baseSteps = isWeekend ? 4200 : 6800; // Lower baseline
     const seasonalVariation = Math.cos((i / 30) * Math.PI) * 1000; // Monthly cycle
     const randomSteps = (Math.random() - 0.5) * 2500;
     
     data.push({
       user_id: userId,
       metric_type: 'steps',
-      value: Math.max(3000, Math.round(baseSteps + seasonalVariation + randomSteps)),
+      value: Math.max(2000, Math.round(baseSteps + seasonalVariation + randomSteps)),
       unit: 'steps',
       timestamp: date.toISOString(),
       source: 'wearable',
-      metadata: { goal_achievement: Math.random() > 0.3 }
+      metadata: { goal_achievement: Math.random() > 0.7 } // Less likely to hit goals
     });
     
     // Sleep quality with patterns
-    let sleepScore = 76;
-    if (isWeekend) sleepScore += 6;
-    if (i < 7) sleepScore += 4; // Recent improvement
+    let sleepScore = 58; // Lower baseline
+    if (isWeekend) sleepScore += 8;
+    if (i < 7) sleepScore -= 3; // Recent decline
     sleepScore += (Math.random() - 0.5) * 18;
     
     data.push({
       user_id: userId,
       metric_type: 'sleep',
-      value: Math.max(45, Math.min(98, Math.round(sleepScore))),
+      value: Math.max(35, Math.min(85, Math.round(sleepScore))),
       unit: '/100',
       timestamp: date.toISOString(),
       source: 'wearable',
       metadata: { 
-        duration_hours: 7.1 + (Math.random() - 0.5) * 1.2,
-        efficiency: 0.82 + (Math.random() - 0.5) * 0.15
+        duration_hours: 6.2 + (Math.random() - 0.5) * 1.0, // Shorter sleep
+        efficiency: 0.72 + (Math.random() - 0.5) * 0.15 // Lower efficiency
       }
     });
     
     // Glucose with insulin resistance patterns
-    let avgGlucose = 105; // Elevated baseline
-    if (i < 14) avgGlucose -= 2; // Recent improvement
+    let avgGlucose = 118; // More elevated baseline
+    if (i < 14) avgGlucose += 3; // Recent worsening
     avgGlucose += (Math.random() - 0.5) * 25;
     
     data.push({
       user_id: userId,
       metric_type: 'glucose',
-      value: Math.max(80, Math.min(180, Math.round(avgGlucose))),
+      value: Math.max(95, Math.min(200, Math.round(avgGlucose))),
       unit: 'mg/dL',
       timestamp: date.toISOString(),
       source: 'cgm',
       metadata: { 
-        time_in_range: 0.65 + (Math.random() - 0.5) * 0.2,
-        variability: 'moderate'
+        time_in_range: 0.52 + (Math.random() - 0.5) * 0.15, // Lower time in range
+        variability: 'high'
       }
     });
     
     // HRV with recovery patterns
-    let hrvValue = 38;
-    if (sleepScore > 80) hrvValue += 6;
+    let hrvValue = 28; // Lower baseline
+    if (sleepScore > 70) hrvValue += 4;
     if (isWeekend) hrvValue += 2;
     hrvValue += (Math.random() - 0.5) * 10;
     
     data.push({
       user_id: userId,
       metric_type: 'hrv',
-      value: Math.max(20, Math.min(60, Math.round(hrvValue))),
+      value: Math.max(18, Math.min(45, Math.round(hrvValue))),
       unit: 'ms',
       timestamp: date.toISOString(),
       source: 'wearable',
       metadata: { 
-        recovery_status: hrvValue > 40 ? 'good' : 'moderate',
+        recovery_status: hrvValue > 30 ? 'fair' : 'poor',
         measurement_quality: 'high'
       }
     });
