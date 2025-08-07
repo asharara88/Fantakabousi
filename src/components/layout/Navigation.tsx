@@ -14,10 +14,10 @@ const Navigation: React.FC = () => {
     : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1NDM4MDA4NywiZXhwIjoxNzg1OTE2MDg3fQ.GTBPM8tMs-jtvycD39wO6Bt32JHyEWB4a-tWle0jl8I";
 
   const navItems = [
-    { label: 'Features', href: '#features' },
-    { label: 'How it Works', href: '#how-it-works' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'About', href: '#about' }
+    { label: 'Features', href: '#features', action: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
+    { label: 'How it Works', href: '#how-it-works', action: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
+    { label: 'Pricing', href: '#pricing', action: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
+    { label: 'About', href: '#about', action: () => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }) }
   ];
 
   const themeIcons = {
@@ -51,10 +51,14 @@ const Navigation: React.FC = () => {
               <motion.a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  item.action();
+                }}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-200 relative group"
+                className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-200 relative group cursor-pointer"
               >
                 {item.label}
                 <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300" />
@@ -125,8 +129,12 @@ const Navigation: React.FC = () => {
                 <a
                   key={item.label}
                   href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium py-2 transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    item.action();
+                    setIsMenuOpen(false);
+                  }}
+                  className="block text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium py-2 transition-colors cursor-pointer"
                 >
                   {item.label}
                 </a>

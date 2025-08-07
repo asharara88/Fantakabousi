@@ -1,20 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Brain, 
-  Heart, 
-  Activity, 
-  Zap, 
-  Shield, 
-  Sparkles,
-  ArrowRight,
-  Play,
-  CheckCircle,
-  Star,
-  Users,
-  TrendingUp
-} from 'lucide-react';
 import Navigation from '../components/layout/Navigation';
 import Hero from '../components/home/Hero';
 import Features from '../components/home/Features';
@@ -27,7 +13,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950" id="top">
       <Navigation />
       
       <main>

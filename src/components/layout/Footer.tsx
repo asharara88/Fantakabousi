@@ -25,28 +25,28 @@ const Footer: React.FC = () => {
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '#features' },
-        { label: 'How it Works', href: '#how-it-works' },
-        { label: 'Pricing', href: '#pricing' },
-        { label: 'API Documentation', href: '/docs' }
+        { label: 'Features', href: '#features', action: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'How it Works', href: '#how-it-works', action: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Pricing', href: '#pricing', action: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'API Documentation', href: '/docs', action: () => window.open('/docs', '_blank') }
       ]
     },
     {
       title: 'Company',
       links: [
-        { label: 'About Us', href: '/about' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Press', href: '/press' },
-        { label: 'Contact', href: '/contact' }
+        { label: 'About Us', href: '/about', action: () => window.open('/about', '_blank') },
+        { label: 'Careers', href: '/careers', action: () => window.open('/careers', '_blank') },
+        { label: 'Press', href: '/press', action: () => window.open('/press', '_blank') },
+        { label: 'Contact', href: '/contact', action: () => window.open('/contact', '_blank') }
       ]
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Blog', href: '/blog' },
-        { label: 'Help Center', href: '/help' },
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' }
+        { label: 'Blog', href: '/blog', action: () => window.open('/blog', '_blank') },
+        { label: 'Help Center', href: '/help', action: () => window.open('/help', '_blank') },
+        { label: 'Privacy Policy', href: '/privacy', action: () => window.open('/privacy', '_blank') },
+        { label: 'Terms of Service', href: '/terms', action: () => window.open('/terms', '_blank') }
       ]
     }
   ];
@@ -116,6 +116,10 @@ const Footer: React.FC = () => {
                     <li key={link.label}>
                       <a
                         href={link.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          link.action();
+                        }}
                         className="text-slate-400 hover:text-white transition-colors duration-200 flex items-center space-x-2 group"
                       >
                         <span>{link.label}</span>
