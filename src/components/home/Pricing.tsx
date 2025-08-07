@@ -16,16 +16,16 @@ interface PricingProps {
 const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
   const plans = [
     {
-      name: 'Essential',
+      name: 'Free',
       price: 'Free',
       period: 'Forever',
-      description: 'Perfect for getting started with health optimization',
+      description: 'Perfect for getting started',
       features: [
-        'Basic health monitoring',
-        'Weekly AI insights',
-        '5 coach consultations/day',
-        'Standard device integration',
-        'Community support'
+        'Track your health basics',
+        'Ask your coach 5 times daily',
+        'Log meals and see nutrition',
+        'Basic progress tracking',
+        'Email support'
       ],
       cta: 'Start Free',
       popular: false,
@@ -33,18 +33,18 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
       icon: Zap
     },
     {
-      name: 'Professional',
+      name: 'Premium',
       price: 'AED 149',
       period: '/month',
-      description: 'Advanced health optimization for serious wellness enthusiasts',
+      description: 'For people serious about their health',
       features: [
-        'Unlimited AI coaching',
-        'Advanced health analytics',
-        'Predictive health insights',
-        'Premium device integration',
+        'Unlimited coach conversations',
+        'Advanced health insights',
+        'Detailed progress tracking',
+        'Connect any health device',
         'Priority support',
-        'Custom health protocols',
-        'Lab result integration'
+        'Personalized meal plans',
+        'Supplement recommendations'
       ],
       cta: 'Start 14-Day Trial',
       popular: true,
@@ -52,20 +52,20 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
       icon: Crown
     },
     {
-      name: 'Enterprise',
-      price: 'Custom',
-      period: 'Contact us',
-      description: 'Complete health ecosystem for organizations and clinics',
+      name: 'Family',
+      price: 'AED 249',
+      period: '/month',
+      description: 'For couples and families',
       features: [
-        'Everything in Professional',
-        'Multi-user management',
-        'Advanced biomarker analysis',
-        'Custom health models',
-        'Dedicated health advisor',
-        'API access',
-        'White-label options'
+        'Everything in Premium',
+        'Up to 4 family members',
+        'Family health dashboard',
+        'Shared meal planning',
+        'Family challenges',
+        'Dedicated support',
+        'Fertility tracking (UBERGENE)'
       ],
-      cta: 'Contact Sales',
+      cta: 'Start Family Plan',
       popular: false,
       color: 'from-emerald-600 to-teal-700',
       icon: Sparkles
@@ -83,13 +83,13 @@ const Pricing: React.FC<PricingProps> = ({ onGetStarted }) => {
           className="text-center space-y-4 mb-16"
         >
           <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Choose Your
+            Simple
             <span className="block bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent">
-              Health Plan
+              Pricing
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Professional health optimization plans designed for different levels of engagement and expertise.
+            Choose the plan that works for you. Start free, upgrade when you're ready.
           </p>
         </motion.div>
 
