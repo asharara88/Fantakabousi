@@ -300,7 +300,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ onBack }) => {
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                 <CheckCircleIcon className="h-4 w-4 text-blue-600" />
-                <span>Evidence-Based</span>
+                <span>GDPR Compliant</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                 <UserIcon className="h-4 w-4 text-violet-600" />

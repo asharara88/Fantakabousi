@@ -158,7 +158,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowAuth }) => {
                   { icon: EyeIcon, value: '99.7%', label: 'Accuracy' },
                   { icon: BoltIcon, value: '<2s', label: 'Response' },
                   { icon: ClockIcon, value: '24/7', label: 'Monitoring' },
-                  { icon: ShieldCheckIcon, value: 'HIPAA', label: 'Compliant' }
+                  { icon: ShieldCheckIcon, value: 'GDPR', label: 'Compliant' }
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
