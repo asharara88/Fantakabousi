@@ -32,6 +32,7 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [cartCount, setCartCount] = useState(0);
+  const [showProtocolModal, setShowProtocolModal] = useState<string | null>(null);
 
   // Simplified categories with friendly names
   const categories = [
@@ -42,6 +43,58 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
     { value: 'heart', label: 'Heart Health', emoji: '❤️' },
     { value: 'muscle', label: 'Muscle & Fitness', emoji: '💪' }
   ];
+
+  // Specific health protocols with exact supplements
+  const healthProtocols = {
+    'glucose-control': {
+      title: 'Glucose Control Protocol',
+      problem: 'Post-meal glucose spikes to 168mg/dL (target: <140mg/dL)',
+      supplements: [
+        { name: 'Berberine HCl', dosage: '500mg', timing: '15 minutes before meals', price: 89 },
+        { name: 'Chromium Picolinate', dosage: '200mcg', timing: 'With breakfast', price: 45 },
+        { name: 'Alpha Lipoic Acid', dosage: '300mg', timing: 'With largest meal', price: 67 }
+      ],
+      lifestyle: [
+        '10-minute walk after each meal',
+        'Limit meals to <30g net carbs',
+        'Eat protein first, carbs last'
+      ],
+      totalCost: 201,
+      expectedResults: 'Reduce post-meal spikes by 40-60mg/dL within 2 weeks'
+    },
+    'sleep-optimization': {
+      title: 'Sleep Extension Protocol',
+      problem: 'Averaging 6h 12m sleep (need 7.5+ hours for recovery)',
+      supplements: [
+        { name: 'Magnesium Glycinate', dosage: '400mg', timing: '1 hour before bed', price: 56 },
+        { name: 'Melatonin', dosage: '1mg', timing: '30 minutes before bed', price: 34 },
+        { name: 'L-Theanine', dosage: '200mg', timing: 'With dinner', price: 42 }
+      ],
+      lifestyle: [
+        'Set bedtime to 10:30 PM (30 min earlier)',
+        'No screens after 9:30 PM',
+        'Room temperature 65-68°F'
+      ],
+      totalCost: 132,
+      expectedResults: 'Increase sleep duration to 7.5+ hours within 1 week'
+    },
+    'hrv-recovery': {
+      title: 'HRV Recovery Protocol',
+      problem: 'HRV dropped from 35ms to 28ms (indicates stress/poor recovery)',
+      supplements: [
+        { name: 'Ashwagandha KSM-66', dosage: '600mg', timing: 'With dinner', price: 78 },
+        { name: 'Magnesium Glycinate', dosage: '400mg', timing: 'Before bed', price: 56 },
+        { name: 'Omega-3 EPA/DHA', dosage: '2g', timing: 'With breakfast', price: 89 }
+      ],
+      lifestyle: [
+        '4-7-8 breathing protocol 2x daily',
+        'Reduce training intensity 20% for 1 week',
+        '10-minute morning meditation'
+      ],
+      totalCost: 223,
+      expectedResults: 'Improve HRV to 35+ ms within 2-3 weeks'
+    }
+  };
 
   // Featured/popular supplements
   const featuredSupplements = supplements.filter(s => s.is_featured || s.is_bestseller).slice(0, 6);
@@ -75,6 +128,10 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
         variant: "destructive"
       });
     }
+  };
+
+  const openProtocol = (protocolId: string) => {
+    setShowProtocolModal(protocolId);
   };
 
   if (supplementsLoading) {
@@ -135,6 +192,54 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
           ))}
         </div>
       </div>
+
+      {/* Health Protocol Shortcuts */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl p-6 border border-amber-200/50 dark:border-amber-800/50"
+      >
+        <div className="space-y-4">
+          <div className="text-center space-y-2">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              🎯 Targeted Health Protocols
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              Based on your health data, here are specific supplement protocols to address your concerns
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {Object.entries(healthProtocols).map(([key, protocol]) => (
+              <motion.button
+                key={key}
+                onClick={() => openProtocol(key)}
+                className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all text-left group border border-white/40 dark:border-slate-700/40"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="space-y-3">
+                  <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange-600 transition-colors">
+                    {protocol.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
+                    {protocol.problem}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-orange-600">
+                      AED {protocol.totalCost}
+                    </span>
+                    <span className="text-xs bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 px-2 py-1 rounded-full">
+                      {protocol.supplements.length} supplements
+                    </span>
+                  </div>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
       {/* Featured Products - Big Cards */}
       {searchQuery === '' && selectedCategory === 'all' && (
@@ -366,6 +471,108 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
           </div>
         </div>
       </motion.div>
+
+      {/* Protocol Modal */}
+      <AnimatePresence>
+        {showProtocolModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowProtocolModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/20 dark:border-slate-700/20 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {showProtocolModal && healthProtocols[showProtocolModal as keyof typeof healthProtocols] && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                      {healthProtocols[showProtocolModal as keyof typeof healthProtocols].title}
+                    </h2>
+                    <button
+                      onClick={() => setShowProtocolModal(null)}
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  <div className="bg-amber-50 dark:bg-amber-950/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
+                    <h3 className="font-semibold text-amber-800 dark:text-amber-400 mb-2">Your Current Issue:</h3>
+                    <p className="text-amber-700 dark:text-amber-500">
+                      {healthProtocols[showProtocolModal as keyof typeof healthProtocols].problem}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">Supplement Protocol:</h3>
+                    {healthProtocols[showProtocolModal as keyof typeof healthProtocols].supplements.map((supp, index) => (
+                      <div key={index} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                        <div>
+                          <div className="font-semibold text-slate-900 dark:text-white">{supp.name}</div>
+                          <div className="text-sm text-slate-600 dark:text-slate-400">
+                            {supp.dosage} • {supp.timing}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold text-slate-900 dark:text-white">AED {supp.price}</div>
+                          <button className="text-xs text-orange-600 hover:text-orange-700 font-medium">
+                            Add to Stack
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">Lifestyle Changes:</h3>
+                    {healthProtocols[showProtocolModal as keyof typeof healthProtocols].lifestyle.map((change, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                        <span className="text-slate-700 dark:text-slate-300">{change}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800">
+                    <h3 className="font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Expected Results:</h3>
+                    <p className="text-emerald-700 dark:text-emerald-500">
+                      {healthProtocols[showProtocolModal as keyof typeof healthProtocols].expectedResults}
+                    </p>
+                  </div>
+                  
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => setShowProtocolModal(null)}
+                      className="flex-1 px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-semibold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                    >
+                      Maybe Later
+                    </button>
+                    <button
+                      onClick={() => {
+                        toast({
+                          title: "Protocol Started! 🎯",
+                          description: `${healthProtocols[showProtocolModal as keyof typeof healthProtocols].title} added to your daily routine`,
+                        });
+                        setShowProtocolModal(null);
+                      }}
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                    >
+                      Start Protocol (AED {healthProtocols[showProtocolModal as keyof typeof healthProtocols].totalCost})
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

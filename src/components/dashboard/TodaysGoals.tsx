@@ -57,7 +57,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
           {
             id: '1',
             title: 'Take morning supplements',
-            description: 'Vitamin D3, Omega-3, Magnesium',
+            description: 'Berberine 500mg + Chromium 200mcg (glucose control)',
             completed: false,
             priority: 'high',
             category: 'health',
@@ -65,8 +65,8 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
           },
           {
             id: '2',
-            title: 'Log breakfast',
-            description: 'Track nutrition and glucose impact',
+            title: 'Take photo of breakfast',
+            description: 'AI will calculate calories and glucose impact',
             completed: false,
             priority: 'medium',
             category: 'nutrition',
@@ -74,17 +74,46 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
           },
           {
             id: '3',
-            title: 'Complete workout',
-            description: '30 minutes strength training',
+            title: 'Post-lunch walk protocol',
+            description: '10-minute walk to control glucose spike',
             completed: false,
             priority: 'high',
-            category: 'fitness',
+            category: 'health',
             createdAt: new Date().toISOString()
           }
         ];
         setGoals(defaultGoals);
         saveGoals(defaultGoals);
       }
+    
+    // Add time-based goals
+    const hour = new Date().getHours();
+    if (hour >= 18 && hour < 21) {
+      const eveningGoals = [
+        {
+          id: 'evening-1',
+          title: 'Take evening supplements',
+          description: 'Ashwagandha 600mg + Magnesium 400mg (HRV recovery)',
+          completed: false,
+          priority: 'high',
+          category: 'health',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'evening-2',
+          title: '4-7-8 breathing protocol',
+          description: '5 minutes to activate parasympathetic nervous system',
+          completed: false,
+          priority: 'medium',
+          category: 'wellness',
+          createdAt: new Date().toISOString()
+        }
+      ];
+      
+      const updatedGoals = [...defaultGoals, ...eveningGoals];
+      setGoals(updatedGoals);
+      saveGoals(updatedGoals);
+    }
     } catch (error) {
       console.error('Error loading goals:', error);
       setGoals([]); // Fallback to empty array
@@ -385,16 +414,16 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ onQuickAction }) => {
           <div className="text-center space-y-3">
             <TrophyIcon className="w-8 h-8 text-green-600 mx-auto" />
             <div>
-              <h3 className="font-bold text-green-700 dark:text-green-400">All Goals Completed! 🎉</h3>
+              <h3 className="font-bold text-green-700 dark:text-green-400">All Protocols Completed! 🎉</h3>
               <p className="text-sm text-green-600 dark:text-green-500">
-                Great job staying on track with your wellness goals
+                Excellent adherence to your health optimization protocols
               </p>
             </div>
             <button
               onClick={() => onQuickAction?.('coach')}
               className="btn-primary bg-gradient-to-r from-green-500 to-emerald-600"
             >
-              Ask Coach for Tomorrow's Goals
+              Get Tomorrow's Protocol Plan
             </button>
           </div>
         </motion.div>

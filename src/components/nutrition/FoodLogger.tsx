@@ -384,13 +384,22 @@ const FoodLogger: React.FC = () => {
                     <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 italic">
                       "{log.notes}"
                     </p>
-                  )}
+                <button 
+                  onClick={() => {
+                    // Simulate camera access
+                    toast({
+                      title: "📸 Camera Analysis",
+                      description: "AI analyzing your meal... Estimated 420 calories, 35g protein, moderate glucose impact",
+                    });
+                  }}
+                  className="w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-green-500 transition-colors flex flex-col items-center justify-center space-y-2 group"
+                >
                 </div>
                 
                 <button
                   onClick={() => deleteFoodLog(log.id)}
-                  className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-colors"
-                >
+                    <div className="font-semibold text-slate-900 dark:text-white">📸 Snap & Analyze</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">AI calculates calories, macros & glucose impact</div>
                   <TrashIcon className="w-5 h-5" />
                 </button>
               </div>

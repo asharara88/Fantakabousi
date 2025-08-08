@@ -17,10 +17,10 @@ const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
       onQuickAction?.('supplements');
       
       toast({
-        title: `🛒 ${products.join(' or ')} Available`,
-        description: `Premium ${category} supplements ready to order`,
+        title: `🎯 ${products[0]} Protocol Ready`,
+        description: `Specific dosage and timing protocol for ${category}`,
         action: {
-          label: "Shop Now",
+          label: "Start Protocol",
           onClick: () => onQuickAction?.('supplements')
         }
       });
@@ -67,16 +67,16 @@ const DailyInsights: React.FC<DailyInsightsProps> = ({ onQuickAction }) => {
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
             <div className="text-base font-medium text-foreground font-inter">
-              Last updated: 2 minutes ago • 3 areas need attention
+              Last updated: 2 minutes ago • 3 protocols recommended
             </div>
           </div>
           <button 
             onClick={() => onQuickAction?.('coach')}
             className="btn-primary flex items-center space-x-2"
-            aria-label="Get more insights from Smart Coach"
+            aria-label="Get specific protocols from Smart Coach"
           >
             <SparklesIcon className="w-4 h-4" />
-            <span>Ask Coach for Help</span>
+            <span>Get Specific Protocol</span>
           </button>
         </div>
       </div>
