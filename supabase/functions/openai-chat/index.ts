@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
       .select('*')
       .eq('user_id', userId)
       .order('timestamp', { ascending: false })
-      .limit(20)
+      .limit(10)
 
     const { data: profileData } = await supabaseClient
       .from('user_profile_signin')
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       .select('*')
       .eq('user_id', userId)
       .order('timestamp', { ascending: false })
-      .limit(10)
+      .limit(5)
 
     // Build comprehensive context for AI
     const healthContext = healthData?.map(metric => 
@@ -110,7 +110,7 @@ Remember: You're helping optimize their health journey with personalized, data-d
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
-        max_tokens: 600,
+        max_tokens: 400,
         temperature: 0.7,
         presence_penalty: 0.1,
         frequency_penalty: 0.1,

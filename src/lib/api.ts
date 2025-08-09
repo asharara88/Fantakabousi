@@ -38,7 +38,8 @@ export const sendChatMessage = async (message: string, userId: string, sessionId
           message,
           userId,
           sessionId
-        })
+        }),
+        signal: AbortSignal.timeout(12000) // 12 second timeout
       });
 
       if (!response.ok) {

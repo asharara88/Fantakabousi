@@ -18,8 +18,8 @@ export class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private observers: PerformanceObserver[] = [];
   private thresholds: PerformanceThresholds = {
-    criticalTiming: 3000, // 3 seconds
-    warningTiming: 1000,  // 1 second
+    criticalTiming: 15000, // 15 seconds for API calls
+    warningTiming: 8000,   // 8 seconds warning
     maxMemoryUsage: 150 * 1024 * 1024, // 150MB
     maxBundleSize: 2 * 1024 * 1024,    // 2MB
   };
