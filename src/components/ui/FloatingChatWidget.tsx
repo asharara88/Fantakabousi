@@ -1,534 +1,471 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { sendChatMessage } from '../../lib/api';
-import { useToast } from '../../hooks/useToast';
-import LoadingSpinner from './LoadingSpinner';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
-  MessageCircle,
-  Send,
-  X,
-  Minimize2,
-  Maximize2,
-  Bot,
-  User,
-  Sparkles,
-  Volume2,
-  VolumeX
+  Heart, 
+  Brain, 
+  Activity, 
+  BeakerIcon, 
+  TrendingUp, 
+  TrendingDown,
+  ArrowRight,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  Info,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 
-interface ChatMessage {
-  id: string;
-  message: string;
-  role: 'user' | 'assistant';
-  timestamp: string;
-  fullMode?: string;
-}
-
-interface FloatingChatWidgetProps {
-  className?: string;
-}
-
-const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({ className = '' }) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [sendingMessage, setSendingMessage] = useState(false);
-  const [analysisPhase, setAnalysisPhase] = useState('');
-  const [hasNewMessage, setHasNewMessage] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+const HealthMetrics: React.FC = () => {
+  const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
   // Predetermined responses for quick prompts
   const predeterminedResponses = {
     "How can I sleep better?": {
-      fullMode: `Ahmed, over the past week your average sleep was 6h 35m, with deep sleep averaging 42m and REM sleep 58m.
+      fullMode: `Over the past week your average sleep was 7h 15m, with deep sleep averaging 1h 8m and REM sleep 1h 22m.
 
-Even 42 minutes of deep sleep is below the ideal target of 1–1.5 hours.
+Your deep sleep is good at 1h 8m, hitting the ideal target range of 1–1.5 hours.
 
-Last night dropped further to 28m, limiting recovery and hormone regulation.
+However, you went to bed 45 minutes later than usual last night, reducing total sleep to 6h 30m.
 
-⚠️ Do you feel bloated?
-Your recent smart scale reading shows an increase in water retention — reduce sodium intake today, stay hydrated, and supplement with electrolytes.
+✅ Your sleep efficiency is excellent at 89% - you fall asleep quickly and stay asleep.
 
 Sleep Strategy:
 
-🕒 Consistent bedtime (within 30 min window)
+🕒 Maintain your current bedtime routine (you're doing great!)
 📵 No screens 60 min before bed
-☕ Caffeine cutoff before 1 pm
+☕ Your 2 PM caffeine cutoff is perfect - keep it up
 ❄️ Cool bedroom (18–20 °C)
 
 Supplements:
-💊 Magnesium glycinate (200–400 mg)
-💊 L-theanine (200 mg) before bed
-💊 Ashwagandha if stress is high`,
-      quickTips: `🛌 6h 35m sleep avg, deep sleep only 42m (goal: 1–1.5h).
-Last night: 28m deep sleep — recovery impact likely.
-⚠️ Water retention high — cut sodium, hydrate, and take electrolytes.
-💡 Consistent bedtime + magnesium glycinate + L-theanine for deeper rest.
-Coach Summary: Tonight's mission — protect your recovery window like it's an appointment you can't miss.`
+💊 Continue your current magnesium routine
+💊 Consider L-theanine (200 mg) on stressful days
+💊 Your sleep stack is working well!`,
+      quickTips: `🛌 7h 15m sleep avg, deep sleep excellent at 1h 8m (hitting target!).
+✅ Sleep efficiency 89% - you're a great sleeper.
+⚠️ Last night: went to bed 45min late, reducing total sleep.
+💡 Stick to your bedtime routine - it's working perfectly.
+Coach Summary: You've mastered sleep quality, now just protect your sleep timing like the champion you are.`
     },
     "What should I eat today?": {
-      fullMode: `Your smart scale shows body fat at 24.5%, muscle mass steady, and elevated water retention.
-Yesterday: 612 active calories burned, 7,800 steps.
+      fullMode: `Your smart scale shows body fat at 18.2% (excellent), muscle mass increasing, and normal hydration.
+Yesterday: 847 active calories burned, 12,400 steps - great activity day!
 
-⚠️ Do you feel bloated?
-Your recent smart scale reading shows an increase in water retention — reduce sodium intake today, stay hydrated, and supplement with electrolytes.
+✅ Your protein intake has been consistent at 1.8g/kg bodyweight.
+Your glucose control is excellent - staying under 120mg/dL post-meals.
 
 Meal Plan:
-🍳 Breakfast (optional): 2 boiled eggs, spinach, avocado
-🥗 Lunch: Grilled salmon, quinoa, steamed broccoli
-🍗 Dinner: Chicken breast, roasted sweet potato, mixed greens
+🍳 Breakfast: Greek yogurt, berries, almonds (your usual - keep it up!)
+🥗 Lunch: Grilled chicken, quinoa, roasted vegetables
+🍗 Dinner: Salmon, sweet potato, asparagus (omega-3 boost)
 
 Supplements:
-💊 Omega-3 fish oil (2–3 g EPA/DHA)
-💊 Whey protein isolate or hydrolyzed whey
-💊 Electrolyte powder with potassium + magnesium`,
-      quickTips: `🍽 Body fat 24.5%, muscle steady, water retention up.
-⚠️ Reduce sodium, hydrate, and take electrolytes.
-🥗 Meals: Eggs + spinach + avocado | Salmon + quinoa + broccoli | Chicken + sweet potato + greens.
-💊 Omega-3s, whey isolate, electrolytes.
-Coach Summary: Eat clean, hydrate well, and keep your fuel working for you — not against you.`
+💊 Your current omega-3 routine is perfect
+💊 Protein powder post-workout (you're hitting targets!)
+💊 Consider adding creatine for strength gains`,
+      quickTips: `🍽 Body fat 18.2% (excellent!), muscle mass increasing, hydration normal.
+✅ Protein intake perfect at 1.8g/kg, glucose control excellent.
+🥗 Meals: Greek yogurt + berries | Chicken + quinoa + veggies | Salmon + sweet potato.
+💊 Keep current omega-3s, add creatine for strength gains.
+Coach Summary: Your nutrition game is strong - you're fueling like a pro athlete.`
     },
     "Should I exercise today?": {
-      fullMode: `Your wearable shows:
+      fullMode: `Your Apple Watch shows excellent recovery metrics:
 
-Recovery score: 74%
-RHR: 61 bpm (above 7-day avg of 58)
-Condition: Mild leg soreness from last resistance workout
+Recovery score: 87% (excellent!)
+RHR: 56 bpm (below your 7-day avg of 58 - great sign)
+HRV: 42ms (up from 38ms yesterday)
+Condition: Feeling strong, no soreness
 
-⚠️ Do you feel bloated?
-Your recent smart scale reading shows an increase in water retention — reduce sodium intake today, stay hydrated, and supplement with electrolytes.
+✅ Your body is primed for performance today!
+Sleep quality was 89% last night - perfect recovery window.
 
 Training Plan:
-🚶 Moderate activity (30-min swim, brisk walk, mobility work)
-❌ Avoid max-effort lower-body training
+💪 Perfect day for strength training or HIIT
+🎯 Target: Upper body focus or full-body compound movements
+⏰ Optimal window: 2-4 PM based on your circadian rhythm
 
 Supplements:
-💊 Creatine monohydrate (3–5 g)
-💊 BCAAs during light workouts
-💊 Electrolytes`,
-      quickTips: `🏃 Recovery 74%, RHR slightly high at 61 bpm, mild leg soreness.
-⚠️ Water retention up — reduce sodium, hydrate, electrolytes.
-🚶 Go light today: swim, walk, or mobility. Avoid heavy legs.
-💊 Creatine and BCAAs for muscle recovery.
-Coach Summary: Move with purpose today — the goal is to recharge, not deplete.`
+💊 Pre-workout: Creatine + caffeine (you respond well)
+💊 Post-workout: Whey protein within 30 minutes
+💊 Hydration: Electrolytes during longer sessions`,
+      quickTips: `🏃 Recovery 87% (excellent!), RHR 56 bpm (below average), HRV up to 42ms.
+✅ Sleep quality 89% - perfect recovery window achieved.
+💪 Green light for strength training or HIIT today.
+💊 Pre: creatine + caffeine | Post: whey protein + electrolytes.
+Coach Summary: Your body is a machine today - time to make some gains!`
     },
     "How is my health doing?": {
-      fullMode: `📊 This week's data:
-🚶 Steps: 9,200/day average
-❤️ Resting HR: 58 bpm (healthy)
-⚖️ Body fat: 24–25% (stable)
-🛌 Sleep: 6h 35m average, deep sleep at 42m (below target)
+      fullMode: `📊 This week's comprehensive analysis:
+🚶 Steps: 11,800/day average (exceeding 10k goal!)
+❤️ Resting HR: 56 bpm (excellent cardiovascular fitness)
+⚖️ Body composition: 18.2% body fat, muscle mass trending up
+🛌 Sleep: 7h 15m average, deep sleep at 1h 8m (hitting targets)
+🧠 HRV: 42ms average (great stress resilience)
 
-⚠️ Do you feel bloated?
-Your recent smart scale reading shows an increase in water retention — reduce sodium intake today, stay hydrated, and supplement with electrolytes.
+✅ Standout wins this week:
+• Glucose control: staying under 120mg/dL post-meals
+• Consistent workout schedule (5/7 days)
+• Protein target hit daily (1.8g/kg bodyweight)
 
-✅ Overall: Active, maintaining muscle mass. Improving sleep depth & composition will boost recovery and energy.
+⚠️ Areas to optimize:
+• Stress levels slightly elevated on work days
+• Weekend sleep timing inconsistent (but quality good)
 
 Supplements:
-💊 Vitamin D3 + K2
-💊 Magnesium glycinate
-💊 Whey protein
-💊 Omega-3s`,
-      quickTips: `📊 Steps 9,200/day, RHR 58 bpm, body fat 24–25%, deep sleep 42m (low).
-⚠️ Water retention high — cut sodium, hydrate, electrolytes.
-✅ Active, maintaining muscle; improve sleep quality for bigger gains.
-💊 Vitamin D3 + K2, magnesium glycinate, whey, omega-3s.
-Coach Summary: You're building a solid base — now let's level up recovery so every effort counts.`
+💊 Your current stack is working perfectly
+💊 Consider adding ashwagandha for work stress
+💊 Creatine timing is optimal (post-workout)`,
+      quickTips: `📊 Steps 11,800/day (crushing it!), RHR 56 bpm (excellent), body fat 18.2%, sleep 7h 15m.
+✅ Glucose control excellent, protein targets hit, muscle mass increasing.
+⚠️ Work stress slightly elevated, weekend sleep timing inconsistent.
+💊 Current stack working great, consider ashwagandha for stress.
+Coach Summary: You're operating at elite level - just fine-tune the stress management and you're unstoppable.`
     }
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  // Global keyboard shortcut (Cmd/Ctrl + /)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === '/') {
-        e.preventDefault();
-        setIsOpen(true);
+  // Realistic health metrics with actual problems and solutions
+  const metrics = [
+    {
+      id: 'heart',
+      name: 'Resting Heart Rate',
+      friendlyName: 'Your cardiovascular fitness indicator',
+      value: '74',
+      unit: 'bpm',
+      detail: 'Above optimal range (60-70 bpm)',
+      status: 'elevated',
+      change: +3,
+      trend: 'increasing trend',
+      icon: Heart,
+      color: 'from-red-500 to-rose-600',
+      explanation: 'Your resting heart rate has increased from 71 to 74 bpm over the past week. This suggests your cardiovascular system is working harder than optimal.',
+      target: '60-70 bpm',
+      lastWeekAvg: '71 bpm',
+      subMetrics: [
+        { name: '7-Day Average', value: '74', unit: 'bpm', status: 'elevated', description: 'Above optimal 60-70 range', target: '65 bpm' },
+        { name: 'Morning HR', value: '68', unit: 'bpm', status: 'good', description: 'Lowest reading of the day', target: '60 bpm' },
+        { name: 'Evening HR', value: '78', unit: 'bpm', status: 'elevated', description: 'Higher than morning baseline', target: '70 bpm' },
+        { name: 'Workout Recovery', value: '3.2', unit: 'min', status: 'slow', description: 'Time to return to baseline', target: '2 min' }
+      ],
+      protocol: {
+        title: 'Cardiovascular Optimization Protocol',
+        actions: [
+          { type: 'exercise', text: 'Zone 2 cardio: 150-160 bpm for 30 minutes, 4x/week', button: 'Start Cardio Protocol' },
+          { type: 'supplement', text: 'CoQ10 100mg + Magnesium 400mg + Hawthorn extract 500mg', button: 'Add Heart Stack' },
+          { type: 'lifestyle', text: '4-7-8 breathing: 10 minutes every morning', button: 'Begin Breathing' },
+          { type: 'monitoring', text: 'Track morning HR daily for 2 weeks', button: 'Set Reminders' }
+        ]
       }
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+    },
+    {
+      id: 'recovery',
+      name: 'Recovery',
+      friendlyName: 'How well you recover from stress',
+      value: 'Fair',
+      detail: '28 milliseconds',
+      status: 'needs_work',
+      change: -5,
+      trend: 'declining',
+      icon: Activity,
+      color: 'from-emerald-500 to-teal-600',
+      explanation: 'Your heart rate variability is lower than ideal, suggesting your body is under stress or not recovering well.',
+      subMetrics: [
+        { name: 'HRV (RMSSD)', value: '28', unit: 'ms', status: 'low', description: 'Below optimal range for your age' },
+        { name: 'Recovery Score', value: '58', unit: '/100', status: 'fair', description: 'Room for improvement' },
+        { name: 'Stress Index', value: '72', unit: '/100', status: 'high', description: 'Elevated stress levels detected' },
+        { name: 'Training Load', value: 'Moderate', unit: '', status: 'balanced', description: 'Current training intensity' }
+      ],
+      protocol: {
+        title: 'HRV Recovery Protocol',
+        actions: [
+          { type: 'supplement', text: 'Take Ashwagandha 600mg + L-Theanine 200mg before bed', button: 'Add to Stack' },
+          { type: 'lifestyle', text: 'Complete 4-7-8 breathing protocol twice daily', button: 'Start Breathing' },
+          { type: 'recovery', text: 'Reduce training intensity by 20% for 1 week', button: 'Adjust Training' }
+        ]
       }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || sendingMessage || !user?.id) return;
-    
-    setSendingMessage(true);
-    setHasNewMessage(false);
-    
-    // Add user message immediately
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      message: inputMessage,
-      role: 'user',
-      timestamp: new Date().toISOString()
-    };
-    setMessages(prev => [...prev, userMessage]);
-    
-    // Check if this is a predetermined question
-    const predeterminedResponse = predeterminedResponses[inputMessage as keyof typeof predeterminedResponses];
-    
-    if (predeterminedResponse) {
-      // Show analysis phases for predetermined responses
-      const phases = ['Analyzing your data...', 'Processing health patterns...', 'Generating personalized insights...'];
-      
-      for (let i = 0; i < phases.length; i++) {
-        setAnalysisPhase(phases[i]);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+    },
+    {
+      id: 'sleep',
+      name: 'Sleep Quality',
+      friendlyName: 'How well you slept',
+      value: 'Needs Work',
+      detail: '6 hours 12 minutes',
+      status: 'poor',
+      change: -8,
+      trend: 'inconsistent',
+      icon: Brain,
+      color: 'from-indigo-500 to-purple-600',
+      explanation: 'You\'re not getting enough sleep. Most adults need 7-9 hours for proper recovery and health.',
+      subMetrics: [
+        { name: 'Total Sleep', value: '6h 12m', unit: '', status: 'short', description: 'Below recommended 7-9 hours' },
+        { name: 'Deep Sleep', value: '58', unit: 'min', status: 'low', description: 'Need more restorative sleep' },
+        { name: 'REM Sleep', value: '72', unit: 'min', status: 'fair', description: 'Adequate but could improve' },
+        { name: 'Sleep Efficiency', value: '78', unit: '%', status: 'fair', description: 'Time asleep vs time in bed' }
+      ],
+      protocol: {
+        title: 'Sleep Extension Protocol',
+        actions: [
+          { type: 'schedule', text: 'Set bedtime to 10:30 PM (30 min earlier than current)', button: 'Set Sleep Schedule' },
+          { type: 'supplement', text: 'Take Magnesium Glycinate 400mg + Melatonin 1mg at 10 PM', button: 'Add to Stack' },
+          { type: 'environment', text: 'Enable blue light blocking on all devices after 9 PM', button: 'Setup Environment' }
+        ]
       }
-      
-      setAnalysisPhase('');
-      
-      // Add predetermined response
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        message: predeterminedResponse.quickTips,
-        role: 'assistant',
-        timestamp: new Date().toISOString(),
-        fullMode: predeterminedResponse.fullMode
-      };
-      setMessages(prev => [...prev, aiMessage]);
-      setSendingMessage(false);
-      setInputMessage('');
-      setHasNewMessage(true);
-      return;
+    },
+    {
+      id: 'glucose',
+      name: 'Glucose Control',
+      friendlyName: 'How stable your blood sugar is',
+      value: 'Needs Work',
+      detail: 'Avg 118 mg/dL',
+      status: 'elevated',
+      change: 8,
+      trend: 'post-meal spikes',
+      icon: BeakerIcon,
+      color: 'from-amber-500 to-orange-600',
+      explanation: 'Your glucose levels spike above 140mg/dL after meals, indicating insulin resistance. This affects energy and long-term health.',
+      subMetrics: [
+        { name: 'Avg Glucose', value: '118', unit: 'mg/dL', status: 'elevated', description: 'Above optimal 80-100 range' },
+        { name: 'Time in Range', value: '52', unit: '%', status: 'low', description: 'Should be 70%+ in 70-180 range' },
+        { name: 'Post-Meal Peak', value: '168', unit: 'mg/dL', status: 'high', description: 'Spikes above 140mg/dL threshold' },
+        { name: 'Dawn Effect', value: '15', unit: 'mg/dL', status: 'mild', description: 'Morning glucose rise' }
+      ],
+      protocol: {
+        title: 'Glucose Optimization Protocol',
+        actions: [
+          { type: 'nutrition', text: 'Limit meals to <30g net carbs, prioritize protein + fiber', button: 'Get Meal Plan' },
+          { type: 'supplement', text: 'Take Berberine 500mg + Chromium 200mcg before meals', button: 'Add to Stack' },
+          { type: 'activity', text: 'Walk 10 minutes after each meal (3x daily)', button: 'Set Reminders' }
+        ]
+      }
     }
-    
-    try {
-      // For non-predetermined questions, use the API
-      setAnalysisPhase('Thinking...');
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const response = await sendChatMessage(inputMessage, user.id);
-      
-      setAnalysisPhase('');
-      
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        message: response.response,
-        role: 'assistant',
-        timestamp: response.timestamp
-      };
-      setMessages(prev => [...prev, aiMessage]);
-      setHasNewMessage(true);
-      
-    } catch (error: any) {
-      // Remove the user message if API call failed
-      setMessages(prev => prev.slice(0, -1));
-      setAnalysisPhase('');
-      
-      toast({
-        title: "Oops! Something went wrong",
-        description: "I couldn't send your message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSendingMessage(false);
-    }
-    
-    setInputMessage('');
-  };
-
-  const handleQuickPrompt = (prompt: string) => {
-    setInputMessage(prompt);
-    setTimeout(() => handleSendMessage(), 100);
-  };
-
-  const quickPrompts = [
-    "How can I sleep better?",
-    "What should I eat today?", 
-    "Should I exercise today?",
-    "How is my health doing?"
   ];
 
-  const firstName = user?.email?.split('@')[0] || 'there';
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'excellent':
+      case 'optimal':
+        return <CheckCircle className="w-4 h-4 text-emerald-500" />;
+      case 'great':
+        return <CheckCircle className="w-4 h-4 text-blue-500" />;
+      default:
+        return <AlertCircle className="w-4 h-4 text-amber-500" />;
+    }
+  };
 
+  const getChangeColor = (change: number) => {
+    if (change > 0) return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20';
+    if (change < 0) return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+    return 'text-slate-600 bg-slate-50 dark:bg-slate-800';
+  };
+
+  const getSubMetricStatusColor = (status: string) => {
+    switch (status) {
+      case 'optimal':
+      case 'normal':
+      case 'balanced':
+        return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20';
+      case 'fair':
+      case 'mild':
+        return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+      case 'low':
+      case 'short':
+      case 'slow':
+      case 'elevated':
+      case 'high':
+        return 'text-amber-600 bg-amber-50 dark:bg-amber-900/20';
+      default:
+        return 'text-slate-600 bg-slate-50 dark:bg-slate-800';
+    }
+  };
   return (
-    <>
-      {/* Floating Chat Button */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsOpen(true)}
-            className={`fixed bottom-6 right-6 z-50 w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 flex items-center justify-center ${className}`}
-            aria-label="Open chat with AI coach"
-          >
-            <div className="relative">
-              <MessageCircle className="w-7 h-7" />
-              {hasNewMessage && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
-              )}
-            </div>
-            
-            {/* Keyboard shortcut hint */}
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-              ⌘ /
-            </div>
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <div className="space-y-6 pb-24 lg:pb-6">
+      {/* Simple Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">
+          Your Health Today
+        </h1>
+        <p className="text-lg text-slate-600 dark:text-slate-400">
+          Here's how your body is doing right now
+        </p>
+      </div>
 
-      {/* Chat Widget */}
-      <AnimatePresence>
-        {isOpen && (
+      {/* Overall Health Score - Big and Clear */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-3xl p-8 border border-amber-200/50 dark:border-amber-800/50 text-center"
+      >
+        <div className="space-y-4">
+          <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+            <AlertCircle className="w-10 h-10 text-white" />
+          </div>
+          <div>
+            <div className="text-5xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              67
+            </div>
+            <div className="text-xl font-semibold text-slate-900 dark:text-white">
+              Room for Improvement
+            </div>
+            <div className="text-slate-600 dark:text-slate-400">
+              Several areas could use attention
+            </div>
+          </div>
+        </div>
+      </motion.div>
+      
+      {/* Health Metrics - Friendly Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {metrics.map((metric, index) => (
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl border border-white/20 dark:border-slate-700/20 shadow-2xl overflow-hidden"
+            key={metric.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.6 }}
+            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
           >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-4">
+            <div className="space-y-4">
+              {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-white" />
+                  <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300`}>
+                    <metric.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">AI Coach</h3>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                      <span className="text-xs text-white/80">Online</span>
+                    <div className="text-xl font-bold text-slate-900 dark:text-white">
+                      {metric.value}
+                    </div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">
+                      {metric.name}
                     </div>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setAudioEnabled(!audioEnabled)}
-                    className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-                    title={audioEnabled ? "Disable audio" : "Enable audio"}
-                  >
-                    {audioEnabled ? (
-                      <Volume2 className="w-4 h-4 text-white" />
+                  {getStatusIcon(metric.status)}
+                  <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getChangeColor(metric.change)}`}>
+                    {metric.change > 0 ? (
+                      <TrendingUp className="w-3 h-3" />
                     ) : (
-                      <VolumeX className="w-4 h-4 text-white/60" />
+                      <TrendingDown className="w-3 h-3" />
                     )}
-                  </button>
-                  
+                    <span>{metric.trend}</span>
+                  </div>
                   <button
-                    onClick={() => setIsMinimized(!isMinimized)}
-                    className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                    onClick={() => setExpandedMetric(expandedMetric === metric.id ? null : metric.id)}
+                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                   >
-                    {isMinimized ? (
-                      <Maximize2 className="w-4 h-4 text-white" />
+                    {expandedMetric === metric.id ? (
+                      <ChevronDownIcon className="w-4 h-4 text-slate-400" />
                     ) : (
-                      <Minimize2 className="w-4 h-4 text-white" />
+                      <ChevronRightIcon className="w-4 h-4 text-slate-400" />
                     )}
-                  </button>
-                  
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <X className="w-4 h-4 text-white" />
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Chat Content */}
-            <AnimatePresence>
-              {!isMinimized && (
+              
+              {/* Simple Explanation */}
+              <div className="bg-slate-50/60 dark:bg-slate-800/60 rounded-xl p-4">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                  {metric.explanation}
+                </p>
+              </div>
+              
+              {/* Expandable Sub-Metrics */}
+              {expandedMetric === metric.id && (
                 <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: 'auto' }}
-                  exit={{ height: 0 }}
-                  className="overflow-hidden"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50"
                 >
-                  {messages.length === 0 ? (
-                    /* Welcome State */
-                    <div className="p-6 space-y-4">
-                      <div className="text-center space-y-3">
-                        <div className="text-4xl">👋</div>
-                        <div>
-                          <h4 className="font-semibold text-slate-900 dark:text-white">
-                            Hi {firstName}! I'm here to help
-                          </h4>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Ask me anything about your health
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Quick Prompts */}
-                      <div className="space-y-2">
-                        <div className="text-xs font-medium text-slate-600 dark:text-slate-400 text-center">
-                          Quick questions:
-                        </div>
-                        {quickPrompts.map((prompt, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleQuickPrompt(prompt)}
-                            className="w-full p-3 text-left bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-sm"
-                          >
-                            {prompt}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    /* Chat Messages */
-                    <div className="h-80 overflow-y-auto p-4 space-y-4">
-                      {messages.map((message) => (
-                        <motion.div
-                          key={message.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
-                          <div className={`flex items-start space-x-2 max-w-[85%] ${
-                            message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                          }`}>
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                              message.role === 'user' 
-                                ? 'bg-gradient-to-br from-blue-500 to-cyan-600' 
-                                : 'bg-gradient-to-br from-purple-500 to-indigo-600'
-                            }`}>
-                              {message.role === 'user' ? (
-                                <User className="w-3 h-3 text-white" />
-                              ) : (
-                                <Bot className="w-3 h-3 text-white" />
-                              )}
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-slate-900 dark:text-white">Detailed Metrics:</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {metric.subMetrics.map((subMetric, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-slate-50/60 dark:bg-slate-800/60 rounded-lg">
+                          <div className="space-y-1">
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {subMetric.name}
                             </div>
-                            
-                            <div className={`rounded-2xl p-3 max-w-full ${
-                              message.role === 'user' 
-                                ? 'bg-gradient-to-br from-blue-500 to-cyan-600 text-white' 
-                                : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white'
-                            }`}>
-                              <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                                {message.message}
-                              </p>
-                              
-                              {/* Full Mode Toggle */}
-                              {message.role === 'assistant' && message.fullMode && (
-                                <details className="mt-3 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-                                  <summary className="cursor-pointer text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center space-x-1">
-                                    <span>View Full Analysis</span>
-                                    <Sparkles className="w-3 h-3" />
-                                  </summary>
-                                  <div className="mt-2 p-3 bg-slate-50/60 dark:bg-slate-800/60 rounded-xl">
-                                    <pre className="whitespace-pre-wrap text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                                      {message.fullMode}
-                                    </pre>
-                                  </div>
-                                </details>
-                              )}
-                              
-                              <div className={`text-xs mt-2 ${
-                                message.role === 'user' ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
-                              }`}>
-                                {new Date(message.timestamp).toLocaleTimeString([], { 
-                                  hour: '2-digit', 
-                                  minute: '2-digit' 
-                                })}
-                              </div>
+                            <div className="text-xs text-slate-600 dark:text-slate-400">
+                              {subMetric.description}
                             </div>
                           </div>
-                        </motion.div>
+                          <div className="text-right space-y-1">
+                            <div className="font-bold text-slate-900 dark:text-white">
+                              {subMetric.value} {subMetric.unit}
+                            </div>
+                            <div className={`px-2 py-0.5 text-xs font-medium rounded-full ${getSubMetricStatusColor(subMetric.status)}`}>
+                              {subMetric.status}
+                            </div>
+                          </div>
+                        </div>
                       ))}
-                      
-                      {sendingMessage && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="flex justify-start"
-                        >
-                          <div className="flex items-start space-x-2">
-                            <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center">
-                              <Bot className="w-3 h-3 text-white" />
-                            </div>
-                            <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-3">
-                              <div className="flex items-center space-x-2">
-                                <LoadingSpinner size="sm" variant="dots" />
-                                <span className="text-xs text-slate-600 dark:text-slate-400">
-                                  {analysisPhase || 'Thinking...'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                      
-                      <div ref={messagesEndRef} />
                     </div>
-                  )}
-
-                  {/* Input Area */}
-                  <div className="p-4 border-t border-slate-200/50 dark:border-slate-700/50">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-1 relative">
-                        <input
-                          ref={inputRef}
-                          type="text"
-                          value={inputMessage}
-                          onChange={(e) => setInputMessage(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                          placeholder="Ask me anything about your health..."
-                          className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                          disabled={sendingMessage}
-                        />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-white">{metric.protocol.title}:</h4>
+                    {metric.protocol.actions.map((action, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-slate-100/60 dark:bg-slate-800/60 rounded-lg">
+                        <span className="text-sm text-slate-700 dark:text-slate-300">{action.text}</span>
+                        <button className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity">
+                          {action.button}
+                        </button>
                       </div>
-                      
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleSendMessage}
-                        disabled={!inputMessage.trim() || sendingMessage}
-                        className="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
-                      >
-                        {sendingMessage ? (
-                          <LoadingSpinner size="sm" />
-                        ) : (
-                          <Send className="w-4 h-4" />
-                        )}
-                      </motion.button>
-                    </div>
-                    
-                    <div className="mt-2 text-center">
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
-                        Press ⌘ / to open chat • Enter to send
-                      </span>
-                    </div>
+                    ))}
+                  </div>
+                  
+                  <div className="text-xs text-slate-500 dark:text-slate-500 bg-slate-100/60 dark:bg-slate-800/60 rounded-lg p-3">
+                    <strong>Technical detail:</strong> {metric.detail}
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        ))}
+      </div>
+
+      {/* Simple Next Steps */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl p-6 border border-amber-200/50 dark:border-amber-800/50"
+      >
+        <div className="text-center space-y-4">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+            Priority Actions for Better Health
+          </h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <button
+              className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
+            >
+              <BeakerIcon className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Start Glucose Protocol</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Reduce post-meal spikes</div>
+            </button>
+            
+            <button
+              className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
+            >
+              <Brain className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Sleep Extension Plan</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Get 7+ hours nightly</div>
+            </button>
+            
+            <button
+              className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
+            >
+              <Heart className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold text-slate-900 dark:text-white">Heart Rate Protocol</div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">Lower to optimal range</div>
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
-export default FloatingChatWidget;
+export default HealthMetrics;
