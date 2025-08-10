@@ -18,32 +18,36 @@ import {
 const HealthMetrics: React.FC = () => {
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
-  // Simplified metrics with friendly explanations
+  // Realistic health metrics with actual problems and solutions
   const metrics = [
     {
       id: 'heart',
-      name: 'Heart Health',
-      friendlyName: 'How your heart is doing',
-      value: 'Good',
-      detail: '74 beats per minute',
-      status: 'good',
-      change: -2,
-      trend: 'slightly elevated',
+      name: 'Resting Heart Rate',
+      friendlyName: 'Your cardiovascular fitness indicator',
+      value: '74',
+      unit: 'bpm',
+      detail: 'Above optimal range (60-70 bpm)',
+      status: 'elevated',
+      change: +3,
+      trend: 'increasing trend',
       icon: Heart,
       color: 'from-red-500 to-rose-600',
-      explanation: 'Your resting heart rate is a bit high. Regular cardio exercise could help bring it down to the optimal 60-70 range.',
+      explanation: 'Your resting heart rate has increased from 71 to 74 bpm over the past week. This suggests your cardiovascular system is working harder than optimal.',
+      target: '60-70 bpm',
+      lastWeekAvg: '71 bpm',
       subMetrics: [
-        { name: 'Resting HR', value: '74', unit: 'bpm', status: 'elevated', description: 'Above optimal range' },
-        { name: 'Max HR', value: '185', unit: 'bpm', status: 'normal', description: 'Age-appropriate maximum' },
-        { name: 'HR Recovery', value: '28', unit: 'bpm/min', status: 'slow', description: 'Takes longer to recover after exercise' },
-        { name: 'HR Variability', value: '28', unit: 'ms', status: 'low', description: 'Indicates stress or poor recovery' }
+        { name: '7-Day Average', value: '74', unit: 'bpm', status: 'elevated', description: 'Above optimal 60-70 range', target: '65 bpm' },
+        { name: 'Morning HR', value: '68', unit: 'bpm', status: 'good', description: 'Lowest reading of the day', target: '60 bpm' },
+        { name: 'Evening HR', value: '78', unit: 'bpm', status: 'elevated', description: 'Higher than morning baseline', target: '70 bpm' },
+        { name: 'Workout Recovery', value: '3.2', unit: 'min', status: 'slow', description: 'Time to return to baseline', target: '2 min' }
       ],
       protocol: {
-        title: 'Heart Rate Optimization Protocol',
+        title: 'Cardiovascular Optimization Protocol',
         actions: [
-          { type: 'exercise', text: 'Start 20-minute Zone 2 cardio protocol 3x/week', button: 'Begin Cardio Plan' },
-          { type: 'supplement', text: 'Take CoQ10 100mg + Magnesium 400mg daily', button: 'Add to Stack' },
-          { type: 'lifestyle', text: 'Practice 10-minute morning breathing exercises', button: 'Start Protocol' }
+          { type: 'exercise', text: 'Zone 2 cardio: 150-160 bpm for 30 minutes, 4x/week', button: 'Start Cardio Protocol' },
+          { type: 'supplement', text: 'CoQ10 100mg + Magnesium 400mg + Hawthorn extract 500mg', button: 'Add Heart Stack' },
+          { type: 'lifestyle', text: '4-7-8 breathing: 10 minutes every morning', button: 'Begin Breathing' },
+          { type: 'monitoring', text: 'Track morning HR daily for 2 weeks', button: 'Set Reminders' }
         ]
       }
     },
