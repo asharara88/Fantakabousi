@@ -1,5 +1,24 @@
 import { supabase } from './supabase';
 
+// Supabase storage configuration
+const STORAGE_BUCKET = 'supplements';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+
+// Helper function to get image URL from Supabase storage
+const getSupplementImageUrl = (imagePath: string): string => {
+  if (!imagePath || !SUPABASE_URL) {
+    return 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'; // Fallback
+  }
+  
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith('http')) {
+    return imagePath;
+  }
+  
+  // Construct Supabase storage URL
+  return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${imagePath}`;
+};
+
 export interface SupplementData {
   id: string;
   name: string;
@@ -109,7 +128,7 @@ export const fetchSupplementsFromDatabase = async (): Promise<SupplementData[]> 
       is_available: supplement.is_available !== false,
       is_featured: supplement.is_featured || false,
       is_bestseller: supplement.is_bestseller || false,
-      image_url: supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
+      image_url: getSupplementImageUrl(supplement.image_url || supplement.name?.toLowerCase().replace(/\s+/g, '-') + '.jpg'),
       nutrition_facts: supplement.nutrition_facts || {},
       certifications: supplement.certifications || 'Third-party tested',
       target_audience: supplement.target_audience || 'Adults',
@@ -183,7 +202,7 @@ const getFallbackSupplements = (): SupplementData[] => [
     is_available: true,
     is_featured: true,
     is_bestseller: false,
-    image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
+    image_url: getSupplementImageUrl('omega-3.jpg'),
     nutrition_facts: {},
     certifications: 'Third-party tested',
     target_audience: 'Adults',
@@ -220,7 +239,7 @@ const getFallbackSupplements = (): SupplementData[] => [
     is_available: true,
     is_featured: true,
     is_bestseller: true,
-    image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
+    image_url: getSupplementImageUrl('vitamin-d3-k2.jpg'),
     nutrition_facts: {},
     certifications: 'Third-party tested, Non-GMO',
     target_audience: 'Adults',
