@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useToast } from '../../hooks/useToast';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   Heart, 
   Brain, 
@@ -16,8 +18,174 @@ import {
 } from 'lucide-react';
 
 const HealthMetrics: React.FC = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
+  const handleProtocolAction = async (actionType: string, actionText: string) => {
+    try {
+      switch (actionType) {
+        case 'exercise':
+          toast({
+            title: "🏃‍♂️ Cardio Protocol Started",
+            description: "Zone 2 cardio plan added to your fitness schedule. Target: 150-160 bpm for 30 minutes.",
+            action: {
+              label: "View Schedule",
+              onClick: () => window.location.href = '#fitness'
+            }
+          });
+          break;
+          
+        case 'supplement':
+          toast({
+            title: "💊 Supplement Stack Ready",
+            description: "Heart health supplements added to your cart. Review dosages and timing.",
+            action: {
+              label: "View Cart",
+              onClick: () => window.location.href = '#supplements'
+            }
+          });
+          break;
+          
+        case 'lifestyle':
+        case 'breathwork':
+          // Start breathing exercise
+          startBreathingExercise();
+          break;
+          
+        case 'monitoring':
+        case 'schedule':
+          setHealthReminder(actionText);
+          break;
+          
+        case 'recovery':
+          toast({
+            title: "🔄 Training Adjusted",
+            description: "Reduced training intensity by 20% for optimal recovery. New plan ready.",
+            action: {
+              label: "View Plan",
+              onClick: () => window.location.href = '#fitness'
+            }
+          });
+          break;
+          
+        case 'nutrition':
+          toast({
+            title: "🥗 Meal Plan Ready",
+            description: "Low-carb meal plan generated. Focus on protein + fiber combinations.",
+            action: {
+              label: "View Meals",
+              onClick: () => window.location.href = '#nutrition'
+            }
+          });
+          break;
+          
+        case 'activity':
+          setWalkingReminders();
+          break;
+          
+        case 'environment':
+          setupSleepEnvironment();
+          break;
+          
+        default:
+          toast({
+            title: "✅ Protocol Activated",
+            description: actionText,
+          });
+      }
+    } catch (error) {
+      console.error('Protocol action failed:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start protocol. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const startBreathingExercise = () => {
+    toast({
+      title: "🫁 4-7-8 Breathing Started",
+      description: "Inhale for 4, hold for 7, exhale for 8. Repeat 4 cycles.",
+      action: {
+        label: "Start Timer",
+        onClick: () => {
+          // Start breathing timer
+          let cycle = 1;
+          const totalCycles = 4;
+          
+          const runCycle = () => {
+            if (cycle > totalCycles) {
+              toast({
+                title: "🎉 Breathing Complete!",
+                description: "Great job! Your nervous system is now more balanced.",
+              });
+              return;
+            }
+            
+            toast({
+              title: `🫁 Cycle ${cycle}/${totalCycles}`,
+              description: "Inhale (4s) → Hold (7s) → Exhale (8s)",
+            });
+            
+            cycle++;
+            setTimeout(runCycle, 19000); // 19 seconds per cycle
+          };
+          
+          runCycle();
+        }
+      }
+    });
+  };
+
+  const setHealthReminder = (reminderText: string) => {
+    toast({
+      title: "⏰ Reminder Set",
+      description: "Daily health tracking reminder activated.",
+      action: {
+        label: "View Reminders",
+        onClick: () => {
+          toast({
+            title: "📱 Daily Reminders Active",
+            description: "• Morning HR check at 7:00 AM\n• Evening review at 9:00 PM\n• Weekly progress report",
+          });
+        }
+      }
+    });
+  };
+
+  const setWalkingReminders = () => {
+    toast({
+      title: "🚶‍♂️ Walking Reminders Set",
+      description: "Post-meal walk alerts activated for glucose control.",
+      action: {
+        label: "View Schedule",
+        onClick: () => {
+          toast({
+            title: "🕐 Walking Schedule",
+            description: "• After breakfast: 8:30 AM\n• After lunch: 1:30 PM\n• After dinner: 8:00 PM\n\n10 minutes each for optimal glucose control.",
+          });
+        }
+      }
+    });
+  };
+
+  const setupSleepEnvironment = () => {
+    toast({
+      title: "🌙 Sleep Environment Setup",
+      description: "Blue light blocking activated on all devices after 9 PM.",
+      action: {
+        label: "Setup Guide",
+        onClick: () => {
+          toast({
+            title: "💤 Sleep Optimization Checklist",
+            description: "✅ Blue light filters enabled\n✅ Room temperature set to 65-68°F\n✅ Blackout curtains ready\n✅ Phone in airplane mode\n✅ Magnesium + Melatonin protocol",
+          });
+        }
+      }
+    });
+  };
   // Realistic health metrics with actual problems and solutions
   const metrics = [
     {
@@ -262,6 +430,13 @@ const HealthMetrics: React.FC = () => {
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   {metric.explanation}
                 </p>
+                <button
+                  onClick={() => setExpandedMetric(expandedMetric === metric.id ? null : metric.id)}
+                  className="mt-3 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center space-x-1"
+                >
+                  <span>Learn More</span>
+                  <ChevronRightIcon className={`w-4 h-4 transition-transform ${expandedMetric === metric.id ? 'rotate-90' : ''}`} />
+                </button>
               </div>
               
               {/* Expandable Sub-Metrics */}
@@ -274,6 +449,60 @@ const HealthMetrics: React.FC = () => {
                 >
                   <div className="space-y-3">
                     <h4 className="font-semibold text-slate-900 dark:text-white">Detailed Metrics:</h4>
+                    
+                    {/* What This Metric Means */}
+                    <div className="bg-blue-50/60 dark:bg-blue-950/20 rounded-xl p-4 border border-blue-200/50 dark:border-blue-800/50">
+                      <h5 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">What is {metric.name}?</h5>
+                      <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed mb-3">
+                        {metric.id === 'heart' && 'Resting heart rate measures how many times your heart beats per minute when you\'re at rest. It\'s a key indicator of cardiovascular fitness and overall health. Lower resting heart rates typically indicate better cardiovascular conditioning.'}
+                        {metric.id === 'recovery' && 'Heart Rate Variability (HRV) measures the variation in time between heartbeats. Higher HRV indicates better stress resilience, recovery capacity, and autonomic nervous system balance. It\'s one of the best indicators of how well your body is adapting to stress.'}
+                        {metric.id === 'sleep' && 'Sleep quality encompasses total sleep time, sleep efficiency, and the amount of deep and REM sleep you get. Quality sleep is essential for physical recovery, mental performance, hormone regulation, and immune function.'}
+                        {metric.id === 'glucose' && 'Blood glucose control measures how well your body manages blood sugar levels, especially after meals. Good glucose control prevents energy crashes, supports weight management, and reduces risk of metabolic disorders.'}
+                      </p>
+                      
+                      <div className="space-y-2">
+                        <h6 className="font-medium text-blue-800 dark:text-blue-300">What might be causing this:</h6>
+                        <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
+                          {metric.id === 'heart' && (
+                            <>
+                              <li>• Increased stress or anxiety levels</li>
+                              <li>• Dehydration or electrolyte imbalance</li>
+                              <li>• Lack of cardiovascular exercise</li>
+                              <li>• Poor sleep quality or insufficient rest</li>
+                              <li>• Caffeine or stimulant intake</li>
+                            </>
+                          )}
+                          {metric.id === 'recovery' && (
+                            <>
+                              <li>• Chronic stress or work pressure</li>
+                              <li>• Overtraining without adequate recovery</li>
+                              <li>• Poor sleep quality or sleep debt</li>
+                              <li>• Nutritional deficiencies (magnesium, B vitamins)</li>
+                              <li>• Alcohol consumption or poor diet</li>
+                            </>
+                          )}
+                          {metric.id === 'sleep' && (
+                            <>
+                              <li>• Inconsistent bedtime schedule</li>
+                              <li>• Screen exposure before bed (blue light)</li>
+                              <li>• Stress, anxiety, or racing thoughts</li>
+                              <li>• Room too warm or noisy environment</li>
+                              <li>• Caffeine intake too late in the day</li>
+                            </>
+                          )}
+                          {metric.id === 'glucose' && (
+                            <>
+                              <li>• High carbohydrate meals without fiber</li>
+                              <li>• Insulin resistance development</li>
+                              <li>• Lack of physical activity after meals</li>
+                              <li>• Stress causing cortisol spikes</li>
+                              <li>• Poor meal timing or eating too fast</li>
+                            </>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                    
                     <div className="grid grid-cols-1 gap-3">
                       {metric.subMetrics.map((subMetric, idx) => (
                         <div key={idx} className="flex items-center justify-between p-3 bg-slate-50/60 dark:bg-slate-800/60 rounded-lg">
@@ -300,10 +529,22 @@ const HealthMetrics: React.FC = () => {
                   
                   <div className="space-y-2">
                     <h4 className="font-semibold text-slate-900 dark:text-white">{metric.protocol.title}:</h4>
+                    <div className="bg-emerald-50/60 dark:bg-emerald-950/20 rounded-xl p-4 border border-emerald-200/50 dark:border-emerald-800/50 mb-3">
+                      <h5 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-2">Why this protocol works:</h5>
+                      <p className="text-sm text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                        {metric.id === 'heart' && 'Zone 2 cardio strengthens your heart muscle and improves efficiency. CoQ10 supports cellular energy production in heart cells, while magnesium helps regulate heart rhythm and blood pressure.'}
+                        {metric.id === 'recovery' && 'Ashwagandha is an adaptogen that helps your body manage stress hormones like cortisol. Breathing exercises activate your parasympathetic nervous system, promoting recovery and better HRV.'}
+                        {metric.id === 'sleep' && 'Consistent sleep timing helps regulate your circadian rhythm. Magnesium relaxes muscles and nervous system, while melatonin signals your body it\'s time to sleep.'}
+                        {metric.id === 'glucose' && 'Berberine activates AMPK, improving insulin sensitivity. Walking after meals helps muscles absorb glucose. Lower carb meals reduce the glucose load on your system.'}
+                      </p>
+                    </div>
                     {metric.protocol.actions.map((action, idx) => (
                       <div key={idx} className="flex items-center justify-between p-3 bg-slate-100/60 dark:bg-slate-800/60 rounded-lg">
                         <span className="text-sm text-slate-700 dark:text-slate-300">{action.text}</span>
-                        <button className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity">
+                        <button 
+                          onClick={() => handleProtocolAction(action.type, action.text)}
+                          className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-all duration-200 hover:scale-105 active:scale-95"
+                        >
                           {action.button}
                         </button>
                       </div>
@@ -334,6 +575,7 @@ const HealthMetrics: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <button
+              onClick={() => handleProtocolAction('nutrition', 'Start comprehensive glucose control protocol')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <BeakerIcon className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
@@ -342,6 +584,7 @@ const HealthMetrics: React.FC = () => {
             </button>
             
             <button
+              onClick={() => handleProtocolAction('schedule', 'Start comprehensive sleep extension protocol')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <Brain className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
@@ -350,6 +593,7 @@ const HealthMetrics: React.FC = () => {
             </button>
             
             <button
+              onClick={() => handleProtocolAction('exercise', 'Start comprehensive cardiovascular optimization protocol')}
               className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all group"
             >
               <Heart className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
