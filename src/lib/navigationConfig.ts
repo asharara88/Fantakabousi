@@ -26,7 +26,7 @@ export const navigationItems = [
   },
   {
     id: 'coach',
-    label: 'AI Coach',
+    label: 'SmartCoach™',
     icon: ChatBubbleLeftRightIcon,
     activeIcon: ChatSolidIcon,
     description: 'Personalized guidance',
@@ -60,7 +60,7 @@ export const navigationItems = [
   },
   {
     id: 'supplements',
-    label: 'Shop',
+    label: 'Supplements',
     icon: ShoppingBagIcon,
     activeIcon: ShoppingSolidIcon,
     description: 'Premium supplements',

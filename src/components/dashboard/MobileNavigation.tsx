@@ -170,8 +170,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ activeView, onNavig
             {[
               { id: 'dashboard', icon: HomeIcon, activeIcon: HomeSolidIcon, label: 'Home' },
               { id: 'health', icon: HeartIcon, activeIcon: HeartIcon, label: 'Health' },
-              { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'Coach' },
-              { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Shop' }
+              { id: 'coach', icon: ChatBubbleLeftRightIcon, activeIcon: ChatSolidIcon, label: 'SmartCoach™' },
+              { id: 'supplements', icon: ShoppingBagIcon, activeIcon: ShoppingSolidIcon, label: 'Supplements' }
             ].map((item) => {
               const Icon = activeView === item.id ? item.activeIcon : item.icon;
               const isActive = activeView === item.id;

@@ -299,9 +299,9 @@ Coach Summary: You're operating at elite level - just fine-tune the stress manag
             <AlertCircle className="w-10 h-10 text-white" />
           </div>
           <div>
-            <div className="text-5xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              67
-            </div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">
+              SmartCoach™
+            </h1>
             <div className="text-xl font-semibold text-slate-900 dark:text-white">
               Room for Improvement
             </div>
