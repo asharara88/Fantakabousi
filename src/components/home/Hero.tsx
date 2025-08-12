@@ -134,12 +134,12 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onGetStarted}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-medium text-lg shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold text-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative flex items-center space-x-3">
-                  <Brain className="w-5 h-5" />
-                  <span>Start Your Analysis</span>
+                  <Sparkles className="w-6 h-6" />
+                  <span>GET STARTED</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </motion.button>
@@ -147,11 +147,11 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group px-8 py-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-2xl font-medium text-lg hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
+                onClick={() => window.location.href = '/auth'}
+                className="group px-8 py-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-2xl font-semibold text-xl hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
               >
                 <div className="flex items-center space-x-3">
-                  <Play className="w-5 h-5" />
-                  <span>Watch Demo</span>
+                  <span>Sign In</span>
                 </div>
               </motion.button>
             </div>
