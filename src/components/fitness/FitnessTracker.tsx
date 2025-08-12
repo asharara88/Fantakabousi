@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import MuscleGroupVisualizer from './MuscleGroupVisualizer';
-import { 
-  FireIcon,
-  ClockIcon,
-  TrophyIcon,
-  ChartBarIcon,
-  PlayIcon,
-  PauseIcon,
-  TargetIcon
-} from 'lucide-react';
+import { FileIcon as FireIcon, ClockIcon, TrophyIcon, ChartBarIcon, PlayIcon, PauseIcon, TargetIcon } from 'lucide-react';
 
 const FitnessTracker: React.FC = () => {
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string>('');
