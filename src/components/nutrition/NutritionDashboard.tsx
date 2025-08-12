@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { analyzeNutrition } from '../../lib/api';
 import { useToast } from '../../hooks/useToast';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import RecipeSearch from '../recipes/RecipeSearch';
 import { 
   Utensils,
   Camera,
@@ -91,6 +92,25 @@ const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ onQuickAction }
       setAnalyzing(false);
     }
   };
+
+  // Show recipes view if activeView is 'recipes'
+  if (activeView === 'recipes') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setActiveView('logger')}
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              ← Back to Food Logger
+            </button>
+          </div>
+        </div>
+        <RecipeSearch />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
