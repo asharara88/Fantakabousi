@@ -16,6 +16,15 @@ const SupplementShopEnhanced = lazy(() => import('../supplements/SupplementShopE
 const ProfileSettingsEnhanced = lazy(() => import('./ProfileSettingsEnhanced'));
 const UbergeneIntegration = lazy(() => import('../fertility/UbergeneIntegration'));
 const FitnessTracker = lazy(() => import('../fitness/FitnessTracker'));
+const WorkoutPlan = lazy(() => import('../fitness/WorkoutPlan'));
+const NEATTracker = lazy(() => import('../fitness/NEATTracker'));
+const StepsDistance = lazy(() => import('../fitness/StepsDistance'));
+const FitnessAwards = lazy(() => import('../fitness/FitnessAwards'));
+const MuscleGroupVisualizer = lazy(() => import('../fitness/MuscleGroupVisualizer'));
+const SleepAnalysis = lazy(() => import('../sleep/SleepAnalysis'));
+const SleepCoaching = lazy(() => import('../sleep/SleepCoaching'));
+const SleepEnvironment = lazy(() => import('../sleep/SleepEnvironment'));
+const CircadianRhythm = lazy(() => import('../sleep/CircadianRhythm'));
 
 interface DashboardContentProps {
   activeView: string;
@@ -58,9 +67,59 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
           </LazyWrapper>
         );
       case 'fitness':
+      case 'fitness-workout-plan':
         return (
-          <LazyWrapper name="Fitness Dashboard">
-            <FitnessTracker />
+          <LazyWrapper name="Workout Plan">
+            <WorkoutPlan />
+          </LazyWrapper>
+        );
+      case 'fitness-neat':
+        return (
+          <LazyWrapper name="NEAT Activity">
+            <NEATTracker />
+          </LazyWrapper>
+        );
+      case 'fitness-steps':
+        return (
+          <LazyWrapper name="Steps & Distance">
+            <StepsDistance />
+          </LazyWrapper>
+        );
+      case 'fitness-awards':
+        return (
+          <LazyWrapper name="Fitness Awards">
+            <FitnessAwards />
+          </LazyWrapper>
+        );
+      case 'fitness-muscle-groups':
+        return (
+          <LazyWrapper name="Muscle Group Visual">
+            <MuscleGroupVisualizer />
+          </LazyWrapper>
+        );
+      case 'sleep':
+      case 'sleep-analysis':
+        return (
+          <LazyWrapper name="Sleep Analysis">
+            <SleepAnalysis />
+          </LazyWrapper>
+        );
+      case 'sleep-coaching':
+        return (
+          <LazyWrapper name="Sleep Coaching">
+            <SleepCoaching />
+          </LazyWrapper>
+        );
+      case 'sleep-environment':
+        return (
+          <LazyWrapper name="Sleep Environment">
+            <SleepEnvironment />
+          </LazyWrapper>
+        );
+      case 'sleep-circadian-rhythm':
+        return (
+          <LazyWrapper name="Circadian Rhythm">
+            <CircadianRhythm />
           </LazyWrapper>
         );
       case 'profile':

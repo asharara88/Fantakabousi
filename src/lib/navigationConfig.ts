@@ -5,14 +5,16 @@ import {
   ShoppingBagIcon,
   BeakerIcon,
   BoltIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  MoonIcon
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeSolidIcon,
   ChatBubbleLeftRightIcon as ChatSolidIcon,
   ChartBarIcon as ChartSolidIcon,
   ShoppingBagIcon as ShoppingSolidIcon,
-  UserGroupIcon as UserGroupSolidIcon
+  UserGroupIcon as UserGroupSolidIcon,
+  MoonIcon as MoonSolidIcon
 } from '@heroicons/react/24/solid';
 
 export const navigationItems = [
@@ -72,7 +74,28 @@ export const navigationItems = [
     icon: BoltIcon,
     activeIcon: BoltIcon,
     description: 'Training & workouts',
-    gradient: 'from-red-500 via-orange-500 to-yellow-500'
+    gradient: 'from-red-500 via-orange-500 to-yellow-500',
+    children: [
+      { id: 'workout-plan', label: 'Workout Plan', description: 'Personalized training programs' },
+      { id: 'neat', label: 'NEAT Activity', description: 'Non-exercise activity tracking' },
+      { id: 'steps', label: 'Steps & Distance', description: 'Daily movement tracking' },
+      { id: 'awards', label: 'Awards', description: 'Fitness achievements & badges' },
+      { id: 'muscle-groups', label: 'Muscle Group Visual', description: 'Interactive muscle readiness' }
+    ]
+  },
+  {
+    id: 'sleep',
+    label: 'Sleep',
+    icon: MoonIcon,
+    activeIcon: MoonIcon,
+    description: 'Sleep optimization & recovery',
+    gradient: 'from-indigo-500 via-purple-500 to-blue-500',
+    children: [
+      { id: 'sleep-analysis', label: 'Sleep Analysis', description: 'Detailed sleep metrics' },
+      { id: 'sleep-coaching', label: 'Sleep Coaching', description: 'Personalized sleep guidance' },
+      { id: 'sleep-environment', label: 'Sleep Environment', description: 'Optimize your bedroom' },
+      { id: 'circadian-rhythm', label: 'Circadian Rhythm', description: 'Light exposure & timing' }
+    ]
   },
   {
     id: 'fertility',
