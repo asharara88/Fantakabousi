@@ -273,6 +273,22 @@ const SupplementShopEnhanced: React.FC<SupplementShopEnhancedProps> = ({ onQuick
                       </p>
                     </div>
                     
+                    <div className="ml-4 w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-xl overflow-hidden flex-shrink-0">
+                      <img
+                        src={supplement.image_url}
+                        alt={supplement.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = '<div class="w-full h-full flex items-center justify-center text-2xl">💊</div>';
+                          }
+                        }}
+                      />
+                    </div>
+                    
                     {supplement.is_bestseller && (
                       <span className="px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full">
                         Popular
