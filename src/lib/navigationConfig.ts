@@ -105,5 +105,17 @@ export const navigationItems = [
     description: 'Couples fertility optimization',
     badge: 'TTC',
     gradient: 'from-pink-500 via-rose-500 to-red-500'
+  },
+  {
+    id: 'sleep',
+    label: 'Sleep',
+    icon: MoonIcon,
+    activeIcon: MoonSolidIcon,
+    description: 'Sleep optimization & recovery',
+    gradient: 'from-indigo-500 via-purple-500 to-blue-500',
+    children: [
+      { id: 'quality', label: 'Sleep Quality', description: 'Awake, Core, Deep, REM metrics + HRV, temperature, apnea' },
+      { id: 'bioclock', label: 'Bioclock', description: 'Circadian rhythm optimization for shift workers & jet lag' }
+    ]
   }
 ];

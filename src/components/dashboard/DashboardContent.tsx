@@ -98,6 +98,19 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
           </LazyWrapper>
         );
       case 'sleep':
+      case 'sleep-quality':
+        return (
+          <LazyWrapper name="Sleep Quality">
+            <SleepQuality />
+          </LazyWrapper>
+        );
+      case 'sleep-bioclock':
+        return (
+          <LazyWrapper name="Bioclock">
+            <Bioclock />
+          </LazyWrapper>
+        );
+      case 'sleep':
       case 'sleep-analysis':
         return (
           <LazyWrapper name="Sleep Analysis">
