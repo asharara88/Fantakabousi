@@ -36,13 +36,17 @@ const Navigation: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-3"
+            className="flex items-center space-x-4"
           >
             <img 
               src={logoUrl} 
               alt="Biowell" 
-              className="h-8 w-auto"
+              className="h-10 w-auto"
             />
+            <div className="hidden md:block w-px h-6 bg-slate-300 dark:bg-slate-600" />
+            <span className="hidden md:block text-sm font-medium text-slate-600 dark:text-slate-400">
+              AI-Powered Health Intelligence
+            </span>
           </motion.div>
 
           {/* Desktop Navigation */}

@@ -112,7 +112,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               <h1 className="text-5xl lg:text-7xl font-light leading-tight tracking-tight">
                 <span className="text-slate-900 dark:text-white">Your</span>
                 <br />
-                <span className="bg-gradient-to-r from-[#48C6FF] via-[#2A7FFF] to-[#0026CC] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
                   Personal Health
                 </span>
                 <br />
@@ -120,11 +120,11 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               </h1>
 
               <p className="text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 font-light tracking-wide">
-                Simple health tracking that actually helps.
+                Advanced biometric analysis, personalized nutrition guidance, and intelligent supplement recommendations powered by cutting-edge AI.
               </p>
 
               <p className="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl font-light">
-                Track your health, get personalized advice, and feel your best every day. No complicated setup required.
+                Transform your wellness journey with AI-powered insights that adapt to your unique biology and lifestyle patterns.
               </p>
             </div>
 
