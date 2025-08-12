@@ -116,13 +116,27 @@ const OptimizeToday: React.FC = () => {
         name: 'Morning Activation',
         type: 'breathwork',
         scheduledTime: '07:30',
-        duration: 10,
+        duration: 5,
         completed: completedProtocols.has('morning-breathwork'),
         priority: 'high',
         description: 'Energizing breathwork to optimize morning cortisol',
         icon: CloudIcon,
         color: 'from-sky-500 to-blue-600',
         benefits: ['Increased alertness', 'Cortisol optimization', 'Mental clarity']
+      });
+      
+      protocols.push({
+        id: 'sunlight-exposure',
+        name: 'Sunlight Exposure',
+        type: 'lifestyle',
+        scheduledTime: '08:00',
+        duration: 15,
+        completed: completedProtocols.has('sunlight-exposure'),
+        priority: 'high',
+        description: 'Morning sunlight exposure with optional walk for circadian rhythm optimization',
+        icon: SunIcon,
+        color: 'from-yellow-500 to-orange-600',
+        benefits: ['Circadian rhythm regulation', 'Vitamin D synthesis', 'Mood enhancement', 'Better sleep timing']
       });
     }
 
@@ -184,7 +198,7 @@ const OptimizeToday: React.FC = () => {
         name: 'Sleep Preparation',
         type: 'breathwork',
         scheduledTime: '21:00',
-        duration: 8,
+        duration: 5,
         completed: completedProtocols.has('sleep-prep'),
         priority: 'high',
         description: 'Calming breathwork to prepare for restorative sleep',
@@ -560,6 +574,12 @@ const OptimizeToday: React.FC = () => {
                           {protocol.type === 'fertility' && (
                             <button className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300">
                               Partner Sync
+                            </button>
+                          )}
+                          
+                          {protocol.type === 'lifestyle' && protocol.id === 'sunlight-exposure' && (
+                            <button className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300">
+                              Start Walk Timer
                             </button>
                           )}
                         </div>
