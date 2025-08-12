@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { sendChatMessage } from '../../lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useToast } from '../../hooks/useToast';
@@ -21,6 +22,7 @@ import {
 
 const AICoachEnhanced: React.FC = () => {
   const { user } = useAuth();
+  const { actualTheme } = useTheme();
   const { toast } = useToast();
   
   const [inputMessage, setInputMessage] = useState('');
@@ -253,12 +255,19 @@ Coach Summary: You're building a solid base — now let's level up recovery so e
     <div className="h-full flex flex-col max-w-4xl mx-auto pb-24 lg:pb-6">
       {/* Friendly Header */}
       <div className="p-6 text-center space-y-4">
-        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
-          <Bot className="w-8 h-8 text-white" />
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto shadow-xl bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl border border-white/20 dark:border-slate-700/20">
+          <img 
+            src={actualTheme === 'dark' 
+              ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzU0MzgwMDY1LCJleHAiOjE3ODU5MTYwNjV9.W4lMMJpIbCmQrbsJFDKK-eRoSnvQ3UUdz4DhUF-jwOc"
+              : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1NDM4MDA4NywiZXhwIjoxNzg1OTE2MDg3fQ.GTBPM8tMs-jtvycD39wO6Bt32JHyEWB4a-tWle0jl8I"
+            } 
+            alt="Biowell SmartCoach" 
+            className="w-12 h-12"
+          />
         </div>
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">
-            Your Health Coach
+            SmartCoach™
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400">
             Ask me anything about your health and wellness
