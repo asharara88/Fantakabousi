@@ -15,6 +15,7 @@ const NutritionDashboard = lazy(() => import('../nutrition/NutritionDashboard'))
 const SupplementShopEnhanced = lazy(() => import('../supplements/SupplementShopEnhanced'));
 const ProfileSettingsEnhanced = lazy(() => import('./ProfileSettingsEnhanced'));
 const UbergeneIntegration = lazy(() => import('../fertility/UbergeneIntegration'));
+const FitnessTracker = lazy(() => import('../fitness/FitnessTracker'));
 
 interface DashboardContentProps {
   activeView: string;
@@ -59,10 +60,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ activeView, onQuick
       case 'fitness':
         return (
           <LazyWrapper name="Fitness Dashboard">
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold text-foreground mb-4">Fitness Dashboard</h2>
-              <p className="text-muted-foreground">Coming soon...</p>
-            </div>
+            <FitnessTracker />
           </LazyWrapper>
         );
       case 'profile':
