@@ -47,8 +47,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       {
         id: '1',
         type: 'health',
-        title: 'Glucose Alert',
-        message: 'Your glucose might spike after lunch. Consider a lighter meal or take a walk.',
+        title: 'HRV Recovery Alert',
+        message: 'Your HRV dropped to 28ms this week. Start the stress reduction protocol: Ashwagandha 600mg + 4-7-8 breathing 2x daily.',
         timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
         read: false,
         priority: 'high',
@@ -57,80 +57,80 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
       },
       {
         id: '2',
-        type: 'supplement',
-        title: 'Supplement Reminder',
-        message: 'Time to take your evening supplements for better sleep tonight.',
+        type: 'health',
+        title: 'Sleep Extension Needed',
+        message: 'You\'re averaging 6h 12m sleep. Set bedtime to 10:30 PM + take Magnesium 400mg + Melatonin 1mg.',
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         read: false,
-        priority: 'medium',
+        priority: 'high',
         icon: CubeIcon,
-        color: 'from-green-500 to-emerald-600'
+        color: 'from-indigo-500 to-purple-600'
       },
       {
         id: '3',
-        type: 'achievement',
-        title: 'Great Progress! 🎉',
-        message: 'You hit your step goal 5 days in a row this week. Keep it up!',
+        type: 'health',
+        title: 'Glucose Control Protocol',
+        message: 'Post-meal glucose peaks at 168mg/dL. Take Berberine 500mg before meals + walk 10 minutes after eating.',
         timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-        read: true,
-        priority: 'low',
+        read: false,
+        priority: 'high',
         icon: CheckCircleIcon,
-        color: 'from-blue-500 to-cyan-600'
+        color: 'from-amber-500 to-orange-600'
       },
       {
         id: '4',
-        type: 'workout',
-        title: 'Perfect Time to Exercise',
-        message: 'Your energy levels are high right now. Great time for a workout!',
+        type: 'health',
+        title: 'Cardio Improvement Needed',
+        message: 'Resting HR at 74 bpm (target: 60-70). Add 20-minute Zone 2 walks at 2 PM and 6 PM daily.',
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-        read: true,
+        read: false,
         priority: 'medium',
         icon: FireIcon,
-        color: 'from-orange-500 to-red-600'
+        color: 'from-red-500 to-pink-600'
       },
       {
         id: '5',
-        type: 'health',
-        title: 'Sleep Quality Improved',
-        message: 'Your sleep score increased by 15% this week. Your new bedtime routine is working!',
+        type: 'supplement',
+        title: 'Evening Supplement Reminder',
+        message: 'Time for your evening stack: Ashwagandha 600mg + Magnesium 400mg for better recovery.',
         timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000), // 18 hours ago
-        read: true,
-        priority: 'low',
+        read: false,
+        priority: 'medium',
         icon: HeartIcon,
-        color: 'from-blue-500 to-purple-600'
+        color: 'from-green-500 to-emerald-600'
       },
       {
         id: '6',
-        type: 'system',
-        title: 'Weekly Health Report Ready',
-        message: 'Your weekly health summary is ready. Check out your progress and insights.',
+        type: 'achievement',
+        title: 'Protocol Adherence Streak! 🎉',
+        message: 'You\'ve followed your health protocols 5 days in a row. Excellent consistency!',
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
         read: true,
         priority: 'low',
         icon: InformationCircleIcon,
-        color: 'from-indigo-500 to-purple-600'
+        color: 'from-emerald-500 to-teal-600'
       },
       {
         id: '7',
-        type: 'health',
-        title: 'Device Sync Complete',
-        message: 'Your Apple Watch data has been synced. All metrics are up to date.',
+        type: 'system',
+        title: 'Weekly Health Report Ready',
+        message: 'Your comprehensive health analysis is ready. Review your progress and new recommendations.',
         timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000), // 1.5 days ago
-        read: false,
-        priority: 'high',
+        read: true,
+        priority: 'low',
         icon: CpuChipIcon,
-        color: 'from-purple-500 to-indigo-600'
+        color: 'from-blue-500 to-cyan-600'
       },
       {
         id: '8',
-        type: 'achievement',
-        title: 'Health Goal Achieved',
-        message: 'Congratulations! You reached your monthly fitness goal 3 days early.',
+        type: 'system',
+        title: 'Device Sync Complete',
+        message: 'Your Apple Watch and CGM data has been synced. All health metrics are up to date.',
         timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
         read: true,
-        priority: 'medium',
-        icon: SparklesIcon,
-        color: 'from-cyan-500 to-blue-600'
+        priority: 'low',
+        icon: CpuChipIcon,
+        color: 'from-purple-500 to-indigo-600'
       }
     ];
 

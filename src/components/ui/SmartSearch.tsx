@@ -174,6 +174,12 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
     return () => document.removeEventListener('keydown', handleGlobalSearch);
   }, []);
 
+  // Auto-focus when opened
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
   return (
     <div className={`relative ${className}`}>
       {/* Search Input */}

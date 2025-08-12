@@ -5,6 +5,8 @@ import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '../../contexts/ThemeContext';
 import { navigationItems } from '../../lib/navigationConfig';
 import ThemeToggle from '../ui/ThemeToggle';
+import NotificationCenter from '../notifications/NotificationCenter';
+import SmartSearch from '../ui/SmartSearch';
 import { 
   BellIcon,
   Cog6ToothIcon,
@@ -24,6 +26,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeView, onNavigate }) => {
   const { actualTheme } = useTheme();
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const logoUrl = actualTheme === 'dark' 
     ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzU0MzgwMDY1LCJleHAiOjE3ODU5MTYwNjV9.W4lMMJpIbCmQrbsJFDKK-eRoSnvQ3UUdz4DhUF-jwOc"
@@ -41,15 +44,35 @@ const Navigation: React.FC<NavigationProps> = ({ activeView, onNavigate }) => {
     setExpandedMenu(null);
   };
 
+  const handleSearch = (query: string) => {
+    console.log('Searching for:', query);
+    // Implement search functionality
+  };
+
+  const handleNavigateFromSearch = (path: string) => {
+    onNavigate(path);
+    setShowSearch(false);
+  };
   return (
-    <nav 
-      className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col"
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
+    <>
+      <nav 
+        className="hidden lg:flex fixed inset-y-0 z-50 w-80 flex-col"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="flex grow flex-col gap-y-6 overflow-y-auto bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl px-8 pb-6 shadow-2xl border-r border-white/20 dark:border-slate-700/20">
+          {/* Search Bar */}
+          <div className="pt-8">
+            <SmartSearch
+              onSearch={handleSearch}
+              onNavigate={handleNavigateFromSearch}
+              placeholder="Search health data, supplements..."
+              className="w-full"
+            />
+          </div>
+
         {/* Logo Section */}
-        <header role="banner" className="flex h-24 shrink-0 items-center gap-4 pt-8">
+          <header role="banner" className="flex h-16 shrink-0 items-center gap-4">
           <motion.button
             onClick={() => window.location.href = '/'}
             className="hover:opacity-80 transition-opacity cursor-pointer"
@@ -60,7 +83,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeView, onNavigate }) => {
             <img 
               src={logoUrl} 
               alt="Biowell" 
-              className="h-14 w-auto"
+              className="h-12 w-auto"
             />
           </motion.button>
         </header>
@@ -179,14 +202,16 @@ const Navigation: React.FC<NavigationProps> = ({ activeView, onNavigate }) => {
         {/* Secondary Actions */}
         <nav role="navigation" aria-label="Secondary navigation" className="space-y-2 pt-6 border-t border-white/20 dark:border-slate-700/20">
           <motion.button 
-            onClick={() => setShowNotifications(true)}
+            onClick={() => setShowNotifications(!showNotifications)}
             className="group w-full flex items-center gap-x-3 rounded-xl p-3 text-slate-700 dark:text-slate-300 hover:bg-white/20 dark:hover:bg-slate-800/20 transition-all duration-200"
             whileHover={{ x: 4 }}
+            aria-label="Toggle notifications"
           >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
               <BellIcon className="w-5 h-5 text-white" />
             </div>
             <span className="font-medium">Notifications</span>
+            <div className="ml-auto w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
           </motion.button>
           
           <motion.button 
@@ -211,8 +236,46 @@ const Navigation: React.FC<NavigationProps> = ({ activeView, onNavigate }) => {
             <span className="font-medium">Sign Out</span>
           </motion.button>
         </nav>
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      {/* Notification Center */}
+      <NotificationCenter 
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
+
+      {/* Search Modal for Desktop */}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-32"
+            onClick={() => setShowSearch(false)}
+          >
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl p-6 w-full max-w-2xl border border-white/20 dark:border-slate-700/20 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <SmartSearch
+                onSearch={handleSearch}
+                onNavigate={(path) => {
+                  onNavigate(path);
+                  setShowSearch(false);
+                }}
+                placeholder="Search health data, supplements, recipes..."
+                className="w-full"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
